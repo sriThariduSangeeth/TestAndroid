@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WhatsDone</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="groups">Groups</string>
+    <string name="tasks">Tasks</string>
+    <string name="settings">Settings</string>
 </resources>
