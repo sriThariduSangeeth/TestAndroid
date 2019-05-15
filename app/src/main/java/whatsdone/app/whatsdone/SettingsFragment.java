@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 
 
 
-public class Tasks_Fragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tasks_, container, false);
+        return inflater.inflate(R.layout.fragment_settings_, container, false);
     }
+
 
 }

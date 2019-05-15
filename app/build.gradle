@@ -29,4 +29,10 @@ dependencies {
     //tablayout support
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
+
+    //Recycler View
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+
+
+
 }

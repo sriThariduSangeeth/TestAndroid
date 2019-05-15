@@ -3,20 +3,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Tasks_Fragment"
+    tools:context=".TasksFragment"
 
     >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
-        android:layout_gravity="center"
-        android:text="@string/tasks"
+    <TextView
+        android:id="@+id/task1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="80dp"
+        android:paddingLeft="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/task1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp">
+
+    </TextView>
+
+
+    <TextView
+        android:id="@+id/task2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="160dp"
+        android:paddingLeft="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/task2"
+        android:textColor="@color/colorPrimary"
         android:textSize="36sp"
 
         >
+
+    </TextView>
+
+
+    <TextView
+        android:id="@+id/task3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="240dp"
+        android:paddingLeft="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/task3"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        >
+
     </TextView>
 
 
