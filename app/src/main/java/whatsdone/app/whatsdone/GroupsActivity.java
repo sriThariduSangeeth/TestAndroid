@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class GroupsActivity extends AppCompatActivity {
 
     private TabAdapter adapter;
     private TabLayout tabLayout;
