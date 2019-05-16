@@ -8,17 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.List;
 
 import whatsdone.app.whatsdone.R;
-import whatsdone.app.whatsdone.model.Groups;
+import whatsdone.app.whatsdone.model.Group;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.recyclerViewHolder>
 {
-    private ArrayList<Groups> groups;
+    private List<Group> groups;
 
     // private OnGroupListner onGroupListner;
 
-    public GroupsRecyclerViewAdapter(ArrayList<Groups> groups)
+    public GroupsRecyclerViewAdapter(List<Group> groups)
     {
         this.groups = groups;
         //this.onGroupListner = onGroupListner;

@@ -1,20 +1,17 @@
 package whatsdone.app.whatsdone;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 import whatsdone.app.whatsdone.Adapters.GroupsRecyclerViewAdapter;
 import whatsdone.app.whatsdone.Adapters.TabAdapter;
-import whatsdone.app.whatsdone.model.Groups;
+import whatsdone.app.whatsdone.model.Group;
 
 public class GroupsActivity extends AppCompatActivity  {
 
@@ -24,7 +21,7 @@ public class GroupsActivity extends AppCompatActivity  {
     private Context context=this;
     private RecyclerView recyclerView;
   //  private String text;
-    private ArrayList<Groups> groups= new ArrayList<>();
+    private ArrayList<Group> groups= new ArrayList<>();
 
 
     private ArrayList<String> A= new ArrayList<String>();
