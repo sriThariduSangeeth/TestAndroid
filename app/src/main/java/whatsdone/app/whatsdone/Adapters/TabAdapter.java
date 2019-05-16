@@ -1,4 +1,4 @@
-package whatsdone.app.whatsdone;
+package whatsdone.app.whatsdone.Adapters;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -18,8 +18,6 @@ public class TabAdapter extends FragmentStatePagerAdapter
     private final List<Fragment> fragmentList = new ArrayList<>();
     private final List<String> fragmentTitleList = new ArrayList<>();
     private Context context;
-
-    // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
