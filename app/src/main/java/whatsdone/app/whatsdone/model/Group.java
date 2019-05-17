@@ -2,6 +2,8 @@ package whatsdone.app.whatsdone.model;
 
 public class Group {
 
+   // public static final int text_type = 0;
+
   //  private int id;
     private String groupName;
   //  private int timeStamp;

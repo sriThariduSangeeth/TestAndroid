@@ -1,31 +1,39 @@
-package whatsdone.app.whatsdone.Adapters;
+package whatsdone.app.whatsdone.adapters;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabAdapter extends FragmentStatePagerAdapter
+import whatsdone.app.whatsdone.GroupFragment;
+import whatsdone.app.whatsdone.SettingFragment;
+import whatsdone.app.whatsdone.TaskFragment;
+
+public class PagerAdapter extends FragmentStatePagerAdapter
 {
     private final List<Fragment> fragmentList = new ArrayList<>();
     private final List<String> fragmentTitleList = new ArrayList<>();
     private Context context;
 
-    public TabAdapter(FragmentManager fm) {
+    public PagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
-    public Fragment getItem(int i) {
-        return fragmentList.get(i);
+    public Fragment getItem(int position) {
+        switch (position){
+            case 0:
+                return new TaskFragment();
+            case 1:
+                return new GroupFragment();
+            case 2:
+                return new SettingFragment();
+        }
+        return fragmentList.get(position);
     }
 
     public void addFragment(Fragment fragment, String title)
@@ -37,12 +45,12 @@ public class TabAdapter extends FragmentStatePagerAdapter
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return fragmentTitleList.get(position);
+        return "Title";
     }
 
     @Override
     public int getCount() {
-        return fragmentList.size();
+        return 3;
     }
 
 
