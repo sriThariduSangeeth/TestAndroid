@@ -68,6 +68,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         @Override
         public void onClick(View v) {
             onItemClick.onItemClick(getAdapterPosition());
+
         }
     }
 }

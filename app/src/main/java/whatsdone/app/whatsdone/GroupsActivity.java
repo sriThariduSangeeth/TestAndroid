@@ -17,10 +17,11 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
     private ViewPager viewPager;
     private Context context=this;
 
-    private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
+   // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         viewPager = (ViewPager) findViewById(R.id.view_pager);

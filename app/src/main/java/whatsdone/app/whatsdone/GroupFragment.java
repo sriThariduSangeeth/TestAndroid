@@ -2,6 +2,8 @@ package whatsdone.app.whatsdone;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,7 +27,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
 
-
+    FragmentTransaction fragmentTransaction;
+    FragmentManager fragmentManager;
 
 
     @Override
@@ -76,5 +79,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
     public void onItemClick(int position) {
 
         System.out.println("item clicked");
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+      // fragmentTransaction.replace(R.id.container_layout, fragment).commit();
     }
 }
