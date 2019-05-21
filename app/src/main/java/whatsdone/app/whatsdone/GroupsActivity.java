@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import whatsdone.app.whatsdone.adapters.PagerAdapter;
 
@@ -28,17 +30,30 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         adapter = new PagerAdapter(getSupportFragmentManager());
-
+       // adapter.addFragment(new GroupFragment(), "Group");
+        adapter.addFragment(new GroupFragment(), "Groups");
+        adapter.addFragment(new TaskFragment(), "My Tasks");
+        adapter.addFragment(new SettingFragment(), "Settings");
 
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
+
+
         //tabLayout.setOnTabSelectedListener(this);
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.container, new TaskFragment(), "fragment");
 //        ft.commit();
 
     }
+  /*  public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_items, menu);
+        return true;
+
+
+    }  */
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {

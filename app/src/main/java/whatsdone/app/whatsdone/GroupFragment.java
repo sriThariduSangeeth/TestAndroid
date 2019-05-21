@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,11 +19,11 @@ import whatsdone.app.whatsdone.adapters.GroupsRecyclerViewAdapter;
 import whatsdone.app.whatsdone.model.Group;
 import whatsdone.app.whatsdone.presenter.GroupPresenter;
 import whatsdone.app.whatsdone.presenter.GroupPresenterImpl;
-import whatsdone.app.whatsdone.presenter.OnItemClick;
+import whatsdone.app.whatsdone.presenter.ItemClickListener;
 import whatsdone.app.whatsdone.view.GroupFragmentView;
 
 
-public class GroupFragment extends Fragment implements GroupFragmentView,OnItemClick{
+public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private List<Group> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
@@ -29,7 +31,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
 
     FragmentTransaction fragmentTransaction;
     FragmentManager fragmentManager;
-
+    private ItemClickListener clickListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,9 +50,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
             groups.add(group);
         }
 
-        adapter = new GroupsRecyclerViewAdapter(groups,this);
+        adapter = new GroupsRecyclerViewAdapter(groups, clickListener);
+//        adapter = new GroupsRecyclerViewAdapter(groups,this);
         myrecycler.setAdapter(adapter);
         System.out.println("oncreateview");
+
+
 
 
         this.presenter = new GroupPresenterImpl();
@@ -60,11 +65,15 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
       //  this.presenter.onItemClick(this,groups.size());
 
 
-
+        setHasOptionsMenu(true);
         return view;
+
     }
 
-
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.group_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     @Override
     public void updateGroups(List<Group> groups) {
@@ -74,14 +83,16 @@ public class GroupFragment extends Fragment implements GroupFragmentView,OnItemC
         System.out.println("updategroups");
     }
 
-
+/*
     @Override
     public void onItemClick(int position) {
 
         System.out.println("item clicked");
 
-        fragmentTransaction = fragmentManager.beginTransaction();
+      //  fragmentTransaction = fragmentManager.beginTransaction();
 
       // fragmentTransaction.replace(R.id.container_layout, fragment).commit();
     }
+*/
+
 }

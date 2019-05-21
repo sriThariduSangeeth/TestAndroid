@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,7 +37,7 @@ public class TaskFragment extends Fragment implements TaskFragmentView{
         for (int i=0; i<20 ; i++)
         {
             Task task = new Task();
-            task.setTaskName("Task " +i);
+            task.setTaskName("My task " +i);
             tasks.add(task);
 
         }
@@ -51,8 +53,14 @@ public class TaskFragment extends Fragment implements TaskFragmentView{
 
 
 
-
+        setHasOptionsMenu(true);
       return view;
+    }
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.task_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

@@ -47,7 +47,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Title";
+        return fragmentTitleList.get(position);
+
     }
 
     @Override

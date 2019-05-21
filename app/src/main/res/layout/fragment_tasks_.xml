@@ -19,8 +19,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
-        android:background="@color/recycler"
-
+        android:background="@color/white"
         android:id="@+id/task_recycler_view"
         />
 </RelativeLayout>

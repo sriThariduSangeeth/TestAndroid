@@ -4,6 +4,7 @@ public class Group {
 
    // public static final int text_type = 0;
 
+
   //  private int id;
     private String groupName;
   //  private int timeStamp;
@@ -33,7 +34,10 @@ public class Group {
         this.description = description;
     }
 */
-  public String getGroupName() {
+
+
+
+    public String getGroupName() {
       return groupName;
   }
 
