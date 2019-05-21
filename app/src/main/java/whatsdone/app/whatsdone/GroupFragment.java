@@ -33,6 +33,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     FragmentManager fragmentManager;
     private ItemClickListener clickListener;
 
+   
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             groups.add(group);
         }
 
-        adapter = new GroupsRecyclerViewAdapter(groups, clickListener);
+        adapter = new GroupsRecyclerViewAdapter(groups, getContext());
 //        adapter = new GroupsRecyclerViewAdapter(groups,this);
         myrecycler.setAdapter(adapter);
         System.out.println("oncreateview");

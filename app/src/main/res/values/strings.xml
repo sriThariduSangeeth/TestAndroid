@@ -13,4 +13,8 @@
     <string name="task2">Task 2</string>
     <string name="task3">Task 3</string>
     <string name="group_menu_item1">Create new group</string>
+    <string name="group_menu_item2">Menu item 2</string>
+    <string name="group_menu_item3">Menu item 3</string>
+    <string name="text1">text1</string>
+    <string name="time">11.00</string>
 </resources>

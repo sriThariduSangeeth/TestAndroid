@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,32 +24,67 @@ import whatsdone.app.whatsdone.presenter.ItemClickListener;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     private List<Group> groups;
-    private ItemClickListener monItemClickListener;
+  //  private ItemClickListener monItemClickListener;
+    private Context context;
 
 
-
-    public GroupsRecyclerViewAdapter(List<Group> groups, ItemClickListener itemClickListener) {
+    public GroupsRecyclerViewAdapter(List<Group> groups, Context context) {
         this.groups = groups;
-        this.monItemClickListener = itemClickListener;
+        this.context = context;
+    //    this.monItemClickListener = itemClickListener;
 
     }
 
 
     @NonNull
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
 
-        return new RecyclerViewHolder(view, monItemClickListener);
+        return new RecyclerViewHolder(view);
 
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         holder.textView.setText(groups.get(position).getGroupName());
 
+        holder.textViewMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popup = new PopupMenu(context, holder.textViewMenu);
+                popup.inflate(R.menu.group_item_options_menu);
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId())
+                        {
+                            case R.id.menu1:
+                                return true;
+                            case R.id.menu2:
+                                return true;
+                            case R.id.menu3:
+                                return true;
+                            default:
+                                return false;
+
+
+                        }
+
+
+                    }
+                });
+
+                popup.show();
+            }
+        });
+
+
+        /*
         holder.setClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
@@ -63,7 +101,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
                 }
             }
-        });
+        }); */
 
     }
 
@@ -72,39 +110,26 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         return groups.size();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
-        private ItemClickListener clickListener;
+        private TextView textViewMenu;
+      //  private ItemClickListener clickListener;
         private ImageView imageView;
 
-        public RecyclerViewHolder(@NonNull View itemView, ItemClickListener itemClickListener) {
+        public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textView = itemView.findViewById(R.id.group_text);
             imageView = itemView.findViewById(R.id.image_view_group);
+            textViewMenu = itemView.findViewById(R.id.group_text_view_menu);
             //this.itemClickListener = itemClickListener;
 
-            itemView.setOnLongClickListener(this);
-            itemView.setOnClickListener(this);
+          //  itemView.setOnLongClickListener(this);
+            //itemView.setOnClickListener(this);
 
         }
 
-        public void setClickListener(ItemClickListener itemClickListener)
-        {
-            this.clickListener = itemClickListener;
-        }
 
-        @Override
-        public void onClick(View v) {
-            clickListener.onClick(v, getAdapterPosition(), false);
-
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            clickListener.onClick(v, getAdapterPosition(),true);
-            return true;
-        }
     }
 }
