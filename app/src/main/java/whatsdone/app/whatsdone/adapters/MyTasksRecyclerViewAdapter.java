@@ -10,13 +10,13 @@ import android.widget.TextView;
 import java.util.List;
 
 import whatsdone.app.whatsdone.R;
-import whatsdone.app.whatsdone.model.Task;
+import whatsdone.app.whatsdone.model.MyTask;
 
-public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecyclerViewAdapter.RecyclerViewHolderTask> {
+public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
-    private List<Task> tasks;
+    private List<MyTask> tasks;
 
-    public TasksRecyclerViewAdapter(List<Task> tasks)
+    public MyTasksRecyclerViewAdapter(List<MyTask> tasks)
     {
         this.tasks = tasks;
     }
@@ -26,7 +26,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     public RecyclerViewHolderTask onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-        View view = layoutInflater.inflate(R.layout.task_recycler_view_layout, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.my_task_recycler_view_layout, viewGroup, false);
 
 
         return new RecyclerViewHolderTask(view);

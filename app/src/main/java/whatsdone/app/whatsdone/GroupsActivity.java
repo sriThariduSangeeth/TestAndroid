@@ -2,13 +2,9 @@ package whatsdone.app.whatsdone;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import whatsdone.app.whatsdone.adapters.PagerAdapter;
 
@@ -32,7 +28,7 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
         adapter = new PagerAdapter(getSupportFragmentManager());
        // adapter.addFragment(new GroupFragment(), "Group");
         adapter.addFragment(new GroupFragment(), "Groups");
-        adapter.addFragment(new TaskFragment(), "My Tasks");
+        adapter.addFragment(new MyTaskFragment(), "My Tasks");
         adapter.addFragment(new SettingFragment(), "Settings");
 
         viewPager.setAdapter(adapter);
@@ -42,7 +38,7 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
 
         //tabLayout.setOnTabSelectedListener(this);
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.replace(R.id.container, new TaskFragment(), "fragment");
+//        ft.replace(R.id.container, new MyTaskFragment(), "fragment");
 //        ft.commit();
 
     }

@@ -1,8 +1,6 @@
 package whatsdone.app.whatsdone.model;
 
-public class Task {
-
-  //  public static final int text_type = 1;
+public class TaskInnerGroup {
     private String taskName;
 
     public String getTaskName() {

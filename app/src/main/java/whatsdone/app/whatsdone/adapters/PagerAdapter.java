@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whatsdone.app.whatsdone.GroupFragment;
+import whatsdone.app.whatsdone.MyTaskFragment;
 import whatsdone.app.whatsdone.SettingFragment;
-import whatsdone.app.whatsdone.TaskFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter
 {
@@ -28,10 +28,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter
         switch (position){
             case 0:
                 return new GroupFragment();
-               // return new TaskFragment();
+               // return new MyTaskFragment();
             case 1:
                // return new GroupFragment();
-                return new TaskFragment();
+                return new MyTaskFragment();
             case 2:
                 return new SettingFragment();
         }

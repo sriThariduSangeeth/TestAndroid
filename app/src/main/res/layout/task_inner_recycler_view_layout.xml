@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/task_inner_recycler_view_layout"
+    android:paddingTop="20sp"
+    android:paddingBottom="20sp"
+    android:paddingLeft="20sp"
+    android:paddingRight="20sp"
+
+    android:layout_weight="20"
+    android:layout_centerVertical="true"
+
+    >
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/task_inner_text"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="50sp"
+
+        android:textColor="#444"
+        android:textSize="20sp"
+        android:paddingBottom="10sp"
+
+        />
+
+    <TextView
+        android:id="@+id/task_inner_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/time"
+        android:textSize="15sp"
+        android:paddingRight="20sp"
+        android:paddingEnd="20sp"
+        >
+
+    </TextView>
+
+</RelativeLayout>

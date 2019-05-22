@@ -33,7 +33,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     FragmentManager fragmentManager;
     private ItemClickListener clickListener;
 
-   
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

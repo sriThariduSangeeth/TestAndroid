@@ -96,7 +96,7 @@
     android:elevation="10dp"
     android:layout_weight="20"
     android:layout_centerVertical="true"
-    android:id="@+id/task_recycler_view_layout"
+    android:id="@+id/my_task_recycler_view_layout"
     >
 
 

@@ -5,21 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".TaskFragment"
+    tools:context=".MyTaskFragment"
 
     >
 
-       <TextView
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:text="Hi"/>
 
-       <android.support.v7.widget.RecyclerView
+     <android.support.v7.widget.RecyclerView
+        android:id="@+id/task_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
         android:background="@color/white"
-        android:id="@+id/task_recycler_view"
-        />
-</RelativeLayout>
+            >
+
+     </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>

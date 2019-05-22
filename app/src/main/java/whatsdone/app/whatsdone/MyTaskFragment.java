@@ -13,30 +13,30 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import whatsdone.app.whatsdone.adapters.TasksRecyclerViewAdapter;
-import whatsdone.app.whatsdone.model.Task;
-import whatsdone.app.whatsdone.presenter.TaskPresenter;
-import whatsdone.app.whatsdone.presenter.TaskPresenterImpl;
-import whatsdone.app.whatsdone.view.TaskFragmentView;
+import whatsdone.app.whatsdone.adapters.MyTasksRecyclerViewAdapter;
+import whatsdone.app.whatsdone.model.MyTask;
+import whatsdone.app.whatsdone.presenter.MyTaskPresenter;
+import whatsdone.app.whatsdone.presenter.MyTaskPresenterImpl;
+import whatsdone.app.whatsdone.view.MyTaskFragmentView;
 
 
-public class TaskFragment extends Fragment implements TaskFragmentView{
+public class MyTaskFragment extends Fragment implements MyTaskFragmentView {
 
 
-    private List<Task> tasks = new ArrayList<>();
-    private TasksRecyclerViewAdapter tasksAdapter;
-    private TaskPresenter taskPresenter;
+    private List<MyTask> tasks = new ArrayList<>();
+    private MyTasksRecyclerViewAdapter tasksAdapter;
+    private MyTaskPresenter taskPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view = inflater.inflate(R.layout.fragment_tasks_, container, false);
+       View view = inflater.inflate(R.layout.fragment_task_my_, container, false);
 
-        List<Task> tasks = new ArrayList<>();
+        List<MyTask> tasks = new ArrayList<>();
 
         for (int i=0; i<20 ; i++)
         {
-            Task task = new Task();
+            MyTask task = new MyTask();
             task.setTaskName("My task " +i);
             tasks.add(task);
 
@@ -45,9 +45,9 @@ public class TaskFragment extends Fragment implements TaskFragmentView{
 
         RecyclerView recycler = view.findViewById(R.id.task_recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        tasksAdapter = new TasksRecyclerViewAdapter(tasks);
+        tasksAdapter = new MyTasksRecyclerViewAdapter(tasks);
         recycler.setAdapter(tasksAdapter);
-        this.taskPresenter = new TaskPresenterImpl();
+        this.taskPresenter = new MyTaskPresenterImpl();
         this.taskPresenter.initi(this);
         this.taskPresenter.loadTasks();
 
@@ -64,7 +64,7 @@ public class TaskFragment extends Fragment implements TaskFragmentView{
     }
 
     @Override
-    public void updateTasks(List<Task> tasks) {
+    public void updateTasks(List<MyTask> tasks) {
         this.tasks.addAll(tasks);
         tasksAdapter.notifyDataSetChanged();
         System.out.println("update tasks");
