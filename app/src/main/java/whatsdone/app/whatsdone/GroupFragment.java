@@ -31,9 +31,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private List<Group> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
+    private OnGroupFragmentInteractionListener listener;
 
-    FragmentTransaction fragmentTransaction;
-    FragmentManager fragmentManager;
     private ItemClickListener clickListener;
 
 
@@ -72,11 +71,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("clicked");
+                if(listener != null) {
+                    System.out.println("listener");
+                    listener.onAddClicked();
+                }
 
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CreateNewGroupActivity.class);
-                context.startActivity(intent);
-                //Snackbar.make(v,"Hello", Snackbar.LENGTH_LONG).show();
             }
         });
      //   setHasOptionsMenu(true);
@@ -100,17 +100,20 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         System.out.println("updategroups");
     }
+    public interface OnGroupFragmentInteractionListener {
 
-/*
-    @Override
-    public void onItemClick(int position) {
+        void onAddClicked();
 
-        System.out.println("item clicked");
-
-      //  fragmentTransaction = fragmentManager.beginTransaction();
-
-      // fragmentTransaction.replace(R.id.container_layout, fragment).commit();
     }
-*/
+
+    public void setListener(OnGroupFragmentInteractionListener handler) {
+            listener = handler;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
 
 }

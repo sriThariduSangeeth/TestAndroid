@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import whatsdone.app.whatsdone.GroupContainerFragment;
 import whatsdone.app.whatsdone.GroupFragment;
 import whatsdone.app.whatsdone.MyTaskFragment;
 import whatsdone.app.whatsdone.SettingFragment;
@@ -27,7 +28,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new GroupFragment();
+                return new GroupContainerFragment();
                // return new MyTaskFragment();
             case 1:
                // return new GroupFragment();

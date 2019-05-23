@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import whatsdone.app.whatsdone.InnerGroupTaskActivity;
+import whatsdone.app.whatsdone.InnerGroupTaskFragment;
 import whatsdone.app.whatsdone.R;
 import whatsdone.app.whatsdone.model.Group;
 
@@ -20,6 +20,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     private List<Group> groups;
   //  private ItemClickListener monItemClickListener;
     private Context context;
+
 
 
     public GroupsRecyclerViewAdapter(List<Group> groups, Context context) {
@@ -83,9 +84,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, InnerGroupTaskActivity.class);
-                context.startActivity(intent);
+
+
+               /* Context context = v.getContext();
+                Intent intent = new Intent(context, InnerGroupTaskFragment.class);
+                context.startActivity(intent);   */
             }
         });
         /*

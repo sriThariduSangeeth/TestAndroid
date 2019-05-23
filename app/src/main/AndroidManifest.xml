@@ -16,22 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InnerGroupTaskActivity">
-
-        </activity>
-        <activity android:name=".CreateNewGroupActivity">
-
-        </activity>
-        <activity android:name=".CreateNewTaskActivity">
-
-        </activity>
+     
 
 
-
-        <activity android:name=".InnerGroupDiscussionActivity">
-
-        </activity>
-
-    </application>
+     </application>
 
 </manifest>

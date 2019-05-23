@@ -2,6 +2,9 @@ package whatsdone.app.whatsdone;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -27,7 +30,7 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
 
         adapter = new PagerAdapter(getSupportFragmentManager());
        // adapter.addFragment(new GroupFragment(), "Group");
-        adapter.addFragment(new GroupFragment(), "Groups");
+        adapter.addFragment(new GroupContainerFragment(), "Groups");
         adapter.addFragment(new MyTaskFragment(), "My Tasks");
         adapter.addFragment(new SettingFragment(), "Settings");
 

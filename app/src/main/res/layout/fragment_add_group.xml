@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    android:paddingLeft="20dp"
+    android:layout_gravity="center_vertical"
+
+    >
+
+
+    <TextView
+        android:id="@+id/group_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
+        android:layout_marginTop="60dp"
+        android:paddingEnd="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="5sp"
+        android:text="@string/GroupDetails"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/group_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
+        android:layout_marginTop="82dp"
+        android:paddingEnd="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="10sp"
+        android:text="@string/group_name"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/teamPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+
+        android:layout_marginTop="120dp"
+        android:paddingEnd="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="10sp"
+        android:text="@string/teamPhoto"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
+        android:layout_marginTop="203dp"
+        android:paddingEnd="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="5sp"
+        android:text="@string/members"
+        android:textSize="15sp" />
+    <Button
+        android:id="@+id/create_new_group_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:text="@string/CreateGroup" />
+
+    <Button
+        android:id="@+id/addMembers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+
+        android:layout_marginBottom="205dp"
+        android:text="@string/AddMembers" />
+
+</RelativeLayout>

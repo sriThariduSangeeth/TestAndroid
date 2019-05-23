@@ -18,12 +18,15 @@
     <string name="text1">text1</string>
     <string name="time">11.00</string>
     <string name="NewActivity">New Activity</string>
-    <string name="GroupName">Group Name</string>
+    <string name="GroupDetails">Group Details</string>
     <string name="group_name">group name</string>
     <string name="CreateGroup">Create Group</string>
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
     <string name="done_image">done image</string>
     <string name="Task_Name">Task Name</string>
+    <string name="teamPhoto">Team Photo</string>
+    <string name="members">Members</string>
+    <string name="AddMembers">Add members</string>
 
 </resources>
