@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import whatsdone.app.whatsdone.adapters.PagerAdapter;
 
@@ -17,6 +20,7 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Context context=this;
+    private Toolbar toolbar;
 
    // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
 
@@ -44,15 +48,10 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
 //        ft.replace(R.id.container, new MyTaskFragment(), "fragment");
 //        ft.commit();
 
+        toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
-  /*  public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_items, menu);
-        return true;
-
-
-    }  */
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
@@ -68,4 +67,6 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
+
 }

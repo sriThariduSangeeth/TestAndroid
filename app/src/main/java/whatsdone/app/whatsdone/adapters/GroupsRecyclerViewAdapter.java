@@ -3,6 +3,8 @@ package whatsdone.app.whatsdone.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,8 +85,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                Fragment myFragment = new InnerGroupTaskFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
                /* Context context = v.getContext();
                 Intent intent = new Intent(context, InnerGroupTaskFragment.class);

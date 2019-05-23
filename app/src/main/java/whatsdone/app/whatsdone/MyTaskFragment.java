@@ -59,7 +59,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView {
 
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.task_menu_items, menu);
+        inflater.inflate(R.menu.mytask_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

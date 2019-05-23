@@ -5,7 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
     <string name="tasks">Tasks</string>
-    <string name="settings">Settings</string>
+    <string name="settings1">Settings1</string>
     <string name="group1">Group 1</string>
     <string name="group3">Group 3</string>
     <string name="group2">Group 2</string>
@@ -28,5 +28,7 @@
     <string name="teamPhoto">Team Photo</string>
     <string name="members">Members</string>
     <string name="AddMembers">Add members</string>
+    <string name="settings">Settings</string>
+    <string name="discussion">Discussion</string>
 
 </resources>

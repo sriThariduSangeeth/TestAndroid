@@ -10,7 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,11 +30,15 @@ public class InnerGroupTaskFragment extends Fragment {
     private List<TaskInnerGroup> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private FloatingActionButton mainFab;
+    private Toolbar toolbar;
+    private MenuItem menuItem;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
 
     }
 
@@ -39,7 +47,6 @@ public class InnerGroupTaskFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view =  inflater.inflate(R.layout.fragment_inner_group_task, container, false);
-       // View view = Inflater.inflate(R.layout.fragment_inner_group_task, container, false);
 
         mainFab = view.findViewById(R.id.add_new_task);
 
@@ -61,16 +68,35 @@ public class InnerGroupTaskFragment extends Fragment {
         mainFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Fragment myFragment = new CreateNewTaskFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+
+
 
 
             }
         });
 
 
+        toolbar =  getActivity().findViewById(R.id.toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
+        inflater.inflate(R.menu.task_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
 
 }
