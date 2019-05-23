@@ -21,6 +21,17 @@
         android:background="@color/white"
 
         />
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="31dp"
+        app:fabSize="normal"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="31dp" />
 
 </RelativeLayout>

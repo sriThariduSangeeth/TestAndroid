@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.List;
 
-import whatsdone.app.whatsdone.InnerGroupActivity;
+import whatsdone.app.whatsdone.InnerGroupTaskActivity;
 import whatsdone.app.whatsdone.R;
 import whatsdone.app.whatsdone.model.Group;
 
@@ -27,7 +25,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public GroupsRecyclerViewAdapter(List<Group> groups, Context context) {
         this.groups = groups;
         this.context = context;
-    //    this.monItemClickListener = itemClickListener;
+
 
     }
 
@@ -47,6 +45,8 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         holder.textView.setText(groups.get(position).getGroupName());
 
+        //popup menu with 3 dots
+        /*
         holder.textViewMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,13 +78,13 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                 popup.show();
             }
         });
-
+*/
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, InnerGroupActivity.class);
+                Intent intent = new Intent(context, InnerGroupTaskActivity.class);
                 context.startActivity(intent);
             }
         });
@@ -117,7 +117,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
-        private TextView textViewMenu;
+      //  private TextView textViewMenu;
       //  private ItemClickListener clickListener;
         private ImageView imageView;
 
@@ -126,7 +126,9 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
             textView = itemView.findViewById(R.id.group_text);
             imageView = itemView.findViewById(R.id.image_view_group);
-            textViewMenu = itemView.findViewById(R.id.group_text_view_menu);
+          //  textViewMenu = itemView.findViewById(R.id.group_text_view_menu);
+
+
             //this.itemClickListener = itemClickListener;
 
           //  itemView.setOnLongClickListener(this);

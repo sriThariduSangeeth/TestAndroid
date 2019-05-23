@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -14,7 +15,20 @@
     android:layout_centerVertical="true"
 
     >
+    <ImageView
+        android:id="@+id/image_view_task_inner_group"
+        android:layout_width="40sp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/done_icon"
+        android:paddingRight="20sp"
+        android:paddingEnd="20sp"
+        android:contentDescription="@string/done_image"
 
+
+        >
+
+    </ImageView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,12 +36,31 @@
         android:layout_height="wrap_content"
 
         android:layout_marginLeft="50sp"
+        android:layout_marginStart="50sp"
 
-        android:textColor="#444"
+        android:textColor="@color/colorPrimary"
         android:textSize="20sp"
-        android:paddingBottom="10sp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="225dp"
+
 
         />
+
+    <TextView
+        android:id="@+id/task_inner_text_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image_view_task_inner_group"
+
+        android:layout_marginStart="-10dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_toEndOf="@+id/image_view_task_inner_group"
+        android:layout_toRightOf="@+id/image_view_task_inner_group"
+        android:paddingBottom="10sp"
+        android:text="@string/text1"
+
+        android:textColor="#444"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/task_inner_time"
@@ -42,5 +75,18 @@
         >
 
     </TextView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1sp"
+        android:layout_below="@+id/image_view_task_inner_group"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-10dp"
+        android:layout_alignBottom="@+id/image_view_task_inner_group"
+       android:background="#000"
+        android:paddingBottom="10sp"
+        />
+
+
 
 </RelativeLayout>

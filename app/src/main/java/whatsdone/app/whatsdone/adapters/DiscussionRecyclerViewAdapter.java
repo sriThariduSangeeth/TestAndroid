@@ -13,11 +13,11 @@ import java.util.List;
 import whatsdone.app.whatsdone.R;
 import whatsdone.app.whatsdone.model.Chat;
 
-public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.MyRecyclerViewHolder> {
+public class DiscussionRecyclerViewAdapter extends RecyclerView.Adapter<DiscussionRecyclerViewAdapter.MyRecyclerViewHolder> {
     private List<Chat> chatsList;
     private Context context;
 
-    public ChatRecyclerViewAdapter(List<Chat> chats, Context context) {
+    public DiscussionRecyclerViewAdapter(List<Chat> chats, Context context) {
 
         this.chatsList = chats;
         this.context = context;
@@ -28,7 +28,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     public MyRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-        View view = layoutInflater.inflate(R.layout.chat_recycler_view_layout, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.discussion_recycler_view_layout, viewGroup, false);
 
 
         return new MyRecyclerViewHolder(view);

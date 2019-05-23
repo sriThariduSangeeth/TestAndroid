@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -39,6 +40,17 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
 
         myRecyclerViewHolder.groupTaskText.setText(taskList.get(position).getTaskName());
+
+        myRecyclerViewHolder.groupTaskText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "show task", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+
     }
 
     @Override
