@@ -44,7 +44,7 @@ public class MyTaskContainerFragment extends Fragment implements MyTaskDetailsFr
         fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = new MyTaskFragment();
-        System.out.println("setting lister");
+        System.out.println("setting listener in my task");
         ((MyTaskFragment)fragment).setListener(this);
         fragmentTransaction.add(R.id.my_task_container, fragment);
         fragmentTransaction.commit();

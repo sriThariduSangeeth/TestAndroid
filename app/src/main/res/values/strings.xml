@@ -31,5 +31,6 @@
     <string name="settings">Settings</string>
     <string name="discussion">Discussion</string>
     <string name="TaskDetails">My Task 1</string>
+    <string name="task_owner">task owner</string>
 
 </resources>

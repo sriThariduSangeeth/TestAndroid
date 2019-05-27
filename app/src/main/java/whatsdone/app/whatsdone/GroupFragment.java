@@ -2,7 +2,9 @@ package whatsdone.app.whatsdone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whatsdone.app.whatsdone.adapters.GroupsRecyclerViewAdapter;
+import whatsdone.app.whatsdone.adapters.SwipeController;
 import whatsdone.app.whatsdone.model.Group;
 import whatsdone.app.whatsdone.presenter.GroupPresenter;
 import whatsdone.app.whatsdone.presenter.GroupPresenterImpl;
@@ -35,6 +38,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
     Toolbar toolbar;
+    private View view;
+    //private SwipeControllerActions buttonsActions = null;
 
 
     @Override
@@ -75,6 +80,33 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
             }
         });
+
+        SwipeController swipeController = new SwipeController(null);
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        RecyclerView recyclerView = view.findViewById(R.id.group_recycler_view);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+
+
+      //  SwipeController swipeController;
+        swipeController = new SwipeController(new SwipeControllerActions()
+        {
+            @Override
+            public void onRightClicked(int position) {
+                adapter.groups.remove(position);
+                adapter.notifyItemRemoved(position);
+            }
+        });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+            }
+        });
+
 
         return view;
 

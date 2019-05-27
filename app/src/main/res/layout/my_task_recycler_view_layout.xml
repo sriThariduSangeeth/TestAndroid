@@ -18,11 +18,13 @@
 
     <ImageView
         android:id="@+id/image_view_task"
-        android:layout_width="40sp"
+        android:layout_width="50sp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
         android:src="@drawable/done_icon"
         android:paddingRight="20sp"
+        android:paddingBottom="10sp"
+
 
         >
 

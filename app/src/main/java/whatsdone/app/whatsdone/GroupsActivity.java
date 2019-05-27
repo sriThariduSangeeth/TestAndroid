@@ -1,26 +1,33 @@
 package whatsdone.app.whatsdone;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.MotionEvent;
-import android.view.View;
 
-import whatsdone.app.whatsdone.adapters.PagerAdapter;
+import whatsdone.app.whatsdone.adapters.GroupsRecyclerViewAdapter;
 import whatsdone.app.whatsdone.adapters.SwipeController;
 
-public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener  {
+public class GroupsActivity extends AppCompatActivity {
 
-    private PagerAdapter adapter;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
     private Context context=this;
     private Toolbar toolbar;
+    public static GroupsActivity instance;
+    private GroupContainerFragment groupContainerFragment;
+    private MyTaskContainerFragment myTaskContainerFragment;
+    private SettingFragment settingFragment;
+    private GroupFragment groupFragment;
+    private MyTaskFragment myTaskFragment;
+    private GroupsRecyclerViewAdapter recyclerViewAdapter;
+
+
 
    // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
 
@@ -28,76 +35,105 @@ public class GroupsActivity extends AppCompatActivity implements TabLayout.OnTab
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_groups);
-       viewPager = (ViewPager) findViewById(R.id.view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        adapter = new PagerAdapter(getSupportFragmentManager());
-        // adapter.addFragment(new GroupFragment(), "Group");
-        adapter.addFragment(new GroupContainerFragment(), "Groups");
-        adapter.addFragment(new MyTaskContainerFragment(), "My Tasks");
-        adapter.addFragment(new SettingFragment(), "Settings");
+        tabLayout = (TabLayout)findViewById(R.id.tab_layout);
 
-        viewPager.setAdapter(adapter);
+       // getAllWidgets();
+        setupTabLayout();
+        bindWidgetsWithAnEvent();
 
-        tabLayout.setupWithViewPager(viewPager);
-
-/*
-        adapter = new PagerAdapter(getSupportFragmentManager());
-       // adapter.addFragment(new GroupFragment(), "Group");
-        adapter.addFragment(new GroupContainerFragment(), "Groups");
-        adapter.addFragment(new MyTaskContainerFragment(), "My Tasks");
-        adapter.addFragment(new SettingFragment(), "Settings");
-
-        viewPager.setAdapter(adapter);
-
-        tabLayout.setupWithViewPager(viewPager);
-*/
-
-        //tabLayout.setOnTabSelectedListener(this);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.replace(R.id.container, new MyTaskFragment(), "fragment");
-//        ft.commit();
 
         toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       // viewpager swipe disable
-         /*
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                viewPager.setCurrentItem(viewPager.getCurrentItem());
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
 
-                return true;
+
+    }
+
+    private void bindWidgetsWithAnEvent()
+    {
+       tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+           @Override
+           public void onTabSelected(TabLayout.Tab tab) {
+               int position = tab.getPosition();
+
+               switch (tab.getPosition())
+               {
+                   case 0:
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
+                       break;
+
+                   case 1:
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, myTaskContainerFragment).commit();
+                       break;
+
+                   case 2:
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, settingFragment).commit();
+                       break;
+
+
+               }
+           }
+
+           @Override
+           public void onTabUnselected(TabLayout.Tab tab) {
+
+           }
+
+           @Override
+           public void onTabReselected(TabLayout.Tab tab) {
+
+           }
+       });
+    }
+
+    public static GroupsActivity getInstance()
+    {
+        return instance;
+    }
+
+
+    private void setupTabLayout()
+    {
+        groupContainerFragment = new GroupContainerFragment();
+        myTaskContainerFragment = new MyTaskContainerFragment();
+        settingFragment = new SettingFragment();
+       // groupFragment = new GroupFragment();
+      //  myTaskFragment = new MyTaskFragment();
+
+        tabLayout.addTab(tabLayout.newTab().setText("Groups").setIcon(R.drawable.group_tab_icon),true);
+        tabLayout.addTab(tabLayout.newTab().setText("My Tasks").setIcon(R.drawable.task_tab_icon));
+        tabLayout.addTab(tabLayout.newTab().setText("Settings").setIcon(R.drawable.settings_tab_icon));
+    }
+
+    public void setupRecyclerView()
+    {
+        // List<Group> groups = new ArrayList<>();
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.group_recycler_view);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+        SwipeController swipeController;
+        swipeController = new SwipeController(new SwipeControllerActions()
+        {
+            @Override
+            public void onRightClicked(int position) {
+                recyclerViewAdapter.groups.remove(position);
+                recyclerViewAdapter.notifyItemRemoved(position);
             }
         });
 
-        */
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        SwipeController swipeController = new SwipeController();
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        RecyclerView recyclerView = findViewById(R.id.group_recycler_view);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        //swipe
-       // viewPager.beginFakeDrag();
-    }
-
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+            }
+        });
     }
 
 

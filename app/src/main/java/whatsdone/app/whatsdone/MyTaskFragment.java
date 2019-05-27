@@ -42,7 +42,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
        View view = inflater.inflate(R.layout.fragment_task_my_, container, false);
 
         List<MyTask> tasks = new ArrayList<>();
-
+        System.out.println("my task on create view");
         for (int i=0; i<20 ; i++)
         {
             MyTask task = new MyTask();

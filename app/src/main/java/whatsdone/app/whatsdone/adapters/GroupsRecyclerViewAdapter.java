@@ -20,7 +20,7 @@ import whatsdone.app.whatsdone.R;
 import whatsdone.app.whatsdone.model.Group;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
-    private List<Group> groups;
+    public List<Group> groups;
   //  private ItemClickListener monItemClickListener;
     private Context context;
 
@@ -40,6 +40,9 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
+        System.out.println("group recycler view");
+
+
 
         return new RecyclerViewHolder(view);
 
@@ -48,6 +51,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         holder.textView.setText(groups.get(position).getGroupName());
+        System.out.println(" group recycler view ");
 
         //popup menu with 3 dots
         /*
@@ -120,4 +124,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
 
     }
+
+ /*   public void removeItem(int position) {
+        groups.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, groups.size());
+    }  */
+
 }

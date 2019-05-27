@@ -15,36 +15,39 @@
     android:layout_centerVertical="true"
 
     >
-    <ImageView
-        android:id="@+id/image_view_task_inner_group"
-        android:layout_width="40sp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/done_icon"
-        android:paddingRight="20sp"
-        android:paddingEnd="20sp"
-        android:contentDescription="@string/done_image"
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_view_task_inner_group"
+        android:layout_height="80sp"
+        android:layout_width="80sp"
+        android:src="@drawable/task_owner"
+        android:foregroundGravity="center_vertical"
+        android:contentDescription="@string/task_owner"
+        android:layout_centerVertical="true"
+        android:paddingBottom="10sp"
 
         >
+    </de.hdodenhof.circleimageview.CircleImageView>
 
-    </ImageView>
 
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/task_inner_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginLeft="50sp"
-        android:layout_marginStart="50sp"
+        android:layout_alignParentStart="true"
 
+        android:layout_alignTop="@+id/image_view_task_inner_group"
+        android:layout_marginStart="100dp"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
+
+
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="225dp"
-
-
-        />
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="100dp" />
 
     <TextView
         android:id="@+id/task_inner_text_sub"
@@ -52,15 +55,15 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/image_view_task_inner_group"
 
-        android:layout_marginStart="-10dp"
-        android:layout_marginLeft="-10dp"
-        android:layout_toEndOf="@+id/image_view_task_inner_group"
-        android:layout_toRightOf="@+id/image_view_task_inner_group"
+        android:layout_alignParentStart="true"
+
+        android:layout_marginStart="100dp"
         android:paddingBottom="10sp"
         android:text="@string/text1"
-
         android:textColor="#444"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="100dp" />
 
     <TextView
         android:id="@+id/task_inner_time"
@@ -78,13 +81,11 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1sp"
-        android:layout_below="@+id/image_view_task_inner_group"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-10dp"
-        android:layout_alignBottom="@+id/image_view_task_inner_group"
-       android:background="#000"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@+id/task_inner_text_sub"
+        android:background="@color/grey"
         android:paddingBottom="10sp"
+        android:paddingTop="20sp"
         />
 
 

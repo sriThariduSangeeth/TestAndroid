@@ -40,7 +40,9 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.my_task_recycler_view_layout, viewGroup, false);
 
+        System.out.println(" my task recycler view");
 /*
+
         view.findViewById(R.id.task_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
