@@ -1,5 +1,7 @@
 package whatsdone.app.whatsdone;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,28 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link GroupContainerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class GroupContainerFragment extends Fragment implements
-        AddGroupFragment.OnAddFragmentInteractionListener,
-        GroupFragment.OnGroupFragmentInteractionListener{
-    Fragment fragment;
 
+public class MyTaskContainerFragment extends Fragment implements MyTaskDetailsFragment.OnFragmentInteractionListener, MyTaskFragment.OnMyTaskFragmentInteractionListener{
+    Fragment fragment;
 
     FragmentManager fragmentManager;
 
-    public GroupContainerFragment() {
+
+    public MyTaskContainerFragment() {
         // Required empty public constructor
     }
 
-
-    public static GroupContainerFragment newInstance(String param1, String param2) {
-        GroupContainerFragment fragment = new GroupContainerFragment();
+    public static MyTaskContainerFragment newInstance(String param1, String param2) {
+        MyTaskContainerFragment fragment = new MyTaskContainerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -46,32 +39,42 @@ public class GroupContainerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_group_container, container, false);
+        View view =   inflater.inflate(R.layout.fragment_my_task_container, container, false);
+
         fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new GroupFragment();
-        ((GroupFragment)fragment).setListener(this);
-        fragmentTransaction.add(R.id.group_container, fragment);
+        fragment = new MyTaskFragment();
+        System.out.println("setting lister");
+        ((MyTaskFragment)fragment).setListener(this);
+        fragmentTransaction.add(R.id.my_task_container, fragment);
         fragmentTransaction.commit();
+
+
 
         return view;
-    }
-
-    @Override
-    public void onSave() {
 
     }
 
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+
+    }
+
+
     @Override
-    public void onAddClicked() {
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onTaskClicked() {
+        System.out.println("Add Task clicked");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        System.out.println("onAdd clicked");
-        fragment = new AddGroupFragment();
-        ((AddGroupFragment)fragment).setListener(this);
+        fragment = new MyTaskDetailsFragment();
+        ((MyTaskDetailsFragment)fragment).setListener(this);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.group_container, fragment);
+        fragmentTransaction.replace(R.id.my_task_container, fragment);
         fragmentTransaction.commit();
+
     }
-
-
 }

@@ -26,16 +26,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-            case 0:
-                return new GroupContainerFragment();
-               // return new MyTaskFragment();
-            case 1:
-               // return new GroupFragment();
-                return new MyTaskFragment();
-            case 2:
-                return new SettingFragment();
-        }
+
         return fragmentList.get(position);
     }
 
@@ -58,5 +49,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter
     }
 
 
+
     }
+
 

@@ -1,11 +1,13 @@
 package whatsdone.app.whatsdone;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +22,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import whatsdone.app.whatsdone.adapters.TaskInnerGroupRecyclerViewAdapter;
 import whatsdone.app.whatsdone.model.TaskInnerGroup;
@@ -32,6 +33,8 @@ public class InnerGroupTaskFragment extends Fragment {
     private FloatingActionButton mainFab;
     private Toolbar toolbar;
     private MenuItem menuItem;
+
+
 
 
     @Override
@@ -84,11 +87,14 @@ public class InnerGroupTaskFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+               if (getActivity() != null)
+                    getActivity().onBackPressed();
             }
         });
 
+        toolbar.setTitle("task list");
         return view;
+
     }
 
     @Override
@@ -96,6 +102,51 @@ public class InnerGroupTaskFragment extends Fragment {
 
         inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.discussion:
+                System.out.println("discussion clicked");
+                System.out.println("in click");
+
+
+                return true;
+
+
+            case R.id.settings:
+
+                System.out.println("settings clicked");
+                return false;
+
+             default:
+                 break;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        System.out.println("method on start ");
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("method onResume");
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
     }
 
 

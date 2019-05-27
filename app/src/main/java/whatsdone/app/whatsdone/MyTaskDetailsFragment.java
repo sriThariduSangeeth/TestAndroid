@@ -8,21 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.support.v7.widget.Toolbar;
 
-public class AddGroupFragment extends Fragment {
 
-    private OnAddFragmentInteractionListener mListener;
-    Toolbar toolbar;
+public class MyTaskDetailsFragment extends Fragment  {
 
-    public AddGroupFragment() {
+    private OnFragmentInteractionListener mListener;
+
+    public MyTaskDetailsFragment() {
         // Required empty public constructor
     }
 
-
-    public static GroupContainerFragment newInstance(String param1, String param2) {
-        GroupContainerFragment fragment = new GroupContainerFragment();
+    public static MyTaskDetailsFragment newInstance(String param1, String param2) {
+        MyTaskDetailsFragment fragment = new MyTaskDetailsFragment();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,21 +36,22 @@ public class AddGroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
-        return inflater.inflate(R.layout.fragment_add_group, container, false);
-
+        return inflater.inflate(R.layout.fragment_my_task_details, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onSave();
+            mListener.onFragmentInteraction(uri);
         }
     }
 
-    public void setListener(OnAddFragmentInteractionListener handler) {
-       mListener = handler;
+    public void setListener(MyTaskFragment.OnMyTaskFragmentInteractionListener handler) {
+        mListener = (OnFragmentInteractionListener) handler;
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
     }
 
     @Override
@@ -70,8 +70,8 @@ public class AddGroupFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnAddFragmentInteractionListener {
+    public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSave();
+        void onFragmentInteraction(Uri uri);
     }
 }

@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +34,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
-
-    private ItemClickListener clickListener;
+    Toolbar toolbar;
 
 
     @Override
@@ -54,18 +55,13 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         }
 
         adapter = new GroupsRecyclerViewAdapter(groups, getContext());
-//        adapter = new GroupsRecyclerViewAdapter(groups,this);
         myrecycler.setAdapter(adapter);
         System.out.println("oncreateview");
-
-
 
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
         this.presenter.loadGroups();
-
-      //  this.presenter.onItemClick(this,groups.size());
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
@@ -79,12 +75,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
             }
         });
-     //   setHasOptionsMenu(true);
+
         return view;
-
-
-
-
 
     }
 
@@ -104,6 +96,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         void onAddClicked();
 
+
     }
 
     public void setListener(OnGroupFragmentInteractionListener handler) {
@@ -116,4 +109,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         listener = null;
     }
 
+
 }
+

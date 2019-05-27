@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,29 +92,9 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                 Fragment myFragment = new InnerGroupTaskFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-               /* Context context = v.getContext();
-                Intent intent = new Intent(context, InnerGroupTaskFragment.class);
-                context.startActivity(intent);   */
-            }
+                          }
         });
-        /*
-        holder.setClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int position, boolean isLongClick) {
-                if(isLongClick)
-                {
-                    System.out.println("Long clicked");
-                }
-                else
-                {
-                    System.out.println("clicked");
-                    AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                    Fragment myFragment = new Group_fragment_0();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_groups, myFragment).addToBackStack(null).commit();
 
-                }
-            }
-        }); */
 
     }
 
@@ -125,8 +106,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
-      //  private TextView textViewMenu;
-      //  private ItemClickListener clickListener;
+
         private ImageView imageView;
 
         public RecyclerViewHolder(@NonNull View itemView) {
@@ -134,13 +114,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
             textView = itemView.findViewById(R.id.group_text);
             imageView = itemView.findViewById(R.id.image_view_group);
-          //  textViewMenu = itemView.findViewById(R.id.group_text_view_menu);
 
-
-            //this.itemClickListener = itemClickListener;
-
-          //  itemView.setOnLongClickListener(this);
-            //itemView.setOnClickListener(this);
 
         }
 
