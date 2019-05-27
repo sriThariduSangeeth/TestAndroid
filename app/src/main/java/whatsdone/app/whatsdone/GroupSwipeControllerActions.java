@@ -1,6 +1,6 @@
 package whatsdone.app.whatsdone;
 
-public abstract class SwipeControllerActions {
+public abstract class GroupSwipeControllerActions {
     public void onLeftClicked(int position)
     {}
 

@@ -1,25 +1,19 @@
 package whatsdone.app.whatsdone;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 
 import whatsdone.app.whatsdone.adapters.GroupsRecyclerViewAdapter;
-import whatsdone.app.whatsdone.adapters.SwipeController;
 
 public class GroupsActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Context context=this;
     private Toolbar toolbar;
-    public static GroupsActivity instance;
+    private static GroupsActivity instance;
     private GroupContainerFragment groupContainerFragment;
     private MyTaskContainerFragment myTaskContainerFragment;
     private SettingFragment settingFragment;
@@ -36,7 +30,7 @@ public class GroupsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
-        tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
 
        // getAllWidgets();
         setupTabLayout();
@@ -107,7 +101,7 @@ public class GroupsActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Settings").setIcon(R.drawable.settings_tab_icon));
     }
 
-    public void setupRecyclerView()
+  /*  public void setupRecyclerView()
     {
         // List<Group> groups = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.group_recycler_view);
@@ -115,8 +109,8 @@ public class GroupsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        SwipeController swipeController;
-        swipeController = new SwipeController(new SwipeControllerActions()
+        GroupSwipeController swipeController;
+        swipeController = new GroupSwipeController(new GroupSwipeControllerActions()
         {
             @Override
             public void onRightClicked(int position) {
@@ -135,6 +129,8 @@ public class GroupsActivity extends AppCompatActivity {
             }
         });
     }
+
+    */
 
 
 }

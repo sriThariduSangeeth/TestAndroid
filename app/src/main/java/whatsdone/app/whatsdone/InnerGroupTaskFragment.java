@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whatsdone.app.whatsdone.adapters.TaskInnerGroupRecyclerViewAdapter;
+import whatsdone.app.whatsdone.adapters.TaskSwipeController;
 import whatsdone.app.whatsdone.model.TaskInnerGroup;
 
 public class InnerGroupTaskFragment extends Fragment {
@@ -93,6 +95,14 @@ public class InnerGroupTaskFragment extends Fragment {
         });
 
         toolbar.setTitle("task list");
+
+
+        //swipe
+        TaskSwipeController taskswipeController = new TaskSwipeController(null);
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskswipeController);
+      //  RecyclerView recyclerView = view.findViewById(R.id.task_inner_group_recycler_view);
+        itemTouchhelper.attachToRecyclerView(myrecycler);
+
         return view;
 
     }

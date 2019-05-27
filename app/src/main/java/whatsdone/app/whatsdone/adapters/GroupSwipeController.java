@@ -1,6 +1,5 @@
 package whatsdone.app.whatsdone.adapters;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,20 +10,22 @@ import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 import android.view.MotionEvent;
 import android.view.View;
 
-import whatsdone.app.whatsdone.SwipeControllerActions;
+import whatsdone.app.whatsdone.GroupSwipeControllerActions;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
-public class SwipeController extends Callback {
+public class GroupSwipeController extends Callback {
 
     private boolean swipeBack = false;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private RectF buttonInstance = null;
-    private SwipeControllerActions buttonsActions = null;
+    private GroupSwipeControllerActions buttonsActions;
+   // private GroupSwipeControllerActions buttonsActions = null;
+
     private ButtonsState buttonShowedState = ButtonsState.GONE;
     private static final float buttonWidth = 300;
 
-    public SwipeController(SwipeControllerActions buttonsActions) {
+    public GroupSwipeController(GroupSwipeControllerActions buttonsActions) {
         this.buttonsActions = buttonsActions;
     }
 
@@ -37,17 +38,17 @@ public class SwipeController extends Callback {
 
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         return makeMovementFlags(0, LEFT | RIGHT);
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         return false;
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
 
@@ -200,7 +201,7 @@ public class SwipeController extends Callback {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    SwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
+                    GroupSwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
