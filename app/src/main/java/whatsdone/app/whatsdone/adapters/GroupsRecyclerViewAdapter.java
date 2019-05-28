@@ -2,7 +2,9 @@ package whatsdone.app.whatsdone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import java.util.List;
 
+import whatsdone.app.whatsdone.GroupSwipeControllerActions;
 import whatsdone.app.whatsdone.InnerGroupTaskFragment;
 import whatsdone.app.whatsdone.R;
 import whatsdone.app.whatsdone.model.Group;
@@ -41,7 +45,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
         System.out.println("group recycler view");
-
 
 
         return new RecyclerViewHolder(view);
@@ -89,6 +92,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 */
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
@@ -96,7 +100,8 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                 Fragment myFragment = new InnerGroupTaskFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-                          }
+
+            }
         });
 
 

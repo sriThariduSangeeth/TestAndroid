@@ -15,30 +15,42 @@
 
     <TextView
         android:id="@+id/group_details"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
 
-        android:layout_marginTop="60dp"
+
         android:paddingEnd="10sp"
         android:paddingRight="10sp"
         android:paddingTop="5sp"
         android:text="@string/GroupDetails"
         android:textSize="15sp" />
 
-    <TextView
+    <EditText
         android:id="@+id/group_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
 
-        android:layout_marginTop="82dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100sp"
         android:paddingEnd="10sp"
         android:paddingRight="10sp"
         android:paddingTop="10sp"
-        android:text="@string/group_name"
+        android:text="Group name"
         android:textColor="@color/black"
         android:textSize="20sp" />
+
+   <de.hdodenhof.circleimageview.CircleImageView
+       android:id="@+id/group_photo_image_view"
+       android:layout_width="50sp"
+       android:layout_height="50sp"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentEnd="true"
+       android:layout_marginTop="30dp"
+
+       />
+
 
     <TextView
         android:id="@+id/teamPhoto"
@@ -47,21 +59,23 @@
 
         android:layout_alignParentTop="true"
 
-        android:layout_marginTop="120dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:paddingEnd="10sp"
         android:paddingRight="10sp"
         android:paddingTop="10sp"
-        android:text="@string/teamPhoto"
+        android:text="@string/groupPhoto"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
     <TextView
         android:id="@+id/members"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
 
-        android:layout_marginTop="203dp"
+        android:layout_marginTop="180dp"
         android:paddingEnd="10sp"
         android:paddingRight="10sp"
         android:paddingTop="5sp"
@@ -72,8 +86,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10sp"
 
-        android:text="@string/CreateGroup" />
+        android:text="@string/Save" />
 
     <Button
         android:id="@+id/addMembers"
@@ -82,7 +97,7 @@
         android:layout_alignParentBottom="true"
 
 
-        android:layout_marginBottom="205dp"
+        android:layout_marginBottom="260sp"
         android:text="@string/AddMembers" />
 
 </RelativeLayout>

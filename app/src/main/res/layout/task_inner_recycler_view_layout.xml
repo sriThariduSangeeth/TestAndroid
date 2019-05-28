@@ -10,6 +10,7 @@
     android:paddingBottom="20sp"
     android:paddingLeft="20sp"
     android:paddingRight="20sp"
+    android:background="@color/white"
 
     android:layout_weight="20"
     android:layout_centerVertical="true"
@@ -40,7 +41,7 @@
 
         android:layout_alignTop="@+id/image_view_task_inner_group"
         android:layout_marginStart="100dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/black"
         android:textSize="20sp"
 
 

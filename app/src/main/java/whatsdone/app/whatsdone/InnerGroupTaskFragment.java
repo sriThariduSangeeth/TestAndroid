@@ -2,9 +2,11 @@ package whatsdone.app.whatsdone;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +22,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +46,8 @@ public class InnerGroupTaskFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //OnBackPressedCallback callback = new OnBackPressedCallback(true);
         setHasOptionsMenu(true);
 
 
@@ -54,6 +60,9 @@ public class InnerGroupTaskFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_inner_group_task, container, false);
 
         mainFab = view.findViewById(R.id.add_new_task);
+        toolbar =  getActivity().findViewById(R.id.toolbar);
+
+
 
         RecyclerView myrecycler = view.findViewById(R.id.task_inner_group_recycler_view);
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,24 +93,13 @@ public class InnerGroupTaskFragment extends Fragment {
         });
 
 
-        toolbar =  getActivity().findViewById(R.id.toolbar);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               if (getActivity() != null)
-                    getActivity().onBackPressed();
-            }
-        });
-
-        toolbar.setTitle("task list");
 
 
-        //swipe
+
+       //swipe
         TaskSwipeController taskswipeController = new TaskSwipeController(null);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskswipeController);
-      //  RecyclerView recyclerView = view.findViewById(R.id.task_inner_group_recycler_view);
-        itemTouchhelper.attachToRecyclerView(myrecycler);
+         itemTouchhelper.attachToRecyclerView(myrecycler);
 
         return view;
 

@@ -1,7 +1,9 @@
 package whatsdone.app.whatsdone;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +34,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private OnGroupFragmentInteractionListener listener;
     Toolbar toolbar;
     private View view;
+    GroupSwipeController groupSwipeController;
+    private RecyclerView myrecycler;
     //private GroupSwipeControllerActions buttonsActions = null;
 
 
@@ -41,7 +45,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
 
-        RecyclerView myrecycler = view.findViewById(R.id.group_recycler_view);
+        myrecycler = view.findViewById(R.id.group_recycler_view);
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
@@ -74,34 +78,14 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             }
         });
 
-        GroupSwipeController groupSwipeController = new GroupSwipeController(null);
+        groupSwipeController= new GroupSwipeController(null);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(groupSwipeController);
-      //  RecyclerView recyclerView = view.findViewById(R.id.group_recycler_view);
         itemTouchhelper.attachToRecyclerView(myrecycler);
 
 
-      //  GroupSwipeController swipeController;
-  /*      swipeController = new GroupSwipeController(new GroupSwipeControllerActions()
-        {
-            @Override
-            public void onRightClicked(int position) {
-                adapter.groups.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-        });
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.onDraw(c, parent, state);
-            }
-        });
-
-*/
-        return view;
+        setupRecyclerView();
+     return view;
 
     }
 
@@ -132,6 +116,28 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    private void setupRecyclerView()
+    {
+
+        groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                super.onRightClicked(position);
+                System.out.println("delete clicked");
+            }
+        });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(groupSwipeController);
+        itemTouchHelper.attachToRecyclerView(myrecycler);
+
+        myrecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+            }
+        });
     }
 
 

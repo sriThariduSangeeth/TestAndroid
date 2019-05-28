@@ -4,7 +4,11 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import whatsdone.app.whatsdone.adapters.GroupsRecyclerViewAdapter;
 
@@ -32,13 +36,20 @@ public class GroupsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_groups);
         tabLayout = findViewById(R.id.tab_layout);
 
-       // getAllWidgets();
+
         setupTabLayout();
         bindWidgetsWithAnEvent();
 
 
         toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //finish();
+            }
+        });
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
 
@@ -93,44 +104,13 @@ public class GroupsActivity extends AppCompatActivity {
         groupContainerFragment = new GroupContainerFragment();
         myTaskContainerFragment = new MyTaskContainerFragment();
         settingFragment = new SettingFragment();
-       // groupFragment = new GroupFragment();
-      //  myTaskFragment = new MyTaskFragment();
 
         tabLayout.addTab(tabLayout.newTab().setText("Groups").setIcon(R.drawable.group_tab_icon),true);
         tabLayout.addTab(tabLayout.newTab().setText("My Tasks").setIcon(R.drawable.task_tab_icon));
         tabLayout.addTab(tabLayout.newTab().setText("Settings").setIcon(R.drawable.settings_tab_icon));
     }
 
-  /*  public void setupRecyclerView()
-    {
-        // List<Group> groups = new ArrayList<>();
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.group_recycler_view);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(recyclerViewAdapter);
-
-        GroupSwipeController swipeController;
-        swipeController = new GroupSwipeController(new GroupSwipeControllerActions()
-        {
-            @Override
-            public void onRightClicked(int position) {
-                recyclerViewAdapter.groups.remove(position);
-                recyclerViewAdapter.notifyItemRemoved(position);
-            }
-        });
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.onDraw(c, parent, state);
-            }
-        });
-    }
-
-    */
 
 
 }
