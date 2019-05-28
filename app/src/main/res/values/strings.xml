@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">WhatsDone</string>
+    <string name="Terms_and_Privacy">Tap "Agree and continue" to accept the <font color='#01C6DB'>WhatsDone Terms of Service and Privacy Policy</font> </string>
+    <string name="agree_and_continue">AGREE AND CONTINUE</string>
+    <string name="next">NEXT</string>
+    <string name="nav_cal">Calender</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_pro">Profile</string>
+    <string name="nav_appointment">Appointment</string>
 </resources>
