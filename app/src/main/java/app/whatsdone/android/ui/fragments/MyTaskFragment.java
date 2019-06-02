@@ -40,7 +40,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view = inflater.inflate(R.layout.fragment_task_my_, container, false);
+       View view = inflater.inflate(R.layout.fragment_task_my, container, false);
 
         List<MyTask> tasks = new ArrayList<>();
         System.out.println("my task on create view");

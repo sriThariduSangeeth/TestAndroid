@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.utils.Constants;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -118,7 +119,7 @@ public class SplashActivity extends AppCompatActivity {
             layoutcenter.animate().setStartDelay(550).translationY(-halftohalfhight*2).scaleX(0.8f).scaleY(0.8f);
             progressBar.animate().setStartDelay(400).translationY(1000).alpha(0);
 
-            if (false) {
+            if (Constants.IS_LOGGED_IN) {
                 // change activity to chat screen
 
                 Runnable changeChatWindow = new Runnable() {
