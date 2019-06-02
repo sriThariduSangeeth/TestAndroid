@@ -1,6 +1,8 @@
-package app.whatsdone.android.ui.model;
+package app.whatsdone.android.model;
 
-public class TaskInnerGroup {
+public class MyTask {
+
+  //  public static final int text_type = 1;
     private String taskName;
 
     public String getTaskName() {

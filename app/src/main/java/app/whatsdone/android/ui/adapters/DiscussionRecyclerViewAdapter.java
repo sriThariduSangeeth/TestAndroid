@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.ui.model.Chat;
+import app.whatsdone.android.model.Chat;
 
 public class DiscussionRecyclerViewAdapter extends RecyclerView.Adapter<DiscussionRecyclerViewAdapter.MyRecyclerViewHolder> {
     private List<Chat> chatsList;

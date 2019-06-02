@@ -25,7 +25,7 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
-import app.whatsdone.android.ui.model.TaskInnerGroup;
+import app.whatsdone.android.model.TaskInnerGroup;
 
 public class InnerGroupTaskFragment extends Fragment {
 

@@ -12,7 +12,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.ui.model.TaskInnerGroup;
+import app.whatsdone.android.model.TaskInnerGroup;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder>{
     private List<TaskInnerGroup> taskList;

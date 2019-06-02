@@ -15,7 +15,7 @@ import java.util.List;
 
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
-import app.whatsdone.android.ui.model.Group;
+import app.whatsdone.android.model.Group;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     public List<Group> groups;

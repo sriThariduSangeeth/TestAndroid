@@ -20,7 +20,7 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
-import app.whatsdone.android.ui.model.Group;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
 import app.whatsdone.android.ui.view.GroupFragmentView;

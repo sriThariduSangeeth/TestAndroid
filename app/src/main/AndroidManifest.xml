@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         
         >
-        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity">
+        <activity android:name="app.whatsdone.android.ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
 
-
+        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"/>
+        <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
 
 
      </application>

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.ui.model.MyTask;
+import app.whatsdone.android.model.MyTask;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 

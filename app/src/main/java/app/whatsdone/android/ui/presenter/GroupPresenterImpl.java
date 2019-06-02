@@ -3,7 +3,7 @@ package app.whatsdone.android.ui.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.whatsdone.android.ui.model.Group;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 
 public class GroupPresenterImpl implements GroupPresenter{

@@ -17,7 +17,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
-import app.whatsdone.android.ui.model.MyTask;
+import app.whatsdone.android.model.MyTask;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;

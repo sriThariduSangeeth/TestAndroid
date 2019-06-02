@@ -1,4 +1,4 @@
-package app.whatsdone.android.ui.model;
+package app.whatsdone.android.model;
 
 public class Chat {
     private String chatId;
