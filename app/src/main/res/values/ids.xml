@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="discussion_text_view" type="id">discussion_text_view</item>
+    <item name="discussion_text_view" type="id"></item>
 </resources>

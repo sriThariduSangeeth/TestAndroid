@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/my_task_layout"
-    tools:context=".MyTaskFragment"
+    tools:context=".ui.fragments.MyTaskFragment"
 
     >
 

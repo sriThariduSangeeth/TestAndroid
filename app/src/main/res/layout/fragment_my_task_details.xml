@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyTaskDetailsFragment"
+    tools:context=".ui.fragments.MyTaskDetailsFragment"
     android:id="@+id/my_task_details">
 
     <!-- TODO: Update blank fragment layout -->
