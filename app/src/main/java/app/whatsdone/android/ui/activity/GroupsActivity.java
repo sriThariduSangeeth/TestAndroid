@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
 import app.whatsdone.android.ui.fragments.GroupFragment;
@@ -39,7 +40,7 @@ public class GroupsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_groups);
         tabLayout = findViewById(R.id.tab_layout);
 
-
+        new GroupServiceImpl().loadGroup();
         setupTabLayout();
         bindWidgetsWithAnEvent();
 
