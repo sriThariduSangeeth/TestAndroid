@@ -24,6 +24,9 @@
 
         <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
+        <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
+        <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
+        <activity android:name="app.whatsdone.android.ui.activity.PhoneNoVerificationActivity"/>
 
 
      </application>
