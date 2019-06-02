@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/recycler_view_layout"
+    android:paddingTop="20sp"
+    android:paddingBottom="20sp"
+    android:paddingLeft="20sp"
+    android:paddingRight="20sp"
+    android:background="@color/white"
+    android:layout_weight="20"
+    android:layout_centerVertical="true"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_view_group"
+        android:layout_width="50sp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/done_icon"
+        android:paddingRight="20sp"
+        android:paddingEnd="20sp"
+        android:contentDescription="done image"
+
+        >
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+
+    <TextView
+        android:id="@+id/group_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50sp"
+        android:layout_weight="3"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="225dp"
+
+        >
+
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/group_task_assigned"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image_view_group"
+        android:layout_marginLeft="50sp"
+
+        android:text="@string/text1"
+        android:textColor="#444"
+        android:textSize="15sp"
+        android:paddingBottom="10sp"
+
+        />
+
+        <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/time"
+        android:textSize="15sp"
+        android:paddingRight="20sp"
+        android:paddingEnd="20sp"
+    />
+
+    <ImageView
+        android:id="@+id/group_chat_icon"
+        android:layout_width="40sp"
+        android:layout_height="30sp"
+        android:layout_alignBottom="@+id/image_view_group"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="20sp"
+        android:paddingEnd="20sp"
+        android:src="@drawable/chat_icon"
+        android:contentDescription="chat image"/>
+
+
+<!--    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/grey"
+        android:paddingBottom="10sp" />
+-->
+
+ <!--   <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&#8942;"
+        android:layout_alignParentRight="true"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_alignParentTop="true"
+        />
+
+
+    <TextView
+        android:id="@+id/group_text_view_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
+-->
+</RelativeLayout>

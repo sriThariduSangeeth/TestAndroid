@@ -10,4 +10,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="MyEditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
 </resources>

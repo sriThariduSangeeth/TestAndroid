@@ -3,7 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="blackColor">#000</color>
+
+    <color name="grey">#dfdfdf</color>
+    <color name="black">#000000</color>
+    <color name="white">#fff</color>
+
     <color name="lightOrange">#fdf2df</color>
     <color name="lightDarkerOrange">#ebd6ab</color>
     <color name="colorte">#a932e1</color>
@@ -13,7 +17,6 @@
     <color name="grey29">#111111</color>
     <color name="bgColor">#1e2744</color>
     <color name="customPurple">#273359</color>
-    <color name="white">#ffffff</color>
     <color name="darkGrey">#292929</color>
     <color name="White">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>

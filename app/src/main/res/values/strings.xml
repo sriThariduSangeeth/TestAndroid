@@ -1,5 +1,50 @@
 <resources>
     <string name="app_name">WhatsDone</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="groups">Groups</string>
+    <string name="tasks">Tasks</string>
+    <string name="settings1">Settings1</string>
+    <string name="group1">Group 1</string>
+    <string name="group3">Group 3</string>
+    <string name="group2">Group 2</string>
+    <string name="task1">Task 1</string>
+    <string name="task2">Task 2</string>
+    <string name="task3">Task 3</string>
+    <string name="group_menu_item1">Create new group</string>
+    <string name="group_menu_item2">Menu item 2</string>
+    <string name="group_menu_item3">Menu item 3</string>
+    <string name="text1">text1</string>
+    <string name="time">11.00</string>
+    <string name="NewActivity">New Activity</string>
+    <string name="GroupDetails">Group Details</string>
+    <string name="group_name">Group name</string>
+    <string name="CreateGroup">Create Group</string>
+    <string name="Discussion">Discussion</string>
+    <string name="NewTask">New Task</string>
+    <string name="done_image">done image</string>
+    <string name="Task_Name">Task Name</string>
+    <string name="teamPhoto">Team Photo</string>
+    <string name="members">Members</string>
+    <string name="AddMembers">Add members</string>
+    <string name="settings">Settings</string>
+    <string name="discussion">Discussion</string>
+    <string name="TaskDetails">My Task 1</string>
+    <string name="task_owner">task owner</string>
+    <string name="Save">Save</string>
+    <string name="groupPhoto">Group photo</string>
+    <string name="task_title">Title</string>
+
+
+    <string-array name="planets">
+        <item>Todo</item>
+        <item>item1</item>
+        <item>item2</item>
+
+
+    </string-array>
+
     <string name="Terms_and_Privacy">Tap "Agree and continue" to accept the <font color='#01C6DB'>WhatsDone Terms of Service and Privacy Policy</font> </string>
     <string name="agree_and_continue">AGREE AND CONTINUE</string>
     <string name="next">NEXT</string>
