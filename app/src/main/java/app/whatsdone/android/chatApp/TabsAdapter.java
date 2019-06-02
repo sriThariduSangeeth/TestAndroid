@@ -1,12 +1,12 @@
-package app.whatsdone.release.chatApp;
+package app.whatsdone.android.chatApp;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import app.whatsdone.release.chatApp.fragmentGroup.GroupFragment;
-import app.whatsdone.release.chatApp.fragmentGroup.SettingFragment;
-import app.whatsdone.release.chatApp.fragmentGroup.TaskFragment;
+import app.whatsdone.android.chatApp.fragmentGroup.GroupFragment;
+import app.whatsdone.android.chatApp.fragmentGroup.SettingFragment;
+import app.whatsdone.android.chatApp.fragmentGroup.TaskFragment;
 
 public class TabsAdapter extends FragmentStatePagerAdapter {
 

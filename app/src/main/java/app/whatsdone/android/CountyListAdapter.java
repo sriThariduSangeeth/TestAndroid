@@ -1,4 +1,4 @@
-package app.whatsdone.release;
+package app.whatsdone.android;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CountyListAdapter extends ArrayAdapter <CountryJsonKey>{

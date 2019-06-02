@@ -1,4 +1,4 @@
-package app.whatsdone.release;
+package app.whatsdone.android;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

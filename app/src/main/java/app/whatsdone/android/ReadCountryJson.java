@@ -1,4 +1,4 @@
-package app.whatsdone.release;
+package app.whatsdone.android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

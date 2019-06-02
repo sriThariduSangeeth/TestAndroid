@@ -1,7 +1,6 @@
-package app.whatsdone.release;
+package app.whatsdone.android;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class CountryJsonKey {
 

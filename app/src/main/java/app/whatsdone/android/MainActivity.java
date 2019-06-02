@@ -1,4 +1,4 @@
-package app.whatsdone.release;
+package app.whatsdone.android;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,8 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import app.whatsdone.release.chatApp.ChatGroupActivity;
-import app.whatsdone.release.firstLogin.LogingMainActivity;
+import app.whatsdone.android.chatApp.ChatGroupActivity;
+import app.whatsdone.android.firstLogin.LogingMainActivity;
 
 public class MainActivity extends AppCompatActivity {
 

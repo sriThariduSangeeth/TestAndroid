@@ -1,4 +1,4 @@
-package app.whatsdone.release.firstLogin;
+package app.whatsdone.android.firstLogin;
 
 import android.app.Dialog;
 import android.content.res.Resources;
@@ -18,12 +18,12 @@ import android.widget.ListView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import app.whatsdone.release.CountyListAdapter;
-import app.whatsdone.release.DownloadImageFromInternet;
-import app.whatsdone.release.R;
-import app.whatsdone.release.ReadCountryJson;
+import app.whatsdone.android.CountyListAdapter;
+import app.whatsdone.android.DownloadImageFromInternet;
+import app.whatsdone.android.R;
+import app.whatsdone.android.ReadCountryJson;
 
-import static app.whatsdone.release.ReadCountryJson.countyArray;
+import static app.whatsdone.android.ReadCountryJson.countyArray;
 
 
 public class LogingMainActivity extends AppCompatActivity {

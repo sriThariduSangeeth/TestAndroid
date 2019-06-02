@@ -1,7 +1,6 @@
-package app.whatsdone.release.chatApp;
+package app.whatsdone.android.chatApp;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
-import app.whatsdone.release.R;
+import app.whatsdone.android.R;
 
 public class ChatGroupActivity extends AppCompatActivity {
 
