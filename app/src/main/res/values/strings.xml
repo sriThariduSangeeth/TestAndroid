@@ -52,4 +52,12 @@
     <string name="nav_search">Search</string>
     <string name="nav_pro">Profile</string>
     <string name="nav_appointment">Appointment</string>
+    <string name="select_from_contacts">Select from contacts</string>
+    <string name="set_due_date">Set due date</string>
+    <string name="checklist">CHECKLIST</string>
+    <string name="assigned_to">Assigned to</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="due_date">Due date</string>
+    <string name="choose_one_of_the_status">Choose one of the status</string>
 </resources>

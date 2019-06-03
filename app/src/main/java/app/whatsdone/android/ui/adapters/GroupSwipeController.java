@@ -11,7 +11,6 @@ import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 import android.view.MotionEvent;
 import android.view.View;
 
-import app.whatsdone.android.ui.GroupSwipeControllerActions;
 import app.whatsdone.android.model.ButtonsState;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
@@ -245,6 +244,11 @@ public class GroupSwipeController extends Callback {
     }
 
 
+    enum ButtonsState {
+        GONE,
+        LEFT_VISIBLE,
+        RIGHT_VISIBLE
+    }
 
 
 }

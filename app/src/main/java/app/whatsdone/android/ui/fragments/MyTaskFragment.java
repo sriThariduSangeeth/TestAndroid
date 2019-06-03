@@ -46,7 +46,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
         System.out.println("my task on create view");
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask();
+            MyTask task = new MyTask("");
             task.setTaskName("My task " +i);
             tasks.add(task);
 

@@ -25,7 +25,7 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
 
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask();
+            MyTask task = new MyTask("");
             task.setTaskName("MyTask " +i);
             tasks.add(task);
 

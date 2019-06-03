@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.fragments;
 
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,14 +27,22 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
 import app.whatsdone.android.model.TaskInnerGroup;
+import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
+import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
+import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
+import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 
-public class InnerGroupTaskFragment extends Fragment {
+public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
     private List<TaskInnerGroup> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private FloatingActionButton mainFab;
     private Toolbar toolbar;
     private MenuItem menuItem;
+    private TaskInnerGroupPresenter taskInnerGroupPresenter;
+    private RecyclerView myRecycler;
+    private TaskSwipeController taskSwipeController;
+
 
 
 
@@ -59,19 +68,15 @@ public class InnerGroupTaskFragment extends Fragment {
 
 
 
-        RecyclerView myrecycler = view.findViewById(R.id.task_inner_group_recycler_view);
-        myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
-        List<TaskInnerGroup> tasks = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            TaskInnerGroup task = new TaskInnerGroup();
-            task.setTaskName("Task " + i);
-            tasks.add(task);
-        }
+        this.taskInnerGroupPresenter = new TaskInnerGroupPresenterImpl();
+        this.taskInnerGroupPresenter.init(this);
+        this.taskInnerGroupPresenter.loadTasksInner();
 
 
-        adapter = new TaskInnerGroupRecyclerViewAdapter(tasks, getContext());
-        myrecycler.setAdapter(adapter);
+
+
 
         //fab
         mainFab.setOnClickListener(new View.OnClickListener() {
@@ -91,12 +96,8 @@ public class InnerGroupTaskFragment extends Fragment {
 
 
 
-       //swipe
-        TaskSwipeController taskswipeController = new TaskSwipeController(null);
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskswipeController);
-         itemTouchhelper.attachToRecyclerView(myrecycler);
-
-        return view;
+        setupRecyclerView();
+       return view;
 
     }
 
@@ -135,14 +136,12 @@ public class InnerGroupTaskFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("method on start ");
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("method onResume");
 
     }
 
@@ -152,5 +151,58 @@ public class InnerGroupTaskFragment extends Fragment {
 
     }
 
+
+
+    @Override
+    public void updateTaskInner(List<TaskInnerGroup> tasks) {
+        this.taskInnerGroups = tasks;
+    }
+
+    private void setupRecyclerView()
+    {
+        myRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new TaskInnerGroupRecyclerViewAdapter(taskInnerGroups, getContext());
+        myRecycler.setAdapter(adapter);
+
+        taskSwipeController = new TaskSwipeController(new TaskSwipeControllerAction() {
+
+            @Override
+            public void onTaskDeleteClicked(int position) {
+                System.out.println("delete");
+//                adapter.taskList.remove(position);
+//                adapter.notifyItemRemoved(position);
+//                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+
+            }
+
+
+            @Override
+            public void onTaskOnHoldClicked(int position) {
+                System.out.println("On Hold");
+
+            }
+
+
+            @Override
+            public void onTaskInProgressClicked(int position) {
+                super.onTaskInProgressClicked(position);
+            }
+
+            @Override
+            public void onTaskDoneClicked(int position) {
+                super.onTaskDoneClicked(position);
+            }
+        });
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
+        itemTouchhelper.attachToRecyclerView(myRecycler);
+
+        myRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                taskSwipeController.onDraw(c);
+            }
+        });
+
+    }
 
 }
