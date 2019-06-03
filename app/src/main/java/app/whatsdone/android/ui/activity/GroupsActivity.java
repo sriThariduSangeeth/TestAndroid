@@ -40,7 +40,6 @@ public class GroupsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_groups);
         tabLayout = findViewById(R.id.tab_layout);
 
-        new GroupServiceImpl().loadGroup();
         setupTabLayout();
         bindWidgetsWithAnEvent();
 

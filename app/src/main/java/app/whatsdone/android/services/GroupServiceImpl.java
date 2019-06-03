@@ -13,8 +13,9 @@ import app.whatsdone.android.model.Group;
 public class GroupServiceImpl implements GroupService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getCanonicalName();
+
     @Override
-    public List<Group> loadGroup() {
+    public void getAllGroups(String userId, GroupServiceListener groupServiceListener) {
         List<Group> groups = new ArrayList<>();
 
         db.collection("groups")
@@ -23,11 +24,36 @@ public class GroupServiceImpl implements GroupService {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d(TAG, document.getId() + " => " + document.getData());
+                            groupServiceListener.onGroupsUpdated(groups);
                         }
                     } else {
                         Log.w(TAG, "Error getting documents.", task.getException());
                     }
                 });
-        return groups;
+    }
+
+    @Override
+    public void create(Group group, GroupServiceListener groupServiceListener) {
+
+    }
+
+    @Override
+    public void update(Group group, GroupServiceListener groupServiceListener) {
+
+    }
+
+    @Override
+    public void delete(String id, GroupServiceListener groupServiceListener) {
+
+    }
+
+    @Override
+    public void subscribe(String userId, GroupServiceListener groupServiceListener) {
+
+    }
+
+    @Override
+    public void unSubscribe() {
+
     }
 }
