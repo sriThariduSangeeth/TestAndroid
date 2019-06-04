@@ -2,10 +2,12 @@ package app.whatsdone.android.ui.adapters;
 
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -23,11 +25,14 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     private RectF buttonInstance = null;
     private TaskSwipeControllerAction buttonsActions;
     private TaskSwipeController.ButtonsState buttonShowedState = TaskSwipeController.ButtonsState.GONE;
-    private static final float buttonWidth = 200;
-    private static final float rightSwipeWidth = 600;
+    private static final float buttonWidth = getScreenWidth()/5;
+    private static final float rightSwipeWidth = buttonWidth*3;
     private  RectF leftButton, rightInProgressButton, rightOnHoldButton, rightDoneButton;
 
 
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
 
 
     public TaskSwipeController(TaskSwipeControllerAction buttonsActions) {
@@ -75,16 +80,12 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != TaskSwipeController.ButtonsState.GONE) {
                 if (buttonShowedState == TaskSwipeController.ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == TaskSwipeController.ButtonsState.RIGHT_VISIBLE)
-                {
-                    dX = Math.min(dX, -rightSwipeWidth);
-
-                }
+                if (buttonShowedState == TaskSwipeController.ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -rightSwipeWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                // buttonShowedState = ButtonsState.GONE;
+
             }
         }
 
@@ -98,7 +99,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
 
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
+       // float buttonWidthWithoutPadding = buttonWidth - 20;
         float corners = 0;
 
         View itemView = viewHolder.itemView;
@@ -111,7 +112,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         drawText("DELETE", c, leftButton, p);
 
         //in progress
-        rightInProgressButton = new RectF(itemView.getRight() - rightSwipeWidth, itemView.getTop(), itemView.getRight()-buttonWidth-buttonWidth, itemView.getBottom());
+        rightInProgressButton = new RectF(itemView.getRight() - rightSwipeWidth, itemView.getTop(), itemView.getRight()-2*buttonWidth, itemView.getBottom());
         p.setColor(Color.YELLOW);
         c.drawRoundRect(rightInProgressButton, corners, corners, p);
         drawText("In Progress", c, rightInProgressButton, p);
@@ -125,7 +126,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
 
 
         //done
-        rightDoneButton = new RectF(itemView.getRight()-buttonWidth-buttonWidth, itemView.getTop(), itemView.getRight()-buttonWidth, itemView.getBottom());
+        rightDoneButton = new RectF(itemView.getRight()-2*buttonWidth, itemView.getTop(), itemView.getRight()-buttonWidth, itemView.getBottom());
         p.setColor(Color.BLUE);
         c.drawRoundRect(rightDoneButton, corners, corners, p);
         drawText("Done", c, rightDoneButton, p);
@@ -134,6 +135,8 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         buttonInstance = null;
         if (buttonShowedState == TaskSwipeController.ButtonsState.RIGHT_VISIBLE) {
             buttonInstance = rightDoneButton;
+            buttonInstance=rightOnHoldButton;
+            buttonInstance=rightInProgressButton;
 
         }
 
@@ -143,7 +146,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     }
 
     private void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 40;
+        float textSize = 30;
         p.setColor(Color.WHITE);
         p.setAntiAlias(true);
         p.setTextSize(textSize);
@@ -159,7 +162,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     }
 
 
-
+//swipe back
     @SuppressLint("ClickableViewAccessibility")
     private void setTouchListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
 
@@ -219,35 +222,40 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     private void setTouchUpListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if (event.getAction() == MotionEvent.ACTION_UP)
+                {
 
                     TaskSwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
-                    buttonsActions.onTaskDeleteClicked(viewHolder.getAdapterPosition());
-                    buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
-                    buttonsActions.onTaskDoneClicked(viewHolder.getAdapterPosition());
-                    buttonsActions.onTaskInProgressClicked(viewHolder.getAdapterPosition());
-
 
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            ///  v.performClick();
                             return false;
                         }
                     });
                     setItemsClickable(recyclerView, true);
                     swipeBack = false;
-                    buttonShowedState = TaskSwipeController.ButtonsState.GONE;
 
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-                            System.out.println("touch up");
-                            // buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                            buttonsActions.onTaskDeleteClicked(viewHolder.getAdapterPosition());
 
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-                            System.out.println("touch up");
+                            if (rightDoneButton.contains(event.getX(), event.getY())) buttonsActions.onTaskDoneClicked(viewHolder.getAdapterPosition());
+
+                            if(rightOnHoldButton.contains(event.getX(), event.getY())) buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
+
+//
+                            if(rightInProgressButton.contains(event.getX(), event.getY()))  buttonsActions.onTaskInProgressClicked(viewHolder.getAdapterPosition());
+
+                              //if(buttonInstance.contains(rightInProgressButton))  buttonsActions.onTaskInProgressClicked(viewHolder.getAdapterPosition());
+//
+//                            if(buttonInstance.contains(rightOnHoldButton)) buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
+
+                            //System.out.println("touch up");
                             // buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
                         }
 
@@ -255,13 +263,13 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
 
                     buttonShowedState = ButtonsState.GONE;
                     currentItemViewHolder = null;
-                    // v.performClick();
+                    ;
                 }
-                // v.performClick();
+
                 return false;
             }
         });
-        //  recyclerView.performClick();
+
     }
 
     private void setItemsClickable(RecyclerView recyclerView, boolean isClickable) {

@@ -36,9 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50sp"
-        android:layout_weight="3"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
+
+        android:textColor="@color/black"
+        android:textSize="15sp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="225dp"
 

@@ -42,6 +42,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private TaskInnerGroupPresenter taskInnerGroupPresenter;
     private RecyclerView myRecycler;
     private TaskSwipeController taskSwipeController;
+    private Fragment fragment;
+    private GroupFragment groupFragment;
 
 
 
@@ -75,9 +77,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         this.taskInnerGroupPresenter.loadTasksInner();
 
 
-
-
-
         //fab
         mainFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +94,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
 
 
+//setHasOptionsMenu(false);
 
+       // groupFragment.setTargetFragment(this,targetCode);
         setupRecyclerView();
        return view;
 
@@ -106,6 +107,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
+
+
     }
 
     @Override
@@ -115,8 +118,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         {
             case R.id.discussion:
                 System.out.println("discussion clicked");
-                System.out.println("in click");
-
 
                 return true;
 
@@ -143,15 +144,35 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onResume() {
         super.onResume();
 
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
+
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        System.out.println(" detach");
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        System.out.println("on destroy view");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        //getTargetFragment().setMenuVisibility(true);
+    }
 
     @Override
     public void updateTaskInner(List<TaskInnerGroup> tasks) {
@@ -169,9 +190,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onTaskDeleteClicked(int position) {
                 System.out.println("delete");
-//                adapter.taskList.remove(position);
-//                adapter.notifyItemRemoved(position);
-//                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                adapter.taskList.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
 
             }
 
@@ -182,15 +203,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             }
 
-
             @Override
             public void onTaskInProgressClicked(int position) {
-                super.onTaskInProgressClicked(position);
+                System.out.println("In progress");
             }
 
             @Override
             public void onTaskDoneClicked(int position) {
-                super.onTaskDoneClicked(position);
+                System.out.println("Done ");
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
@@ -205,4 +225,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+       // setHasOptionsMenu(true);
+    }
 }

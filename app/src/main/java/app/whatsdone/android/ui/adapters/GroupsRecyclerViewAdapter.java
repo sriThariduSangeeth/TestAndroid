@@ -54,7 +54,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         holder.textView.setText(groups.get(position).getGroupName());
-        System.out.println(" group recycler view ");
+
 
         //popup menu with 3 dots
         /*

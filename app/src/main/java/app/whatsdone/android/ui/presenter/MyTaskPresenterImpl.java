@@ -14,7 +14,7 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
     public void initi(MyTaskFragmentView view) {
         this.view = view;
 
-        System.out.println("init task");
+
 
     }
 
@@ -32,6 +32,6 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
         }
 
         this.view.updateTasks(tasks);
-        System.out.println("load tasks");
+
     }
 }

@@ -1,22 +1,28 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
 import app.whatsdone.android.model.ButtonsState;
+import app.whatsdone.android.model.Group;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
 
 public class GroupSwipeController extends Callback {
+
 
     private boolean swipeBack = false;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
@@ -25,21 +31,35 @@ public class GroupSwipeController extends Callback {
    // private GroupSwipeControllerActions buttonsActions = null;
 
     private ButtonsState buttonShowedState = ButtonsState.GONE;
-    private static final float buttonWidth = 300;
+    private static final float buttonWidth = getScreenWidth()/5;
+//    DisplayMetrics displayMetrics = new DisplayMetrics();
+//    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//    int height = displayMetrics.heightPixels;
+//    int width = displayMetrics.widthPixels;
+
+//    Display display = getWindowManager().getDefaultDisplay();
+//    Point size = new Point();
+//    display.getSize(size);
+//    int width = size.x;
+//    int height = size.y;
 
     public GroupSwipeController(GroupSwipeControllerActions buttonsActions) {
         this.buttonsActions = buttonsActions;
     }
 
-
-
-
-
-    @Override
-    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, LEFT | RIGHT);
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
+
+
+//direction flags
+    @Override
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        return makeMovementFlags(0,  RIGHT);
+    }
+
+    //drag
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         return false;
@@ -50,6 +70,7 @@ public class GroupSwipeController extends Callback {
 
     }
 
+    //layout direction of the view
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
         if(swipeBack)
@@ -60,24 +81,23 @@ public class GroupSwipeController extends Callback {
         return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
-
+//Called by ItemTouchHelper on RecyclerView's onDraw callback.
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
-               // if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
-                {
-                    dX = Math.min(dX, -buttonWidth);
-
-                }
+                 if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
+//                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
+//                {
+//                    dX = Math.min(dX, -buttonWidth);
+//
+//                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-               // buttonShowedState = ButtonsState.GONE;
+                // buttonShowedState = ButtonsState.GONE;
             }
         }
 
@@ -92,37 +112,31 @@ public class GroupSwipeController extends Callback {
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
         float buttonWidthWithoutPadding = buttonWidth - 20;
-        float corners = 16;
+        float corners = 0;
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-       // RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-       // p.setColor(Color.WHITE);
-       // c.drawRoundRect(leftButton, corners, corners, p);
-       // drawText("EDIT", c, leftButton, p);
+        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
+        p.setColor(Color.RED);
+        c.drawRoundRect(leftButton, corners, corners, p);
+        drawText("DELETE", c, leftButton, p);
 
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.BLACK);
-        c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("DELETE", c, rightButton, p);
 
        buttonInstance = null;
-        if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            buttonInstance = rightButton;
+        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+            buttonInstance = leftButton;
 
         }
         else
             buttonShowedState = ButtonsState.GONE;
-        //else if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-        //    buttonInstance = leftButton;
-       // }
 
+        //c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(textSize/2), p);
 
     }
 
     private void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 60;
+        float textSize = 30;
         p.setColor(Color.WHITE);
         p.setAntiAlias(true);
         p.setTextSize(textSize);
@@ -131,6 +145,11 @@ public class GroupSwipeController extends Callback {
         c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(textSize/2), p);
     }
 
+    public void onDraw(Canvas c) {
+        if (currentItemViewHolder != null) {
+            drawButtons(c, currentItemViewHolder);
+        }
+    }
 
 
 
@@ -144,17 +163,16 @@ public class GroupSwipeController extends Callback {
 
 
                 if (swipeBack) {
-                    if (dX < -buttonWidth)
+                    if (dX > buttonWidth )
                     {
-                        buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                        buttonShowedState  = ButtonsState.LEFT_VISIBLE;
                     }
-                    else if (dX > buttonWidth)
+
+                    else if (dX < -buttonWidth)
                     {
-                        System.out.println  ("button state gone");
                         buttonShowedState = ButtonsState.GONE;
                     }
 
-                    //else if (dX > buttonWidth) buttonShowedState  = ButtonsState.LEFT_VISIBLE;
 
                     if (buttonShowedState != ButtonsState.GONE)
                     {
@@ -163,6 +181,7 @@ public class GroupSwipeController extends Callback {
                     }
 
 
+
                 }
 
 
@@ -175,7 +194,7 @@ public class GroupSwipeController extends Callback {
 
     }
 
-
+//simulate click on RecyclerView
     @SuppressLint("ClickableViewAccessibility")
     private void setTouchDownListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
 
@@ -184,28 +203,30 @@ public class GroupSwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     setTouchUpListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                   // buttonShowedState = ButtonsState.GONE;
+
                 }
-                buttonShowedState = ButtonsState.GONE;
-                //v.performClick();
+
                 return false;
             }
         });
-      //  recyclerView.performClick();
-    }
+      }
 
 
     @SuppressLint("ClickableViewAccessibility")
     private void setTouchUpListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if (event.getAction() == MotionEvent.ACTION_UP)
+                {
                     GroupSwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
+
+
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                          ///  v.performClick();
+
                             return false;
                         }
                     });
@@ -213,28 +234,28 @@ public class GroupSwipeController extends Callback {
                     swipeBack = false;
 
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
-                        if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-                        }
-                        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-                        }
+                        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                             }
+
+                        else
+                            buttonShowedState = ButtonsState.GONE;
 
                     }
                     buttonShowedState = ButtonsState.GONE;
                     currentItemViewHolder = null;
 
                 }
-               // v.performClick();
+
                 return false;
             }
         });
-      //  recyclerView.performClick();
+
     }
 
     private void setItemsClickable(RecyclerView recyclerView, boolean isClickable) {
 
-        System.out.println("set Items clickable method");
+
         for (int i = 0; i < recyclerView.getChildCount(); ++i) {
             recyclerView.getChildAt(i).setClickable(isClickable);
 
@@ -247,7 +268,7 @@ public class GroupSwipeController extends Callback {
     enum ButtonsState {
         GONE,
         LEFT_VISIBLE,
-        RIGHT_VISIBLE
+
     }
 
 

@@ -24,7 +24,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"/>
+        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>

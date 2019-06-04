@@ -13,12 +13,12 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:gravity="center_vertical"
         app:layout_collapseMode="pin"
         app:layout_scrollFlags="scroll|enterAlways"
         app:title="@string/app_name"
-        app:subtitleTextColor="@color/white"
+        app:subtitleTextColor="@color/black"
 
         app:navigationIcon="?attr/homeAsUpIndicator"
 
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         app:tabIndicatorColor="@color/white"
 
-        app:tabBackground="@color/colorPrimary"
-        app:tabTextColor="@color/white"
+        app:tabBackground="@color/white"
+        app:tabTextColor="@color/black"
         app:tabMode="fixed"
         />
 

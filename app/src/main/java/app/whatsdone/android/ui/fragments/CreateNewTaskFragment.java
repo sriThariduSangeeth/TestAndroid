@@ -125,13 +125,13 @@ public class CreateNewTaskFragment extends Fragment {
                 }
             }
         });
-        saveButton = view.findViewById(R.id.save_task_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        saveButton = view.findViewById(R.id.save_task_button);
+//        saveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
 
 
