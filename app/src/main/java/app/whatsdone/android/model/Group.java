@@ -1,41 +1,24 @@
 package app.whatsdone.android.model;
 
+import android.widget.ImageView;
+
 public class Group {
 
    // public static final int text_type = 0;
 
 
-  //  private int id;
+    private int groupId;
     private String groupName;
-  //  private int timeStamp;
-   // private String description;
+    private int timeStamp;
+    private ImageView groupImage;
 
-  /*  public int getId() {
-        return id;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-*/
-
-
 
     public String getGroupName() {
       return groupName;
@@ -45,4 +28,19 @@ public class Group {
         this.groupName = groupName;
     }
 
+    public int getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public ImageView getGroupImage() {
+        return groupImage;
+    }
+
+    public void setGroupImage(ImageView groupImage) {
+        this.groupImage = groupImage;
+    }
 }

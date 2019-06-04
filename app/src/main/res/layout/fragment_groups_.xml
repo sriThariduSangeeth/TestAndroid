@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_groups"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.GroupFragment"
-    android:id="@+id/fragment_groups"
 
 
-
-     >
-
+    >
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/group_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
+        android:layout_marginTop="120dp"
         android:background="@color/white"
+        android:orientation="vertical"
 
-        />
+        android:scrollbars="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_wrapHeight="500"
+        tools:layout_conversion_wrapWidth="1080" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="32dp"
         android:layout_marginEnd="31dp"
-
-        android:layout_alignParentRight="true"
         android:layout_marginRight="31dp"
-        android:src="@drawable/fab_icon"/>
 
-</RelativeLayout>
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/fab_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_conversion_wrapHeight="147"
+        tools:layout_conversion_wrapWidth="147" />
+
+</android.support.constraint.ConstraintLayout>
