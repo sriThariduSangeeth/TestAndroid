@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -27,12 +28,14 @@ import app.whatsdone.android.tasks.DownloadImageFromInternet;
 import app.whatsdone.android.ui.adapters.CountryListAdapter;
 import app.whatsdone.android.ui.presenter.LoginPresenter;
 import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
+import app.whatsdone.android.ui.view.LoginView;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ReadCountryJson;
 import app.whatsdone.android.viewmodel.LoginViewModel;
 
 import static app.whatsdone.android.utils.ReadCountryJson.countyArray;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private Animation uptodown, downtoup, logopopup;
     private ImageView appIcon , downArrow , flagImg;
@@ -51,8 +54,8 @@ public class LoginActivity extends Activity {
         //setContentView(R.layout.activity_loging_screen);
 
         ActivityLogingScreenBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_loging_screen);
-        LoginPresenter presenter = new LoginPresenterImpl();
-        ((LoginPresenterImpl) presenter).setContext(LoginActivity.this);
+        LoginPresenter presenter = new LoginPresenterImpl(LoginActivity.this, LoginActivity.this);
+
         binding.setPresenter(presenter);
         binding.setModel(new LoginViewModel());
 
@@ -103,5 +106,17 @@ public class LoginActivity extends Activity {
     }
 
 
+    @Override
+    public void onCodeSent(String verificationId) {
+        Intent intent = new Intent(LoginActivity.this,CodeVerificationActivity.class);
+        intent.putExtra(Constants.ARG_VERIFICATION_ID, verificationId);
+        startActivity(intent);
+    }
 
+    @Override
+    public void onVerificationCompleted(String token) {
+        Intent intent = new Intent(LoginActivity.this,ProfileCreationActivity.class);
+        intent.putExtra(Constants.ARG_VERIFICATION_ID, token);
+        startActivity(intent);
+    }
 }

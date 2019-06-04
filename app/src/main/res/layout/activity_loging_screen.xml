@@ -24,7 +24,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@+id/layBack"
             android:background="@drawable/curve_toolbar_bg"
             android:gravity="center">
@@ -42,7 +42,7 @@
         <LinearLayout
             android:id="@+id/layTitle"
             android:layout_width="match_parent"
-            android:layout_height="139dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal">

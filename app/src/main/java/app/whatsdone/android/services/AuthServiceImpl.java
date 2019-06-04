@@ -1,7 +1,6 @@
 package app.whatsdone.android.services;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.FirebaseException;
@@ -34,12 +33,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void Login(String verificationId, String verificationCode, ServiceListener listener) {
-
+    public void Login(String verificationId, String verificationCode, AuthService.Listener listener) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, verificationCode);
+        signInWithPhoneAuthCredential(credential, listener);
     }
 
     @Override
-    public void register(String phoneNo, ServiceListener listener) {
+    public void register(String phoneNo, AuthService.Listener listener) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNo,        // Phone number to verify
                 60,                 // Timeout duration
@@ -80,12 +80,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout() {
-
+        firebaseAuth.signOut();
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential, ServiceListener listener) {
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential, AuthService.Listener listener) {
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener((Executor) this, task -> {
+                .addOnCompleteListener(context, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");

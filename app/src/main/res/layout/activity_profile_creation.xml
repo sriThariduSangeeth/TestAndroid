@@ -10,14 +10,13 @@
         android:id="@+id/nextbutton"
         android:layout_width="121dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="368dp"
+        android:layout_marginBottom="568dp"
         android:background="#25d366"
         android:text="Next"
-        android:textColor="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/profilePic" />
 
     <TextView
         android:id="@+id/textView7"
@@ -48,15 +47,10 @@
 
     <ImageView
         android:id="@+id/profilePic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        app:layout_constraintEnd_toStartOf="@+id/editText2"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
         app:srcCompat="@mipmap/ic_launcher_round" />
