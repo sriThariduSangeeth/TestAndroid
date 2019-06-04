@@ -38,9 +38,15 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
-        System.out.println("group recycler view");
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                Fragment myFragment = new InnerGroupTaskFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-
+            }
+        });
         return new RecyclerViewHolder(view);
 
     }
@@ -48,7 +54,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         holder.textView.setText(groups.get(position).getGroupName());
-        System.out.println(" group recycler view ");
+
 
         //popup menu with 3 dots
         /*
@@ -85,19 +91,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         });
 */
 
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                Fragment myFragment = new InnerGroupTaskFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-
-            }
-        });
-
 
     }
 
@@ -123,11 +116,5 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
 
     }
-
- /*   public void removeItem(int position) {
-        groups.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, groups.size());
-    }  */
 
 }

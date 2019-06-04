@@ -15,7 +15,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.TaskInnerGroup;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder>{
-    private List<TaskInnerGroup> taskList;
+    public List<TaskInnerGroup> taskList;
     private Context context;
 
     public TaskInnerGroupRecyclerViewAdapter(List<TaskInnerGroup> tasks, Context context) {
@@ -32,6 +32,12 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.task_inner_recycler_view_layout, viewGroup, false);
 
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "show task", Toast.LENGTH_SHORT).show();
+            }
+        });
         return new MyRecyclerViewHolder(view);
     }
 
@@ -40,14 +46,14 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         myRecyclerViewHolder.groupTaskText.setText(taskList.get(position).getTaskName());
 
-        myRecyclerViewHolder.groupTaskText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "show task", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//        myRecyclerViewHolder.groupTaskText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "show task", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
 
     }
