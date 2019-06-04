@@ -1,5 +1,7 @@
 package app.whatsdone.android.services;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.FirebaseException;
@@ -20,6 +22,11 @@ public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
     static User user = new User();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private Activity context;
+
+    public void setContext(Activity context) {
+        this.context = context;
+    }
 
     @Override
     public User getCurrentUser() {
@@ -37,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
                 phoneNo,        // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
-                (Executor) this,               // Activity (for callback binding)
+                context,               // Activity (for callback binding)
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {

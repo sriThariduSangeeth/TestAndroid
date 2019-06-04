@@ -169,7 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="@{model.countryCode}"
+                    android:text="@={model.countryCode}"
                     android:ems="4"
                     android:inputType="numberDecimal" />
 
@@ -177,7 +177,7 @@
                     android:id="@+id/txt_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{model.phoneNo}"
+                    android:text="@={model.phoneNo}"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="20dp"
                     android:ems="10"

@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
@@ -24,13 +25,14 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.ActivityLogingScreenBinding;
 import app.whatsdone.android.tasks.DownloadImageFromInternet;
 import app.whatsdone.android.ui.adapters.CountryListAdapter;
+import app.whatsdone.android.ui.presenter.LoginPresenter;
 import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
 import app.whatsdone.android.utils.ReadCountryJson;
 import app.whatsdone.android.viewmodel.LoginViewModel;
 
 import static app.whatsdone.android.utils.ReadCountryJson.countyArray;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private Animation uptodown, downtoup, logopopup;
     private ImageView appIcon , downArrow , flagImg;
@@ -49,7 +51,9 @@ public class LoginActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_loging_screen);
 
         ActivityLogingScreenBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_loging_screen);
-        binding.setPresenter(new LoginPresenterImpl());
+        LoginPresenter presenter = new LoginPresenterImpl();
+        ((LoginPresenterImpl) presenter).setContext(LoginActivity.this);
+        binding.setPresenter(presenter);
         binding.setModel(new LoginViewModel());
 
         appIcon = (ImageView) findViewById(R.id.logoView);
