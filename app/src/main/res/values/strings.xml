@@ -35,7 +35,7 @@
     <string name="Save">Save</string>
     <string name="groupPhoto">Group photo</string>
     <string name="task_title">Title</string>
-
+    <string name="hint_enter_a_message">Type a message…</string>
 
     <string-array name="planets">
         <item>Todo</item>
