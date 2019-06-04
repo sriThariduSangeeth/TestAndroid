@@ -1,12 +1,17 @@
 package app.whatsdone.android.services;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -72,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
                         Map<String, Object> data = new HashMap<>();
                         data.put("verificationID", mVerificationId);
                         data.put("token", mResendToken);
-                        listener.onCompleted(data);
+                        listener.onCodeSent(mVerificationId);
                         // ...
                     }
                 });        // OnVerificationStateChangedCallbacks
@@ -92,7 +97,14 @@ public class AuthServiceImpl implements AuthService {
 
                         FirebaseUser user = task.getResult().getUser();
                         AuthServiceImpl.user.setDocumentID(user.getPhoneNumber());
-                        listener.onSuccess();
+                        user.getIdToken(false).addOnCompleteListener(context, new OnCompleteListener<GetTokenResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                System.out.println(task.getResult().getToken());
+                                listener.onSuccess();
+                            }
+                        });
+
                         // ...
                     } else {
                         // Sign in failed, display a message and update the UI

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
@@ -25,7 +26,7 @@ public class GroupServiceImpl implements GroupService {
         List<BaseEntity> groups = new ArrayList<>();
 
         db.collection("groups")
-                .whereArrayContains("members", FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                .whereArrayContains("members", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

@@ -33,7 +33,7 @@ public class LoginPresenterImpl implements LoginPresenter {
             }
 
             @Override
-            public void onCompleted(@Nullable Map<String, Object> data) {
+            public void onSuccess() {
                 view.onVerificationCompleted("");
             }
         });
