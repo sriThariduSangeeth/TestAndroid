@@ -14,7 +14,7 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
     public void initi(MyTaskFragmentView view) {
         this.view = view;
 
-        System.out.println("init task");
+
 
     }
 
@@ -25,13 +25,13 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
 
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask();
+            MyTask task = new MyTask("");
             task.setTaskName("MyTask " +i);
             tasks.add(task);
 
         }
 
         this.view.updateTasks(tasks);
-        System.out.println("load tasks");
+
     }
 }

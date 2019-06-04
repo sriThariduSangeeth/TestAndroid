@@ -43,10 +43,10 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
        View view = inflater.inflate(R.layout.fragment_task_my, container, false);
 
         List<MyTask> tasks = new ArrayList<>();
-        System.out.println("my task on create view");
+
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask();
+            MyTask task = new MyTask("");
             task.setTaskName("My task " +i);
             tasks.add(task);
 
@@ -75,21 +75,21 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             }
         });
 
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
       return view;
     }
 
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.mytask_menu_items, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.mytask_menu_items, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public void updateTasks(List<MyTask> tasks) {
         this.tasks.addAll(tasks);
         tasksAdapter.notifyDataSetChanged();
-        System.out.println("update tasks");
+
     }
 
     @Override

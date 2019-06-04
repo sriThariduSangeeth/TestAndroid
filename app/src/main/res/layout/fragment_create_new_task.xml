@@ -4,86 +4,158 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.CreateNewTaskFragment">
+
+    android:layout_margin="20sp"
+
+    >
 
     <TextView
+        android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/task_title"
+        android:textColor="@color/black"
         android:textSize="20sp"
         tools:ignore="MissingConstraints"
         android:layout_marginTop="20sp"
         />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_edit_text"
+        android:inputType="textLongMessage"
+        android:hint="@string/description"
+        />
 
     <EditText
-        android:layout_width="297dp"
+        android:id="@+id/title_edit_text"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@+id/title_text_view"
+        android:layout_marginLeft="20sp"
+        android:hint="@string/title"
         android:inputType="text"
+        android:layout_marginTop="8sp"
+        android:layout_toRightOf="@+id/title_text_view"
+        android:layout_marginStart="20sp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130sp"
+        android:id="@+id/layout_relative"
+        >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_one_of_the_status"
 
-        android:layout_marginTop="10sp"
-        android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/due_date"
+            android:layout_below="@+id/textView"
+
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assigned_to"
+            android:layout_below="@id/textView2"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checklist"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="20sp"
+            />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textView"
+            android:layout_marginTop="0dp"
+            />
+
+        <TextView
+            android:id="@+id/due_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/spinner"
+            android:text="@string/set_due_date"
+
+            />
+
+        <TextView
+            android:id="@+id/assign_from_contacts_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+
+            android:layout_alignTop="@+id/textView3"
+            android:text="@string/select_from_contacts"
+            android:layout_alignParentRight="true" />
+
+        <EditText
+            android:id="@+id/checklist_add_new_item_edit_text"
+            android:layout_width="305sp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            />
+
+        <ImageView
+            android:id="@+id/checklist_add_image_view"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@+id/checklist_add_new_item_edit_text"
+            android:layout_toRightOf="@+id/checklist_add_new_item_edit_text"
+            android:layout_below="@+id/textView4"
+            android:src="@drawable/add_items_icon"
+            />
+
+        <ListView
+            android:id="@+id/list_view_checklist"
+            android:layout_width="match_parent"
+            android:layout_height="150sp"
+            android:layout_weight="1"
+            android:dividerHeight="2dp"
+            android:layout_below="@+id/checklist_add_new_item_edit_text"
+
+            >
+        </ListView>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/save_task_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Save"
+
+        android:layout_alignParentBottom="true"
+
 
         />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose one of the status"
-        android:layout_marginTop="90sp"
-         />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Due date"
-
-        android:layout_marginTop="120sp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Assigned to"
-        android:layout_marginTop="150sp"
-        />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Checklist"
-       android:layout_marginTop="200sp"
-        />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textView"
-        android:layout_marginTop="0dp"
-        />
-
-    <TextView
-        android:id="@+id/due_date_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="120sp"
-        android:text="set due date"
-
-        />
-
-    <DatePicker
-        android:id="@+id/due_date_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="294dp"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true">
-
-    </DatePicker>
 </RelativeLayout>

@@ -1,10 +1,12 @@
 package app.whatsdone.android.ui.activity;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.View;
 
 import app.whatsdone.android.R;
@@ -56,6 +58,13 @@ public class GroupsActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        System.out.println("Width  =" + width);
+        System.out.println("height = "+ height);
 
     }
 
