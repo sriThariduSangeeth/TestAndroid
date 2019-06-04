@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "220787713556-7lmkket45jt849l4l3ga7lkhku1bcjif.apps.googleusercontent.com",
+          "client_id": "220787713556-qsmm77bp1fd5j5re5cb0d3rl4f879b6j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "app.whatsdone.android",
             "certificate_hash": "f5e92025b5ba6c6adece68a6b4eac754577cc242"
+          }
+        },
+        {
+          "client_id": "220787713556-a0o5p9n2ntqli5k8ik3o0tec3vihc0j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.whatsdone.android",
+            "certificate_hash": "7bbae7ddc2e50de9e2c00f90f020d1a8f2ba4810"
           }
         },
         {
