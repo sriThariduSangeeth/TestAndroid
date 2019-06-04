@@ -1,4 +1,4 @@
-package app.whatsdone.android.viewmodel;
+package app.whatsdone.android.ui.viewmodel;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

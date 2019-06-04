@@ -8,9 +8,8 @@ import javax.annotation.Nullable;
 
 import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.view.LoginView;
-import app.whatsdone.android.viewmodel.LoginViewModel;
+import app.whatsdone.android.ui.viewmodel.LoginViewModel;
 
 public class LoginPresenterImpl implements LoginPresenter {
     Activity context;

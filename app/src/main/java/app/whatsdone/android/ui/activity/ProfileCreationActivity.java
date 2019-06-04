@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,16 +17,21 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.databinding.ActivityProfileCreationBinding;
+import app.whatsdone.android.ui.presenter.ProfilePresenterImpl;
+import app.whatsdone.android.ui.view.ProfileView;
+import app.whatsdone.android.ui.viewmodel.ProfileViewModel;
+import app.whatsdone.android.utils.Constants;
 
-public class ProfileCreationActivity extends AppCompatActivity
-{
+public class ProfileCreationActivity extends AppCompatActivity implements ProfileView {
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView profilePic;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_creation);
-
+        ActivityProfileCreationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_creation);
+        binding.setPresenter(new ProfilePresenterImpl(this));
+        binding.setViewModel(new ProfileViewModel("Chandima"));
         profilePic = (ImageView)findViewById(R.id.profilePic);
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,5 +77,12 @@ public class ProfileCreationActivity extends AppCompatActivity
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
+    }
+
+    @Override
+    public void onProfileUpdated() {
+        Intent intent = new Intent(ProfileCreationActivity.this,GroupsActivity.class);
+
+        startActivity(intent);
     }
 }

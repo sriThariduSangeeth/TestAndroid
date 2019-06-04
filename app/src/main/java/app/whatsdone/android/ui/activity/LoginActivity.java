@@ -1,6 +1,5 @@
 package app.whatsdone.android.ui.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -31,7 +30,7 @@ import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
 import app.whatsdone.android.ui.view.LoginView;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ReadCountryJson;
-import app.whatsdone.android.viewmodel.LoginViewModel;
+import app.whatsdone.android.ui.viewmodel.LoginViewModel;
 
 import static app.whatsdone.android.utils.ReadCountryJson.countyArray;
 

@@ -1,6 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
-import app.whatsdone.android.viewmodel.LoginViewModel;
+import app.whatsdone.android.ui.viewmodel.LoginViewModel;
 
 public interface LoginPresenter {
     void onNextClicked(LoginViewModel model);

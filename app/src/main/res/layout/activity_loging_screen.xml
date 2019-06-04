@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="model" type="app.whatsdone.android.viewmodel.LoginViewModel"/>
+        <variable name="model" type="app.whatsdone.android.ui.viewmodel.LoginViewModel"/>
         <variable name="presenter" type="app.whatsdone.android.ui.presenter.LoginPresenter"/>
     </data>
 
