@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 import android.app.Dialog;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,12 +21,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.databinding.ActivityLogingScreenBinding;
 import app.whatsdone.android.tasks.DownloadImageFromInternet;
 import app.whatsdone.android.ui.adapters.CountryListAdapter;
+import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
 import app.whatsdone.android.utils.ReadCountryJson;
+import app.whatsdone.android.viewmodel.LoginViewModel;
 
 import static app.whatsdone.android.utils.ReadCountryJson.countyArray;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,10 +42,15 @@ public class LoginActivity extends AppCompatActivity {
     private Dialog myDialog;
     private String dial_code , country , telephone;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loging_screen);
+        //setContentView(R.layout.activity_loging_screen);
+
+        ActivityLogingScreenBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_loging_screen);
+        binding.setPresenter(new LoginPresenterImpl());
+        binding.setModel(new LoginViewModel());
 
         appIcon = (ImageView) findViewById(R.id.logoView);
         flagImg = (ImageView) findViewById(R.id.img_cou_logo_selection);
@@ -89,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+
 
 
 }

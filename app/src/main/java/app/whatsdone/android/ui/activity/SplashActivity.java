@@ -122,15 +122,12 @@ public class SplashActivity extends AppCompatActivity {
             if (Constants.IS_LOGGED_IN) {
                 // change activity to chat screen
 
-                Runnable changeChatWindow = new Runnable() {
-                    @Override
-                    public void run() {
+                Runnable changeChatWindow = () -> {
 
-                        Intent activeIntent = new Intent(getBaseContext(), GroupsActivity.class);
-                        startActivity(activeIntent);
-                        finish();
+                    Intent activeIntent = new Intent(getBaseContext(), LoginActivity.class);
+                    startActivity(activeIntent);
+                    finish();
 
-                    }
                 };
 
                 mHandler.postDelayed(changeChatWindow, 600);
@@ -152,12 +149,9 @@ public class SplashActivity extends AppCompatActivity {
                     public void run() {
 
                         final Intent logingIntent = new Intent(getBaseContext(), LoginActivity.class);
-                        but1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(logingIntent);
-                                finish();
-                            }
+                        but1.setOnClickListener(v -> {
+                            startActivity(logingIntent);
+                            finish();
                         });
                     }
                 });

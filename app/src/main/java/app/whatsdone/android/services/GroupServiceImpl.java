@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 
 public class GroupServiceImpl implements GroupService {
@@ -15,8 +16,8 @@ public class GroupServiceImpl implements GroupService {
     private static final String TAG = GroupServiceImpl.class.getCanonicalName();
 
     @Override
-    public void getAllGroups(String userId, GroupServiceListener groupServiceListener) {
-        List<Group> groups = new ArrayList<>();
+    public void getAllGroups(String userId, ServiceListener serviceListener) {
+        List<BaseEntity> groups = new ArrayList<>();
 
         db.collection("groups")
                 .get()
@@ -24,7 +25,7 @@ public class GroupServiceImpl implements GroupService {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d(TAG, document.getId() + " => " + document.getData());
-                            groupServiceListener.onGroupsUpdated(groups);
+                            serviceListener.onDataReceived(groups);
                         }
                     } else {
                         Log.w(TAG, "Error getting documents.", task.getException());
@@ -33,22 +34,22 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void create(Group group, GroupServiceListener groupServiceListener) {
+    public void create(Group group, ServiceListener serviceListener) {
 
     }
 
     @Override
-    public void update(Group group, GroupServiceListener groupServiceListener) {
+    public void update(Group group, ServiceListener serviceListener) {
 
     }
 
     @Override
-    public void delete(String id, GroupServiceListener groupServiceListener) {
+    public void delete(String id, ServiceListener serviceListener) {
 
     }
 
     @Override
-    public void subscribe(String userId, GroupServiceListener groupServiceListener) {
+    public void subscribe(String userId, ServiceListener serviceListener) {
 
     }
 

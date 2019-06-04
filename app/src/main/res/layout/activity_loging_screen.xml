@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="model" type="app.whatsdone.android.viewmodel.LoginViewModel"/>
+        <variable name="presenter" type="app.whatsdone.android.ui.presenter.LoginPresenter"/>
+    </data>
+
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -163,6 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:text="@{model.countryCode}"
                     android:ems="4"
                     android:inputType="numberDecimal" />
 
@@ -170,6 +177,7 @@
                     android:id="@+id/txt_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{model.phoneNo}"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="20dp"
                     android:ems="10"
@@ -189,6 +197,7 @@
             android:background="#25d366"
             android:gravity="center"
             android:text="@string/next"
+            android:onClick="@{(view) -> presenter.onNextClicked(model)}"
             android:textColor="#ffffff"
             android:layout_marginTop="65dp"/>
 
@@ -196,3 +205,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+</layout>
