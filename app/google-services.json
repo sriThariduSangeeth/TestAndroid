@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "220787713556",
+    "firebase_url": "https://whatsdone-f770e.firebaseio.com",
+    "project_id": "whatsdone-f770e",
+    "storage_bucket": "whatsdone-f770e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220787713556:android:5b5df6396f6fde39",
+        "android_client_info": {
+          "package_name": "app.whatsdone.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220787713556-qsmm77bp1fd5j5re5cb0d3rl4f879b6j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.whatsdone.android",
+            "certificate_hash": "7bbae7ddc2e50de9e2c00f90f020d1a8f2ba4810"
+          }
+        },
+        {
+          "client_id": "220787713556-a0o5p9n2ntqli5k8ik3o0tec3vihc0j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.whatsdone.android",
+            "certificate_hash": "7bbae7ddc2e50de9e2c00f90f020d1a8f2ba4810"
+          }
+        },
+        {
+          "client_id": "220787713556-c9kadjfbgl9k2ka6s7b9fufqthgb3h5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRqHnM7X88yKZLV4-se7UiLzsV7BhuKCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220787713556-c9kadjfbgl9k2ka6s7b9fufqthgb3h5t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "220787713556-5kgkhp79qotnaelvu27bqathtu45jqra.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.whatsdone.ios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220787713556:android:16b3821fe308d581",
+        "android_client_info": {
+          "package_name": "com.virtusa.gto.mobile.dev.whatsdone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220787713556-c9kadjfbgl9k2ka6s7b9fufqthgb3h5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRqHnM7X88yKZLV4-se7UiLzsV7BhuKCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220787713556-c9kadjfbgl9k2ka6s7b9fufqthgb3h5t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "220787713556-5kgkhp79qotnaelvu27bqathtu45jqra.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.whatsdone.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

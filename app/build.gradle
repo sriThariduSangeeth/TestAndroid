@@ -3,12 +3,16 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "android.app.android"
-        minSdkVersion 15
+        applicationId "app.whatsdone.android"
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    dataBinding {
+        enabled = true
     }
     buildTypes {
         release {
@@ -21,9 +25,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+    }
 }
 
 dependencies {
+    def lifecycle_version = "2.0.0"
+
     implementation project(':chatkit')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -53,4 +64,11 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-firestore:19.0.1'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+
 }
+
+apply plugin: 'com.google.gms.google-services'

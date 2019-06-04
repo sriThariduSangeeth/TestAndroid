@@ -62,6 +62,6 @@ public final class MessagesFixtures extends FixturesData {
 
     private static User getUser() {
         //here id will be boolean value.
-        return new User("0","Sangeeth", "cdc",true);
+        return new User("+94714411600","Sangeeth", "http://abc.io",true);
     }
 }
