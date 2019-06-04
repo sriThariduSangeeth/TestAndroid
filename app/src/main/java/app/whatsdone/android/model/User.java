@@ -12,6 +12,7 @@ import app.whatsdone.android.utils.Constants;
 public class User implements BaseEntity, IUser {
     private String documentID;
     private String displayName;
+    private String id;
     private String phoneNo;
     private String avatar;
     private boolean enableNotifications;
@@ -100,6 +101,13 @@ public class User implements BaseEntity, IUser {
         data.put(Constants.FIELD_USER_DEVICE_TOKENS, deviceTokens);
         data.put(Constants.FIELD_USER_DISPLAY_NAME, displayName);
         return data;
+    }
+
+    public User(String id, String name, String avatar, boolean online) {
+        this.id = id;
+        this.displayName = name;
+        this.avatar = avatar;
+        this.online = online;
     }
 
     public User(){
