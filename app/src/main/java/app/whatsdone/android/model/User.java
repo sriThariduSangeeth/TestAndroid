@@ -1,5 +1,7 @@
 package app.whatsdone.android.model;
 
+import com.stfalcon.chatkit.commons.models.IUser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,7 @@ enum UserStatus {
     away
 }
 
-public class User implements BaseEntity {
+public class User implements BaseEntity, IUser {
     private String documentID;
     private String displayName;
     private String phoneNo;
@@ -21,6 +23,13 @@ public class User implements BaseEntity {
     private boolean enableNotifications;
     private UserStatus status;
     private List<String> deviceTokens;
+
+    public User(String id, String name, String avatar, boolean isOnline) {
+        this.documentID = id;
+        this.displayName = name;
+        this.avatar = avatar;
+        this.status = isOnline ? UserStatus.available : UserStatus.busy;
+    }
 
     @Override
     public String getDocumentID() {
@@ -38,6 +47,16 @@ public class User implements BaseEntity {
 
     public String getPhoneNo() {
         return phoneNo;
+    }
+
+    @Override
+    public String getId() {
+        return documentID;
+    }
+
+    @Override
+    public String getName() {
+        return displayName;
     }
 
     public String getAvatar() {
