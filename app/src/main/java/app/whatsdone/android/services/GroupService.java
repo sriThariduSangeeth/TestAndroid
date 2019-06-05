@@ -7,7 +7,7 @@ public interface GroupService {
     void create(Group group, ServiceListener serviceListener);
     void update(Group group, ServiceListener serviceListener);
     void delete(String id, ServiceListener serviceListener);
-    void subscribe(String userId, ServiceListener serviceListener);
+    void subscribe(ServiceListener serviceListener);
     void unSubscribe();
 
 }

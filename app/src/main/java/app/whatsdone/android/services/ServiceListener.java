@@ -17,7 +17,7 @@ public interface ServiceListener {
     default void onSuccess() {
 
     }
-    default void onError(String error){
+    default void onError(@Nullable String error){
 
     }
 }
