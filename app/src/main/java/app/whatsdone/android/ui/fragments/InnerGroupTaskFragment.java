@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
@@ -34,10 +35,11 @@ import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
+import app.whatsdone.android.utils.Constants;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
-    private List<TaskInnerGroup> taskInnerGroups = new ArrayList<>();
+    private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private FloatingActionButton mainFab;
     private Toolbar toolbar;
@@ -49,7 +51,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private GroupFragment groupFragment;
 
 
-
+    public static InnerGroupTaskFragment newInstance(Group group){
+        InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.ARG_GROUP_ID, group.getDocumentID());
+        args.putString(Constants.ARG_GROUP_NAME, group.getGroupName());
+        instance.setArguments(args);
+        return instance;
+    }
 
 
     @Override
@@ -71,14 +80,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         mainFab = view.findViewById(R.id.add_new_task);
         toolbar =  getActivity().findViewById(R.id.toolbar);
 
-
+        Bundle args = getArguments();
+        String groupId = args.getString(Constants.ARG_GROUP_ID);
+        String groupName = args.getString(Constants.ARG_GROUP_NAME);
+        toolbar.setTitle(groupName);
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
         this.taskInnerGroupPresenter = new TaskInnerGroupPresenterImpl();
-        this.taskInnerGroupPresenter.init(this);
-        this.taskInnerGroupPresenter.loadTasksInner();
-
+        this.taskInnerGroupPresenter.init(this, getActivity());
+        this.taskInnerGroupPresenter.loadTasksInner(groupId);
 
         //fab
         mainFab.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +188,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
+        taskInnerGroupPresenter.unSubscribe();
         System.out.println("on destroy view");
     }
 
@@ -189,8 +200,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     }
 
     @Override
-    public void updateTaskInner(List<TaskInnerGroup> tasks) {
-        this.taskInnerGroups = tasks;
+    public void updateTaskInner(List<BaseEntity> tasks) {
+        this.taskInnerGroups.clear();
+        taskInnerGroups.addAll(tasks);
+        adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView()

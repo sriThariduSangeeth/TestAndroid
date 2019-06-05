@@ -34,15 +34,29 @@ public class GroupServiceImpl implements GroupService {
     public void getAllGroups(String userId, ServiceListener serviceListener) {
         List<BaseEntity> groups = new ArrayList<>();
 
-        db.collection("groups")
-                .whereArrayContains("members", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber())
+        db.collection(Constants.REF_TEAMS)
+                .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             Group group = new Group();
-                            group.setGroupName(document.getString("title"));
+                            group.setDocumentID(doc.getId());
+                            if (doc.get(Constants.FIELD_GROUP_TITLE) != null)
+                                group.setGroupName(doc.getString(Constants.FIELD_GROUP_TITLE));
+                            if (doc.get(Constants.FIELD_GROUP_AVATAR) != null)
+                                group.setAvatar(doc.getString(Constants.FIELD_GROUP_AVATAR));
+                            if (doc.get(Constants.FIELD_GROUP_CREATED_BY) != null)
+                                group.setCreatedBy(doc.getString(Constants.FIELD_GROUP_CREATED_BY));
+                            if (doc.get(Constants.FIELD_GROUP_DISCUSSION_COUNT) != null)
+                                group.setDiscussionCount(doc.getLong(Constants.FIELD_GROUP_DISCUSSION_COUNT).intValue());
+                            if (doc.get(Constants.FIELD_GROUP_TASKS_COUNT) != null)
+                                group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
+                            if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
+                                group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
+                            if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
+                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+
                             groups.add(group);
                             serviceListener.onDataReceived(groups);
                         }
@@ -152,7 +166,6 @@ public class GroupServiceImpl implements GroupService {
                                 group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
                             if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
                                 group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
-                            Log.d(TAG, group.getGroupName().toString());
                             groups.add(group);
                         }catch (Exception exception) {
                             Log.d(TAG, "failed to parse group", exception);

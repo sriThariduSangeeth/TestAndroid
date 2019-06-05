@@ -3,6 +3,6 @@ import app.whatsdone.android.ui.view.MyTaskFragmentView;
 
 public interface MyTaskPresenter {
 
-    void initi(MyTaskFragmentView view);
+    void init(MyTaskFragmentView view);
     void loadTasks();
 }
