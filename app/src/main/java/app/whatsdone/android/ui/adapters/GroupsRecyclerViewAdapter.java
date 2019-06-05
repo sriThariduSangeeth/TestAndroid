@@ -59,42 +59,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.textView.setText(((Group) groups.get(position)).getGroupName());
 
 
-        //popup menu with 3 dots
-        /*
-        holder.textViewMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                PopupMenu popup = new PopupMenu(context, holder.textViewMenu);
-                popup.inflate(R.menu.group_item_options_menu);
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId())
-                        {
-                            case R.id.menu1:
-                                return true;
-                            case R.id.menu2:
-                                return true;
-                            case R.id.menu3:
-                                return true;
-                            default:
-                                return false;
-
-
-                        }
-
-
-                    }
-                });
-
-                popup.show();
-            }
-        });
-*/
-
-
     }
 
     @Override

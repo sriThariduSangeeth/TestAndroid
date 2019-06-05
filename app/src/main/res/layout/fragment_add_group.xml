@@ -7,8 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-android:paddingTop="120sp"
+
     android:background="@color/background"
+    app:layout_constraintTop_toBottomOf="@+id/activity_groups_constraint_layout"
 
 
     >
@@ -20,6 +21,7 @@ android:paddingTop="120sp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="20dp"
         android:text="@string/GroupDetails"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,12 +33,12 @@ android:paddingTop="120sp"
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="4dp"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/group_details"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -45,12 +47,14 @@ android:paddingTop="120sp"
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/group_name"
             android:textColor="@color/black"
             android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/teamPhoto">
+            app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
 
@@ -61,11 +65,9 @@ android:paddingTop="120sp"
             android:layout_height="wrap_content"
 
 
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
             android:layout_marginBottom="8dp"
             android:hint="@string/group_name"
             android:inputType="text"
@@ -74,10 +76,19 @@ android:paddingTop="120sp"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/group_name_text_view"
-            app:layout_constraintTop_toBottomOf="@+id/group_photo_image_view"
+
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/group_details"
+        tools:layout_editor_absoluteX="0dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/group_photo_image_view"
@@ -103,10 +114,12 @@ android:paddingTop="120sp"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:paddingTop="10sp"
             android:text="@string/teamPhoto"
             android:textColor="@color/black"
             android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -120,7 +133,7 @@ android:paddingTop="120sp"
 
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:paddingTop="5sp"
         android:text="@string/members"
         android:textSize="15sp"
@@ -131,7 +144,8 @@ android:paddingTop="120sp"
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="300sp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/members"
         tools:layout_editor_absoluteX="16dp">
 
@@ -157,16 +171,18 @@ android:paddingTop="120sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_members_button">
+            app:layout_constraintTop_toBottomOf="@+id/add_members_button"
+            app:layout_constraintVertical_bias="1.0">
 
         </ListView>
 
     </android.support.constraint.ConstraintLayout>
 
-<!--
+    <!--
     <Button
         android:id="@+id/save_group_button"
         android:layout_width="match_parent"
@@ -198,6 +214,5 @@ android:paddingTop="120sp"
         android:layout_marginBottom="41dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

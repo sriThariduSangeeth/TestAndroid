@@ -5,6 +5,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
@@ -41,8 +44,11 @@ public class GroupPresenterImpl implements GroupPresenter{
 
     @Override
     public void unSubscribe() {
-        service.unSubscribe();
+        //service.unSubscribe();
     }
+
+
+
 
 
 }

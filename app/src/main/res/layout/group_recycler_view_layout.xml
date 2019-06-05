@@ -13,6 +13,24 @@
     android:background="@color/white"
     android:orientation="horizontal">
 
+    <shape
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:shape="oval"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/unread_tasks_counter">
+
+        <solid android:color="#e42828" />
+
+        <stroke
+            android:width="5dp"
+            android:color="#3b91d7" />
+        <!-- Set the same value for both width and height to get a circular shape -->
+        <size
+            android:width="250dp"
+            android:height="250dp" />
+    </shape>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view_group"
         android:layout_width="50sp"
@@ -104,19 +122,20 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="16dp"
         android:inputType="number"
         android:text="1"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toEndOf="@+id/group_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/time" />
 
     <TextView
         android:id="@+id/unread_tasks_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20sp"
+        android:layout_height="20sp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
@@ -124,6 +143,9 @@
         android:inputType="number"
         android:text="2"
         android:textSize="10sp"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:background="@drawable/shape_circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/group_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/time" />
