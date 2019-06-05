@@ -118,16 +118,16 @@ public class AddGroupFragment extends Fragment {
 
 
         //save group button
-        saveButton = view.findViewById(R.id.save_group_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-              //  presenter.loadGroups();
-               // presenter.addNewGroup();
-
-            }
-        });
+//        saveButton = view.findViewById(R.id.save_group_fab_button);
+//        saveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//              //  presenter.loadGroups();
+//               // presenter.addNewGroup();
+//
+//            }
+//        });
 
         return view;
 

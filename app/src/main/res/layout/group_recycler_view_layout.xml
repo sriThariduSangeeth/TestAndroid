@@ -7,8 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_margin="10sp"
-    android:layout_weight="20"
+
+    android:layout_marginTop="2sp"
+    android:layout_weight="5"
     android:background="@color/white"
     android:orientation="horizontal">
 
@@ -16,8 +17,8 @@
         android:id="@+id/image_view_group"
         android:layout_width="50sp"
         android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
 
         android:layout_marginBottom="10dp"
@@ -36,10 +37,10 @@
         android:id="@+id/group_text"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
-android:text="whatsdone group 1"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
+        android:text="whatsdone group 1"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_group"
@@ -63,7 +64,7 @@ android:text="whatsdone group 1"
         app:layout_constraintStart_toStartOf="parent" />
 -->
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -71,7 +72,8 @@ android:text="whatsdone group 1"
         android:layout_marginTop="16dp"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:text="@string/time"
+        android:text="@string/date"
+
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.91"
