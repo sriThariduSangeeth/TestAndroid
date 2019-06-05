@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.model.Group;
@@ -30,7 +31,7 @@ import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
 
 public class GroupFragment extends Fragment implements GroupFragmentView {
 
-    private List<Group> groups = new ArrayList<>();
+    private List<BaseEntity> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
@@ -62,10 +63,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         myrecycler = view.findViewById(R.id.group_recycler_view);
 
         this.presenter = new GroupPresenterImpl();
-        this.presenter.init(this);
-        this.presenter.loadGroups();
-
-
+        this.presenter.init(this, getActivity());
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
@@ -80,25 +78,17 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             }
         });
 
-
-       // getTargetFragment();
-
         setupRecyclerView();
         return view;
 
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        //inflater.inflate(R.menu.group_menu_items, menu);
-//        //super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
-//    }
 
     @Override
-    public void updateGroups(List<Group> groups) {
-        this.groups = groups;
-       // adapter.notifyDataSetChanged();
+    public void updateGroups(List<BaseEntity> groups) {
+        this.groups.clear();
+        this.groups.addAll(groups);
+        adapter.notifyDataSetChanged();
 
 
     }
@@ -152,6 +142,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                 groupSwipeController.onDraw(c);
             }
         });
+        presenter.subscribe();
     }
 
 

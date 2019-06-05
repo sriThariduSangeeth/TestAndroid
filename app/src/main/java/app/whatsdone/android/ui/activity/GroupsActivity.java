@@ -10,6 +10,7 @@ import android.view.Display;
 import android.view.View;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
 import app.whatsdone.android.ui.fragments.GroupFragment;
@@ -40,7 +41,6 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         tabLayout = findViewById(R.id.tab_layout);
-
 
         setupTabLayout();
         bindWidgetsWithAnEvent();
