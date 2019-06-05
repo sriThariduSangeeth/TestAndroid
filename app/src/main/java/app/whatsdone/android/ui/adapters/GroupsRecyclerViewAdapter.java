@@ -13,18 +13,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
-    public List<Group> groups;
+    public List<BaseEntity> groups;
   //  private ItemClickListener monItemClickListener;
     private Context context;
 
 
 
-    public GroupsRecyclerViewAdapter(List<Group> groups, Context context) {
+    public GroupsRecyclerViewAdapter(List<BaseEntity> groups, Context context) {
         this.groups = groups;
         this.context = context;
 
@@ -53,7 +54,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
-        holder.textView.setText(groups.get(position).getGroupName());
+        holder.textView.setText(((Group) groups.get(position)).getGroupName());
 
 
         //popup menu with 3 dots
