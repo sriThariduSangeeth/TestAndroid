@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:paddingRight="20dp"
-    android:layout_margin="20sp"
     android:layout_gravity="center_vertical"
+android:paddingTop="120sp"
+    android:background="@color/background"
 
 
     >
@@ -17,109 +18,170 @@
         android:id="@+id/group_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="50dp"
         android:text="@string/GroupDetails"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/group_name_text_view"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/group_name"
-        android:layout_alignParentStart="true"
-        android:text="@string/group_name"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_alignParentLeft="true" />
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="83dp"
+        tools:ignore="MissingConstraints">
 
-    <EditText
-        android:id="@+id/group_name"
+        <TextView
+            android:id="@+id/group_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/group_name"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/teamPhoto">
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/group_details"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="97dp"
+        </TextView>
 
-        android:hint="@string/group_name"
-        android:inputType="text"
+        <EditText
+            android:id="@+id/group_name_edit_text"
 
-        android:paddingTop="10sp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_alignRight="@+id/group_details" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/group_photo_image_view"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="30dp"
-
-        />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
 
-    <TextView
-        android:id="@+id/teamPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/group_name"
+            android:inputType="text"
+            android:paddingTop="10sp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/group_name_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/group_photo_image_view"
+            app:layout_constraintVertical_bias="0.0" />
 
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/group_photo_image_view"
+            android:layout_width="44dp"
+            android:layout_height="42dp"
+android:background="@color/grey"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.893"
+            app:layout_constraintStart_toEndOf="@+id/teamPhoto"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
 
-        android:paddingTop="10sp"
-        android:text="@string/groupPhoto"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/teamPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            android:paddingTop="10sp"
+            android:text="@string/teamPhoto"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
 
-        android:layout_marginTop="161dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
         android:paddingTop="5sp"
         android:text="@string/members"
         android:textSize="15sp"
-        android:layout_alignParentLeft="true" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="300sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/members"
+        tools:layout_editor_absoluteX="16dp">
+
+        <Button
+            android:id="@+id/add_members_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:text="@string/AddMembers"
+            android:textColor="@color/bluelight"
+
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/add_members_list_view"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </Button>
+
+        <ListView
+            android:id="@+id/add_members_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_members_button">
+
+        </ListView>
+
+    </android.support.constraint.ConstraintLayout>
+
+
     <Button
         android:id="@+id/save_group_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10sp"
-
-        android:text="@string/Save" />
-
-    <Button
-        android:id="@+id/add_members_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="260sp"
-        android:text="@string/AddMembers"
-
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white"
+        android:text="@string/Save"
+        android:textColor="@color/bluelight"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
-
-    <ListView
-        android:id="@+id/add_members_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-
-        android:layout_marginTop="250sp"
-        android:layout_marginBottom="70sp"
-
-        >
-
-    </ListView>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

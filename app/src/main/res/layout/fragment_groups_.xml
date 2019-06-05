@@ -29,16 +29,19 @@
         android:id="@+id/fab_add_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="31dp"
-        android:layout_marginRight="31dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/fab_color"
+        app:backgroundTint="@color/fab_color"
+        android:layout_marginStart="319dp"
+        android:layout_marginLeft="319dp"
 
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/fab_icon"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="41dp"
+        android:backgroundTint="@color/fab_color"
+        android:src="@drawable/ic_fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_conversion_wrapHeight="147"
-        tools:layout_conversion_wrapWidth="147" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

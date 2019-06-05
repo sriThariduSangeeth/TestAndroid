@@ -5,7 +5,7 @@ import app.whatsdone.android.ui.view.GroupFragmentView;
 public interface GroupPresenter {
     void init(GroupFragmentView view);
     void loadGroups();
-    void addNewGroup();
+    void addNewGroup(String nameGroup);
     void deleteGroup();
 
     //void onItemClick(GroupFragmentView view, int position);

@@ -21,6 +21,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public List<Group> groups;
   //  private ItemClickListener monItemClickListener;
     private Context context;
+    private TextView groupNameTextView;
 
 
 
@@ -37,6 +38,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
+        groupNameTextView = viewGroup.findViewById(R.id.group_text);
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +55,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
+
         holder.textView.setText(groups.get(position).getGroupName());
 
 

@@ -31,7 +31,7 @@ public class GroupPresenterImpl implements GroupPresenter{
     }
 
     @Override
-    public void addNewGroup() {
+    public void addNewGroup(String name) {
         Group group = new Group();
         groups.add(group);
         System.out.println("loadGroups");

@@ -19,7 +19,7 @@
     <string name="time">11.00</string>
     <string name="NewActivity">New Activity</string>
     <string name="GroupDetails">Group Details</string>
-    <string name="group_name">Group name</string>
+    <string name="group_name">Team name</string>
     <string name="CreateGroup">Create Group</string>
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
@@ -33,7 +33,7 @@
     <string name="TaskDetails">My Task 1</string>
     <string name="task_owner">task owner</string>
     <string name="Save">Save</string>
-    <string name="groupPhoto">Group photo</string>
+
     <string name="task_title">Title</string>
 
 

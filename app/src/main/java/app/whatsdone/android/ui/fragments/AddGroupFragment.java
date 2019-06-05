@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,15 +24,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.whatsdone.android.ui.presenter.GroupPresenter;
-import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
 import de.hdodenhof.circleimageview.CircleImageView;
 import app.whatsdone.android.R;
 
@@ -56,7 +52,6 @@ public class AddGroupFragment extends Fragment {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Cursor cursor;
     private ArrayAdapter arrayAdapter;
-    private GroupPresenter presenter;
 
     public AddGroupFragment() {
         // Required empty public constructor
@@ -126,8 +121,6 @@ public class AddGroupFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-              //  presenter.loadGroups();
-                presenter.addNewGroup();
 
             }
         });
@@ -135,19 +128,6 @@ public class AddGroupFragment extends Fragment {
         return view;
 
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission is granted
-//
-//                contacts.add(name);
-//            } else {
-//                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
