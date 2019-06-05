@@ -2,12 +2,14 @@ package app.whatsdone.android.ui.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
 import app.whatsdone.android.model.TaskInnerGroup;
@@ -117,7 +120,18 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         switch (item.getItemId())
         {
             case R.id.discussion:
-                System.out.println("discussion clicked");
+//                //this is for open discussion
+//                fragmentManager = getFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragment = new InnerGroupDiscussionFragment();
+//                fragmentTransaction.add(R.id.discussion, fragment);
+//                fragmentTransaction.commit();
+
+//                AppCompatActivity activity = (AppCompatActivity) getContext();
+//                Fragment myFragment = new CreateNewTaskFragment();
+//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
+                startActivity(intent);
 
                 return true;
 
