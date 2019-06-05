@@ -23,11 +23,17 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     private boolean swipeBack = false;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private RectF buttonInstance = null;
+    private RectF buttonInstance1 = null;
+    private RectF buttonInstance2 = null;
+
     private TaskSwipeControllerAction buttonsActions;
     private TaskSwipeController.ButtonsState buttonShowedState = TaskSwipeController.ButtonsState.GONE;
     private static final float buttonWidth = getScreenWidth()/5;
     private static final float rightSwipeWidth = buttonWidth*3;
-    private  RectF leftButton, rightInProgressButton, rightOnHoldButton, rightDoneButton;
+    private  RectF leftButton = null;
+    private RectF rightInProgressButton = null;
+    private RectF rightOnHoldButton = null;
+    private RectF rightDoneButton = null;
 
 
     public static int getScreenWidth() {
@@ -132,11 +138,17 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         drawText("Done", c, rightDoneButton, p);
 
 
-        buttonInstance = null;
+      //  buttonInstance = null;
         if (buttonShowedState == TaskSwipeController.ButtonsState.RIGHT_VISIBLE) {
-            buttonInstance = rightDoneButton;
-            buttonInstance=rightOnHoldButton;
-            buttonInstance=rightInProgressButton;
+            buttonInstance = rightInProgressButton;
+         //   buttonInstance1 = rightOnHoldButton;
+         //   buttonInstance2 = rightDoneButton;
+          //  if(buttonInstance == TaskSwipeController.ButtonsState.) return;
+         //   if(buttonInstance==rightOnHoldButton) return;
+           // if(buttonInstance==rightDoneButton) return;
+//            buttonInstance = rightDoneButton;
+//            buttonInstance=rightOnHoldButton;
+//            buttonInstance=rightInProgressButton;
 
         }
 
@@ -175,6 +187,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
                 if (swipeBack) {
                     if (dX < -buttonWidth)
                     {
+                        System.out.println("right visible");
                         buttonShowedState = TaskSwipeController.ButtonsState.RIGHT_VISIBLE;
                     }
 
@@ -224,14 +237,17 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
+
                 if (event.getAction() == MotionEvent.ACTION_UP)
                 {
+                    System.out.println("on touch 1st if");
 
                     TaskSwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
 
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
+
                             return false;
                         }
                     });
@@ -239,23 +255,25 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
                     swipeBack = false;
 
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
+                        System.out.println("on touch 2nd if");
                         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
                             buttonsActions.onTaskDeleteClicked(viewHolder.getAdapterPosition());
 
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+                            System.out.println("else if");
+
                             if (rightDoneButton.contains(event.getX(), event.getY())) buttonsActions.onTaskDoneClicked(viewHolder.getAdapterPosition());
 
                             if(rightOnHoldButton.contains(event.getX(), event.getY())) buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
 
-//
                             if(rightInProgressButton.contains(event.getX(), event.getY()))  buttonsActions.onTaskInProgressClicked(viewHolder.getAdapterPosition());
 
                               //if(buttonInstance.contains(rightInProgressButton))  buttonsActions.onTaskInProgressClicked(viewHolder.getAdapterPosition());
-//
-//                            if(buttonInstance.contains(rightOnHoldButton)) buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
 
-                            //System.out.println("touch up");
+                           // if(buttonInstance.contains(rightOnHoldButton)) buttonsActions.onTaskOnHoldClicked(viewHolder.getAdapterPosition());
+
+                            System.out.println("touch up");
                             // buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
                         }
 
