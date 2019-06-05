@@ -127,7 +127,7 @@ public class AddGroupFragment extends Fragment {
             public void onClick(View v) {
 
               //  presenter.loadGroups();
-                presenter.addNewGroup();
+                //presenter.addNewGroup();
 
             }
         });
