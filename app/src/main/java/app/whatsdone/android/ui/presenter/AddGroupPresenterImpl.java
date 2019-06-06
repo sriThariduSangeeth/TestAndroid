@@ -41,6 +41,13 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
     }
 
+    @Override
+    public void updateTeam(Group group) {
+
+    }
+
+
+
     public void setContext(Activity context) {
         this.context = context;
     }

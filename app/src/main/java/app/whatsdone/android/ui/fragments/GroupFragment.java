@@ -93,6 +93,17 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     }
 
+//    @Override
+//    public void deleteTeam(String id) {
+//
+//    }
+//
+//    @Override
+//    public void deleteTeam(int position) {
+//        adapter.groups.remove(position);
+//        adapter.notifyItemRemoved(position);
+//        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+//    }
 
 
     public interface OnGroupFragmentInteractionListener {
@@ -125,14 +136,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                System.out.println("hi");
+              // presenter.deleteTeam(position);
             }
 
             @Override
             public void onLeftClicked(int position) {
-                adapter.groups.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+
             }
         });
 
