@@ -111,13 +111,13 @@ public class GroupSwipeController extends Callback {
 
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
+
         float corners = 0;
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
+        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
         p.setColor(Color.RED);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("DELETE", c, leftButton, p);

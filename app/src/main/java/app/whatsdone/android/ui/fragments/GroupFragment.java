@@ -27,6 +27,7 @@ import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class GroupFragment extends Fragment implements GroupFragmentView {
@@ -39,6 +40,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private View view;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
+    private CircleImageView circleImageView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
+        circleImageView = view.findViewById(R.id.image_view_group);
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
@@ -85,6 +88,17 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     }
 
+//    @Override
+//    public void deleteTeam(String id) {
+//
+//    }
+//
+//    @Override
+//    public void deleteTeam(int position) {
+//        adapter.groups.remove(position);
+//        adapter.notifyItemRemoved(position);
+//        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+//    }
 
 
     public interface OnGroupFragmentInteractionListener {
@@ -117,14 +131,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                System.out.println("hi");
+              // presenter.deleteTeam(position);
             }
 
             @Override
             public void onLeftClicked(int position) {
-                adapter.groups.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+
             }
         });
 

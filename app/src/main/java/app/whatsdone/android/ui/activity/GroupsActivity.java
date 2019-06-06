@@ -1,8 +1,10 @@
 package app.whatsdone.android.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,8 +14,10 @@ import android.view.View;
 import app.whatsdone.android.R;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
+import app.whatsdone.android.ui.fragments.AddGroupFragment;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
 import app.whatsdone.android.ui.fragments.GroupFragment;
+import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
 import app.whatsdone.android.ui.fragments.MyTaskFragment;
 import app.whatsdone.android.ui.fragments.SettingFragment;
@@ -30,6 +34,8 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupFragment groupFragment;
     private MyTaskFragment myTaskFragment;
     private GroupsRecyclerViewAdapter recyclerViewAdapter;
+    private AddGroupFragment addGroupFragment = new AddGroupFragment();
+    private InnerGroupTaskFragment innerGroupTaskFragment;
 
 
 
@@ -49,12 +55,7 @@ public class GroupsActivity extends AppCompatActivity {
         toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //finish();
-            }
-        });
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
 
@@ -120,9 +121,22 @@ public class GroupsActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Teams"),true);
         tabLayout.addTab(tabLayout.newTab().setText("My Tasks"));
         tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+       // tabLayout.addTab(tabLayout.newTab().setText("Teams").setIcon(R.drawable.group_tab_icon),true);
+
     }
 
-
-
+//
+//    @Override
+//    public void onBackPressed() {
+//        FragmentManager fragmentManager;
+//        fragmentManager = getSupportFragmentManager();
+//
+//        addGroupFragment = (AddGroupFragment) getSupportFragmentManager().findFragmentByTag("Add_Group_Fragment");
+//        if(addGroupFragment !=null && addGroupFragment.isVisible())
+//        {
+//            fragmentManager.popBackStack();
+//        }
+//
+//    }
 
 }
