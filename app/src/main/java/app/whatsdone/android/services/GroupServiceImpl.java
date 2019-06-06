@@ -22,7 +22,7 @@ import app.whatsdone.android.utils.Constants;
 
 public class GroupServiceImpl implements GroupService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = GroupServiceImpl.class.getCanonicalName();
+    private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
     private Activity context;
 

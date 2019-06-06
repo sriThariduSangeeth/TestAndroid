@@ -23,7 +23,7 @@ import app.whatsdone.android.utils.Constants;
 public class TaskServiceImpl implements TaskService {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = GroupServiceImpl.class.getCanonicalName();
+    private static final String TAG = TaskServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
     private Activity context;
 

@@ -75,6 +75,30 @@ public class User implements BaseEntity, IUser {
         return deviceTokens;
     }
 
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setEnableNotifications(boolean enableNotifications) {
+        this.enableNotifications = enableNotifications;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public void setDeviceTokens(List<String> deviceTokens) {
+        this.deviceTokens = deviceTokens;
+    }
+
     public Map<String, Object> toData(){
         Map<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_USER_PHONE_NO, phoneNo);
