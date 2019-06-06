@@ -16,44 +16,27 @@
         android:id="@+id/group_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/background"
+        android:background="@color/grey"
         android:orientation="vertical"
+
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.38"
         tools:layout_conversion_wrapHeight="500"
         tools:layout_conversion_wrapWidth="1080" />
 
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_add_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="36dp"
-            android:layout_marginRight="36dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
 
             android:layout_marginBottom="36dp"
             android:background="@color/fab_color"
             android:backgroundTint="@color/fab_color"
-            android:src="@drawable/ic_fab"
+            android:src="@drawable/ic_add"
             app:backgroundTint="@color/fab_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,5 +44,3 @@
 
             tools:targetApi="lollipop" />
     </android.support.constraint.ConstraintLayout>
-
-</android.support.constraint.ConstraintLayout>

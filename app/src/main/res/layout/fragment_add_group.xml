@@ -7,11 +7,12 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
 
     android:layout_alignParentBottom="true"
     android:background="@color/background"
+    android:tag=""
 
     >
 
@@ -54,7 +55,8 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:background="@color/grey"
+
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.893"
             app:layout_constraintStart_toEndOf="@+id/teamPhoto_text_view"
@@ -100,7 +102,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:layout_marginBottom="8dp"
             android:text="@string/group_name"
             android:textColor="@color/black"
@@ -118,10 +120,8 @@
             android:layout_height="wrap_content"
 
 
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginBottom="8dp"
             android:hint="@string/group_name"
             android:inputType="text"
             android:paddingTop="10sp"
@@ -217,19 +217,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
 
-        android:layout_marginStart="319dp"
-        android:layout_marginLeft="319dp"
-
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
 
         android:layout_marginBottom="36dp"
         android:background="@color/fab_color"
         android:backgroundTint="@color/fab_color"
-        android:src="@drawable/ic_done"
+        android:src="@drawable/ic_check"
         app:backgroundTint="@color/fab_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/fab_color" />
+        app:rippleColor="@color/fab_color"
+
+
+        />
 </android.support.constraint.ConstraintLayout>

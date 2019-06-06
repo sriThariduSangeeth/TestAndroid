@@ -107,10 +107,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
 
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
 
-//setHasOptionsMenu(false);
 
-       // groupFragment.setTargetFragment(this,targetCode);
         setupRecyclerView();
        return view;
 
@@ -148,6 +152,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
 
             case R.id.settings:
+
+//                AppCompatActivity activity = (AppCompatActivity) getContext();
+//                Fragment myFragment = new AddGroupFragment();
+//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+//
 
                 System.out.println("settings clicked");
                 return false;
