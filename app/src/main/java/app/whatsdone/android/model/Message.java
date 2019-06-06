@@ -9,7 +9,7 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-public class Message implements IMessage, MessageContentType.Image,MessageContentType {
+public class Message implements IMessage, MessageContentType.Image,MessageContentType,BaseEntity {
 
     private String id;
     private String text;
@@ -17,6 +17,10 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
     private User user;
     private Image image;
     private Voice voice;
+
+    public  Message(){
+
+    }
 
     public Message(String id, User user, String text) {
         this(id, user, text, new Date());
@@ -34,6 +38,10 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String getText() {
         return text;
@@ -42,6 +50,10 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
     @Override
     public IUser getUser() {
         return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -53,6 +65,16 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
     @Override
     public String getImageUrl() {
         return image == null ? null : image.url;
+    }
+
+    @Override
+    public String getDocumentID() {
+        return null;
+    }
+
+    @Override
+    public void setDocumentID(String documentID) {
+
     }
 
     public static class Image {

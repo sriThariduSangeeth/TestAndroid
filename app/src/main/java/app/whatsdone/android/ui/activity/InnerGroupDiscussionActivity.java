@@ -3,7 +3,6 @@ package app.whatsdone.android.ui.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -14,18 +13,21 @@ import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.fixtures.MessagesFixtures;
 import app.whatsdone.android.model.Message;
+import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.MessageActivity;
 
 public class InnerGroupDiscussionActivity extends MessageActivity  implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
-        DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener,
+        MessageInput.TypingListener {
 
+    private String id = "I0W3Nrrr0IpUVaI33SnU";
     private Toolbar toolbar;
     private MessagesList messagesList;
     private static final byte CONTENT_TYPE_VOICE = 1;
+    private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
 
 
     @Override
@@ -53,11 +55,6 @@ public class InnerGroupDiscussionActivity extends MessageActivity  implements Me
 
 
     @Override
-    public void onLoadMore(int page, int totalItemsCount) {
-
-    }
-
-    @Override
     public void onSelectionChanged(int count) {
 
     }
@@ -80,7 +77,13 @@ public class InnerGroupDiscussionActivity extends MessageActivity  implements Me
     //send Massage
     @Override
     public boolean onSubmit(CharSequence input) {
-        super.messagesAdapter.addToStart(MessagesFixtures.getTextMessage(input.toString()), true);
+        Message message = new Message();
+        message.setId(id);
+        message.setCreatedAt(getCurrentDetails.getCurrentDateTime());
+        message.setText(input.toString());
+        message.setUser(getCurrentDetails.getCurrentUser());
+
+        super.messagesAdapter.addToStart(verifyMessageInsert(message), true);
         return true;
     }
 
@@ -96,4 +99,13 @@ public class InnerGroupDiscussionActivity extends MessageActivity  implements Me
         this.messagesList.setAdapter(super.messagesAdapter);
     }
 
+    @Override
+    public void onStartTyping() {
+
+    }
+
+    @Override
+    public void onStopTyping() {
+
+    }
 }

@@ -51,11 +51,17 @@ public class Constants {
     public static final String FIELD_TASK_CHECKLIST_COMPLETED = "is_completed";
 
 
+    // Discussion Field
+    public static final String FIELD_DISCUSSION_USER_ID = "by_user";
+    public static final String FIELD_DISCUSSION_USER_NAME = "user_name";
+    public static final String FIELD_DISCUSSION_GROUP_ID = "group_id";
+    public static final String FIELD_DISCUSSION_MESSAGE = "message";
+    public static final String FIELD_DISCUSSION_POSTED_AT = "posted_at";
+    public static final String FIELD_DISCUSSION_USER_AVATAR = "user_image";
+
+
     public static final String ARG_GROUP_ID = "group_id";
     public static final String ARG_GROUP_NAME = "group_title";
-
-
-    public static final String URL_FIREBASE = "https://us-central1-whatsdone-f770e.cloudfunctions.net/api";
 
     public static final int IMAGE_HEIGHT = 180;
     public static final int IMAGE_WIDTH = 180;

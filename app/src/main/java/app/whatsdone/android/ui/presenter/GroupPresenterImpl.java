@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.presenter;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
