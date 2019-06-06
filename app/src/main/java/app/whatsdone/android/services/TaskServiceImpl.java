@@ -25,16 +25,11 @@ public class TaskServiceImpl implements TaskService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = TaskServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
-    private Activity context;
-
-    public void setContext(Activity context) {
-        this.context = context;
-    }
 
     @Override
-    public void subscribeForUser(String userId, ServiceListener serviceListener) {
+    public void subscribeForUser(ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_TASKS)
-                .whereEqualTo(Constants.FIELD_TASK_ASSIGNED_USER, userId)
+                .whereEqualTo(Constants.FIELD_TASK_ASSIGNED_USER, AuthServiceImpl.getCurrentUser().getDocumentID())
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Task subscription failed", e);
@@ -151,7 +146,7 @@ public class TaskServiceImpl implements TaskService {
         }
         data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
-        document.set(data).addOnCompleteListener(context, taskResult -> {
+        document.set(data).addOnCompleteListener(taskResult -> {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -184,7 +179,7 @@ public class TaskServiceImpl implements TaskService {
         }
         data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
-        document.update(data).addOnCompleteListener(context, taskResult -> {
+        document.update(data).addOnCompleteListener(taskResult -> {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -200,7 +195,7 @@ public class TaskServiceImpl implements TaskService {
         db.collection(Constants.REF_TASKS)
                 .document(id)
                 .delete()
-                .addOnCompleteListener(context, task -> {
+                .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
                         serviceListener.onSuccess();
                     }else {

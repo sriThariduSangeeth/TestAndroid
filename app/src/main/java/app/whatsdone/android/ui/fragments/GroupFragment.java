@@ -55,7 +55,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         myrecycler = view.findViewById(R.id.group_recycler_view);
 
         this.presenter = new GroupPresenterImpl();
-        this.presenter.init(this, getActivity());
+        this.presenter.init(this);
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {

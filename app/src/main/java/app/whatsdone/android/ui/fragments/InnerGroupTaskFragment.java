@@ -88,7 +88,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
         this.taskInnerGroupPresenter = new TaskInnerGroupPresenterImpl();
-        this.taskInnerGroupPresenter.init(this, getActivity());
+        this.taskInnerGroupPresenter.init(this);
         this.taskInnerGroupPresenter.loadTasksInner(groupId);
 
         //fab

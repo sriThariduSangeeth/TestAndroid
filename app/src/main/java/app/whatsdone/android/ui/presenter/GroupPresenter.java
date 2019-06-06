@@ -7,7 +7,7 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 
 public interface GroupPresenter {
-    void init(GroupFragmentView view, Activity context);
+    void init(GroupFragmentView view);
     void subscribe();
     void unSubscribe();
 

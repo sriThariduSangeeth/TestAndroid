@@ -20,7 +20,6 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
     @Override
     public void create(Group group) {
-        ((GroupServiceImpl) service).setContext(context);
 
         service.create(group, new ServiceListener() {
             @Override
