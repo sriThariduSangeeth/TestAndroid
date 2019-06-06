@@ -17,8 +17,11 @@ import java.util.List;
 import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.ExistInPlatformRequest;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.utils.Constants;
+import retrofit2.Retrofit;
 
 public class GroupServiceImpl implements GroupService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -130,6 +133,19 @@ public class GroupServiceImpl implements GroupService {
                 });
 
 
+    }
+
+    @Override
+    public void leave(String groupId, ServiceListener serviceListener) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.github.com/")
+                .build();
+
+        CloudService service = retrofit.create(CloudService.class);
+        LeaveGroupRequest request = new LeaveGroupRequest();
+        request.setGroupId(groupId);
+        //service.leaveGroup(request);
+        serviceListener.onSuccess();
     }
 
     @Override

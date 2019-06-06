@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.github.stfalcon:chatkit:0.3.3'
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.5.0'
 
 }
 
