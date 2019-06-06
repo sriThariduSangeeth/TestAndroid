@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,6 +169,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
                 group.setAdmins(admins);
 
 
+
                 contacts.add(AuthServiceImpl.user.getDocumentID());
               //  AuthServiceImpl.user.getDocumentID();
 
@@ -185,6 +187,8 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 //                getActivity().onBackPressed();
 //            }
 //        });
+
+
         return view;
 
     }
@@ -308,7 +312,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 //                    REQUEST_CAPTURE_IMAGE);
 //        }
 //    }
-
 
 
 }

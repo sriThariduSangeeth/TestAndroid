@@ -11,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,17 +22,14 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.ui.presenter.DeleteGroupPresenter;
-import app.whatsdone.android.ui.presenter.DeleteGroupPresenterImpl;
 import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
-import app.whatsdone.android.ui.view.DeleteGroupFragmentView;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class GroupFragment extends Fragment implements GroupFragmentView, DeleteGroupFragmentView {
+public class GroupFragment extends Fragment implements GroupFragmentView{
 
     private List<BaseEntity> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
@@ -46,7 +41,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
     private RecyclerView myrecycler;
     private CircleImageView circleImageView;
     private Group group = new Group();
-    private DeleteGroupPresenter presenterDel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +59,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
-        this.presenterDel =new DeleteGroupPresenterImpl();
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
@@ -161,7 +154,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
 
 
                 // groups.get(position).getDocumentID();
-                presenterDel.deleteTeam(groups.get(position).getDocumentID());
+                presenter.deleteTeam(groups.get(position).getDocumentID());
 //                adapter.groups.remove(position);
 //                adapter.notifyItemRemoved(position);
 //                adapter.notifyItemRangeChanged(position, adapter.getItemCount());

@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -107,12 +108,13 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                getActivity().onBackPressed();
+//            }
+//        });
 
 
         setupRecyclerView();
