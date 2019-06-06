@@ -13,24 +13,24 @@
     android:background="@color/white"
     android:orientation="horizontal">
 
-    <shape
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:shape="oval"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/unread_tasks_counter">
+    <!--<shape-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:shape="oval"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toStartOf="@+id/unread_tasks_counter">-->
 
-        <solid android:color="#e42828" />
+        <!--<solid android:color="#e42828" />-->
 
-        <stroke
-            android:width="5dp"
-            android:color="#3b91d7" />
-        <!-- Set the same value for both width and height to get a circular shape -->
-        <size
-            android:width="250dp"
-            android:height="250dp" />
-    </shape>
+        <!--<stroke-->
+            <!--android:width="5dp"-->
+            <!--android:color="#3b91d7" />-->
+        <!--&lt;!&ndash; Set the same value for both width and height to get a circular shape &ndash;&gt;-->
+        <!--<size-->
+            <!--android:width="250dp"-->
+            <!--android:height="250dp" />-->
+    <!--</shape>-->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view_group"
         android:layout_width="50sp"
