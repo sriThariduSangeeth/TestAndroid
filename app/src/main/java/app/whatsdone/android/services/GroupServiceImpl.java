@@ -83,7 +83,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
-        document.set(data).addOnCompleteListener(context, task -> {
+        document.set(data).addOnCompleteListener(task -> {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -103,7 +103,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
-        document.update(data).addOnCompleteListener(context, task -> {
+        document.update(data).addOnCompleteListener(task -> {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -121,7 +121,7 @@ public class GroupServiceImpl implements GroupService {
         db.collection(Constants.REF_TEAMS)
                 .document(id)
                 .delete()
-                .addOnCompleteListener(context, task -> {
+                .addOnCompleteListener(task -> {
                    if(task.isSuccessful()) {
                     serviceListener.onSuccess();
                    }else {

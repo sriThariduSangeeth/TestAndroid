@@ -38,7 +38,8 @@ public class AuthServiceImpl implements AuthService {
                 && firebaseAuth.getCurrentUser() != null){
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             user.setDocumentID(firebaseUser.getPhoneNumber());
-
+            user.setAvatar(firebaseUser.getPhotoUrl().toString());
+            user.setDisplayName(firebaseUser.getDisplayName());
         }
 
         return user;
@@ -97,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential, AuthService.Listener listener) {
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(context, task -> {
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");

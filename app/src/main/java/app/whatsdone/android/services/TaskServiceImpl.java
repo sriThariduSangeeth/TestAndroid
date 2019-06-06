@@ -151,7 +151,7 @@ public class TaskServiceImpl implements TaskService {
         }
         data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
-        document.set(data).addOnCompleteListener(context, taskResult -> {
+        document.set(data).addOnCompleteListener(taskResult -> {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -184,7 +184,7 @@ public class TaskServiceImpl implements TaskService {
         }
         data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
-        document.update(data).addOnCompleteListener(context, taskResult -> {
+        document.update(data).addOnCompleteListener(taskResult -> {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
