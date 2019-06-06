@@ -3,14 +3,20 @@ package app.whatsdone.android.services;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
 
@@ -122,17 +128,87 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void create(BaseEntity entity, ServiceListener listener) {
+    public void create(BaseEntity entity, ServiceListener serviceListener) {
+        Task task = (Task)entity;
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
+        data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
+        data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
+        List<Object> checkListItems = new ArrayList<>();
+        for (CheckListItem item :
+                task.getCheckList()) {
+            Map<String, Object> checkListItem = new HashMap<>();
+            checkListItem.put(Constants.FIELD_TASK_CHECKLIST_TITLE, item.getTitle());
+            checkListItem.put(Constants.FIELD_TASK_CHECKLIST_COMPLETED, item.isCompleted());
+            checkListItems.add(checkListItem);
+        }
+        data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
+        document.set(data).addOnCompleteListener(context, taskResult -> {
+            if(taskResult.isSuccessful())
+                serviceListener.onSuccess();
+            else {
+                Log.w(TAG, "Error creating document.", taskResult.getException());
+                serviceListener.onError(taskResult.getException().getLocalizedMessage());
+            }
+            serviceListener.onCompleted(null);
+        });
     }
 
     @Override
-    public void update(BaseEntity entity, ServiceListener listener) {
+    public void update(BaseEntity entity, ServiceListener serviceListener) {
+        Task task = (Task)entity;
+        DocumentReference document = db.collection(Constants.REF_TASKS).document(entity.getDocumentID());
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
+        data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
+        data.put(Constants.FIELD_TASK_ASSIGNED_BY, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        List<Object> checkListItems = new ArrayList<>();
+        for (CheckListItem item :
+                task.getCheckList()) {
+            Map<String, Object> checkListItem = new HashMap<>();
+            checkListItem.put(Constants.FIELD_TASK_CHECKLIST_TITLE, item.getTitle());
+            checkListItem.put(Constants.FIELD_TASK_CHECKLIST_COMPLETED, item.isCompleted());
+            checkListItems.add(checkListItem);
+        }
+        data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
 
+        document.update(data).addOnCompleteListener(context, taskResult -> {
+            if(taskResult.isSuccessful())
+                serviceListener.onSuccess();
+            else {
+                Log.w(TAG, "Error creating document.", taskResult.getException());
+                serviceListener.onError(taskResult.getException().getLocalizedMessage());
+            }
+            serviceListener.onCompleted(null);
+        });
     }
 
     @Override
-    public void delete(String documentID, ServiceListener listener) {
+    public void delete(String id, ServiceListener serviceListener) {
+        db.collection(Constants.REF_TASKS)
+                .document(id)
+                .delete()
+                .addOnCompleteListener(context, task -> {
+                    if(task.isSuccessful()) {
+                        serviceListener.onSuccess();
+                    }else {
+                        Log.w(TAG, "Error deleting document.", task.getException());
+                        serviceListener.onError(task.getException().getLocalizedMessage());
+                    }
+                    serviceListener.onCompleted(null);
+                });
 
     }
 }
