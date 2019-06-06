@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_groups_constraint_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     >
 
     <android.support.v7.widget.Toolbar
@@ -44,14 +44,13 @@
         app:tabBackground="@color/white"
         app:tabIndicatorColor="@color/grey"
         app:tabMode="fixed"
+        app:tabGravity="fill"
         app:tabTextColor="@color/black" />
 
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/container"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="horizontal"></LinearLayout>-->
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

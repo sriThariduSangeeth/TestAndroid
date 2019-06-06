@@ -39,14 +39,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private View view;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
-    //private GroupSwipeControllerActions buttonsActions = null;
-
-
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//
-//        menu.clear();
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,7 +138,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                 groupSwipeController.onDraw(c);
             }
         });
-       // presenter.subscribe();
+        presenter.subscribe();
     }
 
 

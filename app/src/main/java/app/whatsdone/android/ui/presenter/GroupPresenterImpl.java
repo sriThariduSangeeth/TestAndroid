@@ -27,13 +27,14 @@ public class GroupPresenterImpl implements GroupPresenter{
     public void init(GroupFragmentView view, Activity context) {
         this.view = view;
         this.context = context;
+        ((GroupServiceImpl) service).setContext(context);
         System.out.println("init");
     }
 
     @Override
     public void subscribe() {
 
-        ((GroupServiceImpl) service).setContext(context);
+
         service.subscribe(new ServiceListener() {
             @Override
             public void onDataReceived(List<BaseEntity> entities) {
@@ -44,7 +45,7 @@ public class GroupPresenterImpl implements GroupPresenter{
 
     @Override
     public void unSubscribe() {
-        //service.unSubscribe();
+        service.unSubscribe();
     }
 
 
