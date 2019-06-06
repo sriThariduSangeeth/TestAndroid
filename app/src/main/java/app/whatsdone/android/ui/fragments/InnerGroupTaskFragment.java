@@ -50,6 +50,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private TaskSwipeController taskSwipeController;
     private Fragment fragment;
     private GroupFragment groupFragment;
+    private Group group = new Group();
 
 
     public static InnerGroupTaskFragment newInstance(Group group){
@@ -155,10 +156,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             case R.id.settings:
 
-//                AppCompatActivity activity = (AppCompatActivity) getContext();
-//                Fragment myFragment = new AddGroupFragment();
-//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-//
+                AppCompatActivity activity = (AppCompatActivity) getContext();
+                Fragment myFragment = new AddGroupFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                //add group details
+                //String id = group.get(position)
+                //fillGroupData(int id);
 
                 System.out.println("settings clicked");
                 return false;

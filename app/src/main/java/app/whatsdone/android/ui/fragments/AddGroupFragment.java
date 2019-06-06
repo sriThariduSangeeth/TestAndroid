@@ -98,7 +98,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
 
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
@@ -122,15 +122,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
             }
         });
 
-//        circleImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("image view");
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent,RESULT_LOAD_IMAGE);
-//
-//            }
-//        });
 
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +132,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
 
                 }
@@ -160,7 +150,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
        ((AddGroupPresenterImpl) presenter).setContext(getActivity());
        group = new Group();
 
-       //memberListTextView = view.findViewById(R.id.text1)
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,21 +163,12 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
 
                 contacts.add(AuthServiceImpl.user.getDocumentID());
-              //  AuthServiceImpl.user.getDocumentID();
+
 
                 System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
                 presenter.create(group);
             }
         });
-
-
-//        toolbar = view.findViewById(R.id.toolbar);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getActivity().onBackPressed();
-//            }
-//        });
 
 
         return view;

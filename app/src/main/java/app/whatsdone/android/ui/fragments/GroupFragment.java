@@ -100,18 +100,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
 
     }
 
-//    @Override
-//    public void deleteTeam(String id) {
-//
-//    }
-//
-//    @Override
-//    public void deleteTeam(int position) {
-//        adapter.groups.remove(position);
-//        adapter.notifyItemRemoved(position);
-//        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-//    }
-
 
     public interface OnGroupFragmentInteractionListener {
 
@@ -151,9 +139,10 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             @Override
             public void onLeftClicked(int position) {
                 try {
+                  //  if(group.getCreatedBy() == group.getCurrentUser)
 
 
-                // groups.get(position).getDocumentID();
+
                 presenter.deleteTeam(groups.get(position).getDocumentID());
 //                adapter.groups.remove(position);
 //                adapter.notifyItemRemoved(position);
