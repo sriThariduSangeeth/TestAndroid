@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,7 +153,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
         });
 
 
-        presenter =new AddGroupPresenterImpl();
+        presenter = new AddGroupPresenterImpl();
         this.presenter.init(this,getActivity());
 
        ((AddGroupPresenterImpl) presenter).setContext(getActivity());
@@ -161,7 +164,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
             @Override
             public void onClick(View v) {
                 admins.add(AuthServiceImpl.user.getDocumentID());
-
+                group.setTeamImage(getImageData(circleImageView));
                 group.setGroupName(teamName.getText().toString());
                 group.setMembers(contacts);
                 group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
@@ -172,7 +175,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
               //  AuthServiceImpl.user.getDocumentID();
 
                 System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
-
                 presenter.create(group);
             }
         });
@@ -187,6 +189,18 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 //        });
         return view;
 
+    }
+
+    private Bitmap getImageData(ImageView imageView){
+        //Get the data from an ImageView as bytes
+        if (imageView == null) return null;
+        Drawable drawable = imageView.getDrawable();
+
+        if(drawable == null) return null;
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        return  bitmap;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

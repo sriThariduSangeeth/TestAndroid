@@ -1,5 +1,7 @@
 package app.whatsdone.android.model;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +18,15 @@ public class Group implements BaseEntity {
   private List<String> members;
   private String createdBy;
   private List<String> admins;
+  private Bitmap teamImage;
+
+  public Bitmap getTeamImage() {
+        return teamImage;
+  }
+
+  public void setTeamImage(Bitmap teamImage) {
+        this.teamImage = teamImage;
+  }
 
   public String getGroupName() {
     return groupName;
