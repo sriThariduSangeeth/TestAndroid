@@ -1,6 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -17,7 +16,6 @@ import app.whatsdone.android.utils.Constants;
 public class UserServiceImpl implements UserService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = UserServiceImpl.class.getSimpleName();
-    private Activity context;
 
     @Override
     public void getById(String id, UserService.Listener serviceListener) {
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService {
         data.put(Constants.FIELd_USER_ENABLE_NOTIFICATIONS, user.isEnableNotifications());
         data.put(Constants.FIELd_USER_STATUS, user.getStatus());
 
-        document.set(data, SetOptions.merge()).addOnCompleteListener(context, task -> {
+        document.set(data, SetOptions.merge()).addOnCompleteListener(task -> {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -88,8 +86,4 @@ public class UserServiceImpl implements UserService {
         serviceListener.onError("Users are not allowed to delete");
     }
 
-    @Override
-    public void setContext(Activity activity) {
-     this.context = context;
-    }
 }

@@ -19,12 +19,10 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter{
     private static final String TAG = TaskInnerGroupPresenterImpl.class.getSimpleName();
     private TaskInnerGroupFragmentView view;
     TaskService service = new TaskServiceImpl();
-    private Activity context;
 
     @Override
-    public void init(TaskInnerGroupFragmentView view, Activity activity) {
+    public void init(TaskInnerGroupFragmentView view) {
         this.view = view;
-        service.setContext(activity);
     }
 
     @Override

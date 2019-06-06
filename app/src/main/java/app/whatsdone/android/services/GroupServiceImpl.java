@@ -24,11 +24,6 @@ public class GroupServiceImpl implements GroupService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
-    private Activity context;
-
-    public void setContext(Activity context) {
-        this.context = context;
-    }
 
     @Override
     public void getAllGroups(String userId, ServiceListener serviceListener) {

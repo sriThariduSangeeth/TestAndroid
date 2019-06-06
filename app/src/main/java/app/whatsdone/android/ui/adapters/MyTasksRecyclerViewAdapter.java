@@ -10,15 +10,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
-    private List<Task> tasks;
+    private List<BaseEntity> tasks;
 
     private OnMyTaskFragmentInteractionListener listener;
 
-    public MyTasksRecyclerViewAdapter(List<Task> tasks)
+    public MyTasksRecyclerViewAdapter(List<BaseEntity> tasks)
     {
         this.tasks = tasks;
     }
@@ -56,7 +57,8 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolderTask recyclerViewHolderTask, int i)
     {
-        recyclerViewHolderTask.textView.setText(tasks.get(i).getTitle());
+        Task task = (Task)tasks.get(i);
+        recyclerViewHolderTask.textView.setText(task.getTitle());
 
         recyclerViewHolderTask.textView.setOnClickListener(new View.OnClickListener() {
             @Override

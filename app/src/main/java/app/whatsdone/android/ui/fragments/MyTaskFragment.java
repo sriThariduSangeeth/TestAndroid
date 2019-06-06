@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
@@ -24,7 +25,7 @@ import app.whatsdone.android.ui.view.MyTaskFragmentView;
 public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
 
 
-    private List<Task> tasks = new ArrayList<>();
+    private List<BaseEntity> tasks = new ArrayList<>();
     private MyTasksRecyclerViewAdapter tasksAdapter;
     private MyTaskPresenter taskPresenter;
     private FloatingActionButton addFab;
@@ -39,17 +40,6 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_task_my, container, false);
-
-        List<Task> tasks = new ArrayList<>();
-
-        for (int i=0; i<20 ; i++)
-        {
-            Task task = new Task();
-            task.setTitle("My task " +i);
-            tasks.add(task);
-
-        }
-        this.tasks.addAll(tasks);
 
         RecyclerView recycler = view.findViewById(R.id.task_recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,7 +74,8 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
 //    }
 
     @Override
-    public void updateTasks(List<Task> tasks) {
+    public void updateTasks(List<BaseEntity> tasks) {
+        this.tasks.clear();
         this.tasks.addAll(tasks);
         tasksAdapter.notifyDataSetChanged();
 

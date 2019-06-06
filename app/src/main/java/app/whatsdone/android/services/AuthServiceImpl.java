@@ -32,8 +32,8 @@ public class AuthServiceImpl implements AuthService {
         this.context = context;
     }
 
-    @Override
-    public User getCurrentUser() {
+    public static User getCurrentUser() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if((user.getDocumentID() == null || user.getDocumentID() == "")
                 && firebaseAuth.getCurrentUser() != null){
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
