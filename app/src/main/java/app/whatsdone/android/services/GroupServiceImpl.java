@@ -24,11 +24,6 @@ public class GroupServiceImpl implements GroupService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
-    private Activity context;
-
-    public void setContext(Activity context) {
-        this.context = context;
-    }
 
     @Override
     public void getAllGroups(String userId, ServiceListener serviceListener) {
@@ -86,7 +81,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
-        document.set(data).addOnCompleteListener(context, task -> {
+        document.set(data).addOnCompleteListener(task -> {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -106,7 +101,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
-        document.update(data).addOnCompleteListener(context, task -> {
+        document.update(data).addOnCompleteListener(task -> {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
@@ -124,7 +119,7 @@ public class GroupServiceImpl implements GroupService {
         db.collection(Constants.REF_TEAMS)
                 .document(id)
                 .delete()
-                .addOnCompleteListener(context, task -> {
+                .addOnCompleteListener(task -> {
                    if(task.isSuccessful()) {
                     serviceListener.onSuccess();
                    }else {

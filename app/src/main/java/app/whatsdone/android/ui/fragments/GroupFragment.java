@@ -58,7 +58,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         circleImageView = view.findViewById(R.id.image_view_group);
 
         this.presenter = new GroupPresenterImpl();
-        this.presenter.init(this, getActivity());
+        this.presenter.init(this);
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
