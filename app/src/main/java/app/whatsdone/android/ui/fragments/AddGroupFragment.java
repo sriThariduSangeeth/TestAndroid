@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,21 +33,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.ui.presenter.AddGroupPresenter;
+import app.whatsdone.android.ui.presenter.AddGroupPresenterImpl;
 import app.whatsdone.android.ui.presenter.GroupPresenter;
-import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
+import app.whatsdone.android.ui.view.AddGroupFragmentView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import app.whatsdone.android.R;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddGroupFragment extends Fragment {
+public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
     private Toolbar toolbar;
     private TextView teamPhoto, contactListTextView;
     private Button addMembers;
-    private Button saveButton;
     private CircleImageView circleImageView;
     private Uri selectedImage;
     private List<String> contacts = new ArrayList<String>();
@@ -56,7 +61,11 @@ public class AddGroupFragment extends Fragment {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Cursor cursor;
     private ArrayAdapter arrayAdapter;
-    private GroupPresenter presenter;
+    private AddGroupPresenter presenter;
+    private EditText teamName;
+    private GroupServiceImpl groupService = new GroupServiceImpl();
+    private Group group;
+    private ServiceListener serviceListener;
 
     public AddGroupFragment() {
         // Required empty public constructor
@@ -86,6 +95,13 @@ public class AddGroupFragment extends Fragment {
 
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
         teamPhoto = (TextView) view.findViewById(R.id.teamPhoto);
+        contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
+        addMembers = (Button) view.findViewById(R.id.add_members_button);
+        teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
+
+
+
+
         teamPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,9 +111,15 @@ public class AddGroupFragment extends Fragment {
             }
         });
 
-        contactListView = view.findViewById(R.id.add_members_list_view);
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent,RESULT_LOAD_IMAGE);
 
-        addMembers = view.findViewById(R.id.add_members_button);
+            }
+        });
+
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,34 +142,25 @@ public class AddGroupFragment extends Fragment {
         });
 
 
-        //save group button
-        saveButton = view.findViewById(R.id.save_group_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        presenter =new AddGroupPresenterImpl();
+       ((AddGroupPresenterImpl) presenter).setContext(getActivity());
+
+        view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-              //  presenter.loadGroups();
-                //presenter.addNewGroup();
+              //  group.setGroupName(teamName.getText().toString());
+                //group.setMembers();
+              //  group.setAvatar("");
 
+
+                //presenter.create(group);
             }
         });
 
         return view;
 
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission is granted
-//
-//                contacts.add(name);
-//            } else {
-//                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -164,6 +177,17 @@ public class AddGroupFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onGroupSaved() {
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onGroupError(String errorMessage) {
+        Log.d("add group fragment",errorMessage);
+
     }
 
     public interface OnAddFragmentInteractionListener {
@@ -242,6 +266,19 @@ public class AddGroupFragment extends Fragment {
         parcelFileDescriptor.close();
         return image;
     }
+
+//    private static final int REQUEST_CAPTURE_IMAGE = 100;
+//
+//    private void openCameraIntent() {
+//        Intent pictureIntent = new Intent(
+//                MediaStore.ACTION_IMAGE_CAPTURE
+//        );
+//
+//        if(pictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+//            startActivityForResult(pictureIntent,
+//                    REQUEST_CAPTURE_IMAGE);
+//        }
+//    }
     
 
 }

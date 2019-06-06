@@ -7,4 +7,5 @@ import app.whatsdone.android.model.Group;
 
 public interface GroupFragmentView {
     void updateGroups(List<BaseEntity> groups);
+
 }

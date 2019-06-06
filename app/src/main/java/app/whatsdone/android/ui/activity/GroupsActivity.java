@@ -56,7 +56,7 @@ public class GroupsActivity extends AppCompatActivity {
             }
         });
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -78,15 +78,15 @@ public class GroupsActivity extends AppCompatActivity {
                switch (tab.getPosition())
                {
                    case 0:
-                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, groupContainerFragment).commit();
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
                        break;
 
                    case 1:
-                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, myTaskContainerFragment).commit();
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
                        break;
 
                    case 2:
-                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_ll, settingFragment).commit();
+                       getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, settingFragment).commit();
                        break;
 
 
@@ -117,7 +117,7 @@ public class GroupsActivity extends AppCompatActivity {
         myTaskContainerFragment = new MyTaskContainerFragment();
         settingFragment = new SettingFragment();
 
-        tabLayout.addTab(tabLayout.newTab().setText("Groups").setIcon(R.drawable.group_tab_icon),true);
+        tabLayout.addTab(tabLayout.newTab().setText("Teams").setIcon(R.drawable.group_tab_icon),true);
         tabLayout.addTab(tabLayout.newTab().setText("My Tasks").setIcon(R.drawable.task_tab_icon));
         tabLayout.addTab(tabLayout.newTab().setText("Settings").setIcon(R.drawable.settings_tab_icon));
     }

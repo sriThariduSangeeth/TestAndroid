@@ -22,6 +22,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public List<BaseEntity> groups;
   //  private ItemClickListener monItemClickListener;
     private Context context;
+    private TextView groupNameTextView;
 
 
 
@@ -38,6 +39,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
+        groupNameTextView = viewGroup.findViewById(R.id.group_text);
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
         return new RecyclerViewHolder(view);
 
@@ -48,42 +50,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         Group group = (Group) groups.get(position);
         holder.textView.setText(group.getGroupName());
         holder.setGroup(group);
-
-        //popup menu with 3 dots
-        /*
-        holder.textViewMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                PopupMenu popup = new PopupMenu(context, holder.textViewMenu);
-                popup.inflate(R.menu.group_item_options_menu);
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId())
-                        {
-                            case R.id.menu1:
-                                return true;
-                            case R.id.menu2:
-                                return true;
-                            case R.id.menu3:
-                                return true;
-                            default:
-                                return false;
-
-
-                        }
-
-
-                    }
-                });
-
-                popup.show();
-            }
-        });
-*/
-
 
     }
 

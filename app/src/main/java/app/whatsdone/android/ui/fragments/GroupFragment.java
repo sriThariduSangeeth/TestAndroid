@@ -35,9 +35,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
-    Toolbar toolbar;
+    private Toolbar toolbar;
     private View view;
-    GroupSwipeController groupSwipeController;
+    private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     //private GroupSwipeControllerActions buttonsActions = null;
 
@@ -92,6 +92,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
 
     }
+
+
+
     public interface OnGroupFragmentInteractionListener {
 
         void onAddClicked();
@@ -107,6 +110,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     public void onDetach() {
         super.onDetach();
         listener = null;
+        presenter.unSubscribe();
     }
 
     private void setupRecyclerView()
@@ -142,14 +146,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                 groupSwipeController.onDraw(c);
             }
         });
-        presenter.subscribe();
+       // presenter.subscribe();
     }
 
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        getTargetFragment().setMenuVisibility(false);
-//    }
 }
 

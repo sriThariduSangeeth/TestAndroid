@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="@string/time"
+        android:text="@string/date"
         android:textSize="15sp"
         android:layout_marginTop="10sp"
         >
