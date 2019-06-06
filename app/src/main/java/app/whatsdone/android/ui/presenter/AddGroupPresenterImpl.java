@@ -18,6 +18,14 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
     private Activity context;
     GroupService service = new GroupServiceImpl();
 
+
+
+    @Override
+    public void init(AddGroupFragmentView view, Activity context) {
+        this.view = view;
+        this.context = context;
+    }
+
     @Override
     public void create(Group group) {
 
@@ -39,6 +47,13 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
 
     }
+
+    @Override
+    public void updateTeam(Group group) {
+
+    }
+
+
 
     public void setContext(Activity context) {
         this.context = context;

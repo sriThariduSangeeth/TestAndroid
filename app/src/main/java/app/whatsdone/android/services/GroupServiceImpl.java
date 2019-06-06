@@ -51,6 +51,8 @@ public class GroupServiceImpl implements GroupService {
                                 group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
                             if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
                                 group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+                            if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
+                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
 
                             groups.add(group);
                             serviceListener.onDataReceived(groups);
@@ -75,6 +77,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_MANAGED_BY_ADMIN, true);
         data.put(Constants.FIELD_GROUP_ENABLE_USER_TASKS, true);
         data.put(Constants.FIELD_GROUP_MEMBERS, group.getMembers());
+        data.put(Constants.FIELD_GROUP_ADMINS, group.getMembers());
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 

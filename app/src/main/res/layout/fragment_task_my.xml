@@ -29,12 +29,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="29dp"
-
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="31dp"
+        android:background="@color/fab_color"
+        android:backgroundTint="@color/fab_color"
+        app:backgroundTint="@color/fab_color"
         android:layout_alignParentRight="true"
         android:layout_marginRight="29dp"
-        android:src="@drawable/fab_icon"
+        app:rippleColor="@color/fab_color"
+        android:src="@drawable/ic_add"
         />
 
     </RelativeLayout>

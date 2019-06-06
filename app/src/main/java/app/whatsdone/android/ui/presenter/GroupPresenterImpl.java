@@ -37,5 +37,21 @@ public class GroupPresenterImpl implements GroupPresenter{
         service.unSubscribe();
     }
 
+
+//    @Override
+//    public void deleteTeam(String teamId) {
+//
+//        ((GroupServiceImpl) service).setContext(context);
+//        service.delete(teamId, new ServiceListener() {
+//            @Override
+//            public void onSuccess() {
+//
+//                view.deleteTeam(teamId);
+//            }
+//        });
+//    }
+
+
+
 }
 

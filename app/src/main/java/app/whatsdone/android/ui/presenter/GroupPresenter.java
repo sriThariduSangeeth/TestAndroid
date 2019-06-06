@@ -10,6 +10,7 @@ public interface GroupPresenter {
     void init(GroupFragmentView view);
     void subscribe();
     void unSubscribe();
+   // void deleteTeam(String teamId);
 
 
     //void onItemClick(GroupFragmentView view, int position);

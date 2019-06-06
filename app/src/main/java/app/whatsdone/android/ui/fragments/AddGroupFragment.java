@@ -14,6 +14,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.presenter.AddGroupPresenter;
@@ -66,6 +68,10 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
     private GroupServiceImpl groupService = new GroupServiceImpl();
     private Group group;
     private ServiceListener serviceListener;
+    private TextView memberListTextView;
+    private ConstraintLayout constraintLayout;
+    private List<String> admins = new ArrayList<String>();
+
 
     public AddGroupFragment() {
         // Required empty public constructor
@@ -94,15 +100,16 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
 
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
-        teamPhoto = (TextView) view.findViewById(R.id.teamPhoto);
+        teamPhoto = (TextView) view.findViewById(R.id.teamPhoto_text_view);
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
         addMembers = (Button) view.findViewById(R.id.add_members_button);
         teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
+        constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
 
 
 
 
-        teamPhoto.setOnClickListener(new View.OnClickListener() {
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -111,14 +118,15 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
             }
         });
 
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,RESULT_LOAD_IMAGE);
-
-            }
-        });
+//        circleImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println("image view");
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent,RESULT_LOAD_IMAGE);
+//
+//            }
+//        });
 
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,21 +151,40 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
 
         presenter =new AddGroupPresenterImpl();
-       ((AddGroupPresenterImpl) presenter).setContext(getActivity());
+        this.presenter.init(this,getActivity());
 
+       ((AddGroupPresenterImpl) presenter).setContext(getActivity());
+       group = new Group();
+
+       //memberListTextView = view.findViewById(R.id.text1)
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                admins.add(AuthServiceImpl.user.getDocumentID());
 
-              //  group.setGroupName(teamName.getText().toString());
-                //group.setMembers();
-              //  group.setAvatar("");
+                group.setGroupName(teamName.getText().toString());
+                group.setMembers(contacts);
+                group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
+                group.setAdmins(admins);
 
 
-                //presenter.create(group);
+                contacts.add(AuthServiceImpl.user.getDocumentID());
+              //  AuthServiceImpl.user.getDocumentID();
+
+                System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+
+                presenter.create(group);
             }
         });
 
+
+//        toolbar = view.findViewById(R.id.toolbar);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getActivity().onBackPressed();
+//            }
+//        });
         return view;
 
     }
@@ -181,12 +208,13 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
     @Override
     public void onGroupSaved() {
+        //goes back to the group fragment, list of groups
         getActivity().onBackPressed();
     }
 
     @Override
     public void onGroupError(String errorMessage) {
-        Log.d("add group fragment",errorMessage);
+        Log.d("failed creating a group",errorMessage);
 
     }
 
@@ -243,10 +271,11 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 
                                   String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                                   contacts.add(name);
+                                 // contacts.add(AuthServiceImpl.user.getDocumentID());
                                   // contactListTextView.setText(num);
                                   // Toast.makeText(AddGroupFragment.this, "Number="+num, Toast.LENGTH_LONG).show();
 
-                              }
+                              }numbers.close();
                           } catch(Exception exception){
                               Log.d("test ", exception.getMessage());
                           }
@@ -279,6 +308,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
 //                    REQUEST_CAPTURE_IMAGE);
 //        }
 //    }
-    
+
+
 
 }

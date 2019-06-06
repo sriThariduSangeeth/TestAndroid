@@ -15,6 +15,7 @@ public class Group implements BaseEntity {
   private Date updatedDate;
   private List<String> members;
   private String createdBy;
+  private List<String> admins;
 
   public String getGroupName() {
     return groupName;
@@ -96,5 +97,13 @@ public class Group implements BaseEntity {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public List<String> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<String> admins) {
+        this.admins = admins;
     }
 }
