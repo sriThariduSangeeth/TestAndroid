@@ -16,7 +16,7 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private AddGroupFragmentView view;
     private Activity context;
-    GroupService service = new GroupServiceImpl();
+    private GroupService service = new GroupServiceImpl();
 
 
 

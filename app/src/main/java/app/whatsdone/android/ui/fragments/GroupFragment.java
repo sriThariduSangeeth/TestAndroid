@@ -23,14 +23,17 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.ui.presenter.DeleteGroupPresenter;
+import app.whatsdone.android.ui.presenter.DeleteGroupPresenterImpl;
 import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
+import app.whatsdone.android.ui.view.DeleteGroupFragmentView;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class GroupFragment extends Fragment implements GroupFragmentView {
+public class GroupFragment extends Fragment implements GroupFragmentView, DeleteGroupFragmentView {
 
     private List<BaseEntity> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
@@ -41,6 +44,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     private CircleImageView circleImageView;
+    private Group group = new Group();
+    private DeleteGroupPresenter presenterDel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this, getActivity());
+        this.presenterDel =new DeleteGroupPresenterImpl();
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(new View.OnClickListener() {
@@ -85,6 +91,20 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         this.groups.addAll(groups);
         adapter.notifyDataSetChanged();
 
+
+    }
+
+    @Override
+    public void onGroupDeleted() {
+        adapter.notifyDataSetChanged();
+//        String id = group.getDocumentID();
+//        presenterDel.deleteTeam(id);
+
+
+    }
+
+    @Override
+    public void onDeleteError() {
 
     }
 
@@ -131,11 +151,20 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-              // presenter.deleteTeam(position);
+
+
+
             }
 
             @Override
             public void onLeftClicked(int position) {
+               // groups.get(position).getDocumentID();
+                presenterDel.deleteTeam(groups.get(position).getDocumentID());
+                adapter.groups.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+
+
 
             }
         });
