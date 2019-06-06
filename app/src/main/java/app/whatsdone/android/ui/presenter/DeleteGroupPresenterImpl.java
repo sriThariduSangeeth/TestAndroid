@@ -19,21 +19,25 @@ public class DeleteGroupPresenterImpl implements DeleteGroupPresenter{
 
     @Override
     public void deleteTeam(String documentId) {
-        ((GroupServiceImpl) service).setContext(context);
+       // ((GroupServiceImpl) service).setContext(context);
 
-        service.delete(documentId, new ServiceListener() {
-            @Override
-            public void onSuccess() {
-                view.onGroupDeleted();
+        try {
+            service.delete(documentId, new ServiceListener() {
+                @Override
+                public void onSuccess() {
+                    view.onGroupDeleted();
 
-            }
+                }
 
-            @Override
-            public void onError(@Nullable String error) {
+                @Override
+                public void onError(@Nullable String error) {
 
-                view.onDeleteError();
-            }
-        });
+                    view.onDeleteError();
+                }
+            });
 
+        }catch (Exception ex){
+            view.onDeleteError();
+        }
     }
 }

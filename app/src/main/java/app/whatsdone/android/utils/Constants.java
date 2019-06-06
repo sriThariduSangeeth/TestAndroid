@@ -15,6 +15,9 @@ public class Constants {
     public static final String ARG_VERIFICATION_ID = "arg_verification_id";
     public static final String REF_TEAMS = "groups";
     public static final String REF_TASKS = "tasks";
+    public static final String REF_USERS = "users";
+    public static final String REF_DISCUSSIONS = "discussions";
+    public static final String REF_CONTACTS = "contacts";
 
     // Group collection fields
     public static final String FIELD_GROUP_ADMINS = "admins";

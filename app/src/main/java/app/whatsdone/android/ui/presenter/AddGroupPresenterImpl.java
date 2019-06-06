@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.presenter;
 
 import android.app.Activity;
+import android.util.Log;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +29,9 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
     @Override
     public void create(Group group) {
-        ((GroupServiceImpl) service).setContext(context);
+
+        try {
+
 
         service.create(group, new ServiceListener() {
             @Override
@@ -37,6 +40,7 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
             }
 
+
             @Override
             public void onError(@Nullable String error) {
 
@@ -44,6 +48,8 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
             }
         });
 
+        } catch (Exception exe){ view.onGroupError(exe.getMessage());
+            Log.d("My ", exe.getMessage());}
 
 
 

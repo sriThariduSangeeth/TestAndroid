@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,7 +64,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
         circleImageView = view.findViewById(R.id.image_view_group);
 
         this.presenter = new GroupPresenterImpl();
-        this.presenter.init(this, getActivity());
+        this.presenter.init(this);
         this.presenterDel =new DeleteGroupPresenterImpl();
 
 
@@ -94,11 +95,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
 
     }
 
+
     @Override
     public void onGroupDeleted() {
-        adapter.notifyDataSetChanged();
-//        String id = group.getDocumentID();
-//        presenterDel.deleteTeam(id);
 
 
     }
@@ -129,7 +128,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
     }
 
     public void setListener(OnGroupFragmentInteractionListener handler) {
-            listener = handler;
+        listener = handler;
     }
 
     @Override
@@ -158,13 +157,18 @@ public class GroupFragment extends Fragment implements GroupFragmentView, Delete
 
             @Override
             public void onLeftClicked(int position) {
-               // groups.get(position).getDocumentID();
+                try {
+
+
+                // groups.get(position).getDocumentID();
                 presenterDel.deleteTeam(groups.get(position).getDocumentID());
-                adapter.groups.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+//                adapter.groups.remove(position);
+//                adapter.notifyItemRemoved(position);
+//                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
 
-
+                }catch (Exception e){
+                    Log.d("My", e.getMessage());
+                }
 
             }
         });
