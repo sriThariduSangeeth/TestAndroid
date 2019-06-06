@@ -12,13 +12,15 @@ import android.widget.Toast;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.model.TaskInnerGroup;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder>{
-    public List<TaskInnerGroup> taskList;
+    public List<BaseEntity> taskList;
     private Context context;
 
-    public TaskInnerGroupRecyclerViewAdapter(List<TaskInnerGroup> tasks, Context context) {
+    public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context) {
 
         this.taskList = tasks;
         this.context = context;
@@ -43,8 +45,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     @Override
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
-
-        myRecyclerViewHolder.groupTaskText.setText(taskList.get(position).getTaskName());
+        Task task = (Task) taskList.get(position);
+        myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
 
 //        myRecyclerViewHolder.groupTaskText.setOnClickListener(new View.OnClickListener() {
 //            @Override

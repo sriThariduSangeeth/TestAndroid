@@ -4,14 +4,14 @@ package app.whatsdone.android.ui.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.whatsdone.android.model.MyTask;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 
 public class MyTaskPresenterImpl implements MyTaskPresenter {
     private MyTaskFragmentView view;
 
     @Override
-    public void initi(MyTaskFragmentView view) {
+    public void init(MyTaskFragmentView view) {
         this.view = view;
 
 
@@ -21,12 +21,12 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
     @Override
     public void loadTasks() {
 
-        List<MyTask> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask("");
-            task.setTaskName("MyTask " +i);
+            Task task = new Task();
+            task.setTitle("Task " +i);
             tasks.add(task);
 
         }

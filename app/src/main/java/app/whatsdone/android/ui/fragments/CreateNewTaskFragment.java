@@ -29,7 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.model.MyTask;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 
 public class CreateNewTaskFragment extends Fragment {
@@ -38,7 +38,7 @@ public class CreateNewTaskFragment extends Fragment {
     private TextView setDueDate, assignFromContacts;
     private DatePicker datePicker;
     private int mYear, mMonth, mDay;
-    private ArrayList<MyTask> itemList;
+    private ArrayList<Task> itemList;
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
     private EditText addNewTask;
@@ -145,7 +145,8 @@ public class CreateNewTaskFragment extends Fragment {
             Toast.makeText(getContext().getApplicationContext(), " empty",
                     Toast.LENGTH_SHORT).show();
         } else {
-            MyTask md = new MyTask(name);
+            Task md = new Task();
+            md.setTitle(name);
             itemList.add(md);
             itemsAdapter.notifyDataSetChanged();
             addNewTask.setText("");

@@ -41,23 +41,15 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         groupNameTextView = viewGroup.findViewById(R.id.group_text);
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                Fragment myFragment = new InnerGroupTaskFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-            }
-        });
         return new RecyclerViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
-        holder.textView.setText(((Group) groups.get(position)).getGroupName());
-
+        Group group = (Group) groups.get(position);
+        holder.textView.setText(group.getGroupName());
+        holder.setGroup(group);
 
     }
 
@@ -71,6 +63,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         private TextView textView;
 
         private ImageView imageView;
+        private Group group;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,10 +71,26 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             textView = itemView.findViewById(R.id.group_text);
             imageView = itemView.findViewById(R.id.image_view_group);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                    Fragment myFragment = InnerGroupTaskFragment.newInstance(group);
+
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+
+                }
+            });
 
         }
 
+        public Group getGroup() {
+            return group;
+        }
 
+        public void setGroup(Group group) {
+            this.group = group;
+        }
     }
 
 }

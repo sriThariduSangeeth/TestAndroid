@@ -14,6 +14,7 @@ public class Constants {
 
     public static final String ARG_VERIFICATION_ID = "arg_verification_id";
     public static final String REF_TEAMS = "groups";
+    public static final String REF_TASKS = "tasks";
 
     // Group collection fields
     public static final String FIELD_GROUP_ADMINS = "admins";
@@ -27,4 +28,26 @@ public class Constants {
     public static final String FIELD_GROUP_AVATAR = "avatar";
     public static final String FIELD_GROUP_UPDATED_AT = "updated_at";
 
+    // Task Fields
+    public static final String FIELD_TASK_ASSIGNED_USER = "assigned_user";
+    public static final String FIELD_TASK_ASSIGNED_BY = "assigned_by";
+    public static final String FIELD_TASK_ASSIGNED_USER_IMAGE = "assigned_user_image";
+    public static final String FIELD_TASK_ASSIGNED_USER_NAME = "assigned_user_name";
+    public static final String FIELD_TASK_ASSIGNEE_COMMENT = "assignee_comment";
+    public static final String FIELD_TASK_CREATED_BY = "created_by";
+    public static final String FIELD_TASK_CREATED_AT = "created_at";
+    public static final String FIELD_TASK_DESCRIPTION = "description";
+    public static final String FIELD_TASK_STATUS = "status";
+    public static final String FIELD_TASK_DUE_AT = "due_at";
+    public static final String FIELD_TASK_GROUP_ID = "group_id";
+    public static final String FIELD_TASK_GROUP_NAME = "group_name";
+    public static final String FIELD_TASK_TITLE = "title";
+    public static final String FIELD_TASK_UPDATED_AT = "updated_at";
+    public static final String FIELD_TASK_CHECKLIST = "checklist";
+    public static final String FIELD_TASK_CHECKLIST_TITLE = "title";
+    public static final String FIELD_TASK_CHECKLIST_COMPLETED = "is_completed";
+
+
+    public static final String ARG_GROUP_ID = "group_id";
+    public static final String ARG_GROUP_NAME = "group_title";
 }

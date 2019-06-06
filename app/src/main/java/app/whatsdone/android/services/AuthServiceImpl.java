@@ -24,8 +24,8 @@ import app.whatsdone.android.model.User;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
-    static User user = new User();
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    public static User user = new User();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Activity context;
 
     public void setContext(Activity context) {
@@ -34,6 +34,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getCurrentUser() {
+        if((user.getDocumentID() == null || user.getDocumentID() == "")
+                && firebaseAuth.getCurrentUser() != null){
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            user.setDocumentID(firebaseUser.getPhoneNumber());
+
+        }
+
         return user;
     }
 

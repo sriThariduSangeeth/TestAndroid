@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
-import app.whatsdone.android.model.MyTask;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
@@ -26,7 +24,7 @@ import app.whatsdone.android.ui.view.MyTaskFragmentView;
 public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
 
 
-    private List<MyTask> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
     private MyTasksRecyclerViewAdapter tasksAdapter;
     private MyTaskPresenter taskPresenter;
     private FloatingActionButton addFab;
@@ -42,12 +40,12 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_task_my, container, false);
 
-        List<MyTask> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         for (int i=0; i<20 ; i++)
         {
-            MyTask task = new MyTask("");
-            task.setTaskName("My task " +i);
+            Task task = new Task();
+            task.setTitle("My task " +i);
             tasks.add(task);
 
         }
@@ -59,7 +57,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
         tasksAdapter.setListener(this);
         recycler.setAdapter(tasksAdapter);
         this.taskPresenter = new MyTaskPresenterImpl();
-        this.taskPresenter.initi(this);
+        this.taskPresenter.init(this);
         this.taskPresenter.loadTasks();
 
 
@@ -86,7 +84,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
 //    }
 
     @Override
-    public void updateTasks(List<MyTask> tasks) {
+    public void updateTasks(List<Task> tasks) {
         this.tasks.addAll(tasks);
         tasksAdapter.notifyDataSetChanged();
 
