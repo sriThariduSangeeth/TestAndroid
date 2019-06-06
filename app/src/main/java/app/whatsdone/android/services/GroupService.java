@@ -10,4 +10,5 @@ public interface GroupService {
     void subscribe(ServiceListener serviceListener);
     void unSubscribe();
 
+    String add();
 }

@@ -68,7 +68,11 @@ dependencies {
     // firebase
     implementation 'com.google.firebase:firebase-firestore:19.0.1'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
+
     implementation 'com.github.stfalcon:chatkit:0.3.3'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
 
 }
 

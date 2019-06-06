@@ -1,7 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
 import android.app.Activity;
-import android.util.Log;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +17,7 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
     private AddGroupFragmentView view;
     private Activity context;
     private GroupService service = new GroupServiceImpl();
+    private StorageService storageService = new StorageServiceImpl();
 
 
 
@@ -29,6 +29,17 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
     @Override
     public void create(Group group) {
+        String documentId = service.add();
+        group.setDocumentID(documentId);
+
+        if(group.getTeamImage() != null) {
+            storageService.uploadGroupImage(group.getTeamImage(), documentId, new StorageService.Listener() {
+                @Override
+                public void onSuccess(String url) {
+                    Log.d(TAG, "Image upload success " + documentId);
+                }
+            });
+        }
 
         try {
 

@@ -68,7 +68,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void create(Group group, ServiceListener serviceListener) {
 
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document();
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
         data.put(Constants.FIELD_GROUP_TITLE, group.getGroupName());
         data.put(Constants.FIELD_GROUP_CREATED_BY, group.getCreatedBy());
@@ -181,5 +181,10 @@ public class GroupServiceImpl implements GroupService {
             listener.remove();
             listener = null;
         }
+    }
+
+    @Override
+    public String add() {
+        return db.collection(Constants.REF_TEAMS).document().getId();
     }
 }
