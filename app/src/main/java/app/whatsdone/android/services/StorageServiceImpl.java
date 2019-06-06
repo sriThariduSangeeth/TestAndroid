@@ -1,6 +1,7 @@
 package app.whatsdone.android.services;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -12,25 +13,22 @@ import java.io.ByteArrayOutputStream;
 import app.whatsdone.android.utils.Constants;
 
 public class StorageServiceImpl implements StorageService {
-
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReference();
+    private static final String TAG = StorageServiceImpl.class.getSimpleName();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     @Override
     public void uploadUserImage(Bitmap bitmap, Listener listener) {
-        // Get the data from an ImageView as bytes
-//        imageView.setDrawingCacheEnabled(true);
-//        imageView.buildDrawingCache();
-//        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
         String path = String.format("images/u/%s/avatar.jpg", AuthServiceImpl.getCurrentUser().getDocumentID());
+        Log.d(TAG, path);
         uploadMedia(bitmap, listener, path);
 
     }
 
     @Override
     public void uploadGroupImage(Bitmap bitmap, String groupId, Listener listener) {
-        String path = String.format("images/%s/avatar.jpg", groupId);
+        String path = String.format("images/g/%s/avatar.jpg", groupId);
+        Log.d(TAG, path);
         uploadMedia(bitmap, listener, path);
     }
 
