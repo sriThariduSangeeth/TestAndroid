@@ -9,6 +9,7 @@ public interface GroupFragmentView {
     void updateGroups(List<BaseEntity> groups);
     void onGroupDeleted();
     void onDeleteError();
+    void onGroupLeave();
   //  void deleteTeam(String id);
 
 }

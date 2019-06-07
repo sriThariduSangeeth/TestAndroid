@@ -62,6 +62,21 @@ public class GroupPresenterImpl implements GroupPresenter{
             view.onDeleteError();
         }
     }
+
+    @Override
+    public void leaveTeam(String groupId) {
+        service.leave(groupId, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                view.onGroupLeave();
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+
+            }
+        });
+    }
 }
 
 //    @Override

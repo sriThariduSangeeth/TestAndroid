@@ -56,6 +56,7 @@ public class GroupsActivity extends AppCompatActivity {
 
         toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(null);
 
 
 

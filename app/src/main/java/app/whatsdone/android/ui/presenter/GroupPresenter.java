@@ -11,6 +11,8 @@ public interface GroupPresenter {
     void subscribe();
     void unSubscribe();
     void deleteTeam(String documentId);
+    void leaveTeam(String groupId);
+
    // void deleteTeam(String teamId);
 
 

@@ -81,6 +81,10 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         return groups.size();
     }
 
+    public Group getGroup(int swipedPosition) {
+        return (Group)groups.get(swipedPosition);
+    }
+
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;

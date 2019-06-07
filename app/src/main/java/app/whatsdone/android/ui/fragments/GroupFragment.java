@@ -19,6 +19,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.model.Group;
@@ -40,7 +41,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     private CircleImageView circleImageView;
-    private Group group = new Group();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +101,11 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
 
     }
 
+    @Override
+    public void onGroupLeave() {
+
+    }
+
 
     public interface OnGroupFragmentInteractionListener {
 
@@ -139,21 +145,24 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             @Override
             public void onLeftClicked(int position) {
                 try {
-                  //  if(group.getCreatedBy() == group.getCurrentUser)
+                    Group group = adapter.getGroup(position);
+                    if(group.getCreatedBy() == AuthServiceImpl.getCurrentUser().getDocumentID()){
+
+                        presenter.deleteTeam(groups.get(position).getDocumentID());
+                    }
+                    else {
+                        presenter.leaveTeam(group.getDocumentID());
+
+                    }
 
 
-
-                presenter.deleteTeam(groups.get(position).getDocumentID());
-//                adapter.groups.remove(position);
-//                adapter.notifyItemRemoved(position);
-//                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
 
                 }catch (Exception e){
                     Log.d("My", e.getMessage());
                 }
 
             }
-        });
+        }, myrecycler);
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(groupSwipeController);
@@ -164,6 +173,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 groupSwipeController.onDraw(c);
             }
+
+
         });
         presenter.subscribe();
     }
