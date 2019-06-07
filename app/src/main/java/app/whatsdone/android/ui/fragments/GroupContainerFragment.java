@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ public class GroupContainerFragment extends Fragment implements
         GroupFragment.OnGroupFragmentInteractionListener{
     Fragment fragment;
 
+   // private EditGroupFragment.OnEditFragmentInteractionListener handler;
+    //private InnerGroupTaskFragment.OnGroupEditFragmentInteractionListener handler;
 
     FragmentManager fragmentManager;
 
@@ -56,6 +59,7 @@ public class GroupContainerFragment extends Fragment implements
         fragmentTransaction.add(R.id.group_container, fragment);
         fragmentTransaction.commit();
 
+
         return view;
     }
 
@@ -74,6 +78,7 @@ public class GroupContainerFragment extends Fragment implements
         fragmentTransaction.replace(R.id.group_container, fragment);
         fragmentTransaction.commit();
     }
+
 
 
 }

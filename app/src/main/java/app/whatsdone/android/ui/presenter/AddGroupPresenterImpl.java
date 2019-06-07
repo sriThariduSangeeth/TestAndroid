@@ -44,12 +44,16 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
             });
         }
 
+        try {
+
+
         service.create(group, new ServiceListener() {
             @Override
             public void onSuccess() {
                 view.onGroupSaved();
 
             }
+
 
             @Override
             public void onError(@Nullable String error) {
@@ -58,6 +62,8 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
             }
         });
 
+        } catch (Exception exe){ view.onGroupError(exe.getMessage());
+            Log.d("My ", exe.getMessage());}
 
 
 
@@ -65,6 +71,18 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
     @Override
     public void updateTeam(Group group) {
+        service.update(group, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                view.onGroupSaved();
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+
+                view.onGroupError(error);
+            }
+        });
 
     }
 

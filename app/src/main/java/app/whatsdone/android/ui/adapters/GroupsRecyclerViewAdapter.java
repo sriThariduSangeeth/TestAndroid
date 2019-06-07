@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,9 +60,12 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         Group group = (Group) groups.get(position);
         holder.textView.setText(group.getGroupName());
         try {
-            Picasso.get().load(group.getAvatar()).into(imageView);
-            Log.d(TAG, "onBindViewHolder: ");
-            System.out.println(" Avatar " + group.getAvatar());
+            if(!TextUtils.isEmpty(group.getAvatar())) {
+                Picasso.get().load(group.getAvatar()).into(imageView);
+                Log.d(TAG, "onBindViewHolder: ");
+                System.out.println(" Avatar " + group.getAvatar());
+            }
+
         }catch (Exception exception){
             System.out.println(exception.getMessage());
             exception.printStackTrace();
@@ -75,6 +79,10 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public int getItemCount() {
         return groups.size();
+    }
+
+    public Group getGroup(int swipedPosition) {
+        return (Group)groups.get(swipedPosition);
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {

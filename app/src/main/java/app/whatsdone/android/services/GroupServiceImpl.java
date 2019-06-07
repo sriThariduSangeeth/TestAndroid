@@ -84,7 +84,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_MANAGED_BY_ADMIN, true);
         data.put(Constants.FIELD_GROUP_ENABLE_USER_TASKS, true);
         data.put(Constants.FIELD_GROUP_MEMBERS, group.getMembers());
-        data.put(Constants.FIELD_GROUP_ADMINS, group.getMembers());
+        data.put(Constants.FIELD_GROUP_ADMINS, group.getAdmins());
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
