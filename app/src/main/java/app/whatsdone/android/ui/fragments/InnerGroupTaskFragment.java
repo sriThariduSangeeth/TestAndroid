@@ -169,11 +169,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                 Fragment myFragment = new AddGroupFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-               // if(group.getDocumentID() ==  ) {
-                   // contacts.addAll(group.getMembers());
-                   // groupName.setText(group.getGroupName());
-                  //  circleImageView.setImageBitmap(group.getTeamImage());
-               // }
+                //load group details
+//                group.getDocumentID();
+//                groupName.setText(group.getGroupName());
+//                circleImageView.setImageBitmap(group.getTeamImage());
+//                contacts.addAll(group.getMembers());
+
+//                if(group.getDocumentID() == group. ) {
+//                    contacts.addAll(group.getMembers());
+//                    groupName.setText(group.getGroupName());
+//                    circleImageView.setImageBitmap(group.getTeamImage());
+//                }
 
                 System.out.println("settings clicked");
                 return false;

@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/task_inner_recycler_view_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:id="@+id/task_inner_recycler_view_layout"
-    android:layout_margin="10sp"
-    android:background="@color/white"
-    android:layout_weight="20"
     android:layout_centerVertical="true"
 
+    android:layout_marginTop="1sp"
+
+    android:background="@color/white"
+    android:orientation="horizontal"
     >
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view_task_inner_group"
-        android:layout_height="80sp"
         android:layout_width="80sp"
-        android:src="@drawable/task_owner"
-        android:foregroundGravity="center_vertical"
-        android:contentDescription="@string/task_owner"
-        android:layout_centerVertical="true"
-        android:paddingBottom="10sp"
+        android:layout_height="80dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+
+        android:contentDescription="done image"
+        android:paddingEnd="20sp"
+        android:paddingRight="20sp"
+        android:src="@drawable/done_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
 
         >
     </de.hdodenhof.circleimageview.CircleImageView>
@@ -30,48 +37,49 @@
 
     <TextView
         android:id="@+id/task_inner_text"
-        android:layout_width="wrap_content"
+        android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/image_view_task_inner_group"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginRight="124dp"
+
         android:textColor="@color/black"
         android:textSize="15sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="225dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="100dp" />
+        app:layout_constraintEnd_toEndOf="@+id/task_inner_text_sub"
+        app:layout_constraintStart_toEndOf="@+id/image_view_group"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/task_inner_text_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/image_view_task_inner_group"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:paddingEnd="20sp"
+        android:paddingRight="20sp"
+        android:text="@string/date"
 
-        android:layout_alignParentStart="true"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/group_text"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="102dp"
-        android:layout_marginLeft="102dp"
-        android:layout_marginBottom="18dp"
-        android:paddingBottom="10sp"
-        android:text="@string/text1"
-        android:textColor="#444"
-        android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/task_inner_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/date"
-        android:textSize="15sp"
-        android:layout_marginTop="10sp"
-        >
+        android:id="@+id/status"
+        android:layout_width="0dp"
+        android:layout_height="13dp"
 
-    </TextView>
-
-
-
-</RelativeLayout>
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
+        app:layout_constraintTop_toBottomOf="@+id/task_inner_text" />
+</android.support.constraint.ConstraintLayout>
