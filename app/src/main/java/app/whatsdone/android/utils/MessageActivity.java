@@ -41,7 +41,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
         super.onCreate( persistentState);
-        imageLoader = (imageView, url, payload) -> Picasso.with(MessageActivity.this).load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         senderId = getCurrentDetails.getCurrentUser().getId();
     }
 
