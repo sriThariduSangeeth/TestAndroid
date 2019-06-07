@@ -1,6 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +9,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,14 +18,17 @@ import java.util.List;
 import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.ExistInPlatformRequest;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LeaveGroupRequest;
+import app.whatsdone.android.model.LeaveGroupResponse;
 import app.whatsdone.android.utils.Constants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class GroupServiceImpl implements GroupService {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
 
@@ -131,21 +135,35 @@ public class GroupServiceImpl implements GroupService {
                    }
                     serviceListener.onCompleted(null);
                 });
-
-
     }
 
     @Override
     public void leave(String groupId, ServiceListener serviceListener) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.github.com/")
+                .baseUrl(Constants.URL_FIREBASE)
                 .build();
 
         CloudService service = retrofit.create(CloudService.class);
         LeaveGroupRequest request = new LeaveGroupRequest();
         request.setGroupId(groupId);
-        //service.leaveGroup(request);
-        serviceListener.onSuccess();
+        Call<LeaveGroupResponse> call = service.leaveGroup(request);
+        call.enqueue(new Callback<LeaveGroupResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<LeaveGroupResponse> call,@NotNull Response<LeaveGroupResponse> response) {
+                LeaveGroupResponse leaveGroupResponse = response.body();
+                if (leaveGroupResponse != null && leaveGroupResponse.isSuccess()) {
+                    serviceListener.onSuccess();
+                    return;
+                }
+                serviceListener.onError(null);
+            }
+
+            @Override
+            public void onFailure(Call<LeaveGroupResponse> call, Throwable t) {
+                serviceListener.onError(t.getLocalizedMessage());
+            }
+        });
+
     }
 
     @Override

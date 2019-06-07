@@ -15,38 +15,34 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.presenter.AddGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddGroupPresenterImpl;
-import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.view.AddGroupFragmentView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import app.whatsdone.android.R;
 
 import static android.app.Activity.RESULT_OK;
 

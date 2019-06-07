@@ -5,6 +5,7 @@ import java.util.List;
 import app.whatsdone.android.model.ContactSyncRequest;
 import app.whatsdone.android.model.ContactSyncResponse;
 import app.whatsdone.android.model.ExistInPlatformRequest;
+import app.whatsdone.android.model.ExistInPlatformResponse;
 import app.whatsdone.android.model.InviteAssigneeRequest;
 import app.whatsdone.android.model.InviteAssigneeResponse;
 import app.whatsdone.android.model.InviteMembersRequest;
@@ -26,7 +27,7 @@ public interface CloudService {
     Call<InviteMembersResponse> inviteMembers(@Body InviteMembersRequest request);
 
     @POST("existInPlatform")
-    Call<List<String>> existInPlatform(@Body ExistInPlatformRequest request);
+    Call<ExistInPlatformResponse> existInPlatform(@Body ExistInPlatformRequest request);
 
     @POST("leaveGroup")
     Call<LeaveGroupResponse> leaveGroup(@Body LeaveGroupRequest request);

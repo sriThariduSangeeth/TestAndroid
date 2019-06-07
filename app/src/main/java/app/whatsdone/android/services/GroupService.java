@@ -1,5 +1,7 @@
 package app.whatsdone.android.services;
 
+import java.io.IOException;
+
 import app.whatsdone.android.model.Group;
 
 public interface GroupService {
