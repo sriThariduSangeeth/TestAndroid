@@ -24,6 +24,8 @@ public class GroupContainerFragment extends Fragment implements
         GroupFragment.OnGroupFragmentInteractionListener{
     Fragment fragment;
 
+   // private EditGroupFragment.OnEditFragmentInteractionListener handler;
+    //private InnerGroupTaskFragment.OnGroupEditFragmentInteractionListener handler;
 
     FragmentManager fragmentManager;
 
@@ -76,6 +78,7 @@ public class GroupContainerFragment extends Fragment implements
         fragmentTransaction.replace(R.id.group_container, fragment);
         fragmentTransaction.commit();
     }
+
 
 
 }

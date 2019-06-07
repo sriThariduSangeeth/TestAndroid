@@ -131,8 +131,12 @@ public class GroupsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            //actionbar home button
             case android.R.id.home:
-                onBackPressed();
+                Intent homeIntent = new Intent(this, GroupsActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+                //onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
