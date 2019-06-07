@@ -2,8 +2,6 @@ package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,7 +18,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,8 +84,6 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
     private TextView memberListTextView;
     private ConstraintLayout constraintLayout;
     private List<String> admins = new ArrayList<String>();
-    private AddGroupFragment fragment;
-  //  private EditGroupFragment.OnEditFragmentInteractionListener listener;
 
 
     public AddGroupFragment() {
@@ -106,14 +101,13 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestMultiplePermissions();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
@@ -149,6 +143,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
 
                 }
@@ -167,6 +162,7 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
        ((AddGroupPresenterImpl) presenter).setContext(getActivity());
        group = new Group();
 
+       //memberListTextView = view.findViewById(R.id.text1)
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,6 +173,8 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
                 group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
                 group.setAdmins(admins);
                 contacts.add(AuthServiceImpl.user.getDocumentID());
+              //  AuthServiceImpl.user.getDocumentID();
+
                 System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
 
                // if()
@@ -189,6 +187,13 @@ public class AddGroupFragment extends Fragment implements AddGroupFragmentView {
         });
 
 
+//        toolbar = view.findViewById(R.id.toolbar);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getActivity().onBackPressed();
+//            }
+//        });
         return view;
 
     }
