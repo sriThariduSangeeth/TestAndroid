@@ -58,11 +58,6 @@ public class User implements BaseEntity, IUser {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-
     public boolean isEnableNotifications() {
         return enableNotifications;
     }
