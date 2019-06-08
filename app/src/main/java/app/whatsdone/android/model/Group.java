@@ -11,16 +11,16 @@ import java.util.List;
 public class Group implements Parcelable, BaseEntity {
 
     private String documentID = "";
-    private String groupName;
-    private String avatar;
+    private String groupName = "";
+    private String avatar = "";
     private int discussionCount = 0;
     private int taskCount = 0;
     private int unreadDiscussionCount = 0;
     private int unreadTaskCount = 0;
     private Date updatedDate;
-    private List<String> members;
-    private String createdBy;
-    private List<String> admins;
+    private List<String> members = new ArrayList<>();
+    private String createdBy = "";
+    private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
 
     public Bitmap getTeamImage() {

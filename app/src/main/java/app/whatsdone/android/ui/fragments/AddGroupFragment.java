@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 
 
@@ -31,9 +32,7 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
+        group = new Group();
     }
 
 
