@@ -42,5 +42,4 @@ public class AddGroupFragment extends BaseFragment {
         presenter.create(this.group);
     }
 
-
 }
