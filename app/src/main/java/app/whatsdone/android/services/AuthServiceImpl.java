@@ -21,6 +21,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import app.whatsdone.android.model.User;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
@@ -108,8 +110,13 @@ public class AuthServiceImpl implements AuthService {
                         user.getIdToken(false).addOnCompleteListener(context, new OnCompleteListener<GetTokenResult>() {
                             @Override
                             public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                System.out.println(task.getResult().getToken());
-                                listener.onSuccess();
+                                if(task.isSuccessful()) {
+                                    System.out.println(task.getResult().getToken());
+                                    SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                                    listener.onSuccess();
+                                }else {
+                                    listener.onError(task.getException().getLocalizedMessage());
+                                }
                             }
                         });
 

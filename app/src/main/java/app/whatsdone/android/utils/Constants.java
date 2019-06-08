@@ -68,4 +68,5 @@ public class Constants {
     public static final int IMAGE_HEIGHT = 180;
     public static final int IMAGE_WIDTH = 180;
 
+    public static final String SHARED_TOKEN = "token";
 }
