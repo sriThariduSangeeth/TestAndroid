@@ -29,7 +29,6 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     private boolean isSaving = false;
 
     public SettingsPresenterImpl(SettingsView view){
-
         this.view = view;
     }
 
@@ -37,6 +36,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void save(SettingsViewModel model) {
         Log.d(TAG, "save clicked");
 
+        // debounce the save call.
         if(!isSaving) {
             isSaving = true;
             User user = new User();
@@ -89,6 +89,21 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void logout() {
         authService.logout();
         view.onLogout();
+    }
+
+    @Override
+    public void initUser(SettingsViewModel model) {
+        service.getById(AuthServiceImpl.getCurrentUser().getDocumentID(), new UserService.Listener() {
+            @Override
+            public void onUserRetrieved(User user) {
+                if(user != null){
+                    model.setAvatar(user.getAvatar());
+                    model.setDisplayName(user.getDisplayName());
+                    model.setEnableNotifications(user.isEnableNotifications());
+                    view.onProfileImageLoaded(user.getAvatar());
+                }
+            }
+        });
     }
 
 }

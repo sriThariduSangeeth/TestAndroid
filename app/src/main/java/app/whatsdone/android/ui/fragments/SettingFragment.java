@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -50,6 +49,8 @@ public class SettingFragment extends Fragment implements SettingsView {
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
 
+        presenter.initUser(model);
+
         return binding.getRoot();
 
     }
@@ -69,6 +70,19 @@ public class SettingFragment extends Fragment implements SettingsView {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         getActivity().startActivity(intent);
         getActivity().finish();
+    }
+
+    @Override
+    public void onProfileImageLoaded(String avatar) {
+        if(avatar != null && !avatar.isEmpty()){
+            binding.profilePic.setImageURI(Uri.parse(avatar));
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        presenter.save(model);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
