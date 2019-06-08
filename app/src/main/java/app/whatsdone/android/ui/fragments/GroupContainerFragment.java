@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import app.whatsdone.android.R;
  * create an instance of this fragment.
  */
 public class GroupContainerFragment extends Fragment implements
-        AddGroupFragment.OnAddFragmentInteractionListener,
+        BaseFragment.OnAddFragmentInteractionListener,
         GroupFragment.OnGroupFragmentInteractionListener{
     Fragment fragment;
 
@@ -72,8 +71,8 @@ public class GroupContainerFragment extends Fragment implements
     public void onAddClicked() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         System.out.println("onAdd clicked");
-        fragment = new AddGroupFragment();
-        ((AddGroupFragment)fragment).setListener(this);
+        fragment = AddGroupFragment.newInstance();
+        ((BaseFragment)fragment).setListener(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.replace(R.id.group_container, fragment);
         fragmentTransaction.commit();

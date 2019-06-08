@@ -1,6 +1,9 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +61,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         Group group = (Group) groups.get(position);
+
         holder.textView.setText(group.getGroupName());
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
@@ -98,10 +102,13 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             textView = itemView.findViewById(R.id.group_text);
             imageView = itemView.findViewById(R.id.image_view_group);
 
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                    group.setTeamImage(getImageData(imageView));
                     Fragment myFragment = InnerGroupTaskFragment.newInstance(group);
 
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
@@ -120,4 +127,15 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         }
     }
 
+    public Bitmap getImageData(ImageView imageView){
+        //Get the data from an ImageView as bytes
+        if (imageView == null) return null;
+        Drawable drawable = imageView.getDrawable();
+
+        if(drawable == null) return null;
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        return  bitmap;
+    }
 }

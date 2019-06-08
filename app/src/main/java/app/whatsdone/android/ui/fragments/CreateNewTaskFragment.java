@@ -179,7 +179,7 @@ public class CreateNewTaskFragment extends Fragment {
                             //String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                             // contact.setText(name);
                             // contactListTextView.setText(num);
-                            // Toast.makeText(AddGroupFragment.this, "Number="+num, Toast.LENGTH_LONG).show();
+                            // Toast.makeText(BaseFragment.this, "Number="+num, Toast.LENGTH_LONG).show();
 
                         }
                     }

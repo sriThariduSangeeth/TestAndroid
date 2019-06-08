@@ -1,7 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -30,15 +29,12 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
-import app.whatsdone.android.model.TaskInnerGroup;
 import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
-import app.whatsdone.android.ui.presenter.AddGroupPresenter;
-import app.whatsdone.android.ui.presenter.AddGroupPresenterImpl;
+import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
+import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
@@ -58,18 +54,19 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Fragment fragment;
     private GroupFragment groupFragment;
     private Group group = new Group();
-    private AddGroupFragment addFragment = new AddGroupFragment();
+    private EditGroupFragment editFragment = new EditGroupFragment();
     private CircleImageView  circleImageView;
     public EditText groupName;
     private List<String> contacts = new ArrayList<String>();
     private ListView contactListView;
-    private AddGroupPresenter presenter;
+    private AddEditGroupPresenter presenter;
 
     public static InnerGroupTaskFragment newInstance(Group group){
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.ARG_GROUP_ID, group.getDocumentID());
-        args.putString(Constants.ARG_GROUP_NAME, group.getGroupName());
+        args.putParcelable("group", group);
+//        args.putString(Constants.ARG_GROUP_ID, group.getDocumentID());
+//        args.putString(Constants.ARG_GROUP_NAME, group.getGroupName());
         instance.setArguments(args);
         return instance;
     }
@@ -98,16 +95,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
 
         Bundle args = getArguments();
-        String groupId = args.getString(Constants.ARG_GROUP_ID);
-        String groupName = args.getString(Constants.ARG_GROUP_NAME);
-        toolbar.setTitle(groupName);
+        this.group = args.getParcelable("group");
+
+        toolbar.setTitle(group.getGroupName());
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
         this.taskInnerGroupPresenter = new TaskInnerGroupPresenterImpl();
         this.taskInnerGroupPresenter.init(this);
-        this.taskInnerGroupPresenter.loadTasksInner(groupId);
-        presenter = new AddGroupPresenterImpl();
+        this.taskInnerGroupPresenter.loadTasksInner(group.getDocumentID());
+        presenter = new AddEditGroupPresenterImpl();
 
         //fab
         mainFab.setOnClickListener(new View.OnClickListener() {
@@ -164,16 +161,18 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             case R.id.settings:
 
+//                contacts.addAll(group.getMembers());
+//                groupName.setText(group.getGroupName());
+//                circleImageView.setImageBitmap(group.getTeamImage());
 
                 AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = new AddGroupFragment();
+                Fragment myFragment = EditGroupFragment.newInstance(group);
+                //((BaseFragment) myFragment).setListener(this);
+                        //new EditGroupFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-               // if(group.getDocumentID() ==  ) {
-                   // contacts.addAll(group.getMembers());
-                   // groupName.setText(group.getGroupName());
-                  //  circleImageView.setImageBitmap(group.getTeamImage());
-               // }
+
+
 
                 System.out.println("settings clicked");
                 return false;
@@ -298,17 +297,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
        // setHasOptionsMenu(true);
     }
-
-//    public interface OnGroupEditFragmentInteractionListener
-//    {
-//        void onEditClicked();
-//    }
-//
-//    public void setListener(OnGroupEditFragmentInteractionListener handler)
-//    {
-//        listener = handler;
-//    }
-
 
 
 }
