@@ -10,8 +10,7 @@ public class LoginViewModel extends BaseObservable {
     private String phoneNo;
 
     public LoginViewModel(){
-        countryCode = "94";
-        phoneNo = "714411600";
+
     }
 
     @Bindable

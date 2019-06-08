@@ -25,6 +25,11 @@ public class LoginPresenterImpl implements LoginPresenter {
         System.out.println(model.getCountryCode() + " " + model.getPhoneNo());
         AuthService service = new AuthServiceImpl();
 
+        boolean isValid = false;
+        if(!isValid){
+            view.onValidationFailed();
+        }
+
         ((AuthServiceImpl) service).setContext(context);
         service.register("+" + model.getCountryCode() + model.getPhoneNo(), new AuthService.Listener() {
             @Override

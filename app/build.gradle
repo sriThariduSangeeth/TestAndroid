@@ -70,6 +70,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.github.stfalcon:chatkit:0.3.3'
 
+    // CountryPicker
+    implementation 'com.hbb20:ccp:2.2.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
