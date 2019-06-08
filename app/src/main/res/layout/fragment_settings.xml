@@ -1,155 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/tab_height">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="app.whatsdone.android.model.UserStatus"/>
+        <variable
+            name="model"
+            type="app.whatsdone.android.ui.viewmodel.SettingsViewModel" />
+        <variable
+            name="presenter"
+            type="app.whatsdone.android.ui.presenter.SettingsPresenter" />
+    </data>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/tab_height">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profilePic"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
+        android:onClick="@{() -> presenter.onImageEdit()}"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/change_profile_hint"
+        android:textColor="#3498DB"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profilePic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/profileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="#17202A"
+        android:textSize="15sp"
+        android:hint="@string/display_name"
+        android:text="@={model.displayName}"
+        android:maxLines="1"
+        android:inputType="text"
+        android:onTextChanged="@{() -> presenter.save()}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePic" />
+
+    <TextView
+        android:id="@+id/textView10"
         android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:background="@drawable/settings_background"
-        android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profilePic"
-            android:layout_width="187dp"
-            android:layout_height="156dp"
-            android:layout_gravity="left"
-            android:layout_marginTop="45dp"
-            android:paddingRight="10dp"
-            android:src="@mipmap/ic_launcher_round" />
-        <TextView
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/status"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSwitch" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Enter your Name and Add your additional picture"
-            android:layout_marginTop="110dp"
-            android:layout_marginLeft="185dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:entries="@array/status"
+            android:textAlignment="textEnd"
+            android:selectedItemPosition="@={model.status}"
             android:textSize="15sp"
-            android:textColor="#3498DB"/>
-        <Button
-            android:id="@+id/editbutton"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/simpleSwitch"
+            android:gravity="end" />
+
+        <TextView
+            android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="45dp"
-            android:layout_marginTop="210dp"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:text="Edit"
-            android:textColor="#3498DB"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="429dp"
-        android:layout_height="506dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="45dp"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp">
-            <EditText
-                android:id="@+id/profileName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textSize="15sp"
-                android:textColor="#17202A" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:layout_marginTop="25dp"
-            android:orientation="vertical"
-            android:paddingLeft="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:text="Status"
-                android:textSize="15sp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:textColor="#17202A"
-                    android:textStyle="bold" />
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:paddingRight="15dp"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:orientation="vertical"
-            android:paddingLeft="25dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:paddingLeft="10dp"
-                android:text="Account"
-                android:textSize="15sp" />
-            <Switch
-                android:id="@+id/simpleSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:text="Notification"
-                android:textStyle="bold"
-                android:textSize="15sp">
-            </Switch>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="25dp"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp">
-            <Button
-                android:id="@+id/logoutbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:text="logout"
-                android:textColor="#E74C3C"
-                android:textStyle="bold"
-                android:textSize="15sp"/>
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/account_section"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileName"
+             />
+
+    <Switch
+        android:id="@+id/simpleSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/notifications_hint"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:checked="@{model.enableNotifications}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <Button
+        android:id="@+id/syncContactsBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/sync_contacts"
+        android:onClick="@{() -> presenter.syncContacts()}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/logout"
+        android:onClick="@{() -> presenter.logout()}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/syncContactsBtn" />
+
+</android.support.constraint.ConstraintLayout>
+
+</layout>
