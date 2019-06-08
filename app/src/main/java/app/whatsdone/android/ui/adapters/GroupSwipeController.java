@@ -126,15 +126,10 @@ public class GroupSwipeController extends Callback {
         Paint p = new Paint();
         RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
 
-//        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
-//        p.setColor(Color.RED);
-//        c.drawRoundRect(leftButton, corners, corners, p);
-
         Group group = ((GroupsRecyclerViewAdapter.RecyclerViewHolder)viewHolder).getGroup();
         System.out.println(group.getCreatedBy());
         System.out.println(AuthServiceImpl.getCurrentUser().getDocumentID());
         if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
-          //  RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
             p.setColor(Color.RED);
             c.drawRoundRect(leftButton, corners, corners, p);
             drawText("DELETE", c, leftButton, p);
@@ -156,7 +151,6 @@ public class GroupSwipeController extends Callback {
         else
             buttonShowedState = ButtonsState.GONE;
 
-        //c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(textSize/2), p);
 
     }
 

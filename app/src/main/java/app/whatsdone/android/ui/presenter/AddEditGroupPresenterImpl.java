@@ -11,13 +11,11 @@ import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.StorageService;
 import app.whatsdone.android.services.StorageServiceImpl;
-import app.whatsdone.android.ui.fragments.AddGroupFragment;
-import app.whatsdone.android.ui.view.AddGroupFragmentView;
-import app.whatsdone.android.ui.view.GroupFragmentView;
+import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 
-public class AddGroupPresenterImpl implements AddGroupPresenter {
+public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
-    private AddGroupFragmentView view;
+    private BaseGroupFragmentView view;
     private Activity context;
     private GroupService service = new GroupServiceImpl();
     private StorageService storageService = new StorageServiceImpl();
@@ -25,7 +23,7 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
 
 
     @Override
-    public void init(AddGroupFragmentView view, Activity context) {
+    public void init(BaseGroupFragmentView view, Activity context) {
         this.view = view;
         this.context = context;
     }
@@ -70,7 +68,8 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
     }
 
     @Override
-    public void updateTeam(Group group) {
+    public void update(Group group) {
+
         service.update(group, new ServiceListener() {
             @Override
             public void onSuccess() {
@@ -83,9 +82,7 @@ public class AddGroupPresenterImpl implements AddGroupPresenter {
                 view.onGroupError(error);
             }
         });
-
     }
-
 
 
     public void setContext(Activity context) {

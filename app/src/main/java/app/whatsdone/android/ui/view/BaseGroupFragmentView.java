@@ -1,6 +1,6 @@
 package app.whatsdone.android.ui.view;
 
-public interface AddGroupFragmentView {
+public interface BaseGroupFragmentView {
     void onGroupSaved();
     void onGroupError(String errorMessage);
 

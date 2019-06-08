@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
@@ -77,21 +78,22 @@ public class GroupPresenterImpl implements GroupPresenter{
             }
         });
     }
+
+    @Override
+    public void editTeam(Group group) {
+        service.update(group, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+
+            }
+        });
+    }
 }
-
-//    @Override
-//    public void deleteTeam(String teamId) {
-//
-//        ((GroupServiceImpl) service).setContext(context);
-//        service.delete(teamId, new ServiceListener() {
-//            @Override
-//            public void onSuccess() {
-//
-//                view.deleteTeam(teamId);
-//            }
-//        });
-//    }
-
 
 
 
