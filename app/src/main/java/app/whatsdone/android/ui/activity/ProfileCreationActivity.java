@@ -22,17 +22,18 @@ import app.whatsdone.android.ui.presenter.ProfilePresenterImpl;
 import app.whatsdone.android.ui.view.ProfileView;
 import app.whatsdone.android.ui.viewmodel.ProfileViewModel;
 import app.whatsdone.android.utils.Constants;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileCreationActivity extends AppCompatActivity implements ProfileView {
     private static int RESULT_LOAD_IMAGE = 1;
-    private ImageView profilePic;
+    private CircleImageView profilePic;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityProfileCreationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_creation);
         binding.setPresenter(new ProfilePresenterImpl(this));
         binding.setViewModel(new ProfileViewModel("Chandima"));
-        profilePic = (ImageView)findViewById(R.id.profilePic);
+        profilePic = (CircleImageView) findViewById(R.id.profilePic);
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
