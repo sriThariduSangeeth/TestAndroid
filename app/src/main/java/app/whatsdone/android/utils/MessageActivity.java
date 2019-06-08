@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -18,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import app.whatsdone.android.R;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.services.DiscussionImpl;
 import app.whatsdone.android.services.DiscussionService;
@@ -30,19 +29,18 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
 
     protected String senderId = null;
-    public static String id ="";
-    public static String groupName ="";
     public Toolbar toolbar;
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
     private DiscussionService discussionService = new DiscussionImpl();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
+    public Group group;
 
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
         Intent intent = getIntent();
-        id = intent.getStringExtra("group_id");
-        groupName = intent.getStringExtra("group_title");
+        group = intent.getParcelableExtra(Constants.REF_TEAMS);
+
         super.onCreate( persistentState);
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).into(imageView);
@@ -55,7 +53,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     protected void onStart() {
 
         super.onStart();
-        discussionService.getAllDiscussion(id, new ServiceListener() {
+        discussionService.getAllDiscussion(group.getDocumentID(), new ServiceListener() {
             @Override
             public void onDataReceivedForMessage(ArrayList<Message> messages) {
                 if(!messages.isEmpty()){
@@ -72,7 +70,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
         Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
 
         new Handler().postDelayed(() -> {
-            discussionService.loadRestMessages( id , new ServiceListener() {
+            discussionService.loadRestMessages( group.getDocumentID() , new ServiceListener() {
                 @Override
                 public void onDataReceivedForMessage(ArrayList<Message> messages) {
                     messagesAdapter.addToEnd( messages, false);
@@ -80,20 +78,6 @@ public abstract class MessageActivity extends AppCompatActivity implements
             });
         },1000);
     }
-
-    private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {
-        return message -> {
-            String createdAt = new SimpleDateFormat("MMM d, EEE 'at' h:mm a", Locale.getDefault())
-                    .format(message.getCreatedAt());
-
-            String text = message.getText();
-            if (text == null) text = "[attachment]";
-
-            return String.format(Locale.getDefault(), "%s: %s (%s)",
-                    message.getUser().getName(), text, createdAt);
-        };
-    }
-
 
     public Message verifyMessageInsert(Message message){
         final boolean[] insert = {false};

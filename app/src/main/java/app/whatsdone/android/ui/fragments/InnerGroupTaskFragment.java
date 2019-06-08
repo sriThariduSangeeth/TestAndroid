@@ -68,8 +68,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
         args.putParcelable("group", group);
-//        args.putString(Constants.ARG_GROUP_ID, group.getDocumentID());
-//        args.putString(Constants.ARG_GROUP_NAME, group.getGroupName());
         instance.setArguments(args);
         return instance;
     }
@@ -146,11 +144,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         {
             case R.id.discussion:
                 Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
-
-                intent.putExtra(Constants.ARG_GROUP_ID, groupobj.getDocumentID());
-                intent.putExtra(Constants.ARG_GROUP_NAME, groupobj.getGroupName());
-                intent.putExtra(Constants.FIELD_GROUP_AVATAR, groupobj.getAvatar());
-                intent.putExtra(Constants.FIELD_GROUP_MEMBERS , String.valueOf(groupobj.getMembers()));
+                intent.putExtra(Constants.REF_TEAMS, group);
                 startActivity(intent);
 
                 return true;
