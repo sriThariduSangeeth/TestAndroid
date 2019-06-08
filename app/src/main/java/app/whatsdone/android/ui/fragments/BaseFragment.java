@@ -414,7 +414,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
         return true;
     }
 
@@ -428,23 +428,23 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         public void create(SwipeMenu menu) {
             SwipeMenuItem item1 = new SwipeMenuItem(
                     getContext());
-            item1.setBackground(new ColorDrawable(Color.DKGRAY));
+            item1.setBackground(new ColorDrawable(Color.RED));
             // set width of an option (px)
             item1.setWidth(200);
-            item1.setTitle("Action 1");
+            item1.setTitle("DELETE ");
             item1.setTitleSize(18);
             item1.setTitleColor(Color.WHITE);
             menu.addMenuItem(item1);
 
-            SwipeMenuItem item2 = new SwipeMenuItem(
-                    getContext());
-            // set item background
-            item2.setBackground(new ColorDrawable(Color.RED));
-            item2.setWidth(200);
-            item2.setTitle("Action 2");
-            item2.setTitleSize(18);
-            item2.setTitleColor(Color.WHITE);
-            menu.addMenuItem(item2);
+//            SwipeMenuItem item2 = new SwipeMenuItem(
+//                    getContext());
+//            // set item background
+//            item2.setBackground(new ColorDrawable(Color.RED));
+//            item2.setWidth(200);
+//            item2.setTitle("Action 2");
+//            item2.setTitleSize(18);
+//            item2.setTitleColor(Color.WHITE);
+//            menu.addMenuItem(item2);
 
         }
     };
@@ -470,20 +470,34 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
             String value = (String) adapter.getItem(position);
 
-            switch (index) {
-                case 0:
-                    Toast.makeText(getContext(), "Action 1 for " + value, Toast.LENGTH_SHORT).show();
-                    break;
-                case 1:
-                    Toast.makeText(getContext(), "Action 2 for " + value, Toast.LENGTH_SHORT).show();
-                    break;
-            }
+            System.out.println("a  " +adapter.getItem(position));
+            System.out.println("a  " +contactName.get(position));
+            System.out.println("a  " +adapter.getPosition(group.getMembers().get(position)));
+
+            contactName.remove(adapter.getPosition(group.getMembers().get(position)));
+            adapter.notifyDataSetChanged();
+
+
+            //  switch (index) {
+            //  case 0:
+         //   contactName.get(position);
+
+            Toast.makeText(getContext(), "Action 1 for " + value, Toast.LENGTH_SHORT).show();
+          //  contactName.remove(adapter.getPosition(group.getMembers().get(position)));
+            //   break;
+            //case 1:
+            // Toast.makeText(getContext(), "Action 2 for " + value, Toast.LENGTH_SHORT).show();
+//                    break;
+//            }
+//            return false;
+//        }
+//    });
             return false;
-        }
-    });
 
     }
 
 
 
+});
+    }
 }
