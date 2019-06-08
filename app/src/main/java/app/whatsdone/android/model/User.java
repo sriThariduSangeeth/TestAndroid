@@ -9,12 +9,6 @@ import java.util.Map;
 
 import app.whatsdone.android.utils.Constants;
 
-enum UserStatus {
-    available,
-    busy,
-    away
-}
-
 public class User implements BaseEntity, IUser {
     private String documentID;
     private String displayName;
