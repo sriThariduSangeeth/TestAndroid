@@ -61,4 +61,11 @@
     <string name="due_date">Due date</string>
     <string name="choose_one_of_the_status">Choose one of the status</string>
     <string name="date">01/01/2019</string>
+    <string name="change_profile_hint">Enter your Name and Add your additional picture</string>
+    <string name="status">Status</string>
+    <string name="account_section">Account</string>
+    <string name="notifications_hint">Notifications</string>
+    <string name="sync_contacts">Sync Contacts</string>
+    <string name="logout">logout</string>
+    <string name="display_name">Display Name</string>
 </resources>
