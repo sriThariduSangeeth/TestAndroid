@@ -72,11 +72,13 @@ dependencies {
 
     implementation 'com.github.stfalcon:chatkit:0.3.3'
 
+    // CountryPicker
+    implementation 'com.hbb20:ccp:2.2.4'
+
    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 
     //camera
     implementation 'com.karumi:dexter:5.0.0'
-
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.5.0'

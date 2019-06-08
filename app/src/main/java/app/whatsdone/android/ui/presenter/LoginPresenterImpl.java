@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.presenter;
 
 import android.app.Activity;
+import android.widget.EditText;
 
 import java.util.Map;
 
@@ -20,10 +21,23 @@ public class LoginPresenterImpl implements LoginPresenter {
         this.view = view;
     }
 
+
     @Override
     public void onNextClicked(LoginViewModel model) {
         System.out.println(model.getCountryCode() + " " + model.getPhoneNo());
         AuthService service = new AuthServiceImpl();
+
+        boolean isValid = false;
+        if(model.getPhoneNo() != null && !model.getPhoneNo().isEmpty())
+        {
+            isValid = true;
+            view.disableButton();
+
+        }else
+        {
+            view.onValidationFailed();
+        }
+
 
         ((AuthServiceImpl) service).setContext(context);
         service.register("+" + model.getCountryCode() + model.getPhoneNo(), new AuthService.Listener() {

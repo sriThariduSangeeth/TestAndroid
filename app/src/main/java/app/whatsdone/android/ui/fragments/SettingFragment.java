@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,30 +14,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import app.whatsdone.android.R;
-import de.hdodenhof.circleimageview.CircleImageView;
+import app.whatsdone.android.databinding.FragmentSettingsBinding;
+import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.ui.presenter.SettingsPresenter;
+import app.whatsdone.android.ui.presenter.SettingsPresenterImpl;
+import app.whatsdone.android.ui.view.SettingsView;
+import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SettingFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class SettingFragment extends Fragment implements AdapterView.OnItemSelectedListener, SettingsView {
 
     private static int RESULT_LOAD_IMAGE = 1;
-    private Button editButton;
-    private Uri selectedImage;
-    private CircleImageView profilePic;
-    private EditText profileName;
-    private Spinner spinner;
+    FragmentSettingsBinding binding;
+    private SettingsViewModel model;
+    private SettingsPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,38 +42,14 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
         // Inflate the layout for this fragment
 
         System.out.println("settings fragment");
-        View view =  inflater.inflate(R.layout.fragment_settings, container, false);
 
-        editButton = (Button)view.findViewById(R.id.editbutton);
-        profilePic = (CircleImageView)view.findViewById(R.id.profilePic);
-        profileName = (EditText)view.findViewById(R.id.profileName);
+        this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
+        this.model = new SettingsViewModel("", true, UserStatus.available, "");
+        this.presenter = new SettingsPresenterImpl(this);
+        this.binding.setModel(model);
+        this.binding.setPresenter(presenter);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,RESULT_LOAD_IMAGE);
-            }
-
-        });
-
-        spinner = (Spinner)view.findViewById(R.id.spinner);
-        spinner.setOnItemSelectedListener(this);
-        List<String> categories = new ArrayList<String>();
-        categories.add("Available");
-        categories.add("At Work");
-        categories.add("Busy");
-        categories.add("At School");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
-        return view;
+        return binding.getRoot();
 
     }
 
@@ -95,13 +69,18 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
+    public void onImageEdit() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent,RESULT_LOAD_IMAGE);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data)
         {
-            selectedImage = data.getData();
+            Uri selectedImage = data.getData();
 
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -117,10 +96,9 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
             try {
                 bmp = getBitmapFromUri(selectedImage);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            profilePic.setImageBitmap(bmp);
+             binding.profilePic.setImageBitmap(bmp);
         }
 
     }
