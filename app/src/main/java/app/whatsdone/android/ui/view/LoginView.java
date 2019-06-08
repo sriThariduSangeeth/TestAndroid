@@ -5,4 +5,5 @@ public interface LoginView {
     void onVerificationCompleted(String token);
 
     void onValidationFailed();
+    void disableButton();
 }

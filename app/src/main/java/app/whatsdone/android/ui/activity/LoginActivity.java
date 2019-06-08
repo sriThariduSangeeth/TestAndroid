@@ -24,7 +24,8 @@ import app.whatsdone.android.ui.viewmodel.LoginViewModel;
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private CountryCodePicker CCP;
-    private TextView textView;
+    private EditText txtNumber;
+    private Button nextButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         LoginViewModel model = new LoginViewModel();
         binding.setPresenter(presenter);
         binding.setModel(model);
+
+        txtNumber = (EditText)findViewById(R.id.phoneNumber);
+        nextButton = (Button)findViewById(R.id.nextButton);
 
         CCP = (CountryCodePicker)findViewById(R.id.countryCodePicker);
         model.setCountryCode("+"+CCP.getSelectedCountryCode());
@@ -58,12 +62,18 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onValidationFailed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Error");
-        builder.setMessage("Please enter a valid Phone Number");
 
-        builder.setPositiveButton("OK",null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error");
+            builder.setMessage("Please enter a valid Phone Number");
+
+            builder.setPositiveButton("OK",null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+    }
+    public void disableButton()
+    {
+        nextButton.setEnabled(false);
     }
 }
