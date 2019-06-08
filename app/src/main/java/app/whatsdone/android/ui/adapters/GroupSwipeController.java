@@ -17,6 +17,8 @@ import android.view.View;
 
 import app.whatsdone.android.model.ButtonsState;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthService;
+import app.whatsdone.android.services.AuthServiceImpl;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
@@ -28,10 +30,12 @@ public class GroupSwipeController extends Callback {
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private RectF buttonInstance = null;
     private GroupSwipeControllerActions buttonsActions;
-   // private GroupSwipeControllerActions buttonsActions = null;
+    private RecyclerView recyclerView;
+    // private GroupSwipeControllerActions buttonsActions = null;
 
     private ButtonsState buttonShowedState = ButtonsState.GONE;
     private static final float buttonWidth = getScreenWidth()/5;
+    //private Group group;
 //    DisplayMetrics displayMetrics = new DisplayMetrics();
 //    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 //    int height = displayMetrics.heightPixels;
@@ -43,8 +47,9 @@ public class GroupSwipeController extends Callback {
 //    int width = size.x;
 //    int height = size.y;
 
-    public GroupSwipeController(GroupSwipeControllerActions buttonsActions) {
+    public GroupSwipeController(GroupSwipeControllerActions buttonsActions, RecyclerView recyclerView) {
         this.buttonsActions = buttonsActions;
+        this.recyclerView = recyclerView;
     }
 
     public static int getScreenWidth() {
@@ -67,7 +72,10 @@ public class GroupSwipeController extends Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
+        int swipedPosition = viewHolder.getAdapterPosition();
+        GroupsRecyclerViewAdapter adapter = (GroupsRecyclerViewAdapter)recyclerView.getAdapter();
+        Group group = adapter.getGroup(swipedPosition);
+        //this.group = group;
     }
 
     //layout direction of the view
@@ -111,16 +119,33 @@ public class GroupSwipeController extends Callback {
 
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
+
         float corners = 0;
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
+        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.RED);
-        c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("DELETE", c, leftButton, p);
+//        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
+//        p.setColor(Color.RED);
+//        c.drawRoundRect(leftButton, corners, corners, p);
+
+        Group group = ((GroupsRecyclerViewAdapter.RecyclerViewHolder)viewHolder).getGroup();
+        System.out.println(group.getCreatedBy());
+        System.out.println(AuthServiceImpl.getCurrentUser().getDocumentID());
+        if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
+          //  RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
+            p.setColor(Color.RED);
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("DELETE", c, leftButton, p);
+        }else {
+             p.setColor(Color.GRAY);
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("LEAVE", c, leftButton, p);
+
+        }
+
+
 
 
        buttonInstance = null;

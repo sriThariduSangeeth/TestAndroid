@@ -1,5 +1,7 @@
 package app.whatsdone.android.services;
 
+import java.io.IOException;
+
 import app.whatsdone.android.model.Group;
 
 public interface GroupService {
@@ -7,7 +9,9 @@ public interface GroupService {
     void create(Group group, ServiceListener serviceListener);
     void update(Group group, ServiceListener serviceListener);
     void delete(String id, ServiceListener serviceListener);
+    void leave(String groupId, ServiceListener serviceListener);
     void subscribe(ServiceListener serviceListener);
     void unSubscribe();
 
+    String add();
 }

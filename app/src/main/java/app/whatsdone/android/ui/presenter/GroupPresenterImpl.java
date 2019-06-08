@@ -2,6 +2,8 @@ package app.whatsdone.android.ui.presenter;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
@@ -37,5 +39,60 @@ public class GroupPresenterImpl implements GroupPresenter{
         service.unSubscribe();
     }
 
+    @Override
+    public void deleteTeam(String documentId) {
+        // ((GroupServiceImpl) service).setContext(context);
+
+        try {
+            service.delete(documentId, new ServiceListener() {
+                @Override
+                public void onSuccess() {
+                    view.onGroupDeleted();
+
+                }
+
+                @Override
+                public void onError(@Nullable String error) {
+
+                    view.onDeleteError();
+                }
+            });
+
+        }catch (Exception ex){
+            view.onDeleteError();
+        }
+    }
+
+    @Override
+    public void leaveTeam(String groupId) {
+        service.leave(groupId, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                view.onGroupLeave();
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+
+            }
+        });
+    }
 }
+
+//    @Override
+//    public void deleteTeam(String teamId) {
+//
+//        ((GroupServiceImpl) service).setContext(context);
+//        service.delete(teamId, new ServiceListener() {
+//            @Override
+//            public void onSuccess() {
+//
+//                view.deleteTeam(teamId);
+//            }
+//        });
+//    }
+
+
+
+
 

@@ -1,6 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +9,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,10 +19,16 @@ import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LeaveGroupRequest;
+import app.whatsdone.android.model.LeaveGroupResponse;
 import app.whatsdone.android.utils.Constants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class GroupServiceImpl implements GroupService {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
 
@@ -51,6 +58,8 @@ public class GroupServiceImpl implements GroupService {
                                 group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
                             if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
                                 group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+                            if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
+                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
 
                             groups.add(group);
                             serviceListener.onDataReceived(groups);
@@ -66,7 +75,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void create(Group group, ServiceListener serviceListener) {
 
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document();
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
         data.put(Constants.FIELD_GROUP_TITLE, group.getGroupName());
         data.put(Constants.FIELD_GROUP_CREATED_BY, group.getCreatedBy());
@@ -75,6 +84,7 @@ public class GroupServiceImpl implements GroupService {
         data.put(Constants.FIELD_GROUP_MANAGED_BY_ADMIN, true);
         data.put(Constants.FIELD_GROUP_ENABLE_USER_TASKS, true);
         data.put(Constants.FIELD_GROUP_MEMBERS, group.getMembers());
+        data.put(Constants.FIELD_GROUP_ADMINS, group.getAdmins());
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
@@ -125,7 +135,34 @@ public class GroupServiceImpl implements GroupService {
                    }
                     serviceListener.onCompleted(null);
                 });
+    }
 
+    @Override
+    public void leave(String groupId, ServiceListener serviceListener) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.URL_FIREBASE)
+                .build();
+
+        CloudService service = retrofit.create(CloudService.class);
+        LeaveGroupRequest request = new LeaveGroupRequest();
+        request.setGroupId(groupId);
+        Call<LeaveGroupResponse> call = service.leaveGroup(request);
+        call.enqueue(new Callback<LeaveGroupResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<LeaveGroupResponse> call,@NotNull Response<LeaveGroupResponse> response) {
+                LeaveGroupResponse leaveGroupResponse = response.body();
+                if (leaveGroupResponse != null && leaveGroupResponse.isSuccess()) {
+                    serviceListener.onSuccess();
+                    return;
+                }
+                serviceListener.onError(null);
+            }
+
+            @Override
+            public void onFailure(Call<LeaveGroupResponse> call, Throwable t) {
+                serviceListener.onError(t.getLocalizedMessage());
+            }
+        });
 
     }
 
@@ -178,5 +215,10 @@ public class GroupServiceImpl implements GroupService {
             listener.remove();
             listener = null;
         }
+    }
+
+    @Override
+    public String add() {
+        return db.collection(Constants.REF_TEAMS).document().getId();
     }
 }

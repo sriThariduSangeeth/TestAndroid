@@ -23,13 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="8dp"
         android:text="@string/GroupDetails"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/group_details">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/group_photo_image_view"
+            android:id="@+id/group_photo_image_view2"
             android:layout_width="44dp"
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
@@ -59,12 +59,12 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.893"
-            app:layout_constraintStart_toEndOf="@+id/teamPhoto_text_view"
+            app:layout_constraintStart_toEndOf="@+id/teamPhoto_text_view2"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-            android:id="@+id/teamPhoto_text_view"
+            android:id="@+id/teamPhoto_text_view2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
 
@@ -97,7 +97,7 @@
         tools:ignore="MissingConstraints">
 
         <TextView
-            android:id="@+id/group_name_text_view"
+            android:id="@+id/group_name_text_view2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
@@ -114,7 +114,7 @@
         </TextView>
 
         <EditText
-            android:id="@+id/group_name_edit_text"
+            android:id="@+id/change_group_name_edit_text"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
 
 
     <TextView
-        android:id="@+id/members"
+        android:id="@+id/members2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -158,11 +158,11 @@
         android:layout_height="300sp"
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/members"
+        app:layout_constraintTop_toBottomOf="@+id/members2"
         tools:layout_editor_absoluteX="16dp">
 
         <Button
-            android:id="@+id/add_members_button"
+            android:id="@+id/edit_members_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -173,20 +173,20 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/add_members_list_view"
+            app:layout_constraintStart_toStartOf="@+id/add_members_list_view2"
             app:layout_constraintTop_toTopOf="parent">
 
         </Button>
 
         <ListView
-            android:id="@+id/add_members_list_view"
+            android:id="@+id/add_members_list_view2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
 
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_members_button"
+            app:layout_constraintTop_toBottomOf="@+id/edit_members_button"
             app:layout_constraintVertical_bias="1.0">
 
         </ListView>
@@ -212,7 +212,7 @@
 
     -->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/save_group_fab_button"
+        android:id="@+id/update_group_fab_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

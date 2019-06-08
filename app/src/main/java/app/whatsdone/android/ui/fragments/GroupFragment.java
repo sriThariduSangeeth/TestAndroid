@@ -9,9 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +19,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.model.Group;
@@ -27,9 +27,10 @@ import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
 import app.whatsdone.android.ui.view.GroupFragmentView;
 import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class GroupFragment extends Fragment implements GroupFragmentView {
+public class GroupFragment extends Fragment implements GroupFragmentView{
 
     private List<BaseEntity> groups = new ArrayList<>();
     private GroupsRecyclerViewAdapter adapter;
@@ -39,6 +40,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private View view;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
+    private CircleImageView circleImageView;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
+        circleImageView = view.findViewById(R.id.image_view_group);
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
@@ -86,6 +90,22 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     }
 
 
+    @Override
+    public void onGroupDeleted() {
+
+
+    }
+
+    @Override
+    public void onDeleteError() {
+
+    }
+
+    @Override
+    public void onGroupLeave() {
+
+    }
+
 
     public interface OnGroupFragmentInteractionListener {
 
@@ -95,7 +115,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     }
 
     public void setListener(OnGroupFragmentInteractionListener handler) {
-            listener = handler;
+        listener = handler;
     }
 
     @Override
@@ -117,16 +137,32 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                System.out.println("hi");
+
+
+
             }
 
             @Override
             public void onLeftClicked(int position) {
-                adapter.groups.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                try {
+                    Group group = adapter.getGroup(position);
+                    if(group.getCreatedBy() == AuthServiceImpl.getCurrentUser().getDocumentID()){
+
+                        presenter.deleteTeam(groups.get(position).getDocumentID());
+                    }
+                    else {
+                        presenter.leaveTeam(group.getDocumentID());
+
+                    }
+
+
+
+                }catch (Exception e){
+                    Log.d("My", e.getMessage());
+                }
+
             }
-        });
+        }, myrecycler);
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(groupSwipeController);
@@ -137,6 +173,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 groupSwipeController.onDraw(c);
             }
+
+
         });
         presenter.subscribe();
     }
