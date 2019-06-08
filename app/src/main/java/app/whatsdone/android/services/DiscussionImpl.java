@@ -3,6 +3,7 @@ package app.whatsdone.android.services;
 import android.util.Log;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -21,7 +22,7 @@ public class DiscussionImpl implements DiscussionService {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = DiscussionImpl.class.getCanonicalName();
     private List<Map<String,Objects>> finalList = new ArrayList<>();
-
+    private Query next;
 
 
     @Override
@@ -34,9 +35,21 @@ public class DiscussionImpl implements DiscussionService {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        Query next = null;
+                        if(task.getResult().getDocuments().size() > 0){
+                            DocumentSnapshot lastVisible = task.getResult().getDocuments()
+                                    .get(task.getResult().size() -1);
+                            next =   db.collection(Constants.REF_DISCUSSIONS)
+                                    .whereEqualTo("group_id", Objects.requireNonNull(groupId))
+                                    .orderBy("posted_at" , Query.Direction.DESCENDING)
+                                    .startAfter(lastVisible)
+                                    .limit(10);
+                        }
+
+                        this.next = next;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            User user = new User(document.getString("by_user"),document.getString("user_name"),document.getString("user_image"),true);
-                            Message message = new Message(document.getString("by_user"),user,document.getString("message"),document.getDate("posted_at"));
+                            User user = new User(document.getString("by_user"),document.getString("user_name"),checkAvatarIsEmpty(document.getString("user_image")),true);
+                            Message message = new Message(document.getId(),user,document.getString("message"),document.getDate("posted_at"));
                             discussions.add(message);
                         }
                         serviceListener.onDataReceivedForMessage(discussions);
@@ -78,26 +91,43 @@ public class DiscussionImpl implements DiscussionService {
     }
 
     @Override
-    public void loadRestMessages(Message lastMessage , String groupId, ServiceListener serviceListener) {
+    public void loadRestMessages( String groupId, ServiceListener serviceListener) {
         ArrayList<Message> discussions = new ArrayList<>();
 
-        db.collection("discussions")
-                .whereEqualTo("group_id", Objects.requireNonNull(groupId))
-                .orderBy("posted_at" , Query.Direction.DESCENDING).startAt(lastMessage).limit(10)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            User user = new User(document.getString("by_user"),document.getString("user_name"),document.getString("user_image"),true);
-                            Message message = new Message(document.getString("by_user"),user,document.getString("message"),document.getDate("posted_at"));
-                            discussions.add(message);
+        if(!(next == null)){
+            this.next.get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Query next = null;
+                            if(task.getResult().getDocuments().size() > 0){
+                                DocumentSnapshot lastVisible = task.getResult().getDocuments()
+                                        .get(task.getResult().size() -1);
+                                next =   db.collection(Constants.REF_DISCUSSIONS)
+                                        .whereEqualTo("group_id", Objects.requireNonNull(groupId))
+                                        .orderBy("posted_at" , Query.Direction.DESCENDING)
+                                        .startAfter(lastVisible)
+                                        .limit(10);
+                            }
+
+                            this.next = next;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User user = new User(document.getString("by_user"),document.getString("user_name"),checkAvatarIsEmpty(document.getString("user_image")),true);
+                                Message message = new Message(document.getString("by_user"),user,document.getString("message"),document.getDate("posted_at"));
+                                discussions.add(message);
+                            }
+                            serviceListener.onDataReceivedForMessage(discussions);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
                         }
-                        serviceListener.onDataReceivedForMessage(discussions);
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
-                    }
-                });
+                    });
+        }
     }
 
+    private String checkAvatarIsEmpty(String url){
+        if(url == null || url.isEmpty()){
+           url = "https://img.icons8.com/color/100/000000/user-group-man-man.png";
+        }
+        return url;
+    }
 
 }

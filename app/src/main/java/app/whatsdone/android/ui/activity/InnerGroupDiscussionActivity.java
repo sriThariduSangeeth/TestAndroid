@@ -2,9 +2,14 @@ package app.whatsdone.android.ui.activity;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 import com.stfalcon.chatkit.messages.MessageHolders;
@@ -12,7 +17,11 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.MessageActivity;
@@ -20,28 +29,36 @@ import app.whatsdone.android.utils.MessageActivity;
 public class InnerGroupDiscussionActivity extends MessageActivity  implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
-        DialogInterface.OnClickListener,
-        MessageInput.TypingListener {
+        DialogInterface.OnClickListener{
 
-    private String id = "I0W3Nrrr0IpUVaI33SnU";
-    private Toolbar toolbar;
+//    private static String id = "";
     private MessagesList messagesList;
     private static final byte CONTENT_TYPE_VOICE = 1;
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
+    private MessageInput input;
+    private ListView viewIn;
 
 
     @Override
     public void onCreate(Bundle persistentState) {
+
+        String[] users = { "Suresh Dasari", "Trishika Dasari", "Rohini Alavala", "Praveen Kumar", "Madhav Sai" };
+
+
         super.onCreate(persistentState);
         setContentView(R.layout.activity_inner_group_discussion);
+        this.messagesList = (MessagesList) findViewById(R.id.messagesList);
+        this.viewIn = (ListView) findViewById(R.id.view_in);
+        initAdapter();
         toolbar = (Toolbar) findViewById(R.id.toolbarInChat);
         setSupportActionBar(toolbar);
-        this.messagesList = (MessagesList) findViewById(R.id.messagesList);
-        initAdapter();
-
-        MessageInput input = (MessageInput) findViewById(R.id.input_mes);
+        getSupportActionBar().setTitle(groupName);
+        input = (MessageInput) findViewById(R.id.input_mes);
         input.setInputListener(this);
         input.setAttachmentsListener(this);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -51,8 +68,31 @@ public class InnerGroupDiscussionActivity extends MessageActivity  implements Me
                 onBackPressed();
             }
         });
+
+        input.setTypingListener(new MessageInput.TypingListener() {
+            @Override
+            public void onStartTyping() {
+                Log.d("Tag", String.valueOf(input.getInputEditText().getText()));
+                if(input.getInputEditText().getText().toString().indexOf("@") > -1){
+                    viewIn.setAdapter(adapter);
+                    int num = input.getInputEditText().getText().toString().indexOf("@");
+                }
+
+
+            }
+
+            @Override
+            public void onStopTyping() {
+
+            }
+        });
+
     }
 
+
+    public String getGroupId (){
+        return id;
+    }
 
     @Override
     public void onSelectionChanged(int count) {
@@ -99,13 +139,5 @@ public class InnerGroupDiscussionActivity extends MessageActivity  implements Me
         this.messagesList.setAdapter(super.messagesAdapter);
     }
 
-    @Override
-    public void onStartTyping() {
 
-    }
-
-    @Override
-    public void onStopTyping() {
-
-    }
 }

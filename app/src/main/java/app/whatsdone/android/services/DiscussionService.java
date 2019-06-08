@@ -8,11 +8,11 @@ public interface DiscussionService {
 
     void getAllDiscussion(String groupId , ServiceListener serviceListener);
 
-    void insterMessage(Message getMessage , ServiceListener serviceListener);
+    void insterMessage(Message getMessage ,  ServiceListener serviceListener);
 
     void deleteMessage ();
 
-    void loadRestMessages( Message lastMsg , String groupId , ServiceListener serviceListener);
+    void loadRestMessages( String groupId , ServiceListener serviceListener);
 
 
 }

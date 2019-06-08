@@ -43,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
+    private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private FloatingActionButton mainFab;
@@ -62,6 +63,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private AddEditGroupPresenter presenter;
 
     public static InnerGroupTaskFragment newInstance(Group group){
+        groupobj = new Group();
+        groupobj = group;
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
         args.putParcelable("group", group);
@@ -70,7 +73,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         instance.setArguments(args);
         return instance;
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,22 +140,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item ) {
 
         switch (item.getItemId())
         {
             case R.id.discussion:
-//                //this is for open discussion
-//                fragmentManager = getFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragment = new InnerGroupDiscussionFragment();
-//                fragmentTransaction.add(R.id.discussion, fragment);
-//                fragmentTransaction.commit();
-
-//                AppCompatActivity activity = (AppCompatActivity) getContext();
-//                Fragment myFragment = new CreateNewTaskFragment();
-//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
                 Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
+
+                intent.putExtra(Constants.ARG_GROUP_ID, groupobj.getDocumentID());
+                intent.putExtra(Constants.ARG_GROUP_NAME, groupobj.getGroupName());
+                intent.putExtra(Constants.FIELD_GROUP_AVATAR, groupobj.getAvatar());
+                intent.putExtra(Constants.FIELD_GROUP_MEMBERS , String.valueOf(groupobj.getMembers()));
                 startActivity(intent);
 
                 return true;
