@@ -1,10 +1,13 @@
 package app.whatsdone.android.utils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
+import android.view.View;
+
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -13,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
+
+import app.whatsdone.android.R;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.services.DiscussionImpl;
 import app.whatsdone.android.services.DiscussionService;
@@ -27,34 +30,35 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
 
     protected String senderId = null;
+    public static String id ="";
+    public static String groupName ="";
+    public Toolbar toolbar;
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
-
-    private Menu menu;
-    private int selectionCount;
-    private Date lastLoadedDate;
-    private String id = "I0W3Nrrr0IpUVaI33SnU";
-    private List<Message> allMessages = new ArrayList<>();
     private DiscussionService discussionService = new DiscussionImpl();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
 
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
+        Intent intent = getIntent();
+        id = intent.getStringExtra("group_id");
+        groupName = intent.getStringExtra("group_title");
         super.onCreate( persistentState);
-        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> {
+            Picasso.get().load(url).into(imageView);
+        };
         senderId = getCurrentDetails.getCurrentUser().getId();
+
     }
 
     @Override
     protected void onStart() {
 
         super.onStart();
-        allMessages.clear();
         discussionService.getAllDiscussion(id, new ServiceListener() {
             @Override
             public void onDataReceivedForMessage(ArrayList<Message> messages) {
                 if(!messages.isEmpty()){
-                    allMessages.addAll(messages);
                     messagesAdapter.addToEnd( messages, false);
                 }else {
                     Log.d("TAG", "There is no any messages");
@@ -67,15 +71,11 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public void onLoadMore(int page, int totalItemsCount) {
         Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
 
-        Message lastMes = allMessages.get(page-1);
-
         new Handler().postDelayed(() -> {
-            discussionService.loadRestMessages(lastMes, id , new ServiceListener() {
+            discussionService.loadRestMessages( id , new ServiceListener() {
                 @Override
                 public void onDataReceivedForMessage(ArrayList<Message> messages) {
                     messagesAdapter.addToEnd( messages, false);
-                    allMessages.addAll(messages);
-
                 }
             });
         },1000);
@@ -98,7 +98,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public Message verifyMessageInsert(Message message){
         final boolean[] insert = {false};
 
-        new Handler().postDelayed(() -> {
+        boolean postDelayed = new Handler().postDelayed(() -> {
 
             discussionService.insterMessage(message, new ServiceListener() {
                 @Override
@@ -106,9 +106,11 @@ public abstract class MessageActivity extends AppCompatActivity implements
                     insert[0] = true;
                 }
             });
-        },1000);
+        }, 1000);
 
-        if (insert[0]) return message;
+        if (postDelayed) {
+            return message;
+        }
 
         return message;
     }

@@ -23,7 +23,13 @@ public class Group implements Parcelable, BaseEntity {
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
 
-    public Bitmap getTeamImage() {
+  public void Group(String groupName , String groupId , String groupAvatar ){
+      this.documentID = groupId;
+      this.groupName = groupName;
+      this.avatar = groupAvatar;
+  }
+
+  public Bitmap getTeamImage() {
         return teamImage;
     }
 

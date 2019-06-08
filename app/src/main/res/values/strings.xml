@@ -61,4 +61,5 @@
     <string name="due_date">Due date</string>
     <string name="choose_one_of_the_status">Choose one of the status</string>
     <string name="date">01/01/2019</string>
+    <string name="start_typing_status">Start typing</string>
 </resources>

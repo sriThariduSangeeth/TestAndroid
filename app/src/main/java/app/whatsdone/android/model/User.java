@@ -109,13 +109,6 @@ public class User implements BaseEntity, IUser {
         return data;
     }
 
-    public User(String id, String name, String avatar, boolean online) {
-        this.id = id;
-        this.displayName = name;
-        this.avatar = avatar;
-        this.online = online;
-    }
-
     public User(){
 
     }

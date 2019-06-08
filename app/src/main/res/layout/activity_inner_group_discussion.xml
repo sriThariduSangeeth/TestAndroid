@@ -9,19 +9,19 @@
     tools:context=".ui.activity.InnerGroupDiscussionActivity">
 
     <android.support.v7.widget.Toolbar
-
         android:id="@+id/toolbarInChat"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:gravity="center_vertical"
         app:layout_collapseMode="pin"
         app:layout_scrollFlags="scroll|enterAlways"
         app:title="@string/app_name"
         app:subtitleTextColor="@color/white"
-        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIcon="?attr/homeAsUpIndicator">
 
-        />
+    </android.support.v7.widget.Toolbar>
+
 
    <RelativeLayout
        android:id="@+id/chat_sec"
@@ -38,13 +38,14 @@
            android:layout_height="match_parent"
            android:layout_above="@+id/input_mes"/>
 
-       <View
+       <ListView
+           android:id="@+id/view_in"
            android:layout_width="match_parent"
-           android:layout_height="1dp"
+           android:layout_height="wrap_content"
            android:layout_above="@+id/input_mes"
            android:layout_marginLeft="16dp"
            android:layout_marginRight="16dp"
-           android:background="@color/LightGreen"/>
+           android:background="@color/white"/>
 
        <com.stfalcon.chatkit.messages.MessageInput
            android:id="@+id/input_mes"
