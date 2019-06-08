@@ -22,9 +22,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ContactServiceImpl implements ContactService {
     Retrofit retrofit = new Retrofit.Builder()
+            .addConverterFactory(JacksonConverterFactory.create())
             .baseUrl(Constants.URL_FIREBASE)
             .build();
     CloudService service = retrofit.create(CloudService.class);

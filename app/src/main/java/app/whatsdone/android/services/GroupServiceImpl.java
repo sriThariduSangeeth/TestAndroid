@@ -26,6 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class GroupServiceImpl implements GroupService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -140,6 +141,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void leave(String groupId, ServiceListener serviceListener) {
         Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(JacksonConverterFactory.create())
                 .baseUrl(Constants.URL_FIREBASE)
                 .build();
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.FragmentSettingsBinding;
 import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.ui.activity.LoginActivity;
 import app.whatsdone.android.ui.presenter.SettingsPresenter;
 import app.whatsdone.android.ui.presenter.SettingsPresenterImpl;
 import app.whatsdone.android.ui.view.SettingsView;
@@ -29,7 +30,7 @@ import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SettingFragment extends Fragment implements AdapterView.OnItemSelectedListener, SettingsView {
+public class SettingFragment extends Fragment implements SettingsView {
 
     private static int RESULT_LOAD_IMAGE = 1;
     FragmentSettingsBinding binding;
@@ -53,17 +54,6 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-
-    }
-
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
 
@@ -72,6 +62,13 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
     public void onImageEdit() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onLogout() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        getActivity().startActivity(intent);
+        getActivity().finish();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
