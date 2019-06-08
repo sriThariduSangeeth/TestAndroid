@@ -12,6 +12,7 @@ import app.whatsdone.android.utils.Constants;
 public class User implements BaseEntity, IUser {
     private String documentID;
     private String displayName;
+    private String id;
     private String phoneNo;
     private String avatar;
     private boolean enableNotifications;
