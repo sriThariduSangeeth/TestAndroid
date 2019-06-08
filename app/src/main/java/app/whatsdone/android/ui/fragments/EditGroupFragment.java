@@ -1,29 +1,26 @@
 package app.whatsdone.android.ui.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import app.whatsdone.android.model.Group;
 
 
-public class AddGroupFragment extends BaseFragment {
+public class EditGroupFragment extends BaseFragment{
 
+    public EditGroupFragment() {
 
-    public AddGroupFragment() {
-        // Required empty public constructor
     }
 
+    public static EditGroupFragment newInstance(Group group) {
 
-    public static AddGroupFragment newInstance() {
-        AddGroupFragment fragment = new AddGroupFragment();
+        EditGroupFragment fragment = new EditGroupFragment();
         Bundle args = new Bundle();
-       // args.putString(ARG_PARAM1, param1);
-       // args.putString(ARG_PARAM2, param2);
+        args.putParcelable("group", group);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,16 +29,15 @@ public class AddGroupFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            Group group = getArguments().getParcelable("group");
+            this.group = group;
         }
+
     }
-
-
 
     @Override
     public void save() {
-        presenter.create(this.group);
+        presenter.update(this.group);
     }
-
 
 }
