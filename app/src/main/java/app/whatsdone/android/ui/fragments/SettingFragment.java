@@ -50,13 +50,9 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
         profilePic = (CircleImageView)view.findViewById(R.id.profilePic);
         profileName = (EditText)view.findViewById(R.id.profileName);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,RESULT_LOAD_IMAGE);
-            }
-
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent,RESULT_LOAD_IMAGE);
         });
 
         spinner = (Spinner)view.findViewById(R.id.spinner);
