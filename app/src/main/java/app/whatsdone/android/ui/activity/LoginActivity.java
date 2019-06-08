@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -75,5 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void disableButton()
     {
         nextButton.setEnabled(false);
+        nextButton.setBackgroundColor(Color.GRAY);
+        nextButton.setTextColor(0xFFFFFFFF);
     }
 }
