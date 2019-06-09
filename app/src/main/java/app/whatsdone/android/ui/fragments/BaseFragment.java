@@ -3,7 +3,6 @@ package app.whatsdone.android.ui.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,13 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.support.v7.widget.Toolbar;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -51,14 +46,15 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupServiceImpl;
-import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -77,7 +73,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private Button addMembers;
     protected CircleImageView circleImageView;
     private Uri selectedImage;
-    protected List<String> contactNumber = new ArrayList<String>();
+    protected List<String> contactNumbers = new ArrayList<String>();
     protected List<String> contactName = new ArrayList<String>();
     private final static int RQS_PICK_CONTACT = 1;
     private final int REQUEST_CODE = 99;
@@ -90,7 +86,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private List<String> admins = new ArrayList<String>();
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
-
+    Set<String> contactSet = new HashSet<>();
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -118,15 +114,16 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
         swipeListView = (SwipeMenuListView) view.findViewById(R.id.add_members_list_view);
 
+        contactSet = new HashSet();
 
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumber);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers);
         swipeListView.setAdapter(adapter);
 
         //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
         //swipeListView.setAdapter(arrayAdapter);
 
 
-        contactNumber.addAll(group.getMembers());
+        contactNumbers.addAll(group.getMembers());
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         circleImageView.setImageBitmap(group.getTeamImage());
@@ -195,11 +192,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     admins.add(AuthServiceImpl.user.getDocumentID());
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
-                    group.setMembers(contactNumber);
+                    group.setMembers(contactNumbers);
 
                     group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
                     group.setAdmins(admins);
-                    contactNumber.add(AuthServiceImpl.user.getDocumentID());
+                    contactNumbers.add(AuthServiceImpl.user.getDocumentID());
 
                     System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
 
@@ -313,51 +310,59 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         String num = "";
+
+                        Set<String> oneContact = new HashSet<>();
+
                         if (Integer.valueOf(hasNumber) == 1) {
                             System.out.println("Select Contact");
+
+                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                            Contact contactItem = new Contact();
+
                             try {
-                                //Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                                Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                                 while (numbers.moveToNext()) {
-                                    String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                                     String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                                    //check if the selected name is already in the list
-                                    if (contactNumber.contains(number)) {
-                                       // if (group.getMembers().contains(number))
-
-                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                        alert.setTitle("Alert");
-                                        alert.setMessage("" + name + " is already a member");
-
-                                        System.out.println("" + contactNumber);
-
-                                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        });
-
-
-                                        alert.setNegativeButton(android.R.string.no, null);
-                                        alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                        alert.show();
-                                    }
-
-
-                                    else {
-
-
-                                        //contactName.add(name);
-                                        contactNumber.add(number);
-                                        adapter.notifyDataSetChanged();
-
-
-                                        SwipeList();
-                                    }
+                                    contactItem.setDisplayName(name);
+                                    String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                    String num1 = number.replaceAll("\\s+", "");
+                                    oneContact.add(num1);
+                                    System.out.println(" AAAAAAAAAA   " +num1);
 
                                 }
                                 numbers.close();
+
+                                selectOneContact(oneContact, new OnContactSelectedListener() {
+                                    @Override
+                                    public void onSelected(String contact) {
+
+                                        if (contactNumbers.contains(contact)) {
+                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                            alert.setTitle("Alert");
+                                            alert.setMessage("" + contactItem.getDisplayName() + " is already a member");
+
+                                            System.out.println("" + contactNumbers);
+
+                                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            });
+
+
+                                            alert.setNegativeButton(android.R.string.no, null);
+                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                            alert.show();
+                                        } else {
+                                            //contactName.add(name);
+                                            contactNumbers.add(contact);
+                                            adapter.notifyDataSetChanged();
+
+                                        }
+                                    }
+                                });
+
+
+
                             } catch (Exception exception) {
                                 Log.d("test ", exception.getMessage());
                             }
@@ -495,19 +500,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
                 String value = (String) adapter.getItem(position);
-//
-//                System.out.println("a  " + adapter.getItem(position));
-//                System.out.println("a  " + contactName.get(position));
-//                System.out.println(" b " + adapter.getPosition(contactName.get(position)));
 
                 if(value.equals(group.getCreatedBy()))
                 {
                     Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    contactNumber.remove(value);
+                    contactNumbers.remove(value);
                     adapter.notifyDataSetChanged();
-                   // Toast.makeText(getContext(), "Deleted " + contactNumber.get(position), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -518,6 +519,31 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
         });
+    }
+
+    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener )
+    {
+        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
+
+        if (numbers.length == 0 )
+            return;
+
+        if(numbers.length == 1) {
+            listener.onSelected(numbers[0]);
+            return;
+        }
+
+        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
+        contactDialog.setTitle("Select one contact to add");
+
+        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
+
+        contactDialog.show();
+
+    }
+
+    interface OnContactSelectedListener {
+        void onSelected(String contact);
     }
 
 }
