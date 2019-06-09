@@ -39,7 +39,7 @@
         android:contentDescription="done image"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:src="@drawable/done_icon"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -54,7 +54,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
-        android:text="whatsdone group 1"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_group"
@@ -108,25 +107,26 @@
         android:src="@drawable/ic_chat_bubble_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/date"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/unread_chats_counter"
+        android:id="@+id/unread_discussion_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="13dp"
         android:inputType="number"
-        android:text="1"
+        android:paddingTop="3sp"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toEndOf="@+id/group_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/unread_tasks_counter"
@@ -136,15 +136,16 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:inputType="number"
-        android:text="2"
-        android:textSize="10sp"
-        android:textColor="@color/white"
-        android:textAlignment="center"
         android:background="@drawable/shape_circle"
+        android:inputType="number"
+        android:paddingTop="3sp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/group_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintVertical_bias="1.0" />
     <!--    <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"

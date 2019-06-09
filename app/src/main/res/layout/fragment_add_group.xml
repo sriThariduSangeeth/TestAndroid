@@ -178,18 +178,21 @@
 
         </Button>
 
-        <ListView
+        <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/add_members_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200sp"
+            android:layout_marginBottom="10dp"
             android:background="@color/white"
-
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_members_button"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="0.0">
 
-        </ListView>
+        </com.baoyz.swipemenulistview.SwipeMenuListView>
 
     </android.support.constraint.ConstraintLayout>
 
