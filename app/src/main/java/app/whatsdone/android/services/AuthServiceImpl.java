@@ -19,6 +19,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
@@ -73,7 +74,8 @@ public class AuthServiceImpl implements AuthService {
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             user.setDocumentID(firebaseUser.getPhoneNumber());
             user.setPhoneNo(firebaseUser.getPhoneNumber());
-            user.setAvatar(firebaseUser.getPhotoUrl().toString());
+            if(firebaseUser.getPhotoUrl() != null)
+                user.setAvatar(Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
             user.setDisplayName(firebaseUser.getDisplayName());
         }
 

@@ -24,13 +24,9 @@ public class ListViewCustomArrayAdapter extends ArrayAdapter<String> {
         super(context, resourceId, contacts);
         this.contacts = contacts;
         layout = resourceId;
-        inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
-//    public ListViewCustomArrayAdapter(@NonNull Activity activity, int resourceId, @NonNull List<String> objects) {
-//        super(activity, resourceId, objects);
-//
-//    }
 
 
     @NonNull

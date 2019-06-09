@@ -14,7 +14,6 @@
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
-
     <application
         android:name=".WhatsDoneApplication"
         android:allowBackup="true"
@@ -25,8 +24,22 @@
         android:theme="@style/AppTheme"
         
         >
-        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"
-            android:windowSoftInputMode="adjustPan">
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/whatdoneicon" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <!-- [END fcm_default_icon] -->
+        <!-- [START fcm_default_channel] -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <!-- [END fcm_default_channel] -->
+        <activity android:name="app.whatsdone.android.ui.activity.SplashActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -35,13 +48,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="app.whatsdone.android.ui.activity.SplashActivity"
-            />
+        <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity"/>
+        <service
+            android:name=".services.WhatsDoneFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
 
      </application>
+
 
 </manifest>

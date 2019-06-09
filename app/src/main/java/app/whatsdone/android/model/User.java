@@ -17,7 +17,7 @@ public class User implements BaseEntity, IUser {
     private String avatar;
     private boolean enableNotifications;
     private UserStatus status;
-    private List<String> deviceTokens;
+    private List<String> deviceTokens = new ArrayList<>();
 
     public User(String id, String name, String avatar, boolean isOnline) {
         this.documentID = id;
