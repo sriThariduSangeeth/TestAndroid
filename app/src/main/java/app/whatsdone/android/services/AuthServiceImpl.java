@@ -29,7 +29,7 @@ import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
-    public static User user = new User();
+    private static User user = new User();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Activity context;
 

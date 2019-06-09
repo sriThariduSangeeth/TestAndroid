@@ -88,6 +88,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     Set<String> contactSet = new HashSet<>();
+
+
+
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -197,8 +200,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
 
-
-                    System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+                    System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
 
 
                     save();
