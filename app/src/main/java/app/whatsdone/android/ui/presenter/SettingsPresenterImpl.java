@@ -114,7 +114,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
             @Override
             public void onUserRetrieved(User user) {
                 System.out.println("user "+  user.getDisplayName());
-                if(!user.getDocumentID().isEmpty()){
+                if(user.getDocumentID() != null && !user.getDocumentID().isEmpty()){
                     view.onProfileLoaded(user);
 
                 }
