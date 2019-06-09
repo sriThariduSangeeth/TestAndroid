@@ -30,9 +30,8 @@ import static android.support.constraint.Constraints.TAG;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     public List<BaseEntity> groups;
-  //  private ItemClickListener monItemClickListener;
     private Context context;
-    private TextView groupNameTextView;
+    private TextView groupNameTextView, taskCount, discussionCount;;
     private CircleImageView imageView;
 
 
@@ -49,11 +48,12 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-
-
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
-        groupNameTextView = view.findViewById(R.id.group_text);
+
         imageView = view.findViewById(R.id.image_view_group);
+
+
+
         return new RecyclerViewHolder(view);
 
     }
@@ -61,8 +61,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
         Group group = (Group) groups.get(position);
+        holder.groupNameTextView.setText(group.getGroupName());
+        holder.taskCount.setText(group.getDiscussionCount()+"");
+        holder.discussionCount.setText(group. getDiscussionCount()+"");
 
-        holder.textView.setText(group.getGroupName());
+
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
                 Picasso.get().load(group.getAvatar()).into(imageView);
@@ -91,16 +94,18 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
-
+        private TextView groupNameTextView, taskCount, discussionCount;
         private ImageView imageView;
         private Group group;
+
+
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textView = itemView.findViewById(R.id.group_text);
-            imageView = itemView.findViewById(R.id.image_view_group);
+            groupNameTextView = itemView.findViewById(R.id.group_text);
+            taskCount = itemView.findViewById(R.id.unread_tasks_counter);
+            discussionCount = itemView.findViewById(R.id.unread_discussion_counter);
 
 
 

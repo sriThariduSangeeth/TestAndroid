@@ -73,15 +73,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-       private Button addMembers;
+    private Button addMembers;
     protected CircleImageView circleImageView;
     private Uri selectedImage;
     protected List<String> contactNumber = new ArrayList<String>();
     protected List<String> contactName = new ArrayList<String>();
-
-
     private final static int RQS_PICK_CONTACT = 1;
-   // private ListView contactListView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
@@ -90,7 +87,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected Group group;
     private ConstraintLayout constraintLayout;
     private List<String> admins = new ArrayList<String>();
-
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
 
@@ -122,6 +118,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
         constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
         swipeListView = (SwipeMenuListView) view.findViewById(R.id.add_members_list_view);
+
 
 
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactName);
@@ -394,11 +391,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         pictureDialog.show();
     }
     public void choosePhotoFromGallary() {
+        requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent,RESULT_LOAD_IMAGE);
     }
 
     private void takePhotoFromCamera() {
+        requestMultiplePermissions();
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
@@ -406,10 +405,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private void  requestMultiplePermissions(){
         Dexter.withActivity(getActivity())
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withPermissions( Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {

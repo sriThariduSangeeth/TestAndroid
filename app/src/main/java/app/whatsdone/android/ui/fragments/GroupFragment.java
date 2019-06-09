@@ -56,6 +56,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
         myrecycler = view.findViewById(R.id.group_recycler_view);
         circleImageView = view.findViewById(R.id.image_view_group);
 
+
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
 
