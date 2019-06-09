@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.adapters;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,11 +10,14 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MotionEvent;
 import android.view.View;
 
+
+import app.whatsdone.android.R;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
@@ -34,11 +38,13 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     private RectF rightInProgressButton = null;
     private RectF rightOnHoldButton = null;
     private RectF rightDoneButton = null;
+    private Context context = null;
 
 
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
+
 
 
     public TaskSwipeController(TaskSwipeControllerAction buttonsActions) {
@@ -111,29 +117,40 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
+        int yellowforinprogress = ContextCompat.getColor(context,R.color.LightSalmonGold);
+        int bluefordone = ContextCompat.getColor(context, R.color.MidnightBluelight);
+        int grayforonhold = ContextCompat.getColor(context,R.color.gray);
+        int redfordelete = ContextCompat.getColor(context, R.color.lightRed);
+
+
+
         //delete
         leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
-        p.setColor(Color.RED);
+        p.setColor(redfordelete);
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("DELETE", c, leftButton, p);
 
         //in progress
         rightInProgressButton = new RectF(itemView.getRight() - rightSwipeWidth, itemView.getTop(), itemView.getRight()-2*buttonWidth, itemView.getBottom());
-        p.setColor(Color.YELLOW);
+        p.setColor(yellowforinprogress);
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
         c.drawRoundRect(rightInProgressButton, corners, corners, p);
         drawText("In Progress", c, rightInProgressButton, p);
 
 
         //onHold
         rightOnHoldButton = new RectF(itemView.getRight()-buttonWidth , itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.GRAY);
+        p.setColor(grayforonhold);
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
         c.drawRoundRect(rightOnHoldButton, corners, corners, p);
         drawText("On Hold", c, rightOnHoldButton, p);
 
 
         //done
         rightDoneButton = new RectF(itemView.getRight()-2*buttonWidth, itemView.getTop(), itemView.getRight()-buttonWidth, itemView.getBottom());
-        p.setColor(Color.BLUE);
+        p.setColor(bluefordone);
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
         c.drawRoundRect(rightDoneButton, corners, corners, p);
         drawText("Done", c, rightDoneButton, p);
 
@@ -173,6 +190,9 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         }
     }
 
+    public void setContext (Context context){
+        this.context = context;
+    }
 
 //swipe back
     @SuppressLint("ClickableViewAccessibility")

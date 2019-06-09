@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class TaskServiceImpl implements TaskService {
     public void subscribeForGroup(String groupId, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_TASKS)
                 .whereEqualTo(Constants.FIELD_TASK_GROUP_ID, groupId)
+                .orderBy(Constants.FIELD_TASK_DUE_AT, Query.Direction.ASCENDING)
+                .limit(Constants.TASKS_LIMIT)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Task subscription failed", e);
@@ -94,9 +97,9 @@ public class TaskServiceImpl implements TaskService {
                             if (doc.get(Constants.FIELD_TASK_CREATED_BY) != null)
                                 task.setCreatedBy(doc.getString(Constants.FIELD_TASK_CREATED_BY));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER) != null)
-                                task.setAssignedUser(Constants.FIELD_TASK_ASSIGNED_USER);
+                                task.setAssignedUser(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserImage(Constants.FIELD_TASK_ASSIGNED_USER_NAME);
+                                task.setAssignedUserImage(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
                                 task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)

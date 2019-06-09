@@ -6,20 +6,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
+import java.util.logging.Handler;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.model.TaskInnerGroup;
+import app.whatsdone.android.tasks.DownloadImageFromInternet;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder>{
     public List<BaseEntity> taskList;
     private Context context;
-
     public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context) {
 
         this.taskList = tasks;
@@ -48,6 +53,14 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         Task task = (Task) taskList.get(position);
         myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
 
+        if(task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())){
+            Picasso.get().load(task.getAssignedUserImage()).into(myRecyclerViewHolder.imag);
+        }else {
+            myRecyclerViewHolder.imag.setImageResource(R.drawable.ic_account_circle);
+        }
+
+
+
 //        myRecyclerViewHolder.groupTaskText.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -69,12 +82,14 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView groupTaskText;
+        private ImageView imag ;
 
 
         public MyRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
             groupTaskText = itemView.findViewById(R.id.task_inner_text);
+            imag = itemView.findViewById(R.id.image_view_task_inner_group);
         }
     }
 }

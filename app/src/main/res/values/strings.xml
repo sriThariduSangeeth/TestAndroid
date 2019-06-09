@@ -33,6 +33,7 @@
     <string name="TaskDetails">My Task 1</string>
     <string name="task_owner">task owner</string>
     <string name="Save">Save</string>
+    <string name="todo">TO DO</string>
 
     <string name="task_title">Title</string>
     <string name="hint_enter_a_message">Type a message…</string>
@@ -41,8 +42,6 @@
         <item>Todo</item>
         <item>item1</item>
         <item>item2</item>
-
-
     </string-array>
 
     <string name="Terms_and_Privacy">Tap "Agree and continue" to accept the <font color='#01C6DB'>WhatsDone Terms of Service and Privacy Policy</font> </string>
