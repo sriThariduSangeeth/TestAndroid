@@ -6,4 +6,6 @@ public interface LoginView {
 
     void onValidationFailed();
     void disableButton();
+
+    void enableNext();
 }

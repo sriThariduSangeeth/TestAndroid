@@ -13,4 +13,8 @@
     <style name="MyEditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
+
+    <style name="Button.Danger" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/holo_red_light</item>
+    </style>
 </resources>

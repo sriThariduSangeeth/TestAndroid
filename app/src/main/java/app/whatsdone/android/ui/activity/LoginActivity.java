@@ -8,19 +8,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbb20.CountryCodePicker;
 
 import app.whatsdone.android.R;
-import app.whatsdone.android.databinding.ActivityLogingScreenBinding;
 import app.whatsdone.android.databinding.ActivityPhoneNoVerificationBinding;
 import app.whatsdone.android.ui.presenter.LoginPresenter;
 import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
 import app.whatsdone.android.ui.view.LoginView;
-import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.ui.viewmodel.LoginViewModel;
+import app.whatsdone.android.utils.Constants;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -78,5 +75,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         nextButton.setEnabled(false);
         nextButton.setBackgroundColor(Color.GRAY);
         nextButton.setTextColor(0xFFFFFFFF);
+    }
+
+    @Override
+    public void enableNext() {
+        nextButton.setEnabled(true);
     }
 }

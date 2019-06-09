@@ -14,14 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.FragmentSettingsBinding;
+import app.whatsdone.android.model.User;
 import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.ui.activity.LoginActivity;
 import app.whatsdone.android.ui.presenter.SettingsPresenter;
 import app.whatsdone.android.ui.presenter.SettingsPresenterImpl;
 import app.whatsdone.android.ui.view.SettingsView;
@@ -29,7 +33,7 @@ import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SettingFragment extends Fragment implements AdapterView.OnItemSelectedListener, SettingsView {
+public class SettingFragment extends Fragment implements SettingsView {
 
     private static int RESULT_LOAD_IMAGE = 1;
     FragmentSettingsBinding binding;
@@ -44,23 +48,14 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
         System.out.println("settings fragment");
 
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
-        this.model = new SettingsViewModel("", true, UserStatus.available, "");
-        this.presenter = new SettingsPresenterImpl(this);
+        this.model = new SettingsViewModel(AuthServiceImpl.getCurrentUser().getDisplayName(), true, UserStatus.Available, "");
+        this.loadProfileImage(AuthServiceImpl.getCurrentUser().getAvatar());
+        this.presenter = new SettingsPresenterImpl(this, model);
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
+        presenter.initUser();
 
         return binding.getRoot();
-
-    }
-
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
     }
 
@@ -72,6 +67,34 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
     public void onImageEdit() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onLogout() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        getActivity().startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onProfileLoaded(User user) {
+        //loadProfileImage(user.getAvatar());
+        model.setAvatar(user.getAvatar());
+        model.setDisplayName(user.getDisplayName());
+        model.setEnableNotifications(user.isEnableNotifications());
+        model.status.set(user.getStatus().getValue());
+    }
+
+    private void loadProfileImage(String avatar){
+        if(avatar != null && !avatar.isEmpty()){
+            Picasso.get().load(avatar).noFade().into(binding.profilePic);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        presenter.save(model);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -98,7 +121,8 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
             } catch (IOException e) {
                 e.printStackTrace();
             }
-             binding.profilePic.setImageBitmap(bmp);
+            binding.profilePic.setImageBitmap(bmp);
+            presenter.uploadUserImage(bmp);
         }
 
     }

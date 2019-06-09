@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -119,12 +120,11 @@ public class SplashActivity extends AppCompatActivity {
             layoutcenter.animate().setStartDelay(550).translationY(-halftohalfhight*2).scaleX(0.8f).scaleY(0.8f);
             progressBar.animate().setStartDelay(400).translationY(1000).alpha(0);
 
-            if (Constants.IS_LOGGED_IN) {
+            if (!SharedPreferencesUtil.getString(Constants.SHARED_TOKEN).equals("")) {
                 // change activity to chat screen
 
                 Runnable changeChatWindow = () -> {
-
-                    Intent activeIntent = new Intent(getBaseContext(), LoginActivity.class);
+                    Intent activeIntent = new Intent(getBaseContext(), GroupsActivity.class);
                     startActivity(activeIntent);
                     finish();
 
