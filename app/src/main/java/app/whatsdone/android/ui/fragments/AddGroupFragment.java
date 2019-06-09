@@ -8,13 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.ContactService;
+import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 
 
 public class AddGroupFragment extends BaseFragment {
-
 
     public AddGroupFragment() {
         // Required empty public constructor
@@ -39,6 +44,15 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void save() {
+
+        String currentUser = AuthServiceImpl.getCurrentUser().getDocumentID();
+
+        contactNumbers.add(currentUser);
+        group.setCreatedBy(currentUser);
+        if (group.getAdmins().size() == 0) {
+            group.getAdmins().add(currentUser);
+        }
+
 
         presenter.create(this.group);
     }

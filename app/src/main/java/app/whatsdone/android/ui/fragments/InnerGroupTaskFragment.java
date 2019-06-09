@@ -158,8 +158,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
                 AppCompatActivity activity = (AppCompatActivity) getContext();
                 Fragment myFragment = EditGroupFragment.newInstance(group);
-                //((BaseFragment) myFragment).setListener(this);
-                        //new EditGroupFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
 

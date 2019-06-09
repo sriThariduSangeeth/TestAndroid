@@ -43,6 +43,7 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -87,6 +88,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     Set<String> contactSet = new HashSet<>();
+
+
+
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -126,8 +130,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         contactNumbers.addAll(group.getMembers());
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
-        circleImageView.setImageBitmap(group.getTeamImage());
 
+        if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
+            Picasso.get().load(group.getAvatar()).into(circleImageView);
+        }
 
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,16 +195,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 } else {
 
-                    admins.add(AuthServiceImpl.user.getDocumentID());
+
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
 
-                    group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
-                    group.setAdmins(admins);
-                    contactNumbers.add(AuthServiceImpl.user.getDocumentID());
-
-                    System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+                    System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
 
 
                     save();
@@ -407,15 +409,14 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public void choosePhotoFromGallary() {
-        requestMultiplePermissions();
+       // requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
     private void takePhotoFromCamera() {
         requestMultiplePermissions();
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+
     }
 
 
@@ -428,6 +429,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(getContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(intent, CAMERA);
                         }
 
                         // check for permanent denial of any permission
