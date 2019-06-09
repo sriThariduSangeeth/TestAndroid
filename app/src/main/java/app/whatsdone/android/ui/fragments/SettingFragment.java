@@ -15,12 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.FragmentSettingsBinding;
+import app.whatsdone.android.model.User;
 import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.activity.LoginActivity;
 import app.whatsdone.android.ui.presenter.SettingsPresenter;
 import app.whatsdone.android.ui.presenter.SettingsPresenterImpl;
@@ -44,12 +48,12 @@ public class SettingFragment extends Fragment implements SettingsView {
         System.out.println("settings fragment");
 
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
-        this.model = new SettingsViewModel("", true, UserStatus.available, "");
+        this.model = new SettingsViewModel(AuthServiceImpl.getCurrentUser().getDisplayName(), true, UserStatus.Available, "");
+        this.loadProfileImage(AuthServiceImpl.getCurrentUser().getAvatar());
         this.presenter = new SettingsPresenterImpl(this);
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
-
-        presenter.initUser(model);
+        presenter.initUser();
 
         return binding.getRoot();
 
@@ -73,9 +77,16 @@ public class SettingFragment extends Fragment implements SettingsView {
     }
 
     @Override
-    public void onProfileImageLoaded(String avatar) {
+    public void onProfileLoaded(User user) {
+        loadProfileImage(user.getAvatar());
+        model.setDisplayName(user.getDisplayName());
+        model.setEnableNotifications(user.isEnableNotifications());
+        model.status.set(user.getStatus().getValue());
+    }
+
+    private void loadProfileImage(String avatar){
         if(avatar != null && !avatar.isEmpty()){
-            binding.profilePic.setImageURI(Uri.parse(avatar));
+            Picasso.get().load(avatar).into(binding.profilePic);
         }
     }
 

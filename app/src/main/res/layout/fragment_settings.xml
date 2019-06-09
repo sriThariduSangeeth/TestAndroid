@@ -61,7 +61,6 @@
         android:text="@={model.displayName}"
         android:maxLines="1"
         android:inputType="text"
-        android:onTextChanged="@{() -> presenter.save(model)}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePic" />
@@ -77,10 +76,10 @@
         android:text="@string/status"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/simpleSwitch" />
+        app:layout_constraintTop_toBottomOf="@+id/enableNotifications" />
 
         <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/spinner"
+            android:id="@+id/user_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -96,7 +95,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView10"
-            app:layout_constraintTop_toBottomOf="@+id/simpleSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/enableNotifications"
             android:gravity="end" />
 
         <TextView
@@ -113,7 +112,7 @@
              />
 
     <Switch
-        android:id="@+id/simpleSwitch"
+        android:id="@+id/enableNotifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -144,7 +143,7 @@
         android:onClick="@{() -> presenter.syncContacts()}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/user_status" />
 
         <Button
             android:id="@+id/logoutBtn"

@@ -27,6 +27,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     private AuthService authService = new AuthServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
     private boolean isSaving = false;
+    private boolean userLoaded = false;
 
     public SettingsPresenterImpl(SettingsView view){
         this.view = view;
@@ -37,14 +38,14 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         Log.d(TAG, "save clicked");
 
         // debounce the save call.
-        if(!isSaving) {
+        if(!isSaving && userLoaded) {
             isSaving = true;
             User user = new User();
             user.setDocumentID(AuthServiceImpl.getCurrentUser().getDocumentID());
             user.setPhoneNo(AuthServiceImpl.getCurrentUser().getDocumentID());
             user.setDisplayName(model.getDisplayName());
             user.setEnableNotifications(model.isEnableNotifications());
-            user.setStatus(UserStatus.available);
+            user.setStatus(UserStatus.forInt(model.status.get()));
             service.update(user, new AuthService.Listener() {
                 @Override
                 public void onSuccess() {
@@ -70,6 +71,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         }
     }
 
+
     @Override
     public void onImageEdit() {
         this.view.onImageEdit();
@@ -92,16 +94,16 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     }
 
     @Override
-    public void initUser(SettingsViewModel model) {
+    public void initUser() {
         service.getById(AuthServiceImpl.getCurrentUser().getDocumentID(), new UserService.Listener() {
             @Override
             public void onUserRetrieved(User user) {
-                if(user != null){
-                    model.setAvatar(user.getAvatar());
-                    model.setDisplayName(user.getDisplayName());
-                    model.setEnableNotifications(user.isEnableNotifications());
-                    view.onProfileImageLoaded(user.getAvatar());
+                System.out.println("user "+  user.getDisplayName());
+                if(!user.getDocumentID().isEmpty()){
+                    view.onProfileLoaded(user);
+
                 }
+                userLoaded = true;
             }
         });
     }

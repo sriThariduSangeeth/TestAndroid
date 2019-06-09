@@ -7,5 +7,5 @@ public interface SettingsPresenter {
     void onImageEdit();
     void syncContacts();
     void logout();
-    void initUser(SettingsViewModel model);
+    void initUser();
 }
