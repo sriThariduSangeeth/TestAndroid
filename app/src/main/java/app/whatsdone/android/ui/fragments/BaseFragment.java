@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,16 +51,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
-import app.whatsdone.android.R;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -81,10 +80,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
-    private GroupServiceImpl groupService = new GroupServiceImpl();
     protected Group group;
     private ConstraintLayout constraintLayout;
-    private List<String> admins = new ArrayList<String>();
+    private List<Contact> members = new ArrayList<Contact>();
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     Set<String> contactSet = new HashSet<>();
@@ -111,23 +109,22 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
 
-        contactName = new ArrayList<String>();
-        circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
-        addMembers = (Button) view.findViewById(R.id.add_members_button);
-        teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
-        constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
-        swipeListView = (SwipeMenuListView) view.findViewById(R.id.add_members_list_view);
+        contactName = new ArrayList<>();
+        circleImageView = view.findViewById(R.id.group_photo_image_view);
+        addMembers = view.findViewById(R.id.add_members_button);
+        teamName = view.findViewById(R.id.group_name_edit_text);
+        constraintLayout = view.findViewById(R.id.constraintLayout3);
+        swipeListView = view.findViewById(R.id.add_members_list_view);
 
         contactSet = new HashSet();
 
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
         swipeListView.setAdapter(adapter);
 
         //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
         //swipeListView.setAdapter(arrayAdapter);
-
-
         contactNumbers.addAll(group.getMembers());
+        members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
 
@@ -356,8 +353,14 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                             alert.show();
                                         } else {
                                             //contactName.add(name);
-                                            contactNumbers.add(contact);
-                                            adapter.notifyDataSetChanged();
+                                            if(contactName != null && !contactName.isEmpty()) {
+                                                contact = ContactUtil.cleanNo(contact);
+                                                contactNumbers.add(contact);
+                                                List<String> contacts = new ArrayList<>();
+                                                contacts.add(contact);
+                                                members.addAll(ContactUtil.resolveContacts(contacts));
+                                                adapter.notifyDataSetChanged();
+                                            }
 
                                         }
                                     }
@@ -502,9 +505,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
-                String value = (String) adapter.getItem(position);
+                String value = adapter.getItem(position);
 
-                if(value.equals(group.getCreatedBy()))
+
+                if(value!= null && value.equals(group.getCreatedBy()))
                 {
                     Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
                 }
