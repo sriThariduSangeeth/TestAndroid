@@ -8,6 +8,7 @@ import android.databinding.ObservableInt;
 
 import java.util.Arrays;
 
+import app.whatsdone.android.BR;
 import app.whatsdone.android.model.UserStatus;
 
 public class SettingsViewModel extends BaseObservable {
@@ -33,6 +34,7 @@ public class SettingsViewModel extends BaseObservable {
     public void setDisplayName(String displayName) {
         if(!this.displayName.equals(displayName)){
             this.displayName = displayName;
+            notifyPropertyChanged(BR.displayName);
         }
     }
 
@@ -42,7 +44,10 @@ public class SettingsViewModel extends BaseObservable {
     }
 
     public void setEnableNotifications(boolean enableNotifications) {
-        this.enableNotifications = enableNotifications;
+        if(this.enableNotifications != enableNotifications) {
+            this.enableNotifications = enableNotifications;
+            notifyPropertyChanged(BR.enableNotifications);
+        }
     }
 
     public String getAvatar() {

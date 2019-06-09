@@ -27,10 +27,8 @@ public class LoginPresenterImpl implements LoginPresenter {
         System.out.println(model.getCountryCode() + " " + model.getPhoneNo());
         AuthService service = new AuthServiceImpl();
 
-        boolean isValid = false;
         if(model.getPhoneNo() != null && !model.getPhoneNo().isEmpty())
         {
-            isValid = true;
             view.disableButton();
 
         }else
@@ -39,7 +37,7 @@ public class LoginPresenterImpl implements LoginPresenter {
         }
 
 
-        ((AuthServiceImpl) service).setContext(context);
+        service.setContext(context);
         service.register("+" + model.getCountryCode() + model.getPhoneNo(), new AuthService.Listener() {
             @Override
             public void onCodeSent(String mVerificationId) {
@@ -49,6 +47,11 @@ public class LoginPresenterImpl implements LoginPresenter {
             @Override
             public void onSuccess() {
                 view.onVerificationCompleted("");
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                view.enableNext();
             }
         });
     }

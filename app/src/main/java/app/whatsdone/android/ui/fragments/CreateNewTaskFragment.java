@@ -55,7 +55,7 @@ public class CreateNewTaskFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
 
-        Spinner spinner = view.findViewById(R.id.spinner);
+        Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);

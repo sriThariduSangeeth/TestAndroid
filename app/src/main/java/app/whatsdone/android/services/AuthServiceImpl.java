@@ -2,6 +2,7 @@ package app.whatsdone.android.services;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import app.whatsdone.android.model.User;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
@@ -32,12 +36,43 @@ public class AuthServiceImpl implements AuthService {
         this.context = context;
     }
 
+    @Override
+    public void updateProfile(User user, Listener listener) {
+        FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates;
+        if(user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+            profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getDisplayName())
+                    .setPhotoUri(Uri.parse(user.getAvatar()))
+                    .build();
+        }else {
+            profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getDisplayName())
+                    .build();
+        }
+
+        fireUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                        AuthServiceImpl.user.setAvatar(user.getAvatar());
+                        AuthServiceImpl.user.setDisplayName(user.getDisplayName());
+                        listener.onSuccess();
+                    }else {
+                        listener.onError(task.getException().getLocalizedMessage());
+                    }
+
+
+                });
+    }
+
     public static User getCurrentUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if((user.getDocumentID() == null || user.getDocumentID() == "")
-                && firebaseAuth.getCurrentUser() != null){
+        if(firebaseAuth.getCurrentUser() != null){
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             user.setDocumentID(firebaseUser.getPhoneNumber());
+            user.setPhoneNo(firebaseUser.getPhoneNumber());
             user.setAvatar(firebaseUser.getPhotoUrl().toString());
             user.setDisplayName(firebaseUser.getDisplayName());
         }
@@ -108,8 +143,13 @@ public class AuthServiceImpl implements AuthService {
                         user.getIdToken(false).addOnCompleteListener(context, new OnCompleteListener<GetTokenResult>() {
                             @Override
                             public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                System.out.println(task.getResult().getToken());
-                                listener.onSuccess();
+                                if(task.isSuccessful()) {
+                                    System.out.println(task.getResult().getToken());
+                                    SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                                    listener.onSuccess();
+                                }else {
+                                    listener.onError(task.getException().getLocalizedMessage());
+                                }
                             }
                         });
 

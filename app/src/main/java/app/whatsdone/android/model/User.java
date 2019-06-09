@@ -23,7 +23,7 @@ public class User implements BaseEntity, IUser {
         this.documentID = id;
         this.displayName = name;
         this.avatar = avatar;
-        this.status = isOnline ? UserStatus.available : UserStatus.busy;
+        this.status = isOnline ? UserStatus.Available : UserStatus.Busy;
     }
 
     @Override
@@ -100,6 +100,7 @@ public class User implements BaseEntity, IUser {
         data.put(Constants.FIELD_USER_AVATAR, avatar);
         data.put(Constants.FIELD_USER_DEVICE_TOKENS, deviceTokens);
         data.put(Constants.FIELD_USER_DISPLAY_NAME, displayName);
+        data.put(Constants.FIELd_USER_STATUS, status.toString());
         return data;
     }
 
@@ -125,16 +126,17 @@ public class User implements BaseEntity, IUser {
             String avatar = "";
             List<String> deviceTokens = new ArrayList<>();
             boolean enableUserNotifications = false;
-            UserStatus status = UserStatus.available;
+            UserStatus status = UserStatus.Available;
 
             try {
+                this.documentID = documentID;
                 displayName = (String) data.get(Constants.FIELD_USER_DISPLAY_NAME);
                 phoneNumber = (String) data.get(Constants.FIELD_USER_PHONE_NO);
                 avatar = (String) data.get(Constants.FIELD_USER_AVATAR);
                 deviceTokens = (List<String>) data.get(Constants.FIELD_USER_DEVICE_TOKENS);
                 if ((boolean) data.get(Constants.FIELd_USER_ENABLE_NOTIFICATIONS))
                     enableUserNotifications = true;
-                status = (UserStatus) data.get(Constants.FIELd_USER_STATUS);
+                status = UserStatus.valueOf((String)data.get(Constants.FIELd_USER_STATUS));
             }catch (Exception e){
                 documentID = "";
             }
