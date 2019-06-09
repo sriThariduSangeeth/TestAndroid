@@ -79,6 +79,7 @@ public class SettingFragment extends Fragment implements SettingsView {
     @Override
     public void onProfileLoaded(User user) {
         //loadProfileImage(user.getAvatar());
+        model.setAvatar(user.getAvatar());
         model.setDisplayName(user.getDisplayName());
         model.setEnableNotifications(user.isEnableNotifications());
         model.status.set(user.getStatus().getValue());

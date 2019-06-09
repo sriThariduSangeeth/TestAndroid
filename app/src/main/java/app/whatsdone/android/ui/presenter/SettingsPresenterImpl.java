@@ -22,6 +22,8 @@ import app.whatsdone.android.services.UserService;
 import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.view.SettingsView;
 import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 public class SettingsPresenterImpl implements SettingsPresenter {
     private static final String TAG = SettingsPresenterImpl.class.getSimpleName();
@@ -55,6 +57,12 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "user saved");
+                    authService.updateProfile(user, new AuthService.Listener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "profile saved");
+                        }
+                    });
                 }
 
                 @Override
@@ -71,6 +79,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                             isSaving = false;
                         }
                     }, 600);
+
                 }
             });
         }
@@ -95,6 +104,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     @Override
     public void logout() {
         authService.logout();
+        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, "");
         view.onLogout();
     }
 

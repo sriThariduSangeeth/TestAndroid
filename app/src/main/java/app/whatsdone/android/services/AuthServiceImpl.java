@@ -40,10 +40,17 @@ public class AuthServiceImpl implements AuthService {
     public void updateProfile(User user, Listener listener) {
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(user.getDisplayName())
-                .setPhotoUri(Uri.parse(user.getAvatar()))
-                .build();
+        UserProfileChangeRequest profileUpdates;
+        if(user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+            profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getDisplayName())
+                    .setPhotoUri(Uri.parse(user.getAvatar()))
+                    .build();
+        }else {
+            profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getDisplayName())
+                    .build();
+        }
 
         fireUser.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
@@ -62,10 +69,10 @@ public class AuthServiceImpl implements AuthService {
 
     public static User getCurrentUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if((user.getDocumentID() == null || user.getDocumentID() == "")
-                && firebaseAuth.getCurrentUser() != null){
+        if(firebaseAuth.getCurrentUser() != null){
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             user.setDocumentID(firebaseUser.getPhoneNumber());
+            user.setPhoneNo(firebaseUser.getPhoneNumber());
             user.setAvatar(firebaseUser.getPhotoUrl().toString());
             user.setDisplayName(firebaseUser.getDisplayName());
         }

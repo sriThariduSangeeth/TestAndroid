@@ -2,6 +2,7 @@ package app.whatsdone.android.services;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +19,44 @@ import app.whatsdone.android.model.InviteMembersRequest;
 import app.whatsdone.android.model.InviteMembersResponse;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ContactServiceImpl implements ContactService {
-    Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(JacksonConverterFactory.create())
-            .baseUrl(Constants.URL_FIREBASE)
-            .build();
-    CloudService service = retrofit.create(CloudService.class);
+    CloudService service;
+    public ContactServiceImpl() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+
+            Request request = original.newBuilder()
+                    .header("Authorization", SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Accept", "application/json")
+                    .method(original.method(), original.body())
+                    .build();
+
+            return chain.proceed(request);
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(JacksonConverterFactory.create())
+                .baseUrl(Constants.URL_FIREBASE)
+                .client(client)
+                .build();
+
+        service = retrofit.create(CloudService.class);
+
+    }
+
+
 
     @Override
     public void syncContacts(List<Contact> contacts, Listener serviceListener) {
@@ -46,7 +73,7 @@ public class ContactServiceImpl implements ContactService {
         Call<ContactSyncResponse> call = service.syncContacts(request);
         call.enqueue(new Callback<ContactSyncResponse>() {
             @Override
-            public void onResponse(@NotNull Call<ContactSyncResponse> call, @NotNull Response<ContactSyncResponse> response) {
+            public void onResponse(@NotNull Call<ContactSyncResponse> call, @NotNull retrofit2.Response<ContactSyncResponse> response) {
                 ContactSyncResponse data = response.body();
                 if (data != null && data.isSuccess()) {
                     serviceListener.onContactsSynced(data.getAdded(), data.getDeleted());
@@ -78,7 +105,7 @@ public class ContactServiceImpl implements ContactService {
 
         call.enqueue(new Callback<ExistInPlatformResponse>() {
             @Override
-            public void onResponse(@NotNull Call<ExistInPlatformResponse> call, @NotNull Response<ExistInPlatformResponse> response) {
+            public void onResponse(@NotNull Call<ExistInPlatformResponse> call, @NotNull retrofit2.Response<ExistInPlatformResponse> response) {
                 ExistInPlatformResponse data = response.body();
                 if (data != null) {
                     serviceListener.onCompleteSearch(data.getExistNumbers());
@@ -107,7 +134,7 @@ public class ContactServiceImpl implements ContactService {
 
         call.enqueue(new Callback<InviteAssigneeResponse>() {
             @Override
-            public void onResponse(@NotNull Call<InviteAssigneeResponse> call, @NotNull Response<InviteAssigneeResponse> response) {
+            public void onResponse(@NotNull Call<InviteAssigneeResponse> call, @NotNull retrofit2.Response<InviteAssigneeResponse> response) {
                 InviteAssigneeResponse data = response.body();
                 if (data != null && data.isSuccess()) {
                     serviceListener.onInvited();
@@ -134,7 +161,7 @@ public class ContactServiceImpl implements ContactService {
 
         call.enqueue(new Callback<InviteMembersResponse>() {
             @Override
-            public void onResponse(@NotNull Call<InviteMembersResponse> call, @NotNull Response<InviteMembersResponse> response) {
+            public void onResponse(@NotNull Call<InviteMembersResponse> call, @NotNull retrofit2.Response<InviteMembersResponse> response) {
                 InviteMembersResponse data = response.body();
                 if (data != null && data.isSuccess()) {
                     serviceListener.onInvited();
