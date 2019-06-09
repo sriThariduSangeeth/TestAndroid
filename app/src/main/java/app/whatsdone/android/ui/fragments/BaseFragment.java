@@ -51,6 +51,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,6 +149,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE);
 
@@ -319,6 +321,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         }
 
+
         //contacts
         switch (requestCode) {
             case (REQUEST_CODE):
@@ -326,6 +329,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     Uri contactData = data.getData();
                     Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
                     if (c.moveToFirst()) {
+
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         String num = "";
@@ -335,16 +339,40 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                               //Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                               Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                               while (numbers.moveToNext()) {
-
                                   String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                                   String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                  contactName.add(name);
-                                  contactNumber.add(number);
-                                  adapter.notifyDataSetChanged();
+
+                                  if(contactName.contains(name))
+                                  {
+                                      Toast.makeText(getContext(),"Number is already in the list",Toast.LENGTH_SHORT).show();
+                                      AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
+                                      alert.setTitle("Alert");
+                                      alert.setMessage("" +name+ " is already a member");
+
+                                      alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                                      {
+                                          public void onClick(DialogInterface dialog, int which)
+                                          {
+                                          }
+                                      });
 
 
-                                  SwipeList();
+                                      alert.setNegativeButton(android.R.string.no, null);
+                                      alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                      alert.show();
+                                  }
+                                  else {
+
+
+                                    //  String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                      contactName.add(name);
+                                      contactNumber.add(number);
+                                      adapter.notifyDataSetChanged();
+
+
+                                      SwipeList();
+                                  }
 
                               }numbers.close();
                           } catch(Exception exception){
