@@ -52,6 +52,7 @@ public class Constants {
     public static final String FIELD_TASK_CHECKLIST_COMPLETED = "is_completed";
 
 
+
     // Discussion Field
     public static final String FIELD_DISCUSSION_USER_ID = "by_user";
     public static final String FIELD_DISCUSSION_USER_NAME = "user_name";

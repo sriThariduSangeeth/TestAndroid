@@ -106,6 +106,8 @@ public class TaskServiceImpl implements TaskService {
                                 task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
                             if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
                                 task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
+                            if (doc.get(Constants.FIELD_TASK_STATUS) != null)
+                                task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
                             tasks.add(task);
                         }catch (Exception exception) {
                             Log.d(TAG, "failed to parse group", exception);
@@ -137,6 +139,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
@@ -171,6 +174,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :

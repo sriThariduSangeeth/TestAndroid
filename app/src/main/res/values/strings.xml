@@ -23,6 +23,8 @@
     <string name="CreateGroup">Create Group</string>
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
+    <string name="Title">Title</string>
+    <string name="Description">Description</string>
     <string name="done_image">done image</string>
     <string name="Task_Name">Task Name</string>
     <string name="teamPhoto">Team Photo</string>

@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +39,7 @@ public class CreateNewTaskFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
     private TextView setDueDate, assignFromContacts;
     private DatePicker datePicker;
+    private Toolbar toolbar;
     private int mYear, mMonth, mDay;
     private ArrayList<Task> itemList;
     private AddItemsAdapter itemsAdapter;
@@ -48,6 +51,7 @@ public class CreateNewTaskFragment extends Fragment {
     private Button saveButton;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +63,16 @@ public class CreateNewTaskFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Add New Task");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
 
         setDueDate = (TextView) view.findViewById(R.id.due_date_text_view);
