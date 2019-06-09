@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 
 
@@ -40,6 +41,13 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public void save() {
 
+        String currentUser = AuthServiceImpl.user.getDocumentID();
+
+        contactNumbers.add(currentUser);
+        group.setCreatedBy(currentUser);
+        if(group.getAdmins().size()==0) {
+            group.getAdmins().add(currentUser);
+        }
         presenter.create(this.group);
     }
 

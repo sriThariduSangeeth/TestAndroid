@@ -80,20 +80,7 @@ public class GroupPresenterImpl implements GroupPresenter{
         });
     }
 
-    @Override
-    public void editTeam(Group group) {
-        service.update(group, new ServiceListener() {
-            @Override
-            public void onSuccess() {
 
-            }
-
-            @Override
-            public void onError(@Nullable String error) {
-
-            }
-        });
-    }
 }
 
 
