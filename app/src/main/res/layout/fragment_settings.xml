@@ -90,7 +90,6 @@
             android:entries="@array/status"
             android:textAlignment="textEnd"
             android:selectedItemPosition="@={model.status}"
-            android:onItemSelected="@{() -> presenter.save(model)}"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -124,8 +123,7 @@
         android:text="@string/notifications_hint"
         android:textSize="15sp"
         android:textStyle="normal"
-        android:onCheckedChanged="@{() -> presenter.save(model)}"
-        android:checked="@{model.enableNotifications}"
+        android:checked="@={model.enableNotifications}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />

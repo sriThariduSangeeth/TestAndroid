@@ -1,9 +1,9 @@
 package app.whatsdone.android.model;
 
 public enum UserStatus {
-    Available(1),
-    Busy(2),
-    Away(3);
+    Available(0),
+    Busy(1),
+    Away(2);
 
     private int value;
 
@@ -17,6 +17,6 @@ public enum UserStatus {
     }
 
     public static UserStatus forInt(int id) {
-        return values()[id - 1];
+        return values()[id];
     }
 }

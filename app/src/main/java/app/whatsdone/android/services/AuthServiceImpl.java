@@ -2,6 +2,7 @@ package app.whatsdone.android.services;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,30 @@ public class AuthServiceImpl implements AuthService {
 
     public void setContext(Activity context) {
         this.context = context;
+    }
+
+    @Override
+    public void updateProfile(User user, Listener listener) {
+        FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(user.getDisplayName())
+                .setPhotoUri(Uri.parse(user.getAvatar()))
+                .build();
+
+        fireUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                        AuthServiceImpl.user.setAvatar(user.getAvatar());
+                        AuthServiceImpl.user.setDisplayName(user.getDisplayName());
+                        listener.onSuccess();
+                    }else {
+                        listener.onError(task.getException().getLocalizedMessage());
+                    }
+
+
+                });
     }
 
     public static User getCurrentUser() {

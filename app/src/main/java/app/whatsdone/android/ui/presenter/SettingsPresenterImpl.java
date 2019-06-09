@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
+import app.whatsdone.android.services.StorageService;
+import app.whatsdone.android.services.StorageServiceImpl;
 import app.whatsdone.android.services.UserService;
 import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.view.SettingsView;
@@ -23,14 +26,16 @@ import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 public class SettingsPresenterImpl implements SettingsPresenter {
     private static final String TAG = SettingsPresenterImpl.class.getSimpleName();
     private final SettingsView view;
+    private SettingsViewModel model;
     private UserService service = new UserServiceImpl();
     private AuthService authService = new AuthServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
     private boolean isSaving = false;
     private boolean userLoaded = false;
 
-    public SettingsPresenterImpl(SettingsView view){
+    public SettingsPresenterImpl(SettingsView view, SettingsViewModel model){
         this.view = view;
+        this.model = model;
     }
 
     @Override
@@ -104,6 +109,31 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 
                 }
                 userLoaded = true;
+            }
+        });
+    }
+
+    @Override
+    public void uploadUserImage(Bitmap image) {
+        StorageService storageService = new StorageServiceImpl();
+        storageService.uploadUserImage(image, new StorageService.Listener() {
+            @Override
+            public void onSuccess(String url) {
+                Log.d(TAG, url);
+                User user = AuthServiceImpl.getCurrentUser();
+                user.setAvatar(url);
+                authService.updateProfile(user, new AuthService.Listener() {
+                    @Override
+                    public void onSuccess() {
+                        model.setAvatar(url);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, error);
             }
         });
     }

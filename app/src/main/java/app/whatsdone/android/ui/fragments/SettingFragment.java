@@ -50,7 +50,7 @@ public class SettingFragment extends Fragment implements SettingsView {
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         this.model = new SettingsViewModel(AuthServiceImpl.getCurrentUser().getDisplayName(), true, UserStatus.Available, "");
         this.loadProfileImage(AuthServiceImpl.getCurrentUser().getAvatar());
-        this.presenter = new SettingsPresenterImpl(this);
+        this.presenter = new SettingsPresenterImpl(this, model);
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
         presenter.initUser();
@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment implements SettingsView {
 
     @Override
     public void onProfileLoaded(User user) {
-        loadProfileImage(user.getAvatar());
+        //loadProfileImage(user.getAvatar());
         model.setDisplayName(user.getDisplayName());
         model.setEnableNotifications(user.isEnableNotifications());
         model.status.set(user.getStatus().getValue());
@@ -120,7 +120,8 @@ public class SettingFragment extends Fragment implements SettingsView {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-             binding.profilePic.setImageBitmap(bmp);
+            binding.profilePic.setImageBitmap(bmp);
+            presenter.uploadUserImage(bmp);
         }
 
     }

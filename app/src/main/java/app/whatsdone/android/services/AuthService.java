@@ -9,6 +9,7 @@ public interface AuthService {
     void register(String phoneNo, Listener listener);
     void logout();
     void setContext(Activity activity);
+    void updateProfile(User user, Listener listener);
     interface Listener extends ServiceListener {
         default void onCodeSent(String mVerificationId) { }
     }
