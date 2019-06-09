@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         User user = (User)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document(user.getDocumentID());
+        DocumentReference document = db.collection(Constants.REF_USERS).document(user.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_USER_PHONE_NO, user.getPhoneNo());
         data.put(Constants.FIELD_USER_DISPLAY_NAME, user.getDisplayName());
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(BaseEntity entity, ServiceListener serviceListener) {
         User user = (User)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document(user.getDocumentID());
+        DocumentReference document = db.collection(Constants.REF_USERS).document(user.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_USER_PHONE_NO, user.getPhoneNo());
         data.put(Constants.FIELD_USER_DISPLAY_NAME, user.getDisplayName());

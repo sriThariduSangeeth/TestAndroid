@@ -1,14 +1,21 @@
 package app.whatsdone.android.services;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+
+import javax.annotation.Nullable;
 
 import app.whatsdone.android.utils.Constants;
 
@@ -18,7 +25,7 @@ public class StorageServiceImpl implements StorageService {
     private StorageReference storageRef = storage.getReference();
 
     @Override
-    public void uploadUserImage(Bitmap bitmap, Listener listener) {
+    public void uploadUserImage(Bitmap bitmap,@Nullable Listener listener) {
         String path = String.format("images/u/%s/avatar.jpg", AuthServiceImpl.getCurrentUser().getDocumentID());
         Log.d(TAG, path);
         uploadMedia(bitmap, listener, path);
@@ -26,13 +33,13 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void uploadGroupImage(Bitmap bitmap, String groupId, Listener listener) {
+    public void uploadGroupImage(Bitmap bitmap, String groupId,@Nullable Listener listener) {
         String path = String.format("images/g/%s/avatar.jpg", groupId);
         Log.d(TAG, path);
         uploadMedia(bitmap, listener, path);
     }
 
-    private void uploadMedia(Bitmap bitmap, Listener listener, String path) {
+    private void uploadMedia(Bitmap bitmap,@Nullable Listener listener, String path) {
         StorageReference storageReference = storageRef.child(path);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIGHT, false);
@@ -44,7 +51,23 @@ public class StorageServiceImpl implements StorageService {
 
         UploadTask uploadTask = storageReference.putBytes(data, metadata);
 
-        uploadTask.addOnFailureListener(exception -> listener.onError(exception.getLocalizedMessage()))
-                .addOnSuccessListener(taskSnapshot -> listener.onSuccess(""));
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                if(listener != null)
+                    listener.onError(task.getException().getLocalizedMessage());
+            }
+
+            // Continue with the task to get the download URL
+            return storageReference.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                if(listener != null)
+                    listener.onSuccess(downloadUri.toString());
+            } else {
+                if(listener != null)
+                    listener.onError(task.getException().getLocalizedMessage());
+            }
+        });
     }
 }

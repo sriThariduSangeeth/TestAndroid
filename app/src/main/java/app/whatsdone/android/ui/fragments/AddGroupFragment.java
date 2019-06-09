@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
@@ -33,14 +34,20 @@ public class AddGroupFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         group = new Group();
+
     }
 
 
 
     @Override
     public void save() {
+//        if(teamName.getText().toString().matches(""))
+//        {
+//            Toast.makeText(getContext(),"Team name should not be empty", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
         presenter.create(this.group);
     }
-
 
 }
