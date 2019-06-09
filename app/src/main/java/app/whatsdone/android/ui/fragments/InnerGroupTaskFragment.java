@@ -29,6 +29,9 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
@@ -61,6 +64,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private List<String> contacts = new ArrayList<String>();
     private ListView contactListView;
     private AddEditGroupPresenter presenter;
+    private TaskService service = new TaskServiceImpl();
 
     public static InnerGroupTaskFragment newInstance(Group group){
         groupobj = new Group();
@@ -244,28 +248,33 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             @Override
             public void onTaskDeleteClicked(int position) {
-                System.out.println("delete");
-                adapter.taskList.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                //task delete
+
+                service.delete(taskInnerGroups.get(position).getDocumentID(), new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        adapter.taskList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                    }
+                });
 
             }
 
-
             @Override
             public void onTaskOnHoldClicked(int position) {
-                System.out.println("On Hold");
+                //task change status to On Hold
 
             }
 
             @Override
             public void onTaskInProgressClicked(int position) {
-                System.out.println("In progress");
+                //Task change status to In Progress
             }
 
             @Override
             public void onTaskDoneClicked(int position) {
-                System.out.println("Done ");
+                //Task change status to Done
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
@@ -275,6 +284,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 taskSwipeController.onDraw(c);
+                taskSwipeController.setContext(getContext());
             }
         });
 
