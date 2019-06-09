@@ -36,8 +36,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
-    private Toolbar toolbar;
-    private View view;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     private CircleImageView circleImageView;
@@ -146,7 +144,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             public void onLeftClicked(int position) {
                 try {
                     Group group = adapter.getGroup(position);
-                    if(group.getCreatedBy() == AuthServiceImpl.getCurrentUser().getDocumentID()){
+                    if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
 
                         presenter.deleteTeam(groups.get(position).getDocumentID());
                     }

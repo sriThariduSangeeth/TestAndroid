@@ -3,6 +3,7 @@ package app.whatsdone.android.ui.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -72,9 +73,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-    private Toolbar toolbar;
-    private TextView teamPhoto, contactListTextView;
-    private Button addMembers;
+       private Button addMembers;
     protected CircleImageView circleImageView;
     private Uri selectedImage;
     protected List<String> contactNumber = new ArrayList<String>();
@@ -85,14 +84,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
    // private ListView contactListView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private Cursor cursor;
-
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     private GroupServiceImpl groupService = new GroupServiceImpl();
     protected Group group;
-    private ServiceListener serviceListener;
-    private TextView memberListTextView;
     private ConstraintLayout constraintLayout;
     private List<String> admins = new ArrayList<String>();
 
@@ -123,8 +118,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<String>();
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
-        teamPhoto = (TextView) view.findViewById(R.id.teamPhoto_text_view);
-       // contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
         addMembers = (Button) view.findViewById(R.id.add_members_button);
         teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
         constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
@@ -185,21 +178,52 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                admins.add(AuthServiceImpl.user.getDocumentID());
-                group.setTeamImage(getImageData(circleImageView));
-                group.setGroupName(teamName.getText().toString());
-                group.setMembers(contactNumber);
 
-                group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
-                group.setAdmins(admins);
-                contactNumber.add(AuthServiceImpl.user.getDocumentID());
+                if(teamName.getText().toString().isEmpty())
+                {
 
-                System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+                  AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
+                  alert.setTitle("Alert");
+                  alert.setMessage("Team Name should not be empty");
 
 
-                save();
+                   alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                   {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+
+                        }
+                   });
+
+
+                   alert.setNegativeButton(android.R.string.no, null);
+                   alert.setIcon(android.R.drawable.ic_dialog_alert);
+                   alert.show();
+
+
+                }
+
+                else
+                 {
+
+                    admins.add(AuthServiceImpl.user.getDocumentID());
+                    group.setTeamImage(getImageData(circleImageView));
+                    group.setGroupName(teamName.getText().toString());
+                    group.setMembers(contactNumber);
+
+                    group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
+                    group.setAdmins(admins);
+                    contactNumber.add(AuthServiceImpl.user.getDocumentID());
+
+                    System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+
+
+                     save();
+                }
 
             }
+
+
         });
 
 
@@ -242,11 +266,16 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         //goes back to the group fragment, list of groups
+        adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
 
     @Override
     public void onGroupError(String errorMessage) {
+        if(teamName.getText() == null)
+        {
+            Toast.makeText(getContext(),"Team name should not be empty", Toast.LENGTH_SHORT).show();
+        }
         Log.d("failed creating a group",errorMessage);
 
     }
@@ -472,26 +501,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
             System.out.println("a  " +adapter.getItem(position));
             System.out.println("a  " +contactName.get(position));
-            System.out.println("a  " +adapter.getPosition(group.getMembers().get(position)));
+            System.out.println(" b " + adapter.getPosition(contactName.get(position)));
+       //     System.out.println("a  " + group.getMembers().get(position));
 
-            contactName.remove(adapter.getPosition(group.getMembers().get(position)));
-            adapter.notifyDataSetChanged();
+            contactName.remove(adapter.getPosition(contactName.get(position)));
+           adapter.notifyDataSetChanged();
 
 
-            //  switch (index) {
-            //  case 0:
-         //   contactName.get(position);
+//            Toast.makeText(getContext(), "Deleted " + contactNumber.get(position), Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getContext(), "Action 1 for " + value, Toast.LENGTH_SHORT).show();
-          //  contactName.remove(adapter.getPosition(group.getMembers().get(position)));
-            //   break;
-            //case 1:
-            // Toast.makeText(getContext(), "Action 2 for " + value, Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//            return false;
-//        }
-//    });
             return false;
 
     }
@@ -500,4 +518,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 });
     }
+
+//    public void openDialog() {
+//        final Dialog dialog = new Dialog(context); // Context, this, etc.
+//        dialog.setContentView(R.layout.dialog_demo);
+//        dialog.setTitle(R.string.dialog_title);
+//        dialog.show();
+//    }
 }
