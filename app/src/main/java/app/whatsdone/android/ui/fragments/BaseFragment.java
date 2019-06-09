@@ -3,13 +3,16 @@ package app.whatsdone.android.ui.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +24,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +37,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -43,6 +51,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +59,7 @@ import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
@@ -64,40 +74,35 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-    private Toolbar toolbar;
-    private TextView teamPhoto, contactListTextView;
     private Button addMembers;
     protected CircleImageView circleImageView;
     private Uri selectedImage;
     protected List<String> contactNumber = new ArrayList<String>();
     protected List<String> contactName = new ArrayList<String>();
-
-
     private final static int RQS_PICK_CONTACT = 1;
-    private ListView contactListView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private Cursor cursor;
-    private ArrayAdapter arrayAdapter;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     private GroupServiceImpl groupService = new GroupServiceImpl();
     protected Group group;
-    private ServiceListener serviceListener;
-    private TextView memberListTextView;
     private ConstraintLayout constraintLayout;
     private List<String> admins = new ArrayList<String>();
-
+    private SwipeMenuListView swipeListView;
+    ListViewCustomArrayAdapter adapter;
 
     public BaseFragment() {
         // Required empty public constructor
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,20 +111,27 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
+
+
         contactName = new ArrayList<String>();
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
-        teamPhoto = (TextView) view.findViewById(R.id.teamPhoto_text_view);
-        contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
         addMembers = (Button) view.findViewById(R.id.add_members_button);
         teamName = (EditText) view.findViewById(R.id.group_name_edit_text);
         constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout3);
-       // arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, contactName);
-        //contactListView.setAdapter(arrayAdapter);
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, contactName);
-        contactListView.setAdapter(arrayAdapter);
+        swipeListView = (SwipeMenuListView) view.findViewById(R.id.add_members_list_view);
+
+
+
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactName);
+        swipeListView.setAdapter(adapter);
+
+        //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
+        //swipeListView.setAdapter(arrayAdapter);
+
 
 
         contactName.addAll(group.getMembers());
+        adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         circleImageView.setImageBitmap(group.getTeamImage());
 
@@ -129,29 +141,26 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             public void onClick(View v) {
 
                 showPictureDialog();
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent,RESULT_LOAD_IMAGE);
 
             }
         });
-
+        SwipeList();
 
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
 
                 }
 
 
-                //arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, contacts);
 
 
 
@@ -163,32 +172,59 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         this.presenter.init(this,getActivity());
 
        ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
-       //group = new Group();
 
-       //memberListTextView = view.findViewById(R.id.text1)
+
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                admins.add(AuthServiceImpl.user.getDocumentID());
-                group.setTeamImage(getImageData(circleImageView));
-                group.setGroupName(teamName.getText().toString());
-                group.setMembers(contactNumber);
 
-                group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
-                group.setAdmins(admins);
-                contactNumber.add(AuthServiceImpl.user.getDocumentID());
-              //  AuthServiceImpl.user.getDocumentID();
+                if(teamName.getText().toString().isEmpty())
+                {
 
-                System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+                  AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
+                  alert.setTitle("Alert");
+                  alert.setMessage("Team Name should not be empty");
 
-               // if()
-                save();
-//                if(AuthServiceImpl.getCurrentUser().getPhoneNo()== AuthServiceImpl.user.getDocumentID())
-//                {
-//                     presenter.updateTeam(group);
-//                }
+
+                   alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                   {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+
+                        }
+                   });
+
+
+                   alert.setNegativeButton(android.R.string.no, null);
+                   alert.setIcon(android.R.drawable.ic_dialog_alert);
+                   alert.show();
+
+
+                }
+
+                else
+                 {
+
+                    admins.add(AuthServiceImpl.user.getDocumentID());
+                    group.setTeamImage(getImageData(circleImageView));
+                    group.setGroupName(teamName.getText().toString());
+                    group.setMembers(contactNumber);
+
+                    group.setCreatedBy(AuthServiceImpl.user.getDocumentID());
+                    group.setAdmins(admins);
+                    contactNumber.add(AuthServiceImpl.user.getDocumentID());
+
+                    System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
+
+
+                     save();
+                }
+
             }
+
+
         });
+
 
 
         return view;
@@ -229,11 +265,16 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         //goes back to the group fragment, list of groups
+        adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
 
     @Override
     public void onGroupError(String errorMessage) {
+        if(teamName.getText() == null)
+        {
+            Toast.makeText(getContext(),"Team name should not be empty", Toast.LENGTH_SHORT).show();
+        }
         Log.d("failed creating a group",errorMessage);
 
     }
@@ -277,9 +318,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         else if (requestCode == CAMERA) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             circleImageView.setImageBitmap(bmp);
-          //  saveImage(bmp);
-            //Toast.makeText(getContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
+
         }
+
 
         //contacts
         switch (requestCode) {
@@ -288,6 +329,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     Uri contactData = data.getData();
                     Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
                     if (c.moveToFirst()) {
+
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         String num = "";
@@ -297,17 +339,40 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                               //Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                               Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                               while (numbers.moveToNext()) {
-
-                                 // arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, contacts);
-                                  contactListView.setAdapter(arrayAdapter);
                                   String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                                   String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                  contactName.add(name);
-                                  contactNumber.add(number);
-                                 // contacts.add(AuthServiceImpl.user.getDocumentID());
-                                  // contactListTextView.setText(num);
-                                  // Toast.makeText(BaseFragment.this, "Number="+num, Toast.LENGTH_LONG).show();
+
+                                  if(contactName.contains(name))
+                                  {
+                                      Toast.makeText(getContext(),"Number is already in the list",Toast.LENGTH_SHORT).show();
+                                      AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
+                                      alert.setTitle("Alert");
+                                      alert.setMessage("" +name+ " is already a member");
+
+                                      alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                                      {
+                                          public void onClick(DialogInterface dialog, int which)
+                                          {
+                                          }
+                                      });
+
+
+                                      alert.setNegativeButton(android.R.string.no, null);
+                                      alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                      alert.show();
+                                  }
+                                  else {
+
+
+                                    //  String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                      contactName.add(name);
+                                      contactNumber.add(number);
+                                      adapter.notifyDataSetChanged();
+
+
+                                      SwipeList();
+                                  }
 
                               }numbers.close();
                           } catch(Exception exception){
@@ -354,11 +419,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         pictureDialog.show();
     }
     public void choosePhotoFromGallary() {
+        requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent,RESULT_LOAD_IMAGE);
     }
 
     private void takePhotoFromCamera() {
+        requestMultiplePermissions();
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
@@ -366,10 +433,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private void  requestMultiplePermissions(){
         Dexter.withActivity(getActivity())
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withPermissions( Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -399,4 +463,90 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 .onSameThread()
                 .check();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
+        return true;
+    }
+
+
+    public void SwipeList()
+    {
+
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+        @Override
+        public void create(SwipeMenu menu) {
+            SwipeMenuItem item1 = new SwipeMenuItem(
+                    getContext());
+            item1.setBackground(new ColorDrawable(Color.RED));
+            // set width of an option (px)
+            item1.setWidth(200);
+            item1.setTitle("DELETE ");
+            item1.setTitleSize(18);
+            item1.setTitleColor(Color.WHITE);
+            menu.addMenuItem(item1);
+
+//            SwipeMenuItem item2 = new SwipeMenuItem(
+//                    getContext());
+//            // set item background
+//            item2.setBackground(new ColorDrawable(Color.RED));
+//            item2.setWidth(200);
+//            item2.setTitle("Action 2");
+//            item2.setTitleSize(18);
+//            item2.setTitleColor(Color.WHITE);
+//            menu.addMenuItem(item2);
+
+        }
+    };
+
+    swipeListView.setMenuCreator(creator);
+    swipeListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+        @Override
+        public void onSwipeStart(int position) {
+
+
+            System.out.println(" swipe start");
+        }
+
+        @Override
+        public void onSwipeEnd(int position) {
+
+            System.out.println("swipe");
+        }
+    });
+
+    swipeListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            String value = (String) adapter.getItem(position);
+
+            System.out.println("a  " +adapter.getItem(position));
+            System.out.println("a  " +contactName.get(position));
+            System.out.println(" b " + adapter.getPosition(contactName.get(position)));
+       //     System.out.println("a  " + group.getMembers().get(position));
+
+            contactName.remove(adapter.getPosition(contactName.get(position)));
+           adapter.notifyDataSetChanged();
+
+
+//            Toast.makeText(getContext(), "Deleted " + contactNumber.get(position), Toast.LENGTH_SHORT).show();
+
+            return false;
+
+    }
+
+
+
+});
+    }
+
+//    public void openDialog() {
+//        final Dialog dialog = new Dialog(context); // Context, this, etc.
+//        dialog.setContentView(R.layout.dialog_demo);
+//        dialog.setTitle(R.string.dialog_title);
+//        dialog.show();
+//    }
 }
