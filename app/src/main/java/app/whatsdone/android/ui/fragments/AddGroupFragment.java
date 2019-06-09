@@ -24,8 +24,6 @@ public class AddGroupFragment extends BaseFragment {
     public static AddGroupFragment newInstance() {
         AddGroupFragment fragment = new AddGroupFragment();
         Bundle args = new Bundle();
-       // args.putString(ARG_PARAM1, param1);
-       // args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,11 +39,6 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void save() {
-//        if(teamName.getText().toString().matches(""))
-//        {
-//            Toast.makeText(getContext(),"Team name should not be empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
         presenter.create(this.group);
     }
