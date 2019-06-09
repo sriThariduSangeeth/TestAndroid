@@ -39,6 +39,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public GroupsRecyclerViewAdapter(List<BaseEntity> groups, Context context) {
         this.groups = groups;
         this.context = context;
+        setHasStableIds(true);
 
 
     }
@@ -47,6 +48,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
 
@@ -60,6 +62,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
+      //  holder.progressplay.setProgress(0);
         Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
         holder.taskCount.setText(group.getDiscussionCount()+"");
@@ -142,5 +145,15 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         imageView.buildDrawingCache();
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         return  bitmap;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return  position;
     }
 }
