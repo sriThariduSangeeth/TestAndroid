@@ -96,7 +96,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +111,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
 
-
         contactName = new ArrayList<String>();
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
         addMembers = (Button) view.findViewById(R.id.add_members_button);
@@ -121,16 +119,14 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView = (SwipeMenuListView) view.findViewById(R.id.add_members_list_view);
 
 
-
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactName);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumber);
         swipeListView.setAdapter(adapter);
 
         //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
         //swipeListView.setAdapter(arrayAdapter);
 
 
-
-        contactName.addAll(group.getMembers());
+        contactNumber.addAll(group.getMembers());
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         circleImageView.setImageBitmap(group.getTeamImage());
@@ -161,49 +157,40 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 }
 
 
-
-
-
             }
         });
 
 
         presenter = new AddEditGroupPresenterImpl();
-        this.presenter.init(this,getActivity());
+        this.presenter.init(this, getActivity());
 
-       ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
+        ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
 
 
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(teamName.getText().toString().isEmpty())
-                {
+                if (teamName.getText().toString().isEmpty()) {
 
-                  AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
-                  alert.setTitle("Alert");
-                  alert.setMessage("Team Name should not be empty");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Alert");
+                    alert.setMessage("Team Name should not be empty");
 
 
-                   alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
-                   {
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
 
                         }
-                   });
+                    });
 
 
-                   alert.setNegativeButton(android.R.string.no, null);
-                   alert.setIcon(android.R.drawable.ic_dialog_alert);
-                   alert.show();
+                    alert.setNegativeButton(android.R.string.no, null);
+                    alert.setIcon(android.R.drawable.ic_dialog_alert);
+                    alert.show();
 
 
-                }
-
-                else
-                 {
+                } else {
 
                     admins.add(AuthServiceImpl.user.getDocumentID());
                     group.setTeamImage(getImageData(circleImageView));
@@ -217,7 +204,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     System.out.println("User doc Id" + AuthServiceImpl.user.getDocumentID());
 
 
-                     save();
+                    save();
                 }
 
             }
@@ -226,23 +213,22 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         });
 
 
-
         return view;
 
     }
 
     public abstract void save();
 
-    public Bitmap getImageData(ImageView imageView){
+    public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
 
-        if(drawable == null) return null;
+        if (drawable == null) return null;
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        return  bitmap;
+        return bitmap;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -253,7 +239,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public void setListener(OnAddFragmentInteractionListener handler) {
-       mListener = handler;
+        mListener = handler;
     }
 
     @Override
@@ -271,11 +257,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onGroupError(String errorMessage) {
-        if(teamName.getText() == null)
-        {
-            Toast.makeText(getContext(),"Team name should not be empty", Toast.LENGTH_SHORT).show();
-        }
-        Log.d("failed creating a group",errorMessage);
+         Log.d("failed creating a group", errorMessage);
 
     }
 
@@ -283,19 +265,17 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSave();
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
             return;
         }
 
         //gallery
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data)
-        {
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedImage = data.getData();
 
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContext().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -314,7 +294,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             }
             circleImageView.setImageBitmap(bmp);
         }
-    //camera
+        //camera
         else if (requestCode == CAMERA) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             circleImageView.setImageBitmap(bmp);
@@ -335,49 +315,52 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                         String num = "";
                         if (Integer.valueOf(hasNumber) == 1) {
                             System.out.println("Select Contact");
-                          try {
-                              //Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                              Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                              while (numbers.moveToNext()) {
-                                  String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            try {
+                                //Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                                Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                                while (numbers.moveToNext()) {
+                                    String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                                  String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                                  if(contactName.contains(name))
-                                  {
-                                      Toast.makeText(getContext(),"Number is already in the list",Toast.LENGTH_SHORT).show();
-                                      AlertDialog.Builder alert =  new AlertDialog.Builder(getContext());
-                                      alert.setTitle("Alert");
-                                      alert.setMessage("" +name+ " is already a member");
+                                    //check if the selected name is already in the list
+                                    if (contactNumber.contains(number)) {
+                                       // if (group.getMembers().contains(number))
 
-                                      alert .setPositiveButton("OK", new DialogInterface.OnClickListener()
-                                      {
-                                          public void onClick(DialogInterface dialog, int which)
-                                          {
-                                          }
-                                      });
+                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                        alert.setTitle("Alert");
+                                        alert.setMessage("" + name + " is already a member");
 
+                                        System.out.println("" + contactNumber);
 
-                                      alert.setNegativeButton(android.R.string.no, null);
-                                      alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                      alert.show();
-                                  }
-                                  else {
+                                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        });
 
 
-                                    //  String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                      contactName.add(name);
-                                      contactNumber.add(number);
-                                      adapter.notifyDataSetChanged();
+                                        alert.setNegativeButton(android.R.string.no, null);
+                                        alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                        alert.show();
+                                    }
 
 
-                                      SwipeList();
-                                  }
+                                    else {
 
-                              }numbers.close();
-                          } catch(Exception exception){
-                              Log.d("test ", exception.getMessage());
-                          }
+
+                                        //contactName.add(name);
+                                        contactNumber.add(number);
+                                        adapter.notifyDataSetChanged();
+
+
+                                        SwipeList();
+                                    }
+
+                                }
+                                numbers.close();
+                            } catch (Exception exception) {
+                                Log.d("test ", exception.getMessage());
+                            }
                         }
                     }
                     break;
@@ -386,8 +369,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     }
 
-    private Bitmap getBitmapFromUri(Uri uri) throws IOException
-    {
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor = getContext().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
@@ -396,12 +378,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-    private void showPictureDialog(){
+    private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
                 "Select photo from gallery",
-                "Capture photo from camera" };
+                "Capture photo from camera"};
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -418,10 +400,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 });
         pictureDialog.show();
     }
+
     public void choosePhotoFromGallary() {
         requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,RESULT_LOAD_IMAGE);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
     private void takePhotoFromCamera() {
@@ -431,9 +414,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-    private void  requestMultiplePermissions(){
+    private void requestMultiplePermissions() {
         Dexter.withActivity(getActivity())
-                .withPermissions( Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -444,8 +427,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+
                         }
                     }
 
@@ -467,86 +449,75 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
+        //swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         return true;
     }
 
 
-    public void SwipeList()
-    {
+    public void SwipeList() {
 
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
-        @Override
-        public void create(SwipeMenu menu) {
-            SwipeMenuItem item1 = new SwipeMenuItem(
-                    getContext());
-            item1.setBackground(new ColorDrawable(Color.RED));
-            // set width of an option (px)
-            item1.setWidth(200);
-            item1.setTitle("DELETE ");
-            item1.setTitleSize(18);
-            item1.setTitleColor(Color.WHITE);
-            menu.addMenuItem(item1);
+            @Override
+            public void create(SwipeMenu menu) {
+                swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
+                SwipeMenuItem item1 = new SwipeMenuItem(
+                        getContext());
+                item1.setBackground(new ColorDrawable(Color.RED));
 
-//            SwipeMenuItem item2 = new SwipeMenuItem(
-//                    getContext());
-//            // set item background
-//            item2.setBackground(new ColorDrawable(Color.RED));
-//            item2.setWidth(200);
-//            item2.setTitle("Action 2");
-//            item2.setTitleSize(18);
-//            item2.setTitleColor(Color.WHITE);
-//            menu.addMenuItem(item2);
+                item1.setWidth(200);
+                item1.setTitle("DELETE ");
+                item1.setTitleSize(18);
+                item1.setTitleColor(Color.WHITE);
+                menu.addMenuItem(item1);
 
-        }
-    };
+            }
+        };
 
-    swipeListView.setMenuCreator(creator);
-    swipeListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-        @Override
-        public void onSwipeStart(int position) {
+        swipeListView.setMenuCreator(creator);
+        swipeListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+            @Override
+            public void onSwipeStart(int position) {
 
 
-            System.out.println(" swipe start");
-        }
+                System.out.println(" swipe start");
+            }
 
-        @Override
-        public void onSwipeEnd(int position) {
+            @Override
+            public void onSwipeEnd(int position) {
 
-            System.out.println("swipe");
-        }
-    });
+                System.out.println("swipe");
+            }
+        });
 
-    swipeListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-            String value = (String) adapter.getItem(position);
+        swipeListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
-            System.out.println("a  " +adapter.getItem(position));
-            System.out.println("a  " +contactName.get(position));
-            System.out.println(" b " + adapter.getPosition(contactName.get(position)));
-       //     System.out.println("a  " + group.getMembers().get(position));
+                String value = (String) adapter.getItem(position);
+//
+//                System.out.println("a  " + adapter.getItem(position));
+//                System.out.println("a  " + contactName.get(position));
+//                System.out.println(" b " + adapter.getPosition(contactName.get(position)));
 
-            contactName.remove(adapter.getPosition(contactName.get(position)));
-           adapter.notifyDataSetChanged();
+                if(value.equals(group.getCreatedBy()))
+                {
+                    Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    contactNumber.remove(value);
+                    adapter.notifyDataSetChanged();
+                   // Toast.makeText(getContext(), "Deleted " + contactNumber.get(position), Toast.LENGTH_SHORT).show();
+
+                }
 
 
-//            Toast.makeText(getContext(), "Deleted " + contactNumber.get(position), Toast.LENGTH_SHORT).show();
+                return false;
 
-            return false;
+            }
 
+
+        });
     }
 
-
-
-});
-    }
-
-//    public void openDialog() {
-//        final Dialog dialog = new Dialog(context); // Context, this, etc.
-//        dialog.setContentView(R.layout.dialog_demo);
-//        dialog.setTitle(R.string.dialog_title);
-//        dialog.show();
-//    }
 }
