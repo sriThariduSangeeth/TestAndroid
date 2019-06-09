@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginLeft="4dp"
-    android:id="@+id/task_inner_recycler_view_layout"
+    android:id="@+id/recycler_view_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
@@ -15,12 +15,11 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image_view_task_inner_group"
+        android:id="@+id/image_view_my_task"
         android:layout_width="80sp"
         android:layout_height="80dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-
         android:contentDescription="done image"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
@@ -34,19 +33,19 @@
 
 
     <TextView
-        android:id="@+id/task_inner_text"
+        android:id="@+id/task_text"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:text="Inner Test TASK"
+        android:text="My Test TASK"
         android:ellipsize="end"
         android:singleLine="true"
         android:layout_marginTop="8dp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
+        app:layout_constraintStart_toEndOf="@+id/image_view_my_task"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -77,8 +76,8 @@
         android:text="@string/todo"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
-        app:layout_constraintTop_toBottomOf="@+id/task_inner_text" />
+        app:layout_constraintStart_toEndOf="@+id/image_view_my_task"
+        app:layout_constraintTop_toBottomOf="@+id/task_text" />
 
     <Button
         android:id="@+id/button_date"
