@@ -41,7 +41,13 @@
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity"/>
-
+        <service
+            android:name=".services.WhatsDoneFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>AndroidManifest.xml
      </application>
 
 </manifest>
