@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class CreateNewTaskFragment extends Fragment {
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
     private EditText addNewTask;
+    private LinearLayout lay ;
     private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
@@ -64,6 +66,11 @@ public class CreateNewTaskFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        lay = view.findViewById(R.id.select_group_view) ;
+        listView =  view.findViewById(R.id.list_view_checklist);
+        lay.setVisibility(LinearLayout.GONE);
+        TextView emptyText = (TextView)view.findViewById(R.id.empty);
+        listView.setEmptyView(emptyText);
         toolbar =  getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add New Task");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
@@ -103,7 +110,7 @@ public class CreateNewTaskFragment extends Fragment {
                 datePickerDialog.show();
             }
         });
-        listView =  view.findViewById(R.id.list_view_checklist);
+
         addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
         imageView =  view.findViewById(R.id.checklist_add_image_view) ;
 
@@ -147,6 +154,12 @@ public class CreateNewTaskFragment extends Fragment {
 //            }
 //        });
 
+        view.findViewById(R.id.save_task_button_mmm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("save");
+            }
+        });
 
 
         return view;
@@ -185,7 +198,7 @@ public class CreateNewTaskFragment extends Fragment {
                         Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                         while (numbers.moveToNext()) {
 
-                            //    String name =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String number =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
 
                             String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
