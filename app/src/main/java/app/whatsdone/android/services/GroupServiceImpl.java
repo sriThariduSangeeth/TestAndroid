@@ -97,7 +97,7 @@ public class GroupServiceImpl implements GroupService {
                         Log.w(TAG, "Error getting documents.", task.getException());
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
-                    serviceListener.onCompleted(null);
+                    serviceListener.onCompleted(task.isSuccessful());
                 });
     }
 
@@ -124,7 +124,7 @@ public class GroupServiceImpl implements GroupService {
                 Log.w(TAG, "Error creating document.", task.getException());
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(task.isSuccessful());
         });
     }
 
@@ -145,7 +145,7 @@ public class GroupServiceImpl implements GroupService {
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(task.isSuccessful());
         });
 
     }
@@ -162,7 +162,7 @@ public class GroupServiceImpl implements GroupService {
                        Log.w(TAG, "Error deleting document.", task.getException());
                        serviceListener.onError(task.getException().getLocalizedMessage());
                    }
-                    serviceListener.onCompleted(null);
+                    serviceListener.onCompleted(task.isSuccessful());
                 });
     }
 

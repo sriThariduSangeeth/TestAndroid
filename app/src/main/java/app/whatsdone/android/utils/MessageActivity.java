@@ -13,9 +13,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
@@ -84,7 +82,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
         boolean postDelayed = new Handler().postDelayed(() -> {
 
-            discussionService.insterMessage(message, new ServiceListener() {
+            discussionService.insertMessage(message, new ServiceListener() {
                 @Override
                 public void onSuccess() {
                     insert[0] = true;

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 public class UserServiceImpl implements UserService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
                 .document(id)
                 .get().addOnCompleteListener ((task) -> {
                     if (!task.isSuccessful()) {
-                        Log.w(TAG, "Task subscription failed");
+                        Timber.tag(TAG).w("Task subscription failed");
                         serviceListener.onError(task.getException().getLocalizedMessage());
                         return;
                     }
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(task.isSuccessful());
         });
 
     }
@@ -78,11 +79,11 @@ public class UserServiceImpl implements UserService {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error updating document.", task.getException());
+                Timber.tag(TAG).w(task.getException(), "Error updating document.");
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(task.isSuccessful());
         });
 
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            Timber.tag(TAG).w(task.getException(), "getInstanceId failed");
                             return;
                         }
 

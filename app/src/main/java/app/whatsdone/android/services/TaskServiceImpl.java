@@ -162,7 +162,7 @@ public class TaskServiceImpl implements TaskService {
                 Log.w(TAG, "Error creating document.", taskResult.getException());
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(taskResult.isSuccessful());
         });
     }
 
@@ -196,7 +196,7 @@ public class TaskServiceImpl implements TaskService {
                 Log.w(TAG, "Error creating document.", taskResult.getException());
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(taskResult.isSuccessful());
         });
     }
 
@@ -212,7 +212,7 @@ public class TaskServiceImpl implements TaskService {
                         Log.w(TAG, "Error deleting document.", task.getException());
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
-                    serviceListener.onCompleted(null);
+                    serviceListener.onCompleted(task.isSuccessful());
                 });
 
     }
