@@ -145,9 +145,13 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
                     if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
 
                         presenter.deleteTeam(groups.get(position).getDocumentID());
+                       adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeRemoved(position, groups.size());
+                        adapter.notifyDataSetChanged();
                     }
                     else {
                         presenter.leaveTeam(group.getDocumentID());
+                        adapter.notifyDataSetChanged();
 
                     }
 
