@@ -206,6 +206,7 @@ public class GroupServiceImpl implements GroupService {
                         Log.w(TAG, "Team subscription failed", e);
                         return;
                     }
+                    Log.d(TAG, value.toString());
 
                     List<BaseEntity> groups = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {

@@ -73,4 +73,5 @@ public class Constants {
     public static final String SHARED_TOKEN = "token";
     public static final String DEFULT_CHAT_IMG_URL = "https://img.icons8.com/color/100/000000/user-group-man-man.png";
 
+    public static final String SHARED_PHONE = "phone_no";
 }

@@ -80,9 +80,10 @@ dependencies {
 
     //camera
     implementation 'com.karumi:dexter:5.0.0'
-
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.5.0'
+
+    implementation 'io.michaelrocks:libphonenumber-android:8.10.12-1'
 
 }
 

@@ -4,4 +4,5 @@ public interface BaseGroupFragmentView {
     void onGroupSaved();
     void onGroupError(String errorMessage);
 
+
 }

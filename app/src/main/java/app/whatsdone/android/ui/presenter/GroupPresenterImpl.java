@@ -15,7 +15,7 @@ import app.whatsdone.android.ui.view.GroupFragmentView;
 public class GroupPresenterImpl implements GroupPresenter{
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private GroupFragmentView view;
-    GroupService service = new GroupServiceImpl();
+    private GroupService service = new GroupServiceImpl();
 
 
     @Override
@@ -80,20 +80,7 @@ public class GroupPresenterImpl implements GroupPresenter{
         });
     }
 
-    @Override
-    public void editTeam(Group group) {
-        service.update(group, new ServiceListener() {
-            @Override
-            public void onSuccess() {
 
-            }
-
-            @Override
-            public void onError(@Nullable String error) {
-
-            }
-        });
-    }
 }
 
 

@@ -91,15 +91,10 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void existsInPlatform(List<Contact> contacts, Listener serviceListener) {
+    public void existsInPlatform(List<String> contacts, Listener serviceListener) {
         ExistInPlatformRequest request = new ExistInPlatformRequest();
-        List<ContactRequestItem> items = new ArrayList<>();
-        for (Contact contact:contacts) {
-            ContactRequestItem item = new ContactRequestItem();
-            item.setContactName(contact.getDisplayName());
-            item.setContactNo(contact.getPhoneNumber());
-        }
-        request.setContacts(items);
+
+        request.setContacts(contacts);
 
         Call<ExistInPlatformResponse> call = service.existInPlatform(request);
 

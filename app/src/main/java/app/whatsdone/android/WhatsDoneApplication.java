@@ -10,6 +10,8 @@ public class WhatsDoneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
+
+        Thread.setDefaultUncaughtExceptionHandler((paramThread, paramThrowable) -> paramThrowable.printStackTrace());
     }
 
     public static WhatsDoneApplication getApplication() {
