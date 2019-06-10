@@ -101,46 +101,48 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
 //                        catchAt();
 //                    }
 //                }, 1000);
-                typingStartSize = input.getInputEditText().getText().toString().length();
+//                typingStartSize = input.getInputEditText().getText().toString().length();
 
             }
             @Override
             public void onStopTyping() {
-                try {
-                    typingEndSize = input.getInputEditText().getText().toString().length();
-                    if (typingStartSize > typingEndSize) {
-                        String checkword = input.getInputEditText().getText().toString().substring(typingEndSize - 1);
-                        if (hitAt && checkword.equals("@")) {
-                            viewIn.setVisibility(View.VISIBLE);
-                        }
-                    } else if (typingStartSize <= typingEndSize) {
-                        //when insert characters
-                        String checkword = input.getInputEditText().getText().toString().substring(typingStartSize - 1);
-                        if (checkword.indexOf("@") > -1 && !hitAt) {
-                            hitAt = true;
-                            hitSpace = false;
-                            atLenthList.add(typingEndSize);
-                            viewIn.setVisibility(View.VISIBLE);
-                            System.out.println("@ catch");
-                        } else if (checkword.indexOf("#") > -1 && !hitHash) {
-                            hitHash = true;
-                            hitSpace = false;
-                            System.out.println("# catch");
-                        } else if (checkword.indexOf(" ") > -1 && (hitAt || hitHash)) {
-                            viewIn.setVisibility(View.GONE);
-                            hitSpace = true;
-                            hitAt = false;
-                            hitHash = false;
-                        }
-                        if (hitAt && !checkword.equals("@")) {
-                            changeMemberAdapter(checkword, true);
-                        } else if (hitAt && checkword.equals("@")) {
-                            viewIn.setVisibility(View.VISIBLE);
-                        }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        catchAt();
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                }, 1000);
+//                typingEndSize = input.getInputEditText().getText().toString().length();
+//                if(typingStartSize > typingEndSize){
+//                    String checkword = input.getInputEditText().getText().toString().substring(typingEndSize-1);
+//                    if(hitAt && checkword.equals("@")){
+//                        viewIn.setVisibility(View.VISIBLE);
+//                    }
+//                }else if(typingStartSize <= typingEndSize ){
+//                    //when insert characters
+//                    String checkword = input.getInputEditText().getText().toString().substring(typingStartSize-1);
+//                    if(checkword.indexOf("@") > -1 && !hitAt){
+//                        hitAt = true;
+//                        hitSpace = false;
+//                        atLenthList.add(typingEndSize);
+//                        viewIn.setVisibility(View.VISIBLE);
+//                        System.out.println("@ catch");
+//                    }else if(checkword.indexOf("#") > -1 && !hitHash){
+//                        hitHash = true;
+//                        hitSpace = false;
+//                        System.out.println("# catch");
+//                    }else if(checkword.indexOf(" ") > -1 && (hitAt || hitHash) ){
+//                        viewIn.setVisibility(View.GONE);
+//                        hitSpace = true;
+//                        hitAt = false;
+//                        hitHash = false;
+//                    }
+//                    if(hitAt && !checkword.equals("@")){
+//                        changeMemberAdapter(checkword, true);
+//                    }else if (hitAt && checkword.equals("@")) {
+//                        viewIn.setVisibility(View.VISIBLE);
+//                    }
+//                }
 
             }
         });
@@ -165,6 +167,65 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
 
     }
 
+
+    private void catchAt() {
+
+        boolean set = false;
+        String inputText = input.getInputEditText().getText().toString();
+        charactorCount = inputText.length();
+
+        try {
+            if(charactorCount > lessCharactorCount){
+                if (!hitAt) {
+                    if (inputText.substring(lessCharactorCount).indexOf("@") > -1) {
+                        viewIn.setVisibility(View.VISIBLE);
+                        adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, group.getMembers());
+                        adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+                        viewIn.setAdapter(adapter);
+                        hitSpace = false;
+                        lessCharactorCount = charactorCount;
+                        atLenthList.add(inputText.length());
+                        hitAt = true;
+                    }
+                } else if (inputText.length() < lessCharactorCount) {
+                    viewIn.setVisibility(View.GONE);
+                    atLenthList.remove(atLenthList.size() - 1);
+                    lessCharactorCount = atLenthList.get(atLenthList.size() - 1);
+                } else {
+                    if (!hitSpace && inputText.substring(lessCharactorCount).indexOf(" ") > -1 && inputText.length() > lessCharactorCount) {
+                        //after @ first space and break.
+                        hitAt = false;
+                        hitSpace = true;
+                        viewIn.setVisibility(View.GONE);
+                        lessCharactorCount = inputText.length();
+                    } else {
+                        changeMemberAdapter(inputText.substring(lessCharactorCount),true);
+                    }
+
+                }
+            }else {
+                lessCharactorCount--;
+                if (!atLenthList.isEmpty()) {
+                    if (inputText.length() == atLenthList.get(atLenthList.size() - 1) && !hitAt) {
+                        viewIn.setVisibility(View.VISIBLE);
+                        hitAt = true;
+                        hitSpace = false;
+                        atLenthList.remove(atLenthList.size() - 1);
+                        if (atLenthList.isEmpty()){lessCharactorCount = 0;}
+                        lessCharactorCount = atLenthList.get(atLenthList.size() - 1);
+                    }
+                }
+            }
+
+
+        }catch(
+                Exception e)
+
+        {
+            Log.d("ERROR", e.getMessage());
+        }
+
+    }
 
 
     private void changeMemberAdapter(String mess , boolean set) {

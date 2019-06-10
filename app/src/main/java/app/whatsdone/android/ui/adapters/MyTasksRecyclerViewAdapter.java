@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,13 +16,14 @@ import app.whatsdone.android.model.Task;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
-    private List<BaseEntity> tasks;
-
+    public List<BaseEntity> tasks;
+    private Context context;
     private OnMyTaskFragmentInteractionListener listener;
 
-    public MyTasksRecyclerViewAdapter(List<BaseEntity> tasks)
+    public MyTasksRecyclerViewAdapter(List<BaseEntity> tasks , Context context)
     {
         this.tasks = tasks;
+        this.context = context;
     }
 
     public void setListener(OnMyTaskFragmentInteractionListener listener) {

@@ -155,17 +155,9 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         drawText("Done", c, rightDoneButton, p);
 
 
-      //  buttonInstance = null;
         if (buttonShowedState == TaskSwipeController.ButtonsState.RIGHT_VISIBLE) {
             buttonInstance = rightInProgressButton;
-         //   buttonInstance1 = rightOnHoldButton;
-         //   buttonInstance2 = rightDoneButton;
-          //  if(buttonInstance == TaskSwipeController.ButtonsState.) return;
-         //   if(buttonInstance==rightOnHoldButton) return;
-           // if(buttonInstance==rightDoneButton) return;
-//            buttonInstance = rightDoneButton;
-//            buttonInstance=rightOnHoldButton;
-//            buttonInstance=rightInProgressButton;
+
 
         }
 

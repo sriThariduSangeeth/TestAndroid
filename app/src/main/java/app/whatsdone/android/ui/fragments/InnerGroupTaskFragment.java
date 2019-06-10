@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.Task;
+import app.whatsdone.android.model.UserStatus;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -67,8 +71,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private TaskService service = new TaskServiceImpl();
 
     public static InnerGroupTaskFragment newInstance(Group group){
-        groupobj = new Group();
-        groupobj = group;
+
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
         args.putParcelable("group", group);
@@ -86,6 +89,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     }
 
+    @SuppressLint("ResourceType")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,6 +106,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         this.group = args.getParcelable("group");
 
         toolbar.setTitle(group.getGroupName());
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
@@ -115,22 +129,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new CreateNewTaskFragment();
+                Fragment myFragment = CreateNewTaskFragment.newInstance(group);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-
-
-
             }
         });
-
-
-
 
         setupRecyclerView();
        return view;
 
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -206,15 +215,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        toolbar.setNavigationIcon(null);
+        toolbar.setTitle("Whats Done");
         taskInnerGroupPresenter.unSubscribe();
-        System.out.println("on destroy view");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        //getTargetFragment().setMenuVisibility(true);
     }
 
     @Override
@@ -223,20 +231,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         taskInnerGroups.addAll(tasks);
         adapter.notifyDataSetChanged();
     }
-
-//    @Override
-//    public void groupEdit(Group group) {
-//        System.out.println("onEdit ");
-//        //if(AuthServiceImpl.user.getDocumentID() == group.getCreatedBy() ) {
-//        //   circleImageView.setImageBitmap(addFragment.getImageData(circleImageView));
-//        //    groupName.setText(group.getGroupName());
-//        //    contacts.addAll(group.getMembers());
-//        //  System.out.println("" + AuthServiceImpl.user.getDocumentID());
-//        //   System.out.println("" + group.getCreatedBy());
-//
-//        //}
-//
-//    }
 
     private void setupRecyclerView()
     {
@@ -264,17 +258,44 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onTaskOnHoldClicked(int position) {
                 //task change status to On Hold
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.ON_HOLD);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
 
             @Override
             public void onTaskInProgressClicked(int position) {
                 //Task change status to In Progress
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.IN_PROGRESS);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onTaskDoneClicked(int position) {
                 //Task change status to Done
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.DONE);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
