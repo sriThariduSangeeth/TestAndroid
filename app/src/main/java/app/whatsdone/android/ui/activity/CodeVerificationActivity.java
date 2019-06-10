@@ -33,5 +33,6 @@ public class CodeVerificationActivity extends AppCompatActivity implements CodeV
     public void onVerified() {
         Intent intent = new Intent(CodeVerificationActivity.this,ProfileCreationActivity.class);
         startActivity(intent);
+        finish();
     }
 }

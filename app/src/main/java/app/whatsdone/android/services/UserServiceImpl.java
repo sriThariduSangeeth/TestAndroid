@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
         User user = (User)entity;
         DocumentReference document = db.collection(Constants.REF_USERS).document(user.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
-        data.put(Constants.FIELD_USER_PHONE_NO, user.getPhoneNo());
         data.put(Constants.FIELD_USER_DISPLAY_NAME, user.getDisplayName());
         data.put(Constants.FIELD_USER_DEVICE_TOKENS, user.getDeviceTokens());
         data.put(Constants.FIELd_USER_ENABLE_NOTIFICATIONS, user.isEnableNotifications());

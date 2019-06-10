@@ -29,6 +29,7 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.ActivityProfileCreationBinding;
 import app.whatsdone.android.ui.fragments.BottomSheetFragment;
+import app.whatsdone.android.ui.presenter.ProfilePresenter;
 import app.whatsdone.android.ui.presenter.ProfilePresenterImpl;
 import app.whatsdone.android.ui.view.ProfileView;
 import app.whatsdone.android.ui.viewmodel.ProfileViewModel;
@@ -40,11 +41,12 @@ import static android.media.MediaRecorder.VideoSource.CAMERA;
 public class ProfileCreationActivity extends AppCompatActivity implements ProfileView, BottomSheetFragment.Listener {
     private static final int RESULT_LOAD_IMAGE = 0;
     private CircleImageView profilePic;
+    ProfilePresenter presenter = new ProfilePresenterImpl(this);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityProfileCreationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_creation);
-        binding.setPresenter(new ProfilePresenterImpl(this));
+        binding.setPresenter(presenter);
         binding.setViewModel(new ProfileViewModel(""));
 
 
@@ -90,10 +92,12 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
             Bitmap bmp = null;
             try {
                 bmp = getBitmapFromUri(selectedImage);
+                presenter.setProfileImage(bmp);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
             profilePic.setImageBitmap(bmp);
         }else if(requestCode == CAMERA)
         {
@@ -156,6 +160,11 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
         Intent intent = new Intent(ProfileCreationActivity.this,GroupsActivity.class);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void dismiss() {
+        finish();
     }
 
     @Override
