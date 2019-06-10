@@ -65,7 +65,6 @@ public class ContactUtil {
                         String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
                         String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                         String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        Log.d("test", " Print all values");
                         if(phoneNumbers.contains(cleanNo(phoneNumber)) && !cleanNo(phoneNumber).isEmpty()){
                             Contact contact = new Contact();
                             contact.setPhoneNumber(cleanNo(phoneNumber));
@@ -100,7 +99,6 @@ public class ContactUtil {
         try {
             Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, getCurrentLocale());
             result = phoneUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.E164);
-            Log.d(TAG, result);
         } catch (NumberParseException ignored) {
         }
         return result;
