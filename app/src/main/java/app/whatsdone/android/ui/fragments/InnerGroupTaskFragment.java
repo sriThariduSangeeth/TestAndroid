@@ -71,8 +71,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private TaskService service = new TaskServiceImpl();
 
     public static InnerGroupTaskFragment newInstance(Group group){
-        groupobj = new Group();
-        groupobj = group;
+
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
         args.putParcelable("group", group);
@@ -130,7 +129,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new CreateNewTaskFragment();
+                Fragment myFragment = CreateNewTaskFragment.newInstance(group);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
             }
         });

@@ -130,17 +130,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         Task task = (Task)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document();
+        DocumentReference document = db.collection(Constants.REF_TASKS).document();
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
+        data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());
+        data.put(Constants.FIELD_TASK_GROUP_NAME, task.getGroupName());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
         data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, "");
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :

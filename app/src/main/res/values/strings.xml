@@ -41,7 +41,7 @@
     <string name="hint_enter_a_message">Type a message…</string>
 
     <string-array name="planets">
-        <item>To DO</item>
+        <item>To Do</item>
         <item>IN PROGRESS</item>
         <item>ON HOLD</item>
         <item>DONE</item>

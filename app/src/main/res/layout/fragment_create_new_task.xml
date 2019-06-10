@@ -263,7 +263,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Your text here"
+                    android:text="Add CheckList Here"
                     android:textColor="#312F2F" />
 
             </LinearLayout>

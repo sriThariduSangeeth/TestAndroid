@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -27,13 +28,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.CheckListItem;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthService;
+import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
+import app.whatsdone.android.utils.GetCurrentDetails;
 
 public class CreateNewTaskFragment extends Fragment {
     private List<String> spinnerArray = new ArrayList<>();
@@ -45,27 +58,62 @@ public class CreateNewTaskFragment extends Fragment {
     private ArrayList<Task> itemList;
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
-    private EditText addNewTask;
+    private EditText addNewTask , gettitle , getDescript;
     private LinearLayout lay ;
+    private Group group;
     private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Button saveButton;
+    private Date date;
+    private DateFormat dateFormat;
 
+    //data
+    private String assingnee = null;
+    private String assingnee_name = null;
+    private String creator = null;
+    private Date due_date;
+    private String status = null;
+    private String title = null ;
+    private String description = null;
+    private ArrayList<CheckListItem> checkList;
+    private TaskService service = new TaskServiceImpl();
+
+    public static CreateNewTaskFragment newInstance(Group group){
+
+        CreateNewTaskFragment instance = new CreateNewTaskFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("group", group);
+        instance.setArguments(args);
+        return instance;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle arg = getArguments();
+        Group group = arg.getParcelable("group");
+        this.group = group;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
+        checkList = new ArrayList<>();
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        creator = new GetCurrentDetails().getCurrentUser().getDocumentID();
+        gettitle = view.findViewById(R.id.title_edit_text);
+        getDescript = view.findViewById(R.id.description_edit_text);
         lay = view.findViewById(R.id.select_group_view) ;
         listView =  view.findViewById(R.id.list_view_checklist);
         lay.setVisibility(LinearLayout.GONE);
@@ -83,7 +131,6 @@ public class CreateNewTaskFragment extends Fragment {
 
 
         setDueDate = (TextView) view.findViewById(R.id.due_date_text_view);
-       // datePicker = (DatePicker) view.findViewById(R.id.due_date_picker);
 
         setDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,8 +149,14 @@ public class CreateNewTaskFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                setDueDate.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
+                                String dateval = dayOfMonth + "/"+ (monthOfYear + 1) + "/" + year;
+                                setDueDate.setText(dateval);
+                                try {
+                                    date = dateFormat.parse(dateval);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
 
                             }
                         }, mYear, mMonth, mDay);
@@ -114,9 +167,8 @@ public class CreateNewTaskFragment extends Fragment {
         addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
         imageView =  view.findViewById(R.id.checklist_add_image_view) ;
 
-        itemList = new ArrayList<>();
 
-        itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), itemList);
+        itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), checkList);
         //listView.setEmptyView(view.findViewById(R.id.empty));
         listView.setAdapter(itemsAdapter);
 
@@ -146,18 +198,31 @@ public class CreateNewTaskFragment extends Fragment {
                 }
             }
         });
-//        saveButton = view.findViewById(R.id.save_task_button);
-//        saveButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("save");
+                Task task = new Task();
+                task.setTitle(String.valueOf(gettitle.getText().toString()));
+                task.setDescription(getDescript.getText().toString());
+                task.setDueDate(date);
+                task.setGroupId(group.getDocumentID());
+                task.setGroupName(group.getGroupName());
+                task.setAssignedUserName(assingnee_name);
+                task.setAssignedUser(assingnee);
+                task.setAssignedBy(new GetCurrentDetails().getCurrentUser().getDocumentID());
+                task.setCreatedBy(new GetCurrentDetails().getCurrentUser().getDocumentID());
+                task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
+                task.setUpdatedDate(new GetCurrentDetails().getCurrentDateTime());
+                task.setCheckList(checkList);
+
+                service.create(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        getActivity().onBackPressed();
+                    }
+                });
+
             }
         });
 
@@ -166,15 +231,32 @@ public class CreateNewTaskFragment extends Fragment {
 
     }
 
+    public String returnStatus(String out){
+
+        switch (out){
+            case "To Do":
+                return "TODO";
+            case "IN PROGRESS":
+                return "IN_PROGRESS";
+            case "ON HOLD":
+                return "ON_HOLD";
+            case "DONE":
+                return "DONE";
+        }
+
+        return "TODO";
+    }
+
     public void addValue(View v) {
         String name = addNewTask.getText().toString();
         if (name.isEmpty()) {
             Toast.makeText(getContext().getApplicationContext(), " empty",
                     Toast.LENGTH_SHORT).show();
         } else {
-            Task md = new Task();
-            md.setTitle(name);
-            itemList.add(md);
+            CheckListItem checkListItem = new CheckListItem();
+            checkListItem.setTitle(name);
+            checkListItem.setCompleted(false);
+            checkList.add(checkListItem);
             itemsAdapter.notifyDataSetChanged();
             addNewTask.setText("");
         }
@@ -198,15 +280,11 @@ public class CreateNewTaskFragment extends Fragment {
                         Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                         while (numbers.moveToNext()) {
 
-                            String number =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            assingnee =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
 
-                            String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            assignFromContacts.setText(name);
-                            //String name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            // contact.setText(name);
-                            // contactListTextView.setText(num);
-                            // Toast.makeText(BaseFragment.this, "Number="+num, Toast.LENGTH_LONG).show();
+                            assingnee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                            assignFromContacts.setText(assingnee_name);
 
                         }
                     }

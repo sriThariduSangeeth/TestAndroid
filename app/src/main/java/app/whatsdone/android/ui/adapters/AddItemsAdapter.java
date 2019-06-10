@@ -13,15 +13,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 
 
 public class AddItemsAdapter extends BaseAdapter {
 
     private Context context;
-    ArrayList<Task> itemList;
+    ArrayList<CheckListItem> itemList = new ArrayList<>();
 
-    public AddItemsAdapter(Context context, ArrayList<Task> itemListArray)
+    public AddItemsAdapter(Context context, ArrayList<CheckListItem> itemListArray)
     {
         this.context = context;
         this.itemList = itemListArray;
@@ -53,7 +54,7 @@ public class AddItemsAdapter extends BaseAdapter {
             TextView textView = (TextView) convertView.findViewById(R.id.checklist__item);
             ImageView imageRemove = (ImageView) convertView.findViewById(R.id.remove_image_view);
 
-            Task myTask = itemList.get(position);
+            CheckListItem myTask = itemList.get(position);
             textView.setText(myTask.getTitle());
 
 
