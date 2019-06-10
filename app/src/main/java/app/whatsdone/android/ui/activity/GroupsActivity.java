@@ -75,8 +75,9 @@ public class GroupsActivity extends AppCompatActivity {
            @Override
            public void onTabSelected(TabLayout.Tab tab) {
                int position = tab.getPosition();
-
-               switch (tab.getPosition())
+               toolbar.setNavigationIcon(null);
+               toolbar.setTitle(getString(R.string.app_name));
+               switch (position)
                {
                    case 0:
                        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();

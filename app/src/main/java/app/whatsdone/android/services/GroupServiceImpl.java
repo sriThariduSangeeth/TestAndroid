@@ -30,9 +30,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import timber.log.Timber;
 
 public class GroupServiceImpl implements GroupService {
-    private final CloudService service;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
@@ -58,7 +58,7 @@ public class GroupServiceImpl implements GroupService {
                 .client(client)
                 .build();
 
-        service = retrofit.create(CloudService.class);
+        CloudService service = retrofit.create(CloudService.class);
     }
 
     @Override
@@ -203,10 +203,10 @@ public class GroupServiceImpl implements GroupService {
                 .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
-                        Log.w(TAG, "Team subscription failed", e);
+                        Timber.tag(TAG).w(e, "Team subscription failed");
                         return;
                     }
-                    Log.d(TAG, value.toString());
+                    Timber.tag(TAG).d(value.toString());
 
                     List<BaseEntity> groups = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {
@@ -231,7 +231,7 @@ public class GroupServiceImpl implements GroupService {
                                 group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
                             groups.add(group);
                         }catch (Exception exception) {
-                            Log.d(TAG, "failed to parse group", exception);
+                            Timber.tag(TAG).d(exception, "failed to parse group");
                         }
 
                     }

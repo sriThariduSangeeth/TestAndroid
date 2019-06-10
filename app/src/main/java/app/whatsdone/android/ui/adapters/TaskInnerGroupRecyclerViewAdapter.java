@@ -52,15 +52,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.task_inner_recycler_view_layout, viewGroup, false);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Task task = (Task)taskList.get(index);
-                Fragment myFragment = EditTaskFragment.newInstance(group, task);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-            }
-        });
+
         return new MyRecyclerViewHolder(view);
     }
 
@@ -83,6 +75,15 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         }else {
             myRecyclerViewHolder.imag.setImageResource(R.drawable.ic_account_circle);
         }
+
+        myRecyclerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Fragment myFragment = EditTaskFragment.newInstance(group, task);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+            }
+        });
 
 
 
