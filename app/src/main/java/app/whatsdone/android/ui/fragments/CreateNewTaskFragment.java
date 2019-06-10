@@ -216,6 +216,7 @@ public class CreateNewTaskFragment extends Fragment {
                 task.setUpdatedDate(new GetCurrentDetails().getCurrentDateTime());
                 task.setCheckList(checkList);
 
+
                 service.create(task, new ServiceListener() {
                     @Override
                     public void onSuccess() {
@@ -266,33 +267,33 @@ public class CreateNewTaskFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-      switch (requestCode) {
-        case (REQUEST_CODE):
-            if (resultCode == Activity.RESULT_OK) {
-                Uri contactData = data.getData();
-                Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                if (c.moveToFirst()) {
-                    String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-                    String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                    String num = "";
-                    if (Integer.valueOf(hasNumber) == 1) {
-                        System.out.println("Select Contact");
-                        Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                        while (numbers.moveToNext()) {
+        switch (requestCode) {
+            case (REQUEST_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
+                    if (c.moveToFirst()) {
+                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String num = "";
+                        if (Integer.valueOf(hasNumber) == 1) {
+                            System.out.println("Select Contact");
+                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                            while (numbers.moveToNext()) {
 
-                            assingnee =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                assingnee =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
 
-                            assingnee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            assignFromContacts.setText(assingnee_name);
+                                assingnee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                assignFromContacts.setText(assingnee_name);
 
+                            }
                         }
                     }
+                    break;
                 }
-                break;
-            }
-    }
+        }
 
-}
+    }
 }
 

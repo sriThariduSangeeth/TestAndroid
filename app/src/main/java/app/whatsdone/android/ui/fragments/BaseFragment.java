@@ -21,6 +21,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -65,8 +68,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
+import static android.widget.Toast.LENGTH_LONG;
 
-public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView {
+public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView, TextWatcher {
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
@@ -127,6 +131,32 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+
+
+        teamName.addTextChangedListener(this);
+
+        //team name
+//        if(teamName.length() >  25)
+//        {
+//            AlertDialog.Builder teamNameLengthAlert = new AlertDialog.Builder(getContext());
+//            teamNameLengthAlert.setTitle("Alert");
+//            teamNameLengthAlert.setMessage("Number of characters should not exceed than 25");
+//
+//
+//            teamNameLengthAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {
+//
+//                }
+//            });
+//
+//
+//            teamNameLengthAlert.setNegativeButton(android.R.string.no, null);
+//            teamNameLengthAlert.setIcon(android.R.drawable.ic_dialog_alert);
+//            teamNameLengthAlert.show();
+//
+//        }
+
+
 
         if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
@@ -191,7 +221,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     alert.show();
 
 
-                } else {
+                }
+
+
+                else {
 
 
                     group.setTeamImage(getImageData(circleImageView));
@@ -554,4 +587,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
 }
