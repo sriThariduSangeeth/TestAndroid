@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import timber.log.Timber;
 
 public class WhatsDoneApplication extends Application {

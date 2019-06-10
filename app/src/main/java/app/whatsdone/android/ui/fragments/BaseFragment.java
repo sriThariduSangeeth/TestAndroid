@@ -89,8 +89,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private List<Contact> members = new ArrayList<Contact>();
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
-    Set<String> contactSet = new HashSet<>();
-
+    HashSet contactSet = new HashSet<>();
 
 
     public BaseFragment() {
@@ -157,8 +156,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 //        }
 
 
-
-        if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
+        if (group.getAvatar() != null && !group.getAvatar().isEmpty()) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
@@ -221,10 +219,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     alert.show();
 
 
-                }
-
-
-                else {
+                } else {
 
 
                     group.setTeamImage(getImageData(circleImageView));
@@ -287,7 +282,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onGroupError(String errorMessage) {
-         Log.d("failed creating a group", errorMessage);
+        Log.d("failed creating a group", errorMessage);
 
     }
 
@@ -360,7 +355,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                     String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                     String num1 = number.replaceAll("\\s+", "");
                                     oneContact.add(num1);
-                                    System.out.println(" AAAAAAAAAA   " +num1);
+                                    System.out.println(" AAAAAAAAAA   " + num1);
 
                                 }
                                 numbers.close();
@@ -387,7 +382,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                             alert.show();
                                         } else {
                                             //contactName.add(name);
-                                            if(contact != null && !contact.isEmpty()) {
+                                            if (contact != null && !contact.isEmpty()) {
                                                 contact = ContactUtil.cleanNo(contact);
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
@@ -399,7 +394,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                         }
                                     }
                                 });
-
 
 
                             } catch (Exception exception) {
@@ -446,7 +440,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public void choosePhotoFromGallary() {
-       // requestMultiplePermissions();
+        // requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
@@ -541,19 +535,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 String value = adapter.getItem(position);
 
-
-                if(value!= null && value.equals(group.getCreatedBy()))
-                {
-                    Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    contactNumbers.remove(value);
-                    adapter.notifyDataSetChanged();
-                   // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
-
-                }
-
-
+                contactNumbers.remove(value);
+                adapter.notifyDataSetChanged();
+                // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
                 return false;
 
             }
@@ -562,14 +546,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         });
     }
 
-    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener )
-    {
+    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener) {
         String[] numbers = oneContact.toArray(new String[oneContact.size()]);
 
-        if (numbers.length == 0 )
+        if (numbers.length == 0)
             return;
 
-        if(numbers.length == 1) {
+        if (numbers.length == 1) {
             listener.onSelected(numbers[0]);
             return;
         }
