@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +67,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             public void onClick(View v) {
 
                 if(listener != null) {
-
                     listener.onAddClicked();
                 }
 
