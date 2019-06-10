@@ -31,7 +31,7 @@ import static android.support.constraint.Constraints.TAG;
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     public List<BaseEntity> groups;
     private Context context;
-    private TextView groupNameTextView, taskCount, discussionCount;;
+    private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
     private CircleImageView imageView;
 
 
@@ -53,6 +53,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
 
         imageView = view.findViewById(R.id.image_view_group);
+       // toolbarTextView = view.findViewById(R.id.toolbar_title);
 
 
 
@@ -112,6 +113,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
 
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,6 +122,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                     Fragment myFragment = InnerGroupTaskFragment.newInstance(group);
 
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+
 
                 }
             });

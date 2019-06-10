@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private ListView contactListView;
     private AddEditGroupPresenter presenter;
     private TaskService service = new TaskServiceImpl();
+    private TextView toolbarTextView;
 
     public static InnerGroupTaskFragment newInstance(Group group){
 
@@ -98,14 +100,33 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         mainFab = view.findViewById(R.id.add_new_task);
         toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbarTextView = getActivity().findViewById(R.id.toolbar_title);
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
         groupName = (EditText) view.findViewById(R.id.group_name_edit_text) ;
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
+        toolbarTextView.setText(group.getGroupName());
+       // toolbar.setTitle("    ");
 
-        toolbar.setTitle(group.getGroupName());
+//
+        //toolbar.setTitle(group.getGroupName());
+
+
+        toolbarTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) getContext();
+                Fragment myFragment = EditGroupFragment.newInstance(group);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+
+
+            }
+        });
+
+
+
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 //        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
@@ -162,22 +183,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
                 return true;
 
-
-            case R.id.settings:
-
-//                contacts.addAll(group.getMembers());
-//                groupName.setText(group.getGroupName());
-//                circleImageView.setImageBitmap(group.getTeamImage());
-
-                AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-
-
-
-                System.out.println("settings clicked");
-                return false;
 
              default:
                  break;

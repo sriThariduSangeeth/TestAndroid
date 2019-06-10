@@ -1,6 +1,8 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +54,8 @@ public class AddGroupFragment extends BaseFragment {
             }
         });
 
+
+
     }
 
 
@@ -71,4 +75,9 @@ public class AddGroupFragment extends BaseFragment {
         presenter.create(this.group);
     }
 
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
 }

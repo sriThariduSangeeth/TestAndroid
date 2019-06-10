@@ -48,12 +48,13 @@
             android:id="@+id/profilePic"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="96dp"
             android:src="@drawable/user_group_man_woman3x"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="155dp" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <EditText
             android:id="@+id/displayName"

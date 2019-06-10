@@ -18,12 +18,10 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
-import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
 import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
