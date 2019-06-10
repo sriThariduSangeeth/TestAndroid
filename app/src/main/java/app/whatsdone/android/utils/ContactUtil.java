@@ -23,6 +23,8 @@ public class ContactUtil {
     public static List<Contact> resolveContacts(List<String> phoneNumbers) {
         List<Contact> items = new ArrayList<>();
 
+        if(phoneNumbers.isEmpty()) return items;
+
         try{
 
             items = readContacts(WhatsDoneApplication.getApplication().getApplicationContext(), phoneNumbers);

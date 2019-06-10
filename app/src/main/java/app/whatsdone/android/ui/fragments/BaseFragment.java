@@ -146,7 +146,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setDataAndType(ContactsContract.Contacts.CONTENT_URI,ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                 startActivityForResult(intent, REQUEST_CODE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
@@ -353,7 +354,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                             alert.show();
                                         } else {
                                             //contactName.add(name);
-                                            if(contactName != null && !contactName.isEmpty()) {
+                                            if(contact != null && !contact.isEmpty()) {
                                                 contact = ContactUtil.cleanNo(contact);
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
