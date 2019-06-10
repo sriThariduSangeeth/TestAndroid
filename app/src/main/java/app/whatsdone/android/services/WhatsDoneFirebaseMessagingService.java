@@ -88,15 +88,17 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> data = new HashMap<>();
-        data.put(Constants.FIELD_USER_DEVICE_TOKENS, new String[] {token});
-        db.collection(Constants.REF_USERS)
-                .document(AuthServiceImpl.getCurrentUser().getDocumentID())
-                .update(data)
-                .addOnCompleteListener(command -> {
-                   Log.d(TAG, "command is success: " + command.isSuccessful());
-                });
+        if(token != null && !token.isEmpty()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Map<String, Object> data = new HashMap<>();
+            data.put(Constants.FIELD_USER_DEVICE_TOKENS, new String[]{token});
+            db.collection(Constants.REF_USERS)
+                    .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                    .update(data)
+                    .addOnCompleteListener(command -> {
+                        Log.d(TAG, "command is success: " + command.isSuccessful());
+                    });
+        }
     }
 
     /**

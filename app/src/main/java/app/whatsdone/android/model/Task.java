@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Task implements BaseEntity {
 
-    enum TaskStatus {
+    public enum TaskStatus {
         TODO(10),
         IN_PROGRESS(20),
         ON_HOLD(30),
@@ -17,6 +17,22 @@ public class Task implements BaseEntity {
 
         TaskStatus(int value) {
             this.value = value;
+        }
+
+        public static TaskStatus fromInt(int intValue) {
+            switch (intValue){
+                case 10:
+                    return TaskStatus.TODO;
+                case 20:
+                    return TaskStatus.IN_PROGRESS;
+                case 30:
+                    return TaskStatus.ON_HOLD;
+                case 50:
+                    return TaskStatus.DONE;
+
+                    default:
+                        return TaskStatus.TODO;
+            }
         }
 
         public int getValue() {

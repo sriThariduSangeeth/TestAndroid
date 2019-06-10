@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class TaskServiceImpl implements TaskService {
     public void subscribeForGroup(String groupId, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_TASKS)
                 .whereEqualTo(Constants.FIELD_TASK_GROUP_ID, groupId)
+                .orderBy(Constants.FIELD_TASK_DUE_AT, Query.Direction.ASCENDING)
+                .limit(Constants.TASKS_LIMIT)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Task subscription failed", e);
@@ -94,15 +97,17 @@ public class TaskServiceImpl implements TaskService {
                             if (doc.get(Constants.FIELD_TASK_CREATED_BY) != null)
                                 task.setCreatedBy(doc.getString(Constants.FIELD_TASK_CREATED_BY));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER) != null)
-                                task.setAssignedUser(Constants.FIELD_TASK_ASSIGNED_USER);
+                                task.setAssignedUser(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserImage(Constants.FIELD_TASK_ASSIGNED_USER_NAME);
+                                task.setAssignedUserImage(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
                                 task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
                             if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)
                                 task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
                             if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
                                 task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
+                            if (doc.get(Constants.FIELD_TASK_STATUS) != null)
+                                task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
                             tasks.add(task);
                         }catch (Exception exception) {
                             Log.d(TAG, "failed to parse group", exception);
@@ -125,16 +130,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         Task task = (Task)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document();
+        DocumentReference document = db.collection(Constants.REF_TASKS).document();
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
+        data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());
+        data.put(Constants.FIELD_TASK_GROUP_NAME, task.getGroupName());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
         data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, "");
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
@@ -168,6 +177,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :

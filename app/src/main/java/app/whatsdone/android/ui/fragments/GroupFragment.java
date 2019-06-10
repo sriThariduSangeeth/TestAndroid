@@ -38,7 +38,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
-    private CircleImageView circleImageView;
 
 
     @Override
@@ -54,7 +53,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
-        circleImageView = view.findViewById(R.id.image_view_group);
+        CircleImageView circleImageView = view.findViewById(R.id.image_view_group);
 
 
         this.presenter = new GroupPresenterImpl();
@@ -137,8 +136,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             @Override
             public void onRightClicked(int position) {
 
-
-
             }
 
             @Override
@@ -153,8 +150,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
                         presenter.leaveTeam(group.getDocumentID());
 
                     }
-
-
 
                 }catch (Exception e){
                     Log.d("My", e.getMessage());

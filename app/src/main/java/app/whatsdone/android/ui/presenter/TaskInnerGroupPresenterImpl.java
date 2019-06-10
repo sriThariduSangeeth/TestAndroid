@@ -30,7 +30,6 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter{
         service.subscribeForGroup(groupId, new ServiceListener() {
             @Override
             public void onDataReceived(List<BaseEntity> tasks) {
-                System.out.println(tasks);
                 view.updateTaskInner(tasks);
             }
 

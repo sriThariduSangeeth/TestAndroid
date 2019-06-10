@@ -33,6 +33,8 @@ import app.whatsdone.android.model.Message;
 import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.MessageActivity;
 
+import static android.R.*;
+
 public class InnerGroupDiscussionActivity extends MessageActivity implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
@@ -45,17 +47,21 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
     private MessageInput input;
     private ListView viewIn;
     public boolean hitAt = false;
+    public boolean hitHash = false;
     public boolean hitSpace = false;
     public int charactorCount = 0;
     public int lessCharactorCount = 0;
+
+    //this
+    public int typingStartSize = 0;
+    public int typingEndSize = 0;
+
+
     public List<Integer> atLenthList = new ArrayList<>();
 
 
     @Override
     public void onCreate(Bundle persistentState) {
-
-        String[] users = {"Suresh Dasari", "Trishika Dasari", "Rohini Alavala", "Praveen Kumar", "Madhav Sai"};
-
 
         super.onCreate(persistentState);
         setContentView(R.layout.activity_inner_group_discussion);
@@ -71,6 +77,11 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         input.setInputListener(this);
         input.setAttachmentsListener(this);
 
+        adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, group.getMembers());
+        adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        viewIn.setAdapter(adapter);
+        viewIn.setVisibility(View.GONE);
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,33 +95,78 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         input.setTypingListener(new MessageInput.TypingListener() {
             @Override
             public void onStartTyping() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        catchAt();
+//                    }
+//                }, 1000);
+//                typingStartSize = input.getInputEditText().getText().toString().length();
 
+            }
+            @Override
+            public void onStopTyping() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         catchAt();
                     }
-                }, 800);
-            }
-            @Override
-            public void onStopTyping() {
-                System.out.println("scs");
+                }, 1000);
+//                typingEndSize = input.getInputEditText().getText().toString().length();
+//                if(typingStartSize > typingEndSize){
+//                    String checkword = input.getInputEditText().getText().toString().substring(typingEndSize-1);
+//                    if(hitAt && checkword.equals("@")){
+//                        viewIn.setVisibility(View.VISIBLE);
+//                    }
+//                }else if(typingStartSize <= typingEndSize ){
+//                    //when insert characters
+//                    String checkword = input.getInputEditText().getText().toString().substring(typingStartSize-1);
+//                    if(checkword.indexOf("@") > -1 && !hitAt){
+//                        hitAt = true;
+//                        hitSpace = false;
+//                        atLenthList.add(typingEndSize);
+//                        viewIn.setVisibility(View.VISIBLE);
+//                        System.out.println("@ catch");
+//                    }else if(checkword.indexOf("#") > -1 && !hitHash){
+//                        hitHash = true;
+//                        hitSpace = false;
+//                        System.out.println("# catch");
+//                    }else if(checkword.indexOf(" ") > -1 && (hitAt || hitHash) ){
+//                        viewIn.setVisibility(View.GONE);
+//                        hitSpace = true;
+//                        hitAt = false;
+//                        hitHash = false;
+//                    }
+//                    if(hitAt && !checkword.equals("@")){
+//                        changeMemberAdapter(checkword, true);
+//                    }else if (hitAt && checkword.equals("@")) {
+//                        viewIn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+
             }
         });
 
         viewIn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                StringBuilder stringBuilder = new StringBuilder();
                 String selc = ((AppCompatTextView) view).getText().toString();
-                input.getInputEditText().setText(input.getInputEditText().getText().toString().replace("@",selc));
-//                input.getInputEditText().setText("rrrr");
+                if(selc != null){
+                    stringBuilder.append(selc+" ");
+                }
+                input.getInputEditText().setText(input.getInputEditText().getText().toString()+stringBuilder);
                 viewIn.setVisibility(View.GONE);
+                hitSpace = false;
+                hitAt= false;
                 Selection.setSelection(input.getInputEditText().getText(),input.getInputEditText().length());
+                lessCharactorCount = input.getInputEditText().getText().length();
 
             }
         });
 
     }
+
 
     private void catchAt() {
 
@@ -123,8 +179,8 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 if (!hitAt) {
                     if (inputText.substring(lessCharactorCount).indexOf("@") > -1) {
                         viewIn.setVisibility(View.VISIBLE);
-                        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, group.getMembers());
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, group.getMembers());
+                        adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
                         viewIn.setAdapter(adapter);
                         hitSpace = false;
                         lessCharactorCount = charactorCount;
@@ -162,14 +218,15 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
             }
 
 
-    }catch(
-    Exception e)
+        }catch(
+                Exception e)
 
-    {
-        Log.d("ERROR", e.getMessage());
+        {
+            Log.d("ERROR", e.getMessage());
+        }
+
     }
 
-}
 
     private void changeMemberAdapter(String mess , boolean set) {
 
@@ -184,7 +241,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                         listFound.add(item);
                 }
 
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listFound);
+                adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, listFound);
                 viewIn.setAdapter(adapter);
             }
 

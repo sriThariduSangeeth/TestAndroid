@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         Intent intent = new Intent(LoginActivity.this,CodeVerificationActivity.class);
         intent.putExtra(Constants.ARG_VERIFICATION_ID, verificationId);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         Intent intent = new Intent(LoginActivity.this,ProfileCreationActivity.class);
         intent.putExtra(Constants.ARG_VERIFICATION_ID, token);
         startActivity(intent);
+        finish();
     }
 
     @Override

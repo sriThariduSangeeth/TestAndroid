@@ -39,7 +39,7 @@ public class DiscussionImpl implements DiscussionService {
 
         db.collection(Constants.REF_DISCUSSIONS)
                 .whereEqualTo(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
-                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(10)
+                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.TASKS_LIMIT)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
