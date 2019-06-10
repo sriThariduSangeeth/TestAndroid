@@ -106,36 +106,40 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
             }
             @Override
             public void onStopTyping() {
-                typingEndSize = input.getInputEditText().getText().toString().length();
-                if(typingStartSize > typingEndSize){
-                    String checkword = input.getInputEditText().getText().toString().substring(typingEndSize-1);
-                    if(hitAt && checkword.equals("@")){
-                        viewIn.setVisibility(View.VISIBLE);
+                try {
+                    typingEndSize = input.getInputEditText().getText().toString().length();
+                    if (typingStartSize > typingEndSize) {
+                        String checkword = input.getInputEditText().getText().toString().substring(typingEndSize - 1);
+                        if (hitAt && checkword.equals("@")) {
+                            viewIn.setVisibility(View.VISIBLE);
+                        }
+                    } else if (typingStartSize <= typingEndSize) {
+                        //when insert characters
+                        String checkword = input.getInputEditText().getText().toString().substring(typingStartSize - 1);
+                        if (checkword.indexOf("@") > -1 && !hitAt) {
+                            hitAt = true;
+                            hitSpace = false;
+                            atLenthList.add(typingEndSize);
+                            viewIn.setVisibility(View.VISIBLE);
+                            System.out.println("@ catch");
+                        } else if (checkword.indexOf("#") > -1 && !hitHash) {
+                            hitHash = true;
+                            hitSpace = false;
+                            System.out.println("# catch");
+                        } else if (checkword.indexOf(" ") > -1 && (hitAt || hitHash)) {
+                            viewIn.setVisibility(View.GONE);
+                            hitSpace = true;
+                            hitAt = false;
+                            hitHash = false;
+                        }
+                        if (hitAt && !checkword.equals("@")) {
+                            changeMemberAdapter(checkword, true);
+                        } else if (hitAt && checkword.equals("@")) {
+                            viewIn.setVisibility(View.VISIBLE);
+                        }
                     }
-                }else if(typingStartSize <= typingEndSize ){
-                    //when insert characters
-                    String checkword = input.getInputEditText().getText().toString().substring(typingStartSize-1);
-                    if(checkword.indexOf("@") > -1 && !hitAt){
-                        hitAt = true;
-                        hitSpace = false;
-                        atLenthList.add(typingEndSize);
-                        viewIn.setVisibility(View.VISIBLE);
-                        System.out.println("@ catch");
-                    }else if(checkword.indexOf("#") > -1 && !hitHash){
-                        hitHash = true;
-                        hitSpace = false;
-                        System.out.println("# catch");
-                    }else if(checkword.indexOf(" ") > -1 && (hitAt || hitHash) ){
-                        viewIn.setVisibility(View.GONE);
-                        hitSpace = true;
-                        hitAt = false;
-                        hitHash = false;
-                    }
-                    if(hitAt && !checkword.equals("@")){
-                        changeMemberAdapter(checkword, true);
-                    }else if (hitAt && checkword.equals("@")) {
-                        viewIn.setVisibility(View.VISIBLE);
-                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
             }
