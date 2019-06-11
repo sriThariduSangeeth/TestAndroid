@@ -109,6 +109,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -135,6 +136,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+        checkUserForName();
 
 
 
@@ -147,30 +149,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()))
-                    showPictureDialog();
 
 
-                    else
-                        Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
-
+                    checkUserForTeamImage();
 
                 }
             });
 
 //team name can be changed by creator
-    teamName.setOnTouchListener(new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if(!AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
-                teamName.setEnabled(false);
-                Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
-                teamName.setError("Only the creator can change Team name");
 
-            }
-            return false;
-    }
-});
 
         SwipeList();
 
@@ -239,6 +226,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
                     save();
+                    adapter.notifyDataSetChanged();
+
                 }
 
             }
@@ -252,6 +241,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
+    public  abstract void checkUserForName();
+    public abstract void checkUserForTeamImage();
+
 
     public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
@@ -426,7 +418,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-    private void showPictureDialog() {
+    protected void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
@@ -607,7 +599,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
-//            teamName.setError("Only team creator can change the name");
+
     }
 }

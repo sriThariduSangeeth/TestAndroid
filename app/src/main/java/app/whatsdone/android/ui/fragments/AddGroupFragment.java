@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ public class AddGroupFragment extends BaseFragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +56,7 @@ public class AddGroupFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
+
 
 
 
@@ -74,6 +78,21 @@ public class AddGroupFragment extends BaseFragment {
 
         presenter.create(this.group);
     }
+
+    @Override
+    public void checkUserForName() {
+
+    }
+
+    @Override
+    public void checkUserForTeamImage() {
+
+            showPictureDialog();
+
+
+
+    }
+
 
 
     @Override
