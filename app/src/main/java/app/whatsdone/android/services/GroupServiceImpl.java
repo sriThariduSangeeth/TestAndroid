@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
@@ -196,6 +197,7 @@ public class GroupServiceImpl implements GroupService {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         listener = db.collection(Constants.REF_TEAMS)
                 .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
+                .orderBy(Constants.FIELD_GROUP_UPDATED_AT, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Timber.tag(TAG).w(e, "Team subscription failed");
