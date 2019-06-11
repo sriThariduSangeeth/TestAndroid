@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,10 +23,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -77,14 +80,14 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
                 Picasso.get().load(group.getAvatar()).into(imageView);
-                Log.d(TAG, "onBindViewHolder: ");
+                Timber.tag(TAG).d("onBindViewHolder: ");
                 System.out.println(" Avatar " + group.getAvatar());
             }
 
         }catch (Exception exception){
             System.out.println(exception.getMessage());
             exception.printStackTrace();
-            Log.e("EXE", "exception" + exception.getMessage());
+            Timber.tag("EXE").e("exception%s", exception.getMessage());
         }
 
         holder.setGroup(group);
@@ -127,17 +130,15 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             }
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                    group.setTeamImage(getImageData(imageView));
-                    Fragment myFragment = InnerGroupTaskFragment.newInstance(group);
+            itemView.setOnClickListener(v -> {
+                group.setTeamImage(getImageData(imageView));
 
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                Intent intent = new Intent(activity, InnerGroupTaskActivity.class);
+                intent.putExtra("group", group);
+                activity.startActivity(intent);
 
 
-                }
             });
 
         }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
@@ -20,9 +21,9 @@ import app.whatsdone.android.model.Task;
 public class AddItemsAdapter extends BaseAdapter {
 
     private Context context;
-    ArrayList<CheckListItem> itemList = new ArrayList<>();
+    List<CheckListItem> itemList = new ArrayList<>();
 
-    public AddItemsAdapter(Context context, ArrayList<CheckListItem> itemListArray)
+    public AddItemsAdapter(Context context, List<CheckListItem> itemListArray)
     {
         this.context = context;
         this.itemList = itemListArray;

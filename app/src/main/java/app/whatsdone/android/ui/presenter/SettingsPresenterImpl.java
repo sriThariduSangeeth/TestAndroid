@@ -1,10 +1,8 @@
 package app.whatsdone.android.ui.presenter;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,6 +22,7 @@ import app.whatsdone.android.ui.view.SettingsView;
 import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
+import timber.log.Timber;
 
 public class SettingsPresenterImpl implements SettingsPresenter {
     private static final String TAG = SettingsPresenterImpl.class.getSimpleName();
@@ -42,7 +41,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 
     @Override
     public void save(SettingsViewModel model) {
-        Log.d(TAG, "save clicked");
+        Timber.tag(TAG).d("save clicked");
 
         // debounce the save call.
         if(!isSaving && userLoaded) {
@@ -56,22 +55,22 @@ public class SettingsPresenterImpl implements SettingsPresenter {
             service.update(user, new AuthService.Listener() {
                 @Override
                 public void onSuccess() {
-                    Log.d(TAG, "user saved");
+                    Timber.d("user saved");
                     authService.updateProfile(user, new AuthService.Listener() {
                         @Override
                         public void onSuccess() {
-                            Log.d(TAG, "profile saved");
+                            Timber.d("profile saved");
                         }
                     });
                 }
 
                 @Override
                 public void onError(@Nullable String error) {
-                    Log.d(TAG, error);
+                    Timber.d(error);
                 }
 
                 @Override
-                public void onCompleted(@Nullable Map<String, Object> data) {
+                public void onCompleted(boolean isSuccessful) {
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
@@ -96,7 +95,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         contactService.syncContacts(new ArrayList<>(), new ContactService.Listener() {
             @Override
             public void onContactsSynced(int added, int deleted) {
-                Log.d(TAG, "added: " + added + "deleted: "+ deleted);
+                Timber.tag(TAG).d("added: " + added + "deleted: " + deleted);
             }
         });
     }
@@ -129,7 +128,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         storageService.uploadUserImage(image, new StorageService.Listener() {
             @Override
             public void onSuccess(String url) {
-                Log.d(TAG, url);
+                Timber.d(url);
                 User user = AuthServiceImpl.getCurrentUser();
                 user.setAvatar(url);
                 authService.updateProfile(user, new AuthService.Listener() {
@@ -143,7 +142,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 
             @Override
             public void onError(String error) {
-                Log.e(TAG, error);
+                Timber.e(error);
             }
         });
     }

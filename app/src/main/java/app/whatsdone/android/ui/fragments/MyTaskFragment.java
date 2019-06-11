@@ -18,6 +18,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -67,7 +68,8 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new CreateNewTaskFragment();
+                //TODO: add personal group information here.
+                Fragment myFragment = AddTaskFragment.newInstance(new Group());
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.my_task_container, myFragment).addToBackStack(null).commit();
 
             }

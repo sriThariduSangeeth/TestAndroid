@@ -78,23 +78,19 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-    private Button addMembers;
-    protected CircleImageView circleImageView, imageView;
-    private Uri selectedImage;
-    protected List<String> contactNumbers = new ArrayList<String>();
-    protected List<String> contactName = new ArrayList<String>();
+    protected CircleImageView circleImageView;
+    protected List<String> contactNumbers = new ArrayList<>();
+    protected List<String> contactName = new ArrayList<>();
     private final static int RQS_PICK_CONTACT = 1;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
-    private ConstraintLayout constraintLayout;
     private List<Contact> members = new ArrayList<Contact>();
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
-    Set<String> contactSet = new HashSet<>();
-
+    HashSet contactSet = new HashSet<>();
 
 
     public BaseFragment() {
@@ -121,9 +117,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<>();
         circleImageView = view.findViewById(R.id.group_photo_image_view);
-        addMembers = view.findViewById(R.id.add_members_button);
+        Button addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
-        constraintLayout = view.findViewById(R.id.constraintLayout3);
+        ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
         imageView = view.findViewById(R.id.image_view_group);
 
@@ -132,8 +128,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
         swipeListView.setAdapter(adapter);
 
-        //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
-        //swipeListView.setAdapter(arrayAdapter);
         contactNumbers.addAll(group.getMembers());
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
@@ -142,8 +136,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
 
-
-        if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
+        if (group.getAvatar() != null && !group.getAvatar().isEmpty()) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
@@ -174,7 +167,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-
 
                 }
 
@@ -212,10 +204,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     alert.show();
 
 
-                }
-
-
-                else {
+                } else {
 
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
@@ -282,7 +271,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onGroupError(String errorMessage) {
-         Log.d("failed creating a group", errorMessage);
+        Log.d("failed creating a group", errorMessage);
 
     }
 
@@ -298,7 +287,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         //gallery
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            selectedImage = data.getData();
+            Uri selectedImage = data.getData();
 
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -355,7 +344,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                     String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                     String num1 = number.replaceAll("\\s+", "");
                                     oneContact.add(num1);
-                                    System.out.println(" AAAAAAAAAA   " +num1);
+                                    System.out.println(" AAAAAAAAAA   " + num1);
 
                                 }
                                 numbers.close();
@@ -382,7 +371,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                             alert.show();
                                         } else {
                                             //contactName.add(name);
-                                            if(contact != null && !contact.isEmpty()) {
+                                            if (contact != null && !contact.isEmpty()) {
                                                 contact = ContactUtil.cleanNo(contact);
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
@@ -394,7 +383,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                         }
                                     }
                                 });
-
 
 
                             } catch (Exception exception) {
@@ -441,7 +429,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public void choosePhotoFromGallary() {
-       // requestMultiplePermissions();
+        // requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
@@ -536,19 +524,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 String value = adapter.getItem(position);
 
-
-                if(value!= null && value.equals(group.getCreatedBy()))
-                {
-                    Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    contactNumbers.remove(value);
-                    adapter.notifyDataSetChanged();
-                   // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
-
-                }
-
-
+                contactNumbers.remove(value);
+                adapter.notifyDataSetChanged();
+                // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
                 return false;
 
             }
@@ -557,14 +535,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         });
     }
 
-    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener )
-    {
+    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener) {
         String[] numbers = oneContact.toArray(new String[oneContact.size()]);
 
-        if (numbers.length == 0 )
+        if (numbers.length == 0)
             return;
 
-        if(numbers.length == 1) {
+        if (numbers.length == 1) {
             listener.onSelected(numbers[0]);
             return;
         }
