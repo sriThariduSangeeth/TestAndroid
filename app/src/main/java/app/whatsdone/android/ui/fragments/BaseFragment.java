@@ -73,7 +73,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 import static android.widget.Toast.LENGTH_LONG;
 
-public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView, TextWatcher {
+public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView{
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
@@ -136,7 +136,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
-        checkUserForName();
+        //checkUserForName();
 
 
 
@@ -145,18 +145,18 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
-//team image can be changed by creator
+
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-
-                    checkUserForTeamImage();
+                    showPictureDialog();
+                    //checkUserForTeamImage();
 
                 }
             });
 
-//team name can be changed by creator
+
 
 
         SwipeList();
@@ -241,8 +241,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
-    public  abstract void checkUserForName();
-    public abstract void checkUserForTeamImage();
+ //   public  abstract void checkUserForName();
+ //   public abstract void checkUserForTeamImage();
 
 
     public Bitmap getImageData(ImageView imageView) {
@@ -583,22 +583,22 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
-//            teamName.setError("Only team creator can change the name");
-
-
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
+//
+//    @Override
+//    public void afterTextChanged(Editable s) {
+//
+//    }
+//
+//    @Override
+//    public void onTextChanged(CharSequence s, int start, int before, int count) {
+////        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
+////            teamName.setError("Only team creator can change the name");
+//
+//
+//    }
+//
+//    @Override
+//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//    }
 }

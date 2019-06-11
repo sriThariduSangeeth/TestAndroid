@@ -60,38 +60,38 @@ public class EditGroupFragment extends BaseFragment{
         presenter.update(this.group);
     }
 
-    @Override
-    public void checkUserForName() {
-
-            if (!AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
-                teamName.setEnabled(false);
-               // Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
-               // teamName.setError("Only the creator can change Team name");
-
-            }
-
-
-
-
-
-    }
-
-    @Override
-    public void checkUserForTeamImage() {
-        if(AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy()))
-            showPictureDialog();
-
-
-        else
-            Toast.makeText(getContext(), "Only admin can change the team photo", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
+//    @Override
+//    public void checkUserForName() {
+//
+//            if (!AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
+//                teamName.setEnabled(false);
+//               // Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
+//               // teamName.setError("Only the creator can change Team name");
+//
+//            }
+//
+//
+//
+//
+//
+//    }
+//
+//    @Override
+//    public void checkUserForTeamImage() {
+//        if(AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy()))
+//            showPictureDialog();
+//
+//
+//        else
+//            Toast.makeText(getContext(), "Only admin can change the team photo", Toast.LENGTH_SHORT).show();
+//
+//    }
+//
+//    @Override
+//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//    }
+//
 
 
 }

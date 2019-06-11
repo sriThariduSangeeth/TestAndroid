@@ -79,24 +79,24 @@ public class AddGroupFragment extends BaseFragment {
         presenter.create(this.group);
     }
 
-    @Override
-    public void checkUserForName() {
-
-    }
-
-    @Override
-    public void checkUserForTeamImage() {
-
-            showPictureDialog();
-
-
-
-    }
-
-
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
+//    @Override
+//    public void checkUserForName() {
+//
+//    }
+//
+//    @Override
+//    public void checkUserForTeamImage() {
+//
+//            showPictureDialog();
+//
+//
+//
+//    }
+//
+//
+//
+//    @Override
+//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//    }
 }
