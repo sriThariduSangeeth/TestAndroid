@@ -78,7 +78,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
     private Button addMembers;
-    protected CircleImageView circleImageView;
+    protected CircleImageView circleImageView, imageView;
     private Uri selectedImage;
     protected List<String> contactNumbers = new ArrayList<String>();
     protected List<String> contactName = new ArrayList<String>();
@@ -124,6 +124,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName = view.findViewById(R.id.group_name_edit_text);
         constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
+        imageView = view.findViewById(R.id.image_view_group);
 
         contactSet = new HashSet();
 
@@ -218,9 +219,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 else {
 
 
+
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
+
 
                     System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
 

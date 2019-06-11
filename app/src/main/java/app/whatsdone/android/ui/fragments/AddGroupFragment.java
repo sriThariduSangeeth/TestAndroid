@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -74,6 +75,11 @@ public class AddGroupFragment extends BaseFragment {
         if (group.getAdmins().size() == 0) {
             group.getAdmins().add(currentUser);
         }
+//        if(group.getTeamImage() == null)
+//        {
+//            Drawable defaultImage= getResources().getDrawable(R.drawable.user_group_man_woman3x);
+//            //imageView.setImageDrawable(defaultImage);
+//        }
 
 
         presenter.create(this.group);
