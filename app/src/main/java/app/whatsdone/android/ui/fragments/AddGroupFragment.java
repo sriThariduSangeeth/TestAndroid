@@ -46,8 +46,8 @@ public class AddGroupFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         group = new Group();
         toolbar =  getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Group");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+//        toolbar.setTitle("Add Group");
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

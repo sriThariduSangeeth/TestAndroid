@@ -73,4 +73,5 @@
     <string name="display_name">Display Name</string>
     <string name="start_typing_status">Start typing</string>
     <string name="default_notification_channel_id">whats_done_channel</string>
+    <string name="enable_user_tasks">Enable user tasks</string>
 </resources>
