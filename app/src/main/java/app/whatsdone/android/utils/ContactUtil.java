@@ -9,7 +9,6 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +25,7 @@ public class ContactUtil {
     private static final String TAG = ContactUtil.class.getSimpleName();
     private static List<Contact> contacts = new ArrayList<>();
     private static MyContentObserver contentObserver = new MyContentObserver();
+    private static boolean isObserved = false;
 
     public static class MyContentObserver extends ContentObserver {
         public MyContentObserver() {
@@ -71,7 +71,7 @@ public class ContactUtil {
 
         try{
             if(contacts.size() == 0)
-                contacts = readContacts(WhatsDoneApplication.getApplication().getApplicationContext(), phoneNumbers);
+               readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
             items = filterContacts(phoneNumbers);
         }catch (Exception ex){
             Timber.tag(TAG).w(ex.getLocalizedMessage());
@@ -79,12 +79,12 @@ public class ContactUtil {
         return items;
     }
 
-    public static List<Contact> readContacts(Context context, List<String> phoneNumbers) {
+    public static void readContacts(Context context) {
         if (context == null)
-            return null;
+            return;
         ContentResolver contentResolver = context.getContentResolver();
-        contentResolver.registerContentObserver(
-                        ContactsContract.Contacts.CONTENT_URI, true, contentObserver);
+
+        addObserver(contentResolver);
 
         String[] fieldListProjection = {
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
@@ -97,9 +97,15 @@ public class ContactUtil {
         Cursor phones = contentResolver
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI
                         , fieldListProjection,null, null, null, null);
-        List<Contact> contacts = getContacts(phones);
+        contacts = getContacts(phones);
+    }
 
-        return contacts;
+    private static void addObserver(ContentResolver contentResolver) {
+        if(!isObserved) {
+            contentResolver.registerContentObserver(
+                    ContactsContract.Contacts.CONTENT_URI, true, contentObserver);
+            isObserved = true;
+        }
     }
 
     @NonNull

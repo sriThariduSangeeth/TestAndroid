@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.Constants;
+
+import static app.whatsdone.android.utils.Constants.*;
 
 
 /**
@@ -70,13 +75,9 @@ public class GroupContainerFragment extends Fragment implements
 
     @Override
     public void onAddClicked() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        System.out.println("onAdd clicked");
-        fragment = AddGroupFragment.newInstance();
-        ((BaseFragment)fragment).setListener(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.group_container, fragment);
-        fragmentTransaction.commit();
+        Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+        intent.putExtra(ARG_ACTION, ACTION_VIEW_GROUP);
+        getActivity().startActivity(intent);
     }
 
 

@@ -24,21 +24,13 @@ import app.whatsdone.android.ui.fragments.SettingFragment;
 public class GroupsActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
-    private Context context=this;
     private Toolbar toolbar;
-    private static GroupsActivity instance;
     private GroupContainerFragment groupContainerFragment;
     private MyTaskContainerFragment myTaskContainerFragment;
     private SettingFragment settingFragment;
-    private GroupFragment groupFragment;
-    private MyTaskFragment myTaskFragment;
-    private GroupsRecyclerViewAdapter recyclerViewAdapter;
-    private AddGroupFragment addGroupFragment = new AddGroupFragment();
-    private InnerGroupTaskFragment innerGroupTaskFragment;
 
 
-
-   // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
+    // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +47,7 @@ public class GroupsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(null);
 
-
-
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        System.out.println("Width  =" + width);
-        System.out.println("height = "+ height);
 
     }
 
@@ -91,7 +73,6 @@ public class GroupsActivity extends AppCompatActivity {
                        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, settingFragment).commit();
                        break;
 
-
                }
            }
 
@@ -105,11 +86,6 @@ public class GroupsActivity extends AppCompatActivity {
 
            }
        });
-    }
-
-    public static GroupsActivity getInstance()
-    {
-        return instance;
     }
 
 

@@ -119,7 +119,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
                 Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
 
             }
@@ -151,7 +151,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Fragment myFragment = AddTaskFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
             }
         });
 

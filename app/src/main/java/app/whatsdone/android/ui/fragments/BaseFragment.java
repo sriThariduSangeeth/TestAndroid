@@ -74,18 +74,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-    private Button addMembers;
     protected CircleImageView circleImageView;
-    private Uri selectedImage;
-    protected List<String> contactNumbers = new ArrayList<String>();
-    protected List<String> contactName = new ArrayList<String>();
+    protected List<String> contactNumbers = new ArrayList<>();
+    protected List<String> contactName = new ArrayList<>();
     private final static int RQS_PICK_CONTACT = 1;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
-    private ConstraintLayout constraintLayout;
     private List<Contact> members = new ArrayList<Contact>();
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
@@ -114,9 +111,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<>();
         circleImageView = view.findViewById(R.id.group_photo_image_view);
-        addMembers = view.findViewById(R.id.add_members_button);
+        Button addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
-        constraintLayout = view.findViewById(R.id.constraintLayout3);
+        ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
 
         contactSet = new HashSet();
@@ -124,8 +121,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
         swipeListView.setAdapter(adapter);
 
-        //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
-        //swipeListView.setAdapter(arrayAdapter);
         contactNumbers.addAll(group.getMembers());
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
@@ -181,7 +176,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-
 
                 }
 
@@ -298,7 +292,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         //gallery
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            selectedImage = data.getData();
+            Uri selectedImage = data.getData();
 
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
