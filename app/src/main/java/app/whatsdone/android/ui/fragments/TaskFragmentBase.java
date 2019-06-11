@@ -77,6 +77,7 @@ public abstract class TaskFragmentBase extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(Task.TaskStatus.getIndex(task.getStatus()), true);
 
         gettitle = view.findViewById(R.id.title_edit_text);
         gettitle.setText(task.getTitle());
@@ -88,10 +89,7 @@ public abstract class TaskFragmentBase extends Fragment {
         lay.setVisibility(LinearLayout.GONE);
         TextView emptyText = view.findViewById(R.id.empty);
         listView.setEmptyView(emptyText);
-        toolbar =  getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        setupToolbar();
 
 
         setDueDate = view.findViewById(R.id.due_date_text_view);
@@ -126,7 +124,6 @@ public abstract class TaskFragmentBase extends Fragment {
 
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
-        //listView.setEmptyView(view.findViewById(R.id.empty));
         listView.setAdapter(itemsAdapter);
 
         imageView.setOnClickListener(this::addValue);
@@ -158,6 +155,13 @@ public abstract class TaskFragmentBase extends Fragment {
 
         });
         return view;
+    }
+
+    private void setupToolbar() {
+        toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
     }
 
     protected abstract void save();

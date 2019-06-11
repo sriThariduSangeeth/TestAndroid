@@ -20,6 +20,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 public class TaskServiceImpl implements TaskService {
 
@@ -106,11 +107,16 @@ public class TaskServiceImpl implements TaskService {
                                 task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
                             if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
                                 task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
+                            if (doc.get(Constants.FIELD_TASK_DUE_AT) != null)
+                                task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_DUE_AT));
                             if (doc.get(Constants.FIELD_TASK_STATUS) != null)
                                 task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
+                            if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
+
+                            }
                             tasks.add(task);
                         }catch (Exception exception) {
-                            Log.d(TAG, "failed to parse group", exception);
+                            Timber.tag(TAG).d(exception, "failed to parse group");
                         }
 
                     }
@@ -130,7 +136,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         Task task = (Task)entity;
-        DocumentReference document = db.collection(Constants.REF_TASKS).document();
+        DocumentReference document = db.collection(Constants.REF_TASKS).document("12345");
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
         data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());
@@ -159,7 +165,7 @@ public class TaskServiceImpl implements TaskService {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error creating document.", taskResult.getException());
+                Timber.tag(TAG).w(taskResult.getException(), "Error creating document.");
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
             serviceListener.onCompleted(taskResult.isSuccessful());
