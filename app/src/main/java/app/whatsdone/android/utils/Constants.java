@@ -72,6 +72,10 @@ public class Constants {
 
     public static final String SHARED_TOKEN = "token";
     public static final String DEFULT_CHAT_IMG_URL = "https://img.icons8.com/color/100/000000/user-group-man-man.png";
-
     public static final String SHARED_PHONE = "phone_no";
+
+    public static final String ACTION_ADD_GROUP = "add_group";
+    public static final String ACTION_VIEW_GROUP = "view_group";
+    public static final String ARG_GROUP = "group";
+    public static final String ARG_ACTION = "action";
 }

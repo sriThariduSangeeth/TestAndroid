@@ -9,6 +9,8 @@ import android.support.multidex.MultiDex;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
+import timber.log.Timber;
 
 public class WhatsDoneApplication extends Application {
 
@@ -17,7 +19,12 @@ public class WhatsDoneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         application = this;
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
         final Thread.UncaughtExceptionHandler oldHandler =
                 Thread.getDefaultUncaughtExceptionHandler();

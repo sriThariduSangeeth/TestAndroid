@@ -23,6 +23,7 @@ import java.util.Map;
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.activity.SplashActivity;
 import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = WhatsDoneFirebaseMessagingService.class.getSimpleName();
@@ -36,11 +37,11 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Timber.tag(TAG).d("From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Timber.tag(TAG).d("Message data payload: %s", remoteMessage.getData());
 
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
@@ -54,14 +55,14 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Timber.tag(TAG).d("Message Notification Body: %s", remoteMessage.getNotification().getBody());
         }
 
     }
 
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+        Timber.tag(TAG).d("Refreshed token: %s", token);
 
         sendRegistrationToServer(token);
     }

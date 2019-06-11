@@ -17,7 +17,7 @@ public interface ServiceListener {
     default void onDataReceived(List<BaseEntity> entities) {
 
     }
-    default void onCompleted(@Nullable Map<String, Object> data) {
+    default void onCompleted(boolean isSuccessful) {
 
     }
     default void onSuccess() {

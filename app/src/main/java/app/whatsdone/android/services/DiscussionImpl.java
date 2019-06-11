@@ -23,12 +23,12 @@ import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 public class DiscussionImpl implements DiscussionService {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = DiscussionImpl.class.getCanonicalName();
-    private List<Map<String, Objects>> finalList = new ArrayList<>();
     private Query next;
     private ListenerRegistration listener;
 
@@ -62,33 +62,32 @@ public class DiscussionImpl implements DiscussionService {
                         }
                         serviceListener.onDataReceivedForMessage(discussions);
                     } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
+                        Timber.tag(TAG).w(task.getException(), "Error getting documents.");
                     }
                 });
     }
 
 
     @Override
-    public void insterMessage(Message getMessage, ServiceListener serviceListener) {
+    public void insertMessage(Message getMessage, ServiceListener serviceListener) {
 
-        Message message = (Message) getMessage;
         DocumentReference document = db.collection(Constants.REF_DISCUSSIONS).document();
         HashMap<String, Object> data = new HashMap<>();
-        data.put(Constants.FIELD_DISCUSSION_GROUP_ID, message.getId());
-        data.put(Constants.FIELD_DISCUSSION_MESSAGE, message.getText());
-        data.put(Constants.FIELD_DISCUSSION_POSTED_AT, message.getCreatedAt());
-        data.put(Constants.FIELD_DISCUSSION_USER_ID, message.getUser().getId());
-        data.put(Constants.FIELD_DISCUSSION_USER_NAME, message.getUser().getName());
-        data.put(Constants.FIELD_DISCUSSION_USER_AVATAR, message.getUser().getAvatar());
+        data.put(Constants.FIELD_DISCUSSION_GROUP_ID, getMessage.getId());
+        data.put(Constants.FIELD_DISCUSSION_MESSAGE, getMessage.getText());
+        data.put(Constants.FIELD_DISCUSSION_POSTED_AT, getMessage.getCreatedAt());
+        data.put(Constants.FIELD_DISCUSSION_USER_ID, getMessage.getUser().getId());
+        data.put(Constants.FIELD_DISCUSSION_USER_NAME, getMessage.getUser().getName());
+        data.put(Constants.FIELD_DISCUSSION_USER_AVATAR, getMessage.getUser().getAvatar());
 
         document.set(data).addOnCompleteListener(taskResult -> {
             if (taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error creating document.", taskResult.getException());
-                serviceListener.onError(taskResult.getException().getLocalizedMessage());
+                Timber.w(taskResult.getException(), TAG, "Error creating document.");
+                serviceListener.onError(taskResult.getException().getMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(taskResult.isSuccessful());
         });
 
     }
@@ -125,7 +124,7 @@ public class DiscussionImpl implements DiscussionService {
                             }
                             serviceListener.onDataReceivedForMessage(discussions);
                         } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Timber.tag(TAG).w(task.getException(), "Error getting documents.");
                         }
                     });
         }
@@ -133,40 +132,24 @@ public class DiscussionImpl implements DiscussionService {
 
     @Override
     public void subscribe(String groupId, ServiceListener serviceListener) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         listener = db.collection(Constants.REF_DISCUSSIONS)
                 .whereArrayContains(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
-                        Log.w(TAG, "Discussion subscription failed", e);
+                        Timber.tag(TAG).w(e, "Discussion subscription failed");
                         return;
                     }
 
                     ArrayList<Message> messages = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : value) {
+                    for (QueryDocumentSnapshot document : value) {
 
                         try {
 
-                            Message message = new Message();
-                            User userobj = new User();
-                            message.setId(doc.getId());
-//                            if (doc.get(Constants.FIELD_GROUP_TITLE) != null)
-//                                group.setGroupName(doc.getString(Constants.FIELD_GROUP_TITLE));
-//                            if (doc.get(Constants.FIELD_GROUP_AVATAR) != null)
-//                                group.setAvatar(doc.getString(Constants.FIELD_GROUP_AVATAR));
-//                            if (doc.get(Constants.FIELD_GROUP_CREATED_BY) != null)
-//                                group.setCreatedBy(doc.getString(Constants.FIELD_GROUP_CREATED_BY));
-//                            if (doc.get(Constants.FIELD_GROUP_DISCUSSION_COUNT) != null)
-//                                group.setDiscussionCount(doc.getLong(Constants.FIELD_GROUP_DISCUSSION_COUNT).intValue());
-//                            if (doc.get(Constants.FIELD_GROUP_TASKS_COUNT) != null)
-//                                group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
-//                            if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
-//                                group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
-//                            if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
-//                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+                            User user = new User(document.getString("by_user"), document.getString("user_name"), checkAvatarIsEmpty(document.getString("user_image")), true);
+                            Message message = new Message(document.getId(), user, document.getString("message"), document.getDate("posted_at"));
                             messages.add(message);
                         } catch (Exception exception) {
-                            Log.d(TAG, "failed to parse group", exception);
+                            Timber.d(exception, "failed to parse group");
                         }
 
                     }

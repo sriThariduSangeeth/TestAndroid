@@ -119,7 +119,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
                 Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
 
             }
@@ -150,8 +150,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = CreateNewTaskFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                Fragment myFragment = AddTaskFragment.newInstance(group);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
             }
         });
 
@@ -240,7 +240,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private void setupRecyclerView()
     {
         myRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TaskInnerGroupRecyclerViewAdapter(taskInnerGroups, getContext());
+        adapter = new TaskInnerGroupRecyclerViewAdapter(taskInnerGroups, getContext(), group);
         myRecycler.setAdapter(adapter);
 
         taskSwipeController = new TaskSwipeController(new TaskSwipeControllerAction() {
