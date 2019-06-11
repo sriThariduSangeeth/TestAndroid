@@ -91,6 +91,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     HashSet contactSet = new HashSet<>();
+    private Button addMembers;
 
 
     public BaseFragment() {
@@ -106,7 +107,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<>();
         circleImageView = view.findViewById(R.id.group_photo_image_view);
-        Button addMembers = view.findViewById(R.id.add_members_button);
+        addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
         ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
@@ -125,7 +125,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactSet = new HashSet();
 
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
         swipeListView.setAdapter(adapter);
 
         contactNumbers.addAll(group.getMembers());
@@ -522,9 +522,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
-                String value = adapter.getItem(position);
+                String value = adapter.getItem(position).getPhoneNumber();
 
                 contactNumbers.remove(value);
+                members.remove(adapter.getItem(position));
                 adapter.notifyDataSetChanged();
                 // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
                 return false;

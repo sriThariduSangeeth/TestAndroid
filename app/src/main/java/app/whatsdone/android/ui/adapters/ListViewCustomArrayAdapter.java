@@ -15,17 +15,14 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
-import app.whatsdone.android.utils.ContactUtil;
 
-public class ListViewCustomArrayAdapter extends ArrayAdapter<String> {
+public class ListViewCustomArrayAdapter extends ArrayAdapter<Contact> {
     protected LayoutInflater inflater;
     protected int layout;
-    private List<String> numbers;
     private List<Contact> contacts;
 
-    public ListViewCustomArrayAdapter( @NonNull Context context, int resourceId,List<String> numbers,  @NonNull List<Contact> contacts) {
-        super(context, resourceId, numbers);
-        this.numbers = numbers;
+    public ListViewCustomArrayAdapter( @NonNull Context context, int resourceId, @NonNull List<Contact> contacts) {
+        super(context, resourceId, contacts);
         this.contacts = contacts;
         layout = resourceId;
         inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -36,12 +33,14 @@ public class ListViewCustomArrayAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = inflater.inflate(layout,parent,false);
-        TextView textView = (TextView)view.findViewById((R.id.item_label));
-        String phoneNumber = this.numbers.get(position);
-        textView.setText(ContactUtil.getDisplayNameOrNumber(contacts, phoneNumber));
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.member_list_layout, parent, false);
+        }
 
-        return view;
+        TextView textView = convertView.findViewById((R.id.item_label));
+        textView.setText(contacts.get(position).getDisplayName());
+
+        return convertView;
 
     }
 }
