@@ -72,37 +72,14 @@ public class AddGroupFragment extends BaseFragment {
 
         contactNumbers.add(currentUser);
         group.setCreatedBy(currentUser);
-        if (group.getAdmins().size() == 0) {
-            group.getAdmins().add(currentUser);
-        }
-//        if(group.getTeamImage() == null)
-//        {
-//            Drawable defaultImage= getResources().getDrawable(R.drawable.user_group_man_woman3x);
-//            //imageView.setImageDrawable(defaultImage);
+        group.getAdmins().add(currentUser);
+//        if (group.getAdmins().size() == 0) {
+//            group.getAdmins().add(currentUser);
 //        }
+
 
 
         presenter.create(this.group);
     }
 
-//    @Override
-//    public void checkUserForName() {
-//
-//    }
-//
-//    @Override
-//    public void checkUserForTeamImage() {
-//
-//            showPictureDialog();
-//
-//
-//
-//    }
-//
-//
-//
-//    @Override
-//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//    }
 }

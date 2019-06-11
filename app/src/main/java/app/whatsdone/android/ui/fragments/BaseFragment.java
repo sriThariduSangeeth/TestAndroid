@@ -61,6 +61,7 @@ import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -192,8 +193,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public void onClick(View v) {
 
-
-
                 if (teamName.getText().toString().isEmpty()) {
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -218,17 +217,16 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 else {
 
-
-
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
-
 
                     System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
 
 
                     save();
+                   // recyclerViewAdapter.notifyItemInserted(0);
+
                     adapter.notifyDataSetChanged();
 
                 }
@@ -244,11 +242,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
- //   public  abstract void checkUserForName();
- //   public abstract void checkUserForTeamImage();
 
-
-    public Bitmap getImageData(ImageView imageView) {
+  public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
@@ -280,6 +275,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         //goes back to the group fragment, list of groups
+       // adapter.notifyAll();
         adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
@@ -586,22 +582,5 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
-//
-//    @Override
-//    public void afterTextChanged(Editable s) {
-//
-//    }
-//
-//    @Override
-//    public void onTextChanged(CharSequence s, int start, int before, int count) {
-////        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
-////            teamName.setError("Only team creator can change the name");
-//
-//
-//    }
-//
-//    @Override
-//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//    }
+
 }

@@ -35,11 +35,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class GroupFragment extends Fragment implements GroupFragmentView{
 
     private List<BaseEntity> groups = new ArrayList<>();
-    private GroupsRecyclerViewAdapter adapter;
+
+    private RecyclerView.LayoutManager layoutManager;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
+    private GroupsRecyclerViewAdapter mAdapter;
 
 
     @Override
@@ -83,7 +85,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     public void updateGroups(List<BaseEntity> groups) {
         this.groups.clear();
         this.groups.addAll(groups);
-        adapter.notifyDataSetChanged();
+
+        mAdapter.notifyDataSetChanged();
 
 
     }
@@ -102,6 +105,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
 
     @Override
     public void onGroupLeave() {
+        mAdapter.notifyDataSetChanged();
 
     }
 
@@ -127,10 +131,10 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     private void setupRecyclerView()
     {
 
-
+        layoutManager = new LinearLayoutManager(getContext());
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new GroupsRecyclerViewAdapter(groups, getContext());
-        myrecycler.setAdapter(adapter);
+        mAdapter = new GroupsRecyclerViewAdapter(groups, getContext());
+        myrecycler.setAdapter(mAdapter);
 
 
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
@@ -142,17 +146,21 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             @Override
             public void onLeftClicked(int position) {
                 try {
-                    Group group = adapter.getGroup(position);
+                    Group group =mAdapter.getGroup(position);
+                    System.out.println(" current user"+(AuthServiceImpl.getCurrentUser().getDocumentID()));
+
                     if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
 
+
                         presenter.deleteTeam(groups.get(position).getDocumentID());
-                       adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeRemoved(position, groups.size());
-                        adapter.notifyDataSetChanged();
+
+                        mAdapter.notifyItemRemoved(position);
+                        mAdapter.notifyItemRangeRemoved(position, groups.size());
+                        mAdapter.notifyDataSetChanged();
                     }
                     else {
                         presenter.leaveTeam(group.getDocumentID());
-                        adapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
 
                     }
 
