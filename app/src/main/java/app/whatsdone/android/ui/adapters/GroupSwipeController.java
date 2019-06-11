@@ -134,7 +134,7 @@ public class GroupSwipeController extends Callback {
             c.drawRoundRect(leftButton, corners, corners, p);
             drawText("DELETE", c, leftButton, p);
         }else {
-             p.setColor(Color.GRAY);
+             p.setColor(Color.RED);
             c.drawRoundRect(leftButton, corners, corners, p);
             drawText("LEAVE", c, leftButton, p);
 

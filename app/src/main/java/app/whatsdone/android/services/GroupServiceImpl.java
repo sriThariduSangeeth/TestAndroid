@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,7 @@ public class GroupServiceImpl implements GroupService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
+    CloudService service;
 
     public GroupServiceImpl() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -43,7 +45,7 @@ public class GroupServiceImpl implements GroupService {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Authorization", "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
                     .build();
@@ -58,7 +60,7 @@ public class GroupServiceImpl implements GroupService {
                 .client(client)
                 .build();
 
-        CloudService service = retrofit.create(CloudService.class);
+        service = retrofit.create(CloudService.class);
     }
 
     @Override
@@ -168,12 +170,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void leave(String groupId, ServiceListener serviceListener) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .baseUrl(Constants.URL_FIREBASE)
-                .build();
-
-        CloudService service = retrofit.create(CloudService.class);
         LeaveGroupRequest request = new LeaveGroupRequest();
         request.setGroupId(groupId);
         Call<LeaveGroupResponse> call = service.leaveGroup(request);
@@ -201,6 +197,7 @@ public class GroupServiceImpl implements GroupService {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         listener = db.collection(Constants.REF_TEAMS)
                 .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
+                .orderBy(Constants.FIELD_GROUP_UPDATED_AT, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Timber.tag(TAG).w(e, "Team subscription failed");

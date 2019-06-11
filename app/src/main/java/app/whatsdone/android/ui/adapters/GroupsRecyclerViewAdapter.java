@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,8 +37,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     private Context context;
     private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
     private CircleImageView imageView;
+    private RecyclerView.LayoutManager linearLayoutManager;
+   // private GroupsRecyclerViewAdapter groupsRecyclerViewAdapter;
 
 
+    private RecyclerView.Adapter adapter;
 
     public GroupsRecyclerViewAdapter(List<BaseEntity> groups, Context context) {
         this.groups = groups;
@@ -67,11 +71,11 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
       //  holder.progressplay.setProgress(0);
-        Group group = (Group) groups.get(position);
+        final Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
         holder.taskCount.setText(group.getDiscussionCount()+"");
         holder.discussionCount.setText(group. getDiscussionCount()+"");
-
+        holder.setIsRecyclable(false);
 
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
@@ -101,6 +105,10 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
+        private RecyclerView groupRecyclerView;
+        public View view;
+
+
         private TextView groupNameTextView, taskCount, discussionCount;
         private ImageView imageView;
         private Group group;
@@ -110,11 +118,16 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            groupNameTextView = itemView.findViewById(R.id.group_text);
-            taskCount = itemView.findViewById(R.id.unread_tasks_counter);
-            discussionCount = itemView.findViewById(R.id.unread_discussion_counter);
-
-
+            groupNameTextView = (TextView) itemView.findViewById(R.id.group_text);
+            taskCount = (TextView) itemView.findViewById(R.id.unread_tasks_counter);
+            discussionCount = (TextView) itemView.findViewById(R.id.unread_discussion_counter);
+            groupRecyclerView = (RecyclerView) itemView.findViewById(R.id.group_recycler_view) ;
+            imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            if(imageView.getDrawable() == null)
+            {
+                Drawable defaultImage= itemView.getResources().getDrawable(R.drawable.user_group_man_woman3x);
+                imageView.setImageDrawable(defaultImage);
+            }
 
 
             itemView.setOnClickListener(v -> {
@@ -160,4 +173,10 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public long getItemId(int position) {
         return  position;
     }
+
+//    @Override
+//    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+//        adapter.notifyDataSetChanged();
+//        super.onDetachedFromRecyclerView(recyclerView);
+//    }
 }

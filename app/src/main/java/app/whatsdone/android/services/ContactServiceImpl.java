@@ -37,7 +37,7 @@ public class ContactServiceImpl implements ContactService {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Authorization", "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
                     .build();
