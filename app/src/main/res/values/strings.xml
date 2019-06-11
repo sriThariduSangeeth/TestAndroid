@@ -35,16 +35,19 @@
     <string name="TaskDetails">My Task 1</string>
     <string name="task_owner">task owner</string>
     <string name="Save">Save</string>
-    <string name="todo">TO DO</string>
+    <string name="todo">Not Started</string>
+    <string name="in_progress">In Progress</string>
+    <string name="on_hold">On Hold</string>
+    <string name="done">Done</string>
 
     <string name="task_title">Title</string>
     <string name="hint_enter_a_message">Type a message…</string>
 
     <string-array name="planets">
-        <item>To Do</item>
-        <item>IN PROGRESS</item>
-        <item>ON HOLD</item>
-        <item>DONE</item>
+        <item>@string/todo</item>
+        <item>@string/in_progress</item>
+        <item>@string/on_hold</item>
+        <item>@string/done</item>
     </string-array>
 
     <string name="Terms_and_Privacy">Tap "Agree and continue" to accept the <font color='#01C6DB'>WhatsDone Terms of Service and Privacy Policy</font> </string>

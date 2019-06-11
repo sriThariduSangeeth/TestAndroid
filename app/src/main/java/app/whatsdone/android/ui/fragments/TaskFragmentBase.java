@@ -106,10 +106,11 @@ public abstract class TaskFragmentBase extends Fragment {
             datePickerDialog = new DatePickerDialog(getContext(),
                     (view1, year, monthOfYear, dayOfMonth) -> {
                         // set day of month , month and year value in the edit text
-                        String dateValue = dayOfMonth + "/"+ (monthOfYear + 1) + "/" + year;
+                        String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d",monthOfYear + 1, dayOfMonth , year);
                         setDueDate.setText(dateValue);
                         try {
-                            task.setDueDate(dateFormat.parse(dateValue));
+                            Date date = dateFormat.parse(dateValue);
+                            task.setDueDate(date);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -168,18 +169,17 @@ public abstract class TaskFragmentBase extends Fragment {
 
     public String returnStatus(String out){
 
-        switch (out){
-            case "To Do":
-                return "TODO";
-            case "IN PROGRESS":
-                return "IN_PROGRESS";
-            case "ON HOLD":
-                return "ON_HOLD";
-            case "DONE":
-                return "DONE";
+        if (getString(R.string.todo).equals(out)) {
+            return Task.TaskStatus.TODO.name();
+        } else if (getString(R.string.in_progress).equals(out)) {
+            return Task.TaskStatus.IN_PROGRESS.name();
+        } else if (getString(R.string.on_hold).equals(out)) {
+            return Task.TaskStatus.ON_HOLD.name();
+        } else if (getString(R.string.done).equals(out)) {
+            return Task.TaskStatus.DONE.name();
         }
 
-        return "TODO";
+        return Task.TaskStatus.TODO.name();
     }
 
     public void addValue(View v) {

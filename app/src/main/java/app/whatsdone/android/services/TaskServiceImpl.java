@@ -108,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
                             if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
                                 task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
                             if (doc.get(Constants.FIELD_TASK_DUE_AT) != null)
-                                task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_DUE_AT));
+                                task.setDueDate(doc.getDate(Constants.FIELD_TASK_DUE_AT));
                             if (doc.get(Constants.FIELD_TASK_STATUS) != null)
                                 task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
                             if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
@@ -185,6 +185,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
                 task.getCheckList()) {
