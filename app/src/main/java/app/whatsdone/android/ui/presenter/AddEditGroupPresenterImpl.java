@@ -76,6 +76,19 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
     @Override
     public void update(Group group) {
+        if(group.isImageChanged())
+        {
+            storageService.uploadGroupImage(group.getTeamImage(), group.getDocumentID(), new StorageService.Listener() {
+                @Override
+                public void onSuccess(String url) {
+                    Log.d(TAG, "Image upload success " + group.getDocumentID());
+
+                }
+            });
+        }
+
+
+
 
         service.update(group, new ServiceListener() {
             @Override

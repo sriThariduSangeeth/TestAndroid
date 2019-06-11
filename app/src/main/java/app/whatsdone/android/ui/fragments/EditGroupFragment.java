@@ -16,6 +16,7 @@ import app.whatsdone.android.services.AuthServiceImpl;
 
 
 public class EditGroupFragment extends BaseFragment{
+    int FLAG_IMAGE_CHANGED = 0;
 
     public EditGroupFragment() {
 
@@ -31,7 +32,7 @@ public class EditGroupFragment extends BaseFragment{
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+   // @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -92,6 +92,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     ListViewCustomArrayAdapter adapter;
     HashSet contactSet = new HashSet<>();
     private Button addMembers;
+    protected  ConstraintLayout constraintLayout;
 
 
     public BaseFragment() {
@@ -119,7 +120,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         circleImageView = view.findViewById(R.id.group_photo_image_view);
         addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
-        ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
+        constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
         //imageView = view.findViewById(R.id.image_view_group);
 
@@ -307,11 +308,14 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 e.printStackTrace();
             }
             circleImageView.setImageBitmap(bmp);
+            group.setImageChanged(true);
+
         }
         //camera
         else if (requestCode == CAMERA) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             circleImageView.setImageBitmap(bmp);
+            group.setImageChanged(true);
 
         }
 

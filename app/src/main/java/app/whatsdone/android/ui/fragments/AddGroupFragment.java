@@ -53,10 +53,10 @@ public class AddGroupFragment extends BaseFragment {
 
         contactNumbers.add(currentUser);
         group.setCreatedBy(currentUser);
-        group.getAdmins().add(currentUser);
-//        if (group.getAdmins().size() == 0) {
-//            group.getAdmins().add(currentUser);
-//        }
+      //  group.getAdmins().add(currentUser);
+        if (group.getAdmins().size() == 0) {
+            group.getAdmins().add(currentUser);
+        }
 
 
         presenter.create(this.group);
