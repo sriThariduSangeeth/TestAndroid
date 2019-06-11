@@ -58,7 +58,7 @@
 
                 <EditText
                     android:id="@+id/description_edit_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -135,7 +135,8 @@
                         android:gravity="center"
                         android:text="@string/due_date"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16sp"
+                        android:layout_marginStart="10dp" />
 
                     <TextView
                         android:id="@+id/due_date_text_view"
@@ -148,8 +149,7 @@
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:text="@string/set_due_date"
-
-                        />
+                        android:layout_marginEnd="10dp" />
 
 
                 </RelativeLayout>
@@ -173,7 +173,8 @@
                         android:gravity="center"
                         android:text="@string/assigned_to"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16sp"
+                        android:layout_marginStart="10dp" />
 
                     <TextView
                         android:id="@+id/assign_from_contacts_text_view"
@@ -185,7 +186,8 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="10dp"
                         android:gravity="center"
-                        android:text="@string/select_from_contacts" />
+                        android:text="@string/select_from_contacts"
+                        android:layout_marginEnd="10dp" />
 
                 </RelativeLayout>
 
@@ -208,7 +210,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:gravity="center"
-                        android:text="@string/assigned_to"
+                        android:text="@string/group_name"
                         android:textColor="@color/black"
                         android:textSize="16dp" />
 

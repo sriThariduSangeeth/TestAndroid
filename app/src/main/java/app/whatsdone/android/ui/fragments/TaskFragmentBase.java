@@ -77,6 +77,7 @@ public abstract class TaskFragmentBase extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(Task.TaskStatus.getIndex(task.getStatus()), true);
 
         gettitle = view.findViewById(R.id.title_edit_text);
         gettitle.setText(task.getTitle());
@@ -88,10 +89,7 @@ public abstract class TaskFragmentBase extends Fragment {
         lay.setVisibility(LinearLayout.GONE);
         TextView emptyText = view.findViewById(R.id.empty);
         listView.setEmptyView(emptyText);
-        toolbar =  getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        setupToolbar();
 
 
         setDueDate = view.findViewById(R.id.due_date_text_view);
@@ -108,10 +106,11 @@ public abstract class TaskFragmentBase extends Fragment {
             datePickerDialog = new DatePickerDialog(getContext(),
                     (view1, year, monthOfYear, dayOfMonth) -> {
                         // set day of month , month and year value in the edit text
-                        String dateValue = dayOfMonth + "/"+ (monthOfYear + 1) + "/" + year;
+                        String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d",monthOfYear + 1, dayOfMonth , year);
                         setDueDate.setText(dateValue);
                         try {
-                            task.setDueDate(dateFormat.parse(dateValue));
+                            Date date = dateFormat.parse(dateValue);
+                            task.setDueDate(date);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -126,7 +125,6 @@ public abstract class TaskFragmentBase extends Fragment {
 
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
-        //listView.setEmptyView(view.findViewById(R.id.empty));
         listView.setAdapter(itemsAdapter);
 
         imageView.setOnClickListener(this::addValue);
@@ -160,22 +158,28 @@ public abstract class TaskFragmentBase extends Fragment {
         return view;
     }
 
+    private void setupToolbar() {
+        toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+    }
+
     protected abstract void save();
 
     public String returnStatus(String out){
 
-        switch (out){
-            case "To Do":
-                return "TODO";
-            case "IN PROGRESS":
-                return "IN_PROGRESS";
-            case "ON HOLD":
-                return "ON_HOLD";
-            case "DONE":
-                return "DONE";
+        if (getString(R.string.todo).equals(out)) {
+            return Task.TaskStatus.TODO.name();
+        } else if (getString(R.string.in_progress).equals(out)) {
+            return Task.TaskStatus.IN_PROGRESS.name();
+        } else if (getString(R.string.on_hold).equals(out)) {
+            return Task.TaskStatus.ON_HOLD.name();
+        } else if (getString(R.string.done).equals(out)) {
+            return Task.TaskStatus.DONE.name();
         }
 
-        return "TODO";
+        return Task.TaskStatus.TODO.name();
     }
 
     public void addValue(View v) {
