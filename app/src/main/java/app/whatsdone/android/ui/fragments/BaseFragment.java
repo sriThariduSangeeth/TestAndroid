@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,6 +28,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,7 +59,9 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -70,7 +74,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 import static android.widget.Toast.LENGTH_LONG;
 
-public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView, TextWatcher {
+public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView{
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
@@ -87,6 +91,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     private SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     HashSet contactSet = new HashSet<>();
+    private Button addMembers;
 
 
     public BaseFragment() {
@@ -101,6 +106,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,58 +117,43 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<>();
         circleImageView = view.findViewById(R.id.group_photo_image_view);
-        Button addMembers = view.findViewById(R.id.add_members_button);
+        addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
         ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
+        //imageView = view.findViewById(R.id.image_view_group);
 
         contactSet = new HashSet();
 
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
         swipeListView.setAdapter(adapter);
 
         contactNumbers.addAll(group.getMembers());
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+        //checkUserForName();
 
-
-        teamName.addTextChangedListener(this);
-
-        //team name
-//        if(teamName.length() >  25)
-//        {
-//            AlertDialog.Builder teamNameLengthAlert = new AlertDialog.Builder(getContext());
-//            teamNameLengthAlert.setTitle("Alert");
-//            teamNameLengthAlert.setMessage("Number of characters should not exceed than 25");
-//
-//
-//            teamNameLengthAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int which) {
-//
-//                }
-//            });
-//
-//
-//            teamNameLengthAlert.setNegativeButton(android.R.string.no, null);
-//            teamNameLengthAlert.setIcon(android.R.drawable.ic_dialog_alert);
-//            teamNameLengthAlert.show();
-//
-//        }
 
 
         if (group.getAvatar() != null && !group.getAvatar().isEmpty()) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
-        constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                showPictureDialog();
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
+                    showPictureDialog();
+                    //checkUserForTeamImage();
+
+                }
+            });
+
+
+
+
         SwipeList();
 
         addMembers.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +206,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 } else {
 
-
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
@@ -224,6 +214,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
                     save();
+                   // recyclerViewAdapter.notifyItemInserted(0);
+
+                    adapter.notifyDataSetChanged();
+
                 }
 
             }
@@ -238,7 +232,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     public abstract void save();
 
-    public Bitmap getImageData(ImageView imageView) {
+  public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
@@ -270,6 +264,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         //goes back to the group fragment, list of groups
+       // adapter.notifyAll();
         adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
@@ -410,7 +405,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-    private void showPictureDialog() {
+    protected void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
@@ -527,9 +522,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
-                String value = adapter.getItem(position);
+                String value = adapter.getItem(position).getPhoneNumber();
 
                 contactNumbers.remove(value);
+                members.remove(adapter.getItem(position));
                 adapter.notifyDataSetChanged();
                 // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
                 return false;
@@ -564,13 +560,5 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
 
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
 }

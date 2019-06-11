@@ -39,7 +39,7 @@
         android:contentDescription="done image"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:src="@mipmap/ic_launcher"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

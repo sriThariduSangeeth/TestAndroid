@@ -79,8 +79,6 @@ public class GroupPresenterImpl implements GroupPresenter{
             }
         });
     }
-
-
 }
 
 

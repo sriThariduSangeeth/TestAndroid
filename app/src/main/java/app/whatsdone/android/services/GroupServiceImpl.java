@@ -36,6 +36,7 @@ public class GroupServiceImpl implements GroupService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
+    CloudService service;
 
     public GroupServiceImpl() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -43,7 +44,7 @@ public class GroupServiceImpl implements GroupService {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Authorization", "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
                     .build();
@@ -58,7 +59,7 @@ public class GroupServiceImpl implements GroupService {
                 .client(client)
                 .build();
 
-        CloudService service = retrofit.create(CloudService.class);
+        service = retrofit.create(CloudService.class);
     }
 
     @Override
@@ -168,12 +169,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void leave(String groupId, ServiceListener serviceListener) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .baseUrl(Constants.URL_FIREBASE)
-                .build();
-
-        CloudService service = retrofit.create(CloudService.class);
         LeaveGroupRequest request = new LeaveGroupRequest();
         request.setGroupId(groupId);
         Call<LeaveGroupResponse> call = service.leaveGroup(request);

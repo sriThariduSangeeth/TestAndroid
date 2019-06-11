@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+//import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +33,13 @@ import timber.log.Timber;
 public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private List<BaseEntity> groups = new ArrayList<>();
-    private GroupsRecyclerViewAdapter adapter;
+
+    private RecyclerView.LayoutManager layoutManager;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
+    private GroupsRecyclerViewAdapter adapter;
 
 
     @Override
@@ -88,6 +92,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     @Override
     public void onGroupLeave() {
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -108,7 +113,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private void setupRecyclerView() {
 
-
+        layoutManager = new LinearLayoutManager(getContext());
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new GroupsRecyclerViewAdapter(groups, getContext());
         myrecycler.setAdapter(adapter);
@@ -125,6 +130,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                 try {
                     Group group = adapter.getGroup(position);
                     if (group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())) {
+
 
                         presenter.deleteTeam(groups.get(position).getDocumentID());
                         adapter.notifyItemRemoved(position);

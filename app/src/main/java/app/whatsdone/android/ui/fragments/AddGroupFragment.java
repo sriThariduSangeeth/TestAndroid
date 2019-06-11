@@ -39,24 +39,27 @@ public class AddGroupFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
+
+
+
     }
+
+
 
     @Override
     public void save() {
 
         String currentUser = AuthServiceImpl.getCurrentUser().getDocumentID();
+
         contactNumbers.add(currentUser);
         group.setCreatedBy(currentUser);
-        if (group.getAdmins().isEmpty()) {
-            group.getAdmins().add(currentUser);
-        }
+        group.getAdmins().add(currentUser);
+//        if (group.getAdmins().size() == 0) {
+//            group.getAdmins().add(currentUser);
+//        }
+
 
         presenter.create(this.group);
     }
 
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
 }
