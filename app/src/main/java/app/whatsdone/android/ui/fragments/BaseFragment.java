@@ -121,7 +121,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName = view.findViewById(R.id.group_name_edit_text);
         ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
-        imageView = view.findViewById(R.id.image_view_group);
+        //imageView = view.findViewById(R.id.image_view_group);
 
         contactSet = new HashSet();
 

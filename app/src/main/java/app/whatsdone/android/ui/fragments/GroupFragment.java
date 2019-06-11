@@ -39,7 +39,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
-    private GroupsRecyclerViewAdapter mAdapter;
+    private GroupsRecyclerViewAdapter adapter;
 
 
     @Override
@@ -92,7 +92,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     @Override
     public void onGroupLeave() {
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -115,8 +115,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         layoutManager = new LinearLayoutManager(getContext());
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new GroupsRecyclerViewAdapter(groups, getContext());
-        myrecycler.setAdapter(mAdapter);
+        adapter = new GroupsRecyclerViewAdapter(groups, getContext());
+        myrecycler.setAdapter(adapter);
 
 
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
@@ -138,7 +138,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                         adapter.notifyDataSetChanged();
                     } else {
                         presenter.leaveTeam(group.getDocumentID());
-                        mAdapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
 
                     }
 

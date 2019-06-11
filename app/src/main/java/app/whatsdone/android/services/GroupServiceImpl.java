@@ -36,6 +36,7 @@ public class GroupServiceImpl implements GroupService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
+    CloudService service;
 
     public GroupServiceImpl() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -58,7 +59,7 @@ public class GroupServiceImpl implements GroupService {
                 .client(client)
                 .build();
 
-        CloudService service = retrofit.create(CloudService.class);
+        service = retrofit.create(CloudService.class);
     }
 
     @Override

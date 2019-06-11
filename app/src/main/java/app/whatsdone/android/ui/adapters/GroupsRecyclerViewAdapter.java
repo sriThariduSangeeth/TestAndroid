@@ -174,9 +174,9 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         return  position;
     }
 
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        adapter.notifyDataSetChanged();
-        super.onDetachedFromRecyclerView(recyclerView);
-    }
+//    @Override
+//    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+//        adapter.notifyDataSetChanged();
+//        super.onDetachedFromRecyclerView(recyclerView);
+//    }
 }
