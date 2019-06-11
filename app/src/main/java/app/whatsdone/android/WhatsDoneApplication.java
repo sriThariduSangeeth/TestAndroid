@@ -1,9 +1,11 @@
 package app.whatsdone.android;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import app.whatsdone.android.utils.Constants;
@@ -33,6 +35,12 @@ public class WhatsDoneApplication extends Application {
                     else
                         System.exit(2); //Prevents the service/app from freezing
                 });
+    }
+
+    protected void attachBaseContext(Context base)
+    {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static WhatsDoneApplication getApplication() {
