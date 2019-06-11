@@ -34,6 +34,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -117,10 +118,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbarTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+                //if(AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
+                    AppCompatActivity activity = (AppCompatActivity) getContext();
+                    Fragment myFragment = EditGroupFragment.newInstance(group);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
+//                }
+//                else
+//                {
+//                    Toast.makeText(getContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//
+//                }
 
             }
         });

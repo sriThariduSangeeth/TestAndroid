@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,6 +28,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,6 +59,7 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
@@ -105,6 +108,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,43 +137,41 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName.setText(group.getGroupName());
 
 
-        teamName.addTextChangedListener(this);
-
-        //team name
-//        if(teamName.length() >  25)
-//        {
-//            AlertDialog.Builder teamNameLengthAlert = new AlertDialog.Builder(getContext());
-//            teamNameLengthAlert.setTitle("Alert");
-//            teamNameLengthAlert.setMessage("Number of characters should not exceed than 25");
-//
-//
-//            teamNameLengthAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int which) {
-//
-//                }
-//            });
-//
-//
-//            teamNameLengthAlert.setNegativeButton(android.R.string.no, null);
-//            teamNameLengthAlert.setIcon(android.R.drawable.ic_dialog_alert);
-//            teamNameLengthAlert.show();
-//
-//        }
-
 
 
         if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
-        constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//team image can be changed by creator
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()))
+                    showPictureDialog();
 
-                showPictureDialog();
+
+                    else
+                        Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
+
+//team name can be changed by creator
+    teamName.setOnTouchListener(new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if(!AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
+                teamName.setEnabled(false);
+                Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
+                teamName.setError("Only the creator can change Team name");
 
             }
-        });
+            return false;
+    }
+});
+
         SwipeList();
 
         addMembers.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +203,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
 
                 if (teamName.getText().toString().isEmpty()) {
 
@@ -587,6 +591,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
+
     @Override
     public void afterTextChanged(Editable s) {
 
@@ -594,6 +599,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
+//            teamName.setError("Only team creator can change the name");
 
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//        if(!AuthServiceImpl.getCurrentUser().toString() .equals(group.getCreatedBy()) )
+//            teamName.setError("Only team creator can change the name");
     }
 }

@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.os.Bundle;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthService;
+import app.whatsdone.android.services.AuthServiceImpl;
 
 
 public class EditGroupFragment extends BaseFragment{
@@ -33,6 +35,8 @@ public class EditGroupFragment extends BaseFragment{
             Group group = getArguments().getParcelable("group");
             this.group = group;
         }
+
+
 
     }
 
