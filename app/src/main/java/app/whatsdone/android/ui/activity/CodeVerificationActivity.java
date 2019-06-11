@@ -21,7 +21,7 @@ public class CodeVerificationActivity extends AppCompatActivity implements CodeV
         super.onCreate(savedInstanceState);
         ActivityCodeVerificationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_code_verification);
         CodeVerificationViewModel model = new CodeVerificationViewModel();
-        model.setCode("123456");
+        model.setCode("");
         CodeVerifyPresenter presenter = new CodeVerifyPresenterImpl();
         presenter.setContext(this);
         presenter.init(this, getIntent().getStringExtra(Constants.ARG_VERIFICATION_ID));
@@ -33,5 +33,6 @@ public class CodeVerificationActivity extends AppCompatActivity implements CodeV
     public void onVerified() {
         Intent intent = new Intent(CodeVerificationActivity.this,ProfileCreationActivity.class);
         startActivity(intent);
+        finish();
     }
 }

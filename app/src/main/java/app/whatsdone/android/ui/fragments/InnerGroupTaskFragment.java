@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -22,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,11 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.Task;
+import app.whatsdone.android.model.UserStatus;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
@@ -61,15 +69,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private List<String> contacts = new ArrayList<String>();
     private ListView contactListView;
     private AddEditGroupPresenter presenter;
+    private TaskService service = new TaskServiceImpl();
+    private TextView toolbarTextView;
 
     public static InnerGroupTaskFragment newInstance(Group group){
-        groupobj = new Group();
-        groupobj = group;
+
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
         args.putParcelable("group", group);
-//        args.putString(Constants.ARG_GROUP_ID, group.getDocumentID());
-//        args.putString(Constants.ARG_GROUP_NAME, group.getGroupName());
         instance.setArguments(args);
         return instance;
     }
@@ -84,6 +91,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     }
 
+    @SuppressLint("ResourceType")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,14 +100,43 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         mainFab = view.findViewById(R.id.add_new_task);
         toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbarTextView = getActivity().findViewById(R.id.toolbar_title);
         circleImageView = (CircleImageView) view.findViewById(R.id.group_photo_image_view);
         groupName = (EditText) view.findViewById(R.id.group_name_edit_text) ;
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
+        toolbarTextView.setText(group.getGroupName());
+       // toolbar.setTitle("    ");
 
-        toolbar.setTitle(group.getGroupName());
+//
+        //toolbar.setTitle(group.getGroupName());
+
+
+        toolbarTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) getContext();
+                Fragment myFragment = EditGroupFragment.newInstance(group);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
+
+
+            }
+        });
+
+
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
 
@@ -113,22 +150,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new CreateNewTaskFragment();
+                Fragment myFragment = CreateNewTaskFragment.newInstance(group);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-
-
-
             }
         });
-
-
-
 
         setupRecyclerView();
        return view;
 
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -146,33 +178,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         {
             case R.id.discussion:
                 Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
-
-                intent.putExtra(Constants.ARG_GROUP_ID, groupobj.getDocumentID());
-                intent.putExtra(Constants.ARG_GROUP_NAME, groupobj.getGroupName());
-                intent.putExtra(Constants.FIELD_GROUP_AVATAR, groupobj.getAvatar());
-                intent.putExtra(Constants.FIELD_GROUP_MEMBERS , String.valueOf(groupobj.getMembers()));
+                intent.putExtra(Constants.REF_TEAMS, group);
                 startActivity(intent);
 
                 return true;
 
-
-            case R.id.settings:
-
-//                contacts.addAll(group.getMembers());
-//                groupName.setText(group.getGroupName());
-//                circleImageView.setImageBitmap(group.getTeamImage());
-
-                AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = EditGroupFragment.newInstance(group);
-                //((BaseFragment) myFragment).setListener(this);
-                        //new EditGroupFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
-
-
-
-
-                System.out.println("settings clicked");
-                return false;
 
              default:
                  break;
@@ -210,15 +220,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        toolbar.setNavigationIcon(null);
+        toolbar.setTitle("Whats Done");
         taskInnerGroupPresenter.unSubscribe();
-        System.out.println("on destroy view");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        //getTargetFragment().setMenuVisibility(true);
     }
 
     @Override
@@ -227,20 +236,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         taskInnerGroups.addAll(tasks);
         adapter.notifyDataSetChanged();
     }
-
-//    @Override
-//    public void groupEdit(Group group) {
-//        System.out.println("onEdit ");
-//        //if(AuthServiceImpl.user.getDocumentID() == group.getCreatedBy() ) {
-//        //   circleImageView.setImageBitmap(addFragment.getImageData(circleImageView));
-//        //    groupName.setText(group.getGroupName());
-//        //    contacts.addAll(group.getMembers());
-//        //  System.out.println("" + AuthServiceImpl.user.getDocumentID());
-//        //   System.out.println("" + group.getCreatedBy());
-//
-//        //}
-//
-//    }
 
     private void setupRecyclerView()
     {
@@ -252,28 +247,60 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             @Override
             public void onTaskDeleteClicked(int position) {
-                System.out.println("delete");
-                adapter.taskList.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                //task delete
+
+                service.delete(taskInnerGroups.get(position).getDocumentID(), new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        adapter.taskList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                    }
+                });
 
             }
 
-
             @Override
             public void onTaskOnHoldClicked(int position) {
-                System.out.println("On Hold");
+                //task change status to On Hold
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.ON_HOLD);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
 
             @Override
             public void onTaskInProgressClicked(int position) {
-                System.out.println("In progress");
+                //Task change status to In Progress
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.IN_PROGRESS);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onTaskDoneClicked(int position) {
-                System.out.println("Done ");
+                //Task change status to Done
+                Task task = new Task();
+                task = (Task) taskInnerGroups.get(position);
+                task.setStatus(Task.TaskStatus.DONE);
+                service.update(task, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getContext(),"Updated Status",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
@@ -283,6 +310,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 taskSwipeController.onDraw(c);
+                taskSwipeController.setContext(getContext());
             }
         });
 

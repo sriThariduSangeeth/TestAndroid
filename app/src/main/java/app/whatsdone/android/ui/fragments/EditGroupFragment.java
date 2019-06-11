@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.services.AuthService;
 
 
 public class EditGroupFragment extends BaseFragment{
@@ -37,7 +38,12 @@ public class EditGroupFragment extends BaseFragment{
 
     @Override
     public void save() {
+
         presenter.update(this.group);
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
 }

@@ -22,15 +22,44 @@ import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class GroupServiceImpl implements GroupService {
+    private final CloudService service;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private ListenerRegistration listener;
+
+    public GroupServiceImpl() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+
+            Request request = original.newBuilder()
+                    .header("Authorization", SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Accept", "application/json")
+                    .method(original.method(), original.body())
+                    .build();
+
+            return chain.proceed(request);
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(JacksonConverterFactory.create())
+                .baseUrl(Constants.URL_FIREBASE)
+                .client(client)
+                .build();
+
+        service = retrofit.create(CloudService.class);
+    }
 
     @Override
     public void getAllGroups(String userId, ServiceListener serviceListener) {
@@ -140,6 +169,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void leave(String groupId, ServiceListener serviceListener) {
         Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(JacksonConverterFactory.create())
                 .baseUrl(Constants.URL_FIREBASE)
                 .build();
 
@@ -176,6 +206,7 @@ public class GroupServiceImpl implements GroupService {
                         Log.w(TAG, "Team subscription failed", e);
                         return;
                     }
+                    Log.d(TAG, value.toString());
 
                     List<BaseEntity> groups = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {

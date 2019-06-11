@@ -11,9 +11,9 @@ import java.io.InputStream;
 public class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
     ImageView imageView;
 
-    public DownloadImageFromInternet(ImageView imageView) {
-        this.imageView = imageView;
-    }
+//    public DownloadImageFromInternet(ImageView imageView) {
+//        this.imageView = imageView;
+//    }
 
     protected Bitmap doInBackground(String... urls) {
         String imageURL = urls[0];

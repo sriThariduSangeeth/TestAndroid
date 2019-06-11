@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="4dp"
     android:id="@+id/task_inner_recycler_view_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-
     android:layout_marginTop="1sp"
-
     android:background="@color/white"
     android:orientation="horizontal"
     >
@@ -26,7 +24,7 @@
         android:contentDescription="done image"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:src="@drawable/done_icon"
+        android:src="@drawable/ic_account_circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,18 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:text="Inner Test TASK"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="124dp"
-        android:layout_marginRight="124dp"
-
+        android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/task_inner_text_sub"
-        app:layout_constraintStart_toEndOf="@+id/image_view_group"
+        app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/task_inner_text_sub"
+        android:id="@+id/task_inner_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -61,7 +59,6 @@
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
         android:text="@string/date"
-
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.91"
@@ -71,15 +68,32 @@
 
 
     <TextView
-        android:id="@+id/status"
-        android:layout_width="0dp"
-        android:layout_height="13dp"
+        android:id="@+id/status_inner_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:text="@string/todo"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
         app:layout_constraintTop_toBottomOf="@+id/task_inner_text" />
+
+    <Button
+        android:id="@+id/button_date"
+        android:layout_width="70dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_cornner"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/task_inner_date"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Overdue" />
+
 
 </android.support.constraint.ConstraintLayout>

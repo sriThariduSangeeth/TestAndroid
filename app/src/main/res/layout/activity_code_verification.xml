@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="88dp"
             android:inputType="number"
+            android:textAlignment="center"
             android:maxLength="6"
             android:text="@={viewModel.code}"
             app:layout_constraintEnd_toEndOf="parent"

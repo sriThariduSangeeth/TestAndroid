@@ -14,5 +14,9 @@ public interface DiscussionService {
 
     void loadRestMessages( String groupId , ServiceListener serviceListener);
 
+    void subscribe(String id , ServiceListener serviceListener);
+
+    void unSubscribe();
+
 
 }

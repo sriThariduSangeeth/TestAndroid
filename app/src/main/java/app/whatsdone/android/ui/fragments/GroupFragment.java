@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +38,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
     private GroupsRecyclerViewAdapter adapter;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
-    private Toolbar toolbar;
-    private View view;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
-    private CircleImageView circleImageView;
 
 
     @Override
@@ -56,7 +55,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
-        circleImageView = view.findViewById(R.id.image_view_group);
+        CircleImageView circleImageView = view.findViewById(R.id.image_view_group);
+
 
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
@@ -67,7 +67,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             public void onClick(View v) {
 
                 if(listener != null) {
-
                     listener.onAddClicked();
                 }
 
@@ -138,24 +137,24 @@ public class GroupFragment extends Fragment implements GroupFragmentView{
             @Override
             public void onRightClicked(int position) {
 
-
-
             }
 
             @Override
             public void onLeftClicked(int position) {
                 try {
                     Group group = adapter.getGroup(position);
-                    if(group.getCreatedBy() == AuthServiceImpl.getCurrentUser().getDocumentID()){
+                    if(group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
 
                         presenter.deleteTeam(groups.get(position).getDocumentID());
+                       adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeRemoved(position, groups.size());
+                        adapter.notifyDataSetChanged();
                     }
                     else {
                         presenter.leaveTeam(group.getDocumentID());
+                        adapter.notifyDataSetChanged();
 
                     }
-
-
 
                 }catch (Exception e){
                     Log.d("My", e.getMessage());

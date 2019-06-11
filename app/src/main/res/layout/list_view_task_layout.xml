@@ -5,25 +5,33 @@
     android:orientation="horizontal"
     android:layout_margin="20sp"
     >
+
+    <ImageView
+        android:id="@+id/remove_image_view"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="10sp"
+        android:layout_marginRight="20sp"
+        android:background="@drawable/remove_items_icon"
+        android:focusable="false" />
+
     <TextView
         android:id="@+id/checklist__item"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="50sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginRight="-5dp"
         android:layout_weight="1"
         android:gravity="left"
         android:padding="8dp"
         android:textColor="#000000"
         android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/remove_image_view"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:focusable="false"
-        android:background="@drawable/remove_items_icon"
-        android:layout_marginTop="10sp"
-        android:layout_marginRight="20sp"
-        android:layout_alignParentRight="true"
-        />
 
 </RelativeLayout>

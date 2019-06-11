@@ -1,11 +1,17 @@
 package app.whatsdone.android.services;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
 
@@ -37,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         User user = (User)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document(user.getDocumentID());
+        DocumentReference document = db.collection(Constants.REF_USERS).document(user.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_USER_PHONE_NO, user.getPhoneNo());
         data.put(Constants.FIELD_USER_DISPLAY_NAME, user.getDisplayName());
@@ -61,9 +67,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(BaseEntity entity, ServiceListener serviceListener) {
         User user = (User)entity;
-        DocumentReference document = db.collection(Constants.REF_TEAMS).document(user.getDocumentID());
+        DocumentReference document = db.collection(Constants.REF_USERS).document(user.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
-        data.put(Constants.FIELD_USER_PHONE_NO, user.getPhoneNo());
         data.put(Constants.FIELD_USER_DISPLAY_NAME, user.getDisplayName());
         data.put(Constants.FIELD_USER_DEVICE_TOKENS, user.getDeviceTokens());
         data.put(Constants.FIELd_USER_ENABLE_NOTIFICATIONS, user.isEnableNotifications());
@@ -79,6 +84,21 @@ public class UserServiceImpl implements UserService {
             }
             serviceListener.onCompleted(null);
         });
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        document.update(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayUnion(token));
+                    }
+                });
     }
 
     @Override

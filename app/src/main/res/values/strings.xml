@@ -19,10 +19,12 @@
     <string name="time">11.00</string>
     <string name="NewActivity">New Activity</string>
     <string name="GroupDetails">Team Details</string>
-    <string name="group_name">Team name</string>
+    <string name="group_name">Team Name</string>
     <string name="CreateGroup">Create Group</string>
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
+    <string name="Title">Title</string>
+    <string name="Description">Description</string>
     <string name="done_image">done image</string>
     <string name="Task_Name">Task Name</string>
     <string name="teamPhoto">Team Photo</string>
@@ -33,16 +35,16 @@
     <string name="TaskDetails">My Task 1</string>
     <string name="task_owner">task owner</string>
     <string name="Save">Save</string>
+    <string name="todo">TO DO</string>
 
     <string name="task_title">Title</string>
     <string name="hint_enter_a_message">Type a message…</string>
 
     <string-array name="planets">
-        <item>Todo</item>
-        <item>item1</item>
-        <item>item2</item>
-
-
+        <item>To Do</item>
+        <item>IN PROGRESS</item>
+        <item>ON HOLD</item>
+        <item>DONE</item>
     </string-array>
 
     <string name="Terms_and_Privacy">Tap "Agree and continue" to accept the <font color='#01C6DB'>WhatsDone Terms of Service and Privacy Policy</font> </string>
@@ -53,6 +55,7 @@
     <string name="nav_pro">Profile</string>
     <string name="nav_appointment">Appointment</string>
     <string name="select_from_contacts">Select from contacts</string>
+    <string name="select_group_name">Select Group Name</string>
     <string name="set_due_date">Set due date</string>
     <string name="checklist">CHECKLIST</string>
     <string name="assigned_to">Assigned to</string>
@@ -69,4 +72,5 @@
     <string name="logout">logout</string>
     <string name="display_name">Display Name</string>
     <string name="start_typing_status">Start typing</string>
+    <string name="default_notification_channel_id">whats_done_channel</string>
 </resources>
