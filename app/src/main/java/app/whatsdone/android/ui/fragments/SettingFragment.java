@@ -48,6 +48,7 @@ public class SettingFragment extends Fragment implements SettingsView {
         System.out.println("settings fragment");
 
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
+
         this.model = new SettingsViewModel(AuthServiceImpl.getCurrentUser().getDisplayName(), true, UserStatus.Available, "");
         this.loadProfileImage(AuthServiceImpl.getCurrentUser().getAvatar());
         this.presenter = new SettingsPresenterImpl(this, model);
