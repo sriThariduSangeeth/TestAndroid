@@ -82,4 +82,7 @@
     <string name="enter_title_here">Enter title here</string>
     <string name="alert">Alert</string>
     <string name="error_task_title">Task title is missing</string>
+    <string name="task_overdue">Overdue</string>
+    <string name="task_ontrack">On track</string>
+    <string name="task_due_soon">Due soon</string>
 </resources>
