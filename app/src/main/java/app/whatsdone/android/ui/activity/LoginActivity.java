@@ -13,6 +13,7 @@ import com.hbb20.CountryCodePicker;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.ActivityPhoneNoVerificationBinding;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.presenter.LoginPresenter;
 import app.whatsdone.android.ui.presenter.LoginPresenterImpl;
 import app.whatsdone.android.ui.view.LoginView;
@@ -54,9 +55,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onVerificationCompleted(String token) {
-        Intent intent = new Intent(LoginActivity.this,ProfileCreationActivity.class);
-        intent.putExtra(Constants.ARG_VERIFICATION_ID, token);
-        startActivity(intent);
+        if(AuthServiceImpl.getCurrentUser().getDisplayName().isEmpty()){
+            Intent intent = new Intent(LoginActivity.this,ProfileCreationActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(LoginActivity.this,GroupsActivity.class);
+            startActivity(intent);
+        }
+
         finish();
     }
 

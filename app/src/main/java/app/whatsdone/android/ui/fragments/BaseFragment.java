@@ -1,7 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,13 +21,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -59,9 +54,7 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -73,7 +66,6 @@ import timber.log.Timber;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
-import static android.widget.Toast.LENGTH_LONG;
 
 public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView{
 

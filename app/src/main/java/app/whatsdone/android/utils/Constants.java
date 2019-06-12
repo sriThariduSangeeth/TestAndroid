@@ -80,4 +80,5 @@ public class Constants {
     public static final String ACTION_VIEW_GROUP = "view_group";
     public static final String ARG_GROUP = "group";
     public static final String ARG_ACTION = "action";
+    public static final String FIELD_USER_ACTIVE = "activated_status";
 }
