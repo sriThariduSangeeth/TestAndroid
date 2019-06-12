@@ -150,16 +150,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 }
             });
 
-
-
-
         SwipeList();
 
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -170,10 +165,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     //intent.setDataAndType(ContactsContract.Contacts.CONTENT_URI,ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                     startActivityForResult(intent, REQUEST_CODE);
                 }
-
-
             }
-
         });
 
 
@@ -213,14 +205,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     group.setMembers(contactNumbers);
 
                     System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
-
-
                     save();
                     saveFab.setEnabled(false);
-                   // recyclerViewAdapter.notifyItemInserted(0);
-
                     adapter.notifyDataSetChanged();
-
                 }
 
 
@@ -327,7 +314,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             group.setImageChanged(true);
 
         }
-
 
         //contacts
         switch (requestCode) {
@@ -561,12 +547,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             listener.onSelected(numbers[0]);
             return;
         }
-
         AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
         contactDialog.setTitle("Select one contact to add");
-
         contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
-
         contactDialog.show();
 
     }

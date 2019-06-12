@@ -16,36 +16,33 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view_task_inner_group"
-        android:layout_width="80sp"
+        android:layout_width="0dp"
         android:layout_height="80dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-
-        android:contentDescription="done image"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:paddingEnd="20sp"
-        android:paddingRight="20sp"
-        android:src="@drawable/ic_account_circle"
+        android:src="@mipmap/ic_user_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
 
-        >
-    </de.hdodenhof.circleimageview.CircleImageView>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
         android:id="@+id/task_inner_text"
-        android:layout_width="164dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="Inner Test TASK"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:layout_marginTop="8dp"
-        android:textStyle="bold"
+        android:text="Inner Test TASK"
         android:textColor="@color/black"
         android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/task_inner_date"
         app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,15 +77,17 @@
         app:layout_constraintStart_toEndOf="@+id/image_view_task_inner_group"
         app:layout_constraintTop_toBottomOf="@+id/task_inner_text" />
 
-    <Button
-        android:id="@+id/button_date"
+    <TextView
+        android:id="@+id/status_indicator"
         android:layout_width="70dp"
         android:layout_height="20dp"
         android:background="@drawable/button_cornner"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
-        android:textSize="10dp"
+        android:textSize="10sp"
+        android:textAlignment="center"
+        android:paddingTop="2dp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/task_inner_date"
