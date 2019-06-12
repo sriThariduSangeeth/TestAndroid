@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,7 +39,7 @@ import static android.R.*;
 public class InnerGroupDiscussionActivity extends MessageActivity implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
-        DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener  {
 
     private MessagesList messagesList;
     private ArrayAdapter<String> adapter;
@@ -88,6 +89,25 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
             public void onClick(View view) {
                 //back to task in group;
                 onBackPressed();
+            }
+        });
+
+        input.getInputEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                System.out.println("before text change : "+s);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                System.out.println("change text : "+s);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("after text change : "+s);
+
             }
         });
 
@@ -292,6 +312,4 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         super.messagesAdapter.setLoadMoreListener(this);
         this.messagesList.setAdapter(super.messagesAdapter);
     }
-
-
 }

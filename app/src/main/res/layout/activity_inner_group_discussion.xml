@@ -60,6 +60,7 @@
             android:scrollingCache="true"
             android:smoothScrollbar="true" />
 
+        
 
         <com.stfalcon.chatkit.messages.MessageInput
             android:inputType="textNoSuggestions"
