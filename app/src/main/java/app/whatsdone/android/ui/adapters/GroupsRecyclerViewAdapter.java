@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
@@ -73,13 +74,13 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
       //  holder.progressplay.setProgress(0);
         final Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
-        holder.taskCount.setText(group.getDiscussionCount()+"");
-        holder.discussionCount.setText(group. getDiscussionCount()+"");
+        holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
+        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
       //  holder.setIsRecyclable(false);
 
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
-                Picasso.get().load(group.getAvatar()).into(imageView);
+                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
                 Timber.tag(TAG).d("onBindViewHolder: ");
                 System.out.println(" Avatar " + group.getAvatar());
             }
