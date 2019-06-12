@@ -525,10 +525,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 String value = adapter.getItem(position).getPhoneNumber();
 
-                contactNumbers.remove(value);
-                members.remove(adapter.getItem(position));
-                adapter.notifyDataSetChanged();
-                // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
+                if(group.getCreatedBy().equals(value))
+                {
+                    Toast.makeText(getContext(), "This number can not be deleted" + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
+                } else {
+                    contactNumbers.remove(value);
+                    members.remove(adapter.getItem(position));
+                    adapter.notifyDataSetChanged();
+                    // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
+                }
                 return false;
 
             }
