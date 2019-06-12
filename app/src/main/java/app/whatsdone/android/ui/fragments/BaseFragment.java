@@ -224,11 +224,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
                     save();
+                    saveFab.setEnabled(false);
                    // recyclerViewAdapter.notifyItemInserted(0);
 
                     adapter.notifyDataSetChanged();
 
                 }
+
 
             }
 
