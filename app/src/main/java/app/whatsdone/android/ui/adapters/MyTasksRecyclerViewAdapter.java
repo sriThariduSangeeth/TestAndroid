@@ -1,12 +1,16 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -62,6 +66,8 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         Task task = (Task)tasks.get(i);
         recyclerViewHolderTask.textView.setText(task.getTitle());
         recyclerViewHolderTask.groupTextView.setText(task.getGroupName());
+        if(!task.getAssignedUserImage().isEmpty())
+            Picasso.get().load(task.getAssignedUserImage()).into(recyclerViewHolderTask.imageView);
 
         recyclerViewHolderTask.textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,16 +91,18 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     }
 
     //public class
-    public class RecyclerViewHolderTask extends RecyclerView.ViewHolder
+    class RecyclerViewHolderTask extends RecyclerView.ViewHolder
     {
-        public TextView textView;
-        public TextView groupTextView;
+        TextView textView;
+        TextView groupTextView;
+        ImageView imageView;
 
 
-        public RecyclerViewHolderTask(@NonNull View itemView) {
+        RecyclerViewHolderTask(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.task_text);
             groupTextView = itemView.findViewById(R.id.group_name_text);
+            imageView = itemView.findViewById(R.id.image_view_my_task);
         }
     }
 

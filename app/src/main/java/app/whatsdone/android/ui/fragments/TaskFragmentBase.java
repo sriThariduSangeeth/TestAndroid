@@ -40,6 +40,7 @@ import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
+import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
 
 public abstract class TaskFragmentBase extends Fragment {
@@ -148,8 +149,13 @@ public abstract class TaskFragmentBase extends Fragment {
         });
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
-
-            task.setTitle(gettitle.getText().toString());
+            String title = gettitle.getText().toString();
+            if(title.isEmpty())
+            {
+                AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
+                return;
+            }
+            task.setTitle(title);
             task.setDescription(getDescript.getText().toString());
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
             task.setUpdatedDate(new Date());

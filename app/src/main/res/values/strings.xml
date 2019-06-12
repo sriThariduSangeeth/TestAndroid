@@ -80,4 +80,6 @@
     <string name="ADD_NEW_TASK">Add Task</string>
     <string name="add_group">Add Group</string>
     <string name="enter_title_here">Enter title here</string>
+    <string name="alert">Alert</string>
+    <string name="error_task_title">Task title is missing</string>
 </resources>
