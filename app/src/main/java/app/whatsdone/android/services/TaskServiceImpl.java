@@ -1,6 +1,7 @@
 package app.whatsdone.android.services;
 
 import android.app.Activity;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +21,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.DateUtil;
 import timber.log.Timber;
 
 public class TaskServiceImpl implements TaskService {
@@ -136,7 +138,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         Task task = (Task)entity;
-        DocumentReference document = db.collection(Constants.REF_TASKS).document("12345");
+        DocumentReference document = db.collection(Constants.REF_TASKS).document();
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
         data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());
@@ -145,11 +147,11 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, "");
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
-        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
+        data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
@@ -185,7 +187,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
-        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
+        data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
                 task.getCheckList()) {

@@ -35,11 +35,13 @@ public class Constants {
     public static final int TASKS_LIMIT = 10;
     public static final String FIELD_TASK_ASSIGNED_USER = "assigned_user";
     public static final String FIELD_TASK_ASSIGNED_BY = "assigned_by";
+    public static final String FIELD_TASK_ASSIGNED_BY_NAME = "assigned_by_name";
     public static final String FIELD_TASK_ASSIGNED_USER_IMAGE = "assigned_user_image";
     public static final String FIELD_TASK_DUE_AT = "due_at";
     public static final String FIELD_TASK_ASSIGNED_USER_NAME = "assigned_user_name";
     public static final String FIELD_TASK_ASSIGNEE_COMMENT = "assignee_comment";
     public static final String FIELD_TASK_CREATED_BY = "created_by";
+    public static final String FIELD_TASK_CREATED_BY_NAME = "created_by_name";
     public static final String FIELD_TASK_CREATED_AT = "created_at";
     public static final String FIELD_TASK_DESCRIPTION = "description";
     public static final String FIELD_TASK_STATUS = "status";

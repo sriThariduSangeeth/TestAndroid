@@ -8,10 +8,12 @@ import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import app.whatsdone.android.WhatsDoneApplication;
@@ -23,11 +25,26 @@ import timber.log.Timber;
 
 public class ContactUtil {
     private static final String TAG = ContactUtil.class.getSimpleName();
-    private static List<Contact> contacts = new ArrayList<>();
-    private static MyContentObserver contentObserver = new MyContentObserver();
-    private static boolean isObserved = false;
+    private Dictionary<String, String> contacts = new Hashtable<>();
+    private MyContentObserver contentObserver = new MyContentObserver();
+    private boolean isObserved = false;
+    private static final String[] PROJECTION = new String[] {
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
+    };
+    private String locale = getCurrentLocale();
+    private PhoneNumberUtil phoneUtil = PhoneNumberUtil.createInstance(WhatsDoneApplication.getApplication());
 
-    public static class MyContentObserver extends ContentObserver {
+    private ContactUtil() {}
+    private static class LazyHolder {
+        static final ContactUtil INSTANCE = new ContactUtil();
+    }
+    public static ContactUtil getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    public class MyContentObserver extends ContentObserver {
         public MyContentObserver() {
             super(null);
         }
@@ -35,27 +52,15 @@ public class ContactUtil {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            String[] fieldListProjection = {
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER,
-                    ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER
-            };
-            Cursor cursor = WhatsDoneApplication.getApplication().getContentResolver().query(
-                    ContactsContract.Contacts.CONTENT_URI, fieldListProjection, null, null,ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP + " Desc");
-            List<Contact> newContacts = getContacts(cursor);
-            for (Contact contact : newContacts) {
-                if(!contacts.contains(contact)){
-                    contacts.add(contact);
-                }else {
-                    for (Contact old : contacts) {
-                        if(old.getPhoneNumber().equals(contact.getPhoneNumber())){
-                            old.setDisplayName(contact.getDisplayName());
-                        }
-                    }
-                }
-            }
+
+            CursorLoader cursorLoader = new CursorLoader(WhatsDoneApplication.getApplication(),
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION,
+                    ContactsContract.Contacts.HAS_PHONE_NUMBER + ">0 AND LENGTH(" + ContactsContract.CommonDataKinds.Phone.NUMBER + ")>0",
+                    null,
+                    ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP + " Desc");
+
+            Cursor cursor = cursorLoader.loadInBackground();
+            getContacts(cursor);
         }
 
         @Override
@@ -64,7 +69,7 @@ public class ContactUtil {
         }
     }
 
-    public static List<Contact> resolveContacts(List<String> phoneNumbers) {
+    public List<Contact> resolveContacts(List<String> phoneNumbers) {
         List<Contact> items = new ArrayList<>();
 
         if(phoneNumbers.isEmpty()) return items;
@@ -79,28 +84,23 @@ public class ContactUtil {
         return items;
     }
 
-    public static void readContacts(Context context) {
+    public void readContacts(Context context) {
         if (context == null)
             return;
-        ContentResolver contentResolver = context.getContentResolver();
 
-        addObserver(contentResolver);
+        //addObserver(context.getContentResolver());
 
-        String[] fieldListProjection = {
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER,
-                ContactsContract.Contacts.HAS_PHONE_NUMBER
-        };
+        CursorLoader cursorLoader = new CursorLoader(context,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION,
+                ContactsContract.Contacts.HAS_PHONE_NUMBER + ">0 AND LENGTH(" + ContactsContract.CommonDataKinds.Phone.NUMBER + ")>0",
+                null,
+                "UPPER(" + ContactsContract.Contacts.DISPLAY_NAME + ")ASC");
 
-        Cursor phones = contentResolver
-                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-                        , fieldListProjection,null, null, null, null);
-        contacts = getContacts(phones);
+        Cursor cursor = cursorLoader.loadInBackground();
+        getContacts(cursor);
     }
 
-    private static void addObserver(ContentResolver contentResolver) {
+    private void addObserver(ContentResolver contentResolver) {
         if(!isObserved) {
             contentResolver.registerContentObserver(
                     ContactsContract.Contacts.CONTENT_URI, true, contentObserver);
@@ -109,49 +109,62 @@ public class ContactUtil {
     }
 
     @NonNull
-    private static List<Contact> getContacts(Cursor phones) {
-        HashSet<String> normalizedNumbersAlreadyFound = new HashSet<>();
-        List<Contact> contacts = new ArrayList<>();
-        if (phones != null && phones.getCount() > 0) {
-            while (phones.moveToNext()) {
-                String normalizedNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
-                if (Integer.parseInt(phones.getString(phones.getColumnIndex(
-                        ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
-                        String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                        String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        //if(phoneNumbers.contains(cleanNo(phoneNumber)) && !cleanNo(phoneNumber).isEmpty()){
-                            Contact contact = new Contact();
-                            contact.setPhoneNumber(cleanNo(phoneNumber));
-                            contact.setDisplayName(name);
+    private void getContacts(Cursor cursor) {
 
-                            contacts.add(contact);
-                        //}
-                    }
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            int Number = cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int Name = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+            do {
+
+                try {
+                    String number = cursor.getString(Number);
+                    String name = cursor.getString(Name);
+
+                    addContact(name, number);
+
+                } catch (Exception e) {
+                    Timber.e(e);
                 }
-            }
-            phones.close();
+
+            } while (cursor.moveToNext());
+
+            cursor.close();
         }
-        return contacts;
     }
 
-    private static List<Contact> filterContacts(List<String> numbers){
+    private void addContact(String name, String phoneNumber) {
+        contacts.put(cleanNo(phoneNumber), name);
+    }
+
+    private List<Contact> filterContacts(List<String> numbers){
         List<Contact> items = new ArrayList<>();
-        for (Contact contact:contacts) {
-            if(numbers.contains(contact.getPhoneNumber())){
-                items.add(contact);
+        for (String contact:numbers) {
+            String contactNo = cleanNo(contact);
+            String contactItem = contacts.get(contactNo);
+            Contact item = new Contact();
+            item.setDisplayName(contactNo);
+            item.setPhoneNumber(contactNo);
+
+            if(contactItem != null){
+                item.setDisplayName(contactItem);
+                item.setPhoneNumber(contactNo);
             }
+
+            items.add(item);
         }
 
         return items;
     }
 
-    public static String getDisplayNameOrNumber(List<Contact> contacts, String phoneNumber){
+    public String getDisplayNameOrNumber(List<Contact> contacts, String phoneNumber){
         if(phoneNumber == null || phoneNumber.isEmpty()) return "";
         String contactName = phoneNumber;
         for (Contact contactItem:contacts) {
-            if(contactItem.getPhoneNumber().equals(ContactUtil.cleanNo(phoneNumber))){
+            if(contactItem.getPhoneNumber().equals(cleanNo(phoneNumber))){
                 contactName = contactItem.getDisplayName();
             }
         }
@@ -159,31 +172,29 @@ public class ContactUtil {
         return contactName;
     }
 
-    public static String cleanNo(String phoneNo) {
+    public String cleanNo(String phoneNo) {
         if (phoneNo == null || phoneNo.isEmpty()) return null;
         String result = "";
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.createInstance(WhatsDoneApplication.getApplication());
         try {
-            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, getCurrentLocale());
+            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, locale);
             result = phoneUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.E164);
         } catch (NumberParseException ignored) {
         }
         return result;
     }
 
-    public static boolean validate(String phoneNo) {
+    public boolean validate(String phoneNo) {
         if (phoneNo == null || phoneNo.isEmpty()) return false;
         boolean result = false;
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.createInstance(WhatsDoneApplication.getApplication());
         try {
-            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, getCurrentLocale());
+            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, locale);
             result = phoneUtil.isValidNumber(number);
         } catch (NumberParseException ignored) {
         }
         return result;
     }
 
-    private static String getCurrentLocale() {
+    private String getCurrentLocale() {
         String iso = "" ;
 
         TelephonyManager telephonyManager = (TelephonyManager) WhatsDoneApplication.getApplication().getSystemService(Context.TELEPHONY_SERVICE);

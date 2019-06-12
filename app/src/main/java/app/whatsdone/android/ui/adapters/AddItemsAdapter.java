@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,9 +56,18 @@ public class AddItemsAdapter extends BaseAdapter {
 
             TextView textView = (TextView) convertView.findViewById(R.id.checklist__item);
             ImageView imageRemove = (ImageView) convertView.findViewById(R.id.remove_image_view);
+            CheckBox checkBox = convertView.findViewById(R.id.checkbox_task);
 
             CheckListItem myTask = itemList.get(position);
             textView.setText(myTask.getTitle());
+            checkBox.setChecked(myTask.isCompleted());
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    myTask.setCompleted(isChecked);
+                }
+            });
 
 
             imageRemove.setOnClickListener(new View.OnClickListener() {

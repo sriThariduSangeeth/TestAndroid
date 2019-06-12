@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
@@ -37,10 +38,15 @@ public class AddTaskFragment extends TaskFragmentBase {
     }
 
     public void save(){
-
-
-        task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
-        task.setCreatedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+        User current = AuthServiceImpl.getCurrentUser();
+        String currentUserId = current.getDocumentID();
+        task.setAssignedBy(currentUserId);
+        task.setCreatedBy(currentUserId);
+        if(task.getAssignedUser() == null || task.getAssignedUser().isEmpty()){
+            task.setAssignedUser(currentUserId);
+            task.setAssignedUserName(current.getDisplayName());
+            task.setAssignedUserImage(current.getAvatar());
+        }
 
         service.create(task, new ServiceListener() {
             @Override
