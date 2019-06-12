@@ -216,7 +216,7 @@ public class Task implements BaseEntity, Parcelable {
             checkList = new ArrayList<>();
             in.readList(checkList, CheckListItem.class.getClassLoader());
         } else {
-            checkList = null;
+            checkList = new ArrayList<>();;
         }
     }
 

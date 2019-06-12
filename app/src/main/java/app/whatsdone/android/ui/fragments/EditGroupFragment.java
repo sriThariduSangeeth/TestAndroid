@@ -98,14 +98,21 @@ public class EditGroupFragment extends BaseFragment{
 
     @Override
     public void checkUserToAddMembers() {
-        if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
+        if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()) || isPersonalGroup()) {
             addMembers.setEnabled(false);
+            addMembers.setVisibility(View.GONE);
             swipeListView.setEnabled(false);
+            teamName.setEnabled(false);
            // swipeListView.setActivated(false);
             swipeListView.setClickable(false);
             saveFab.setEnabled(false);
+            saveFab.hide();
         }
 
+    }
+
+    private boolean isPersonalGroup() {
+        return group.getDocumentID().equals(AuthServiceImpl.getCurrentUser().getDocumentID());
     }
 
 

@@ -101,7 +101,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
                     .document(AuthServiceImpl.getCurrentUser().getDocumentID())
                     .update(data)
                     .addOnCompleteListener(command -> {
-                        Log.d(TAG, "command is success: " + command.isSuccessful());
+                        Timber.d("command is success: %s", command.isSuccessful());
                     });
         }
     }

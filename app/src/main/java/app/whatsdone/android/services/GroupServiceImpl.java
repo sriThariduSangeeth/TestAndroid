@@ -1,10 +1,15 @@
 package app.whatsdone.android.services;
 
+import android.provider.DocumentsContract;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -37,6 +42,7 @@ import timber.log.Timber;
 public class GroupServiceImpl implements GroupService {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
+    public static Group personalGroup = new Group();
     private ListenerRegistration listener;
     CloudService service;
 
@@ -64,6 +70,12 @@ public class GroupServiceImpl implements GroupService {
         service = retrofit.create(CloudService.class);
     }
 
+    public static Group getPersonalGroup() {
+        personalGroup.setDocumentID(AuthServiceImpl.getCurrentUser().getDocumentID());
+        personalGroup.setGroupName(Constants.GROUP_PERSONAL);
+        return personalGroup;
+    }
+
     @Override
     public void getAllGroups(String userId, ServiceListener serviceListener) {
         List<BaseEntity> groups = new ArrayList<>();
@@ -74,25 +86,7 @@ public class GroupServiceImpl implements GroupService {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
-                            Group group = new Group();
-                            group.setDocumentID(doc.getId());
-                            if (doc.get(Constants.FIELD_GROUP_TITLE) != null)
-                                group.setGroupName(doc.getString(Constants.FIELD_GROUP_TITLE));
-                            if (doc.get(Constants.FIELD_GROUP_AVATAR) != null)
-                                group.setAvatar(doc.getString(Constants.FIELD_GROUP_AVATAR));
-                            if (doc.get(Constants.FIELD_GROUP_CREATED_BY) != null)
-                                group.setCreatedBy(doc.getString(Constants.FIELD_GROUP_CREATED_BY));
-                            if (doc.get(Constants.FIELD_GROUP_DISCUSSION_COUNT) != null)
-                                group.setDiscussionCount(doc.getLong(Constants.FIELD_GROUP_DISCUSSION_COUNT).intValue());
-                            if (doc.get(Constants.FIELD_GROUP_TASKS_COUNT) != null)
-                                group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
-                            if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
-                                group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
-                            if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
-                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
-                            if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
-                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
-
+                            Group group = getGroup(doc);
                             groups.add(group);
                             serviceListener.onDataReceived(groups);
                         }
@@ -102,6 +96,29 @@ public class GroupServiceImpl implements GroupService {
                     }
                     serviceListener.onCompleted(task.isSuccessful());
                 });
+    }
+
+    @NonNull
+    private Group getGroup(DocumentSnapshot doc) {
+        Group group = new Group();
+        group.setDocumentID(doc.getId());
+        if (doc.get(Constants.FIELD_GROUP_TITLE) != null)
+            group.setGroupName(doc.getString(Constants.FIELD_GROUP_TITLE));
+        if (doc.get(Constants.FIELD_GROUP_AVATAR) != null)
+            group.setAvatar(doc.getString(Constants.FIELD_GROUP_AVATAR));
+        if (doc.get(Constants.FIELD_GROUP_CREATED_BY) != null)
+            group.setCreatedBy(doc.getString(Constants.FIELD_GROUP_CREATED_BY));
+        if (doc.get(Constants.FIELD_GROUP_DISCUSSION_COUNT) != null)
+            group.setDiscussionCount(doc.getLong(Constants.FIELD_GROUP_DISCUSSION_COUNT).intValue());
+        if (doc.get(Constants.FIELD_GROUP_TASKS_COUNT) != null)
+            group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
+        if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
+            group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
+        if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
+            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+        if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
+            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+        return group;
     }
 
     @Override
@@ -216,23 +233,7 @@ public class GroupServiceImpl implements GroupService {
                     for (QueryDocumentSnapshot doc : value) {
 
                         try {
-
-                            Group group = new Group();
-                            group.setDocumentID(doc.getId());
-                            if (doc.get(Constants.FIELD_GROUP_TITLE) != null)
-                                group.setGroupName(doc.getString(Constants.FIELD_GROUP_TITLE));
-                            if (doc.get(Constants.FIELD_GROUP_AVATAR) != null)
-                                group.setAvatar(doc.getString(Constants.FIELD_GROUP_AVATAR));
-                            if (doc.get(Constants.FIELD_GROUP_CREATED_BY) != null)
-                                group.setCreatedBy(doc.getString(Constants.FIELD_GROUP_CREATED_BY));
-                            if (doc.get(Constants.FIELD_GROUP_DISCUSSION_COUNT) != null)
-                                group.setDiscussionCount(doc.getLong(Constants.FIELD_GROUP_DISCUSSION_COUNT).intValue());
-                            if (doc.get(Constants.FIELD_GROUP_TASKS_COUNT) != null)
-                                group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
-                            if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
-                                group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
-                            if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
-                                group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+                            Group group = getGroup(doc);
                             groups.add(group);
                         }catch (Exception exception) {
                             Timber.tag(TAG).d(exception, "failed to parse group");
@@ -255,5 +256,23 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public String add() {
         return db.collection(Constants.REF_TEAMS).document().getId();
+    }
+
+    @Override
+    public void getGroupById(String groupId, ServiceListener serviceListener) {
+        db.collection(Constants.REF_TEAMS)
+                .document(groupId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            Group group = getGroup(task.getResult());
+                            serviceListener.onDataReceived(group);
+                        }else {
+                            serviceListener.onError(task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
     }
 }
