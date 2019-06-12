@@ -10,11 +10,11 @@ import java.util.Map;
 import app.whatsdone.android.utils.Constants;
 
 public class User implements BaseEntity, IUser {
-    private String documentID;
-    private String displayName;
+    private String documentID= "";
+    private String displayName= "";
     private String id;
-    private String phoneNo;
-    private String avatar;
+    private String phoneNo= "";
+    private String avatar= "";
     private boolean enableNotifications;
     private UserStatus status;
     private List<String> deviceTokens = new ArrayList<>();
