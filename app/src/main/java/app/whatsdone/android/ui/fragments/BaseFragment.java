@@ -68,6 +68,7 @@ import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -129,7 +130,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView.setAdapter(adapter);
 
         contactNumbers.addAll(group.getMembers());
-        members.addAll(ContactUtil.resolveContacts(group.getMembers()));
+        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         //checkUserForName();
@@ -372,11 +373,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                         } else {
                                             //contactName.add(name);
                                             if (contact != null && !contact.isEmpty()) {
-                                                contact = ContactUtil.cleanNo(contact);
+                                                contact = ContactUtil.getInstance().cleanNo(contact);
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
                                                 contacts.add(contact);
-                                                members.addAll(ContactUtil.resolveContacts(contacts));
+                                                members.addAll(ContactUtil.getInstance().resolveContacts(contacts));
                                                 adapter.notifyDataSetChanged();
                                             }
 
@@ -386,7 +387,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
                             } catch (Exception exception) {
-                                Log.d("test ", exception.getMessage());
+                                Timber.d(exception);
                             }
                         }
                     }
