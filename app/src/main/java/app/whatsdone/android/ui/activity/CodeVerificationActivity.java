@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.ActivityCodeVerificationBinding;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.presenter.CodeVerifyPresenter;
 import app.whatsdone.android.ui.presenter.CodeVerifyPresenterImpl;
 import app.whatsdone.android.ui.view.CodeVerifyView;
@@ -31,8 +32,13 @@ public class CodeVerificationActivity extends AppCompatActivity implements CodeV
 
     @Override
     public void onVerified() {
-        Intent intent = new Intent(CodeVerificationActivity.this,ProfileCreationActivity.class);
-        startActivity(intent);
+        if(AuthServiceImpl.getCurrentUser().getDisplayName().isEmpty()){
+            Intent intent = new Intent(CodeVerificationActivity.this,ProfileCreationActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(CodeVerificationActivity.this,GroupsActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 }
