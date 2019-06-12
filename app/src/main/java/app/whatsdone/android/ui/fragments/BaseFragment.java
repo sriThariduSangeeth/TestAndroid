@@ -55,7 +55,9 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -81,6 +83,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
+    private User user;
     private List<Contact> members = new ArrayList<Contact>();
     protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
@@ -126,7 +129,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
         swipeListView.setAdapter(adapter);
 
+
+
         contactNumbers.addAll(group.getMembers());
+        if(contactNumbers.contains(AuthServiceImpl.getCurrentUser().getPhoneNo()))
+        {
+            //
+            System.out.println(" "+ AuthServiceImpl.getCurrentUser().getDisplayName() );
+
+        }
         members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
