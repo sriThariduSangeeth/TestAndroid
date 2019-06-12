@@ -26,4 +26,8 @@ public interface ServiceListener {
     default void onError(@Nullable String error){
 
     }
+
+    default void onDataReceived(BaseEntity entity){
+
+    }
 }

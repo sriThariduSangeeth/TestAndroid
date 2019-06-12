@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.User;
+import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
@@ -30,11 +32,34 @@ public class AddTaskFragment extends TaskFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arg = getArguments();
+        String currentUserId = AuthServiceImpl.getCurrentUser().getDocumentID();
         if(arg != null) {
             this.group = arg.getParcelable("group");
             if(group != null) {
                 task.setGroupId(group.getDocumentID());
                 task.setGroupName(group.getGroupName());
+
+                if(group.getDocumentID().equals(currentUserId)){
+                    if(!group.getCreatedBy().equals(currentUserId)){
+                        group.setUpdatedDate(new Date());
+                        group.getMembers().add(currentUserId);
+                        group.getAdmins().add(currentUserId);
+                        group.setCreatedBy(currentUserId);
+                        group.setAvatar(AuthServiceImpl.getCurrentUser().getAvatar());
+                        groupService.create(group, new ServiceListener() {
+                            @Override
+                            public void onSuccess() {
+                                Timber.d("%s created.", group.getGroupName());
+                                GroupServiceImpl.personalGroup = group;
+                            }
+
+                            @Override
+                            public void onError(@javax.annotation.Nullable String error) {
+                                Timber.e(error);
+                            }
+                        });
+                    }
+                }
             }
         }
     }

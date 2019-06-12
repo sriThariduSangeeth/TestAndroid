@@ -69,7 +69,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         myRecyclerViewHolder.itemView.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            Fragment myFragment = EditTaskFragment.newInstance(group, task);
+            Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
         });
         myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));

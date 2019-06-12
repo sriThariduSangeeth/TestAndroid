@@ -14,4 +14,6 @@ public interface GroupService {
     void unSubscribe();
 
     String add();
+
+    void getGroupById(String groupId, ServiceListener serviceListener);
 }

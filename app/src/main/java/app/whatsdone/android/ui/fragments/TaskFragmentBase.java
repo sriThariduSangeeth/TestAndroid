@@ -37,6 +37,8 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.GroupService;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
@@ -44,6 +46,7 @@ import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
 
 public abstract class TaskFragmentBase extends Fragment {
+    protected boolean isFromMyTasks;
     private DatePickerDialog datePickerDialog;
     private TextView setDueDate, assignFromContacts;
     private Toolbar toolbar;
@@ -60,6 +63,7 @@ public abstract class TaskFragmentBase extends Fragment {
     protected String title = "Add Task";
     //data
     protected TaskService service = new TaskServiceImpl();
+    protected GroupService groupService = new GroupServiceImpl();
 
     Task task = new Task();
     protected TextView toolbarTitle;

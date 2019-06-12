@@ -5,21 +5,25 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.ServiceBase;
 import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.utils.Constants;
 import timber.log.Timber;
 
 public class EditTaskFragment extends TaskFragmentBase {
 
-    public static EditTaskFragment newInstance(Group group, Task task){
+    public static EditTaskFragment newInstance(Group group, Task task, boolean isMyTask){
 
         EditTaskFragment instance = new EditTaskFragment();
         Bundle args = new Bundle();
-        args.putParcelable("group", group);
-        args.putParcelable("task", task);
+        args.putParcelable(Constants.ARG_GROUP, group);
+        args.putParcelable(Constants.ARG_TASK, task);
+        args.putBoolean(Constants.ACTION_VIEW_TASK, true);
         instance.setArguments(args);
         return instance;
     }
@@ -29,8 +33,18 @@ public class EditTaskFragment extends TaskFragmentBase {
         super.onCreate(savedInstanceState);
         Bundle arg = getArguments();
         if(arg != null) {
-            this.group = arg.getParcelable("group");
-            this.task = arg.getParcelable("task");
+            this.group = arg.getParcelable(Constants.ARG_GROUP);
+            this.task = arg.getParcelable(Constants.ARG_TASK);
+            this.isFromMyTasks = arg.getBoolean(Constants.ACTION_VIEW_TASK, false);
+
+            if(group == null && isFromMyTasks){
+                groupService.getGroupById(task.getGroupId(), new ServiceListener() {
+                    @Override
+                    public void onDataReceived(BaseEntity entity) {
+                        group = (Group) entity;
+                    }
+                });
+            }
         }
         this.title = "Edit Task";
     }

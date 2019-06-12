@@ -7,12 +7,10 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -54,7 +52,7 @@ public class ContactUtil {
     }
 
     public class MyContentObserver extends ContentObserver {
-        public MyContentObserver() {
+        MyContentObserver() {
             super(null);
         }
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -93,7 +91,7 @@ public class ContactUtil {
         return items;
     }
 
-    public void readContacts(Context context) {
+    private void readContacts(Context context) {
         if (context == null)
             return;
 
@@ -117,7 +115,6 @@ public class ContactUtil {
         }
     }
 
-    @NonNull
     private void getContacts(Cursor cursor) {
 
 
