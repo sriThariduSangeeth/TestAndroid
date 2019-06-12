@@ -84,7 +84,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * Handle time allotted to BroadcastReceivers.
      */
     private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
+        Timber.d("Short lived task is done.");
     }
 
    /*
