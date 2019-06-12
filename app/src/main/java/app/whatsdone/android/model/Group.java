@@ -22,6 +22,7 @@ public class Group implements Parcelable, BaseEntity {
     private String createdBy = "";
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
+    private boolean imageChanged = false;
 
   public void Group(String groupName , String groupId , String groupAvatar ){
       this.documentID = groupId;
@@ -125,6 +126,14 @@ public class Group implements Parcelable, BaseEntity {
 
     public void setAdmins(List<String> admins) {
         this.admins = admins;
+    }
+
+    public boolean isImageChanged() {
+        return imageChanged;
+    }
+
+    public void setImageChanged(boolean imageChanged) {
+        this.imageChanged = imageChanged;
     }
 
     public Group() {
