@@ -23,6 +23,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.DateUtil;
 import timber.log.Timber;
 
@@ -142,7 +143,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_GROUP_NAME, task.getGroupName());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
         data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
@@ -178,10 +179,10 @@ public class TaskServiceImpl implements TaskService {
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
-        data.put(Constants.FIELD_TASK_ASSIGNED_BY, task.getAssignedBy());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_BY, ContactUtil.getInstance().cleanNo(task.getAssignedBy()));
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));

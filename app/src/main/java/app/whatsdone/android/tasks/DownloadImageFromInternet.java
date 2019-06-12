@@ -8,8 +8,10 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 
+import timber.log.Timber;
+
 public class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
-    ImageView imageView;
+    private ImageView imageView;
 
 //    public DownloadImageFromInternet(ImageView imageView) {
 //        this.imageView = imageView;
@@ -23,7 +25,7 @@ public class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
             bimage = BitmapFactory.decodeStream(in);
 
         } catch (Exception e) {
-            Log.e("Error Message", e.getMessage());
+            Timber.e(e);
             e.printStackTrace();
         }
         return bimage;
