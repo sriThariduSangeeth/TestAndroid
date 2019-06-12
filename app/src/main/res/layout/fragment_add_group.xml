@@ -179,7 +179,6 @@
             android:background="@color/white"
             android:text="@string/AddMembers"
             android:textColor="@color/bluelight"
-
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

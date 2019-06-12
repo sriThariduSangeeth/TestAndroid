@@ -205,8 +205,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
-
-                    System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
+                    if(group.getMembers().isEmpty()){
+                        group.getMembers().add(AuthServiceImpl.getCurrentUser().getDocumentID());
+                    }
                     save();
                     saveFab.setEnabled(false);
                     adapter.notifyDataSetChanged();
