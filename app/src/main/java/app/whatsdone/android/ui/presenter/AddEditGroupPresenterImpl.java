@@ -16,6 +16,8 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.StorageService;
 import app.whatsdone.android.services.StorageServiceImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import app.whatsdone.android.utils.ContactUtil;
+import timber.log.Timber;
 
 public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
@@ -24,7 +26,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private GroupService service = new GroupServiceImpl();
     private StorageService storageService = new StorageServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
-
 
 
     @Override
@@ -38,12 +39,11 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         String documentId = service.add();
         group.setDocumentID(documentId);
 
-        if(group.getTeamImage() != null) {
+        if (group.getTeamImage() != null) {
             storageService.uploadGroupImage(group.getTeamImage(), documentId, new StorageService.Listener() {
                 @Override
                 public void onSuccess(String url) {
-                    Log.d(TAG, "Image upload success " + documentId);
-
+                    Timber.d("Image upload success %s", documentId);
                 }
             });
         }
@@ -51,31 +51,40 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
         try {
 
+            service.create(group, new ServiceListener() {
+                @Override
+                public void onSuccess() {
+                    view.onGroupSaved();
+                    checkExistInPlatform(group);
+                }
 
-        service.create(group, new ServiceListener() {
-            @Override
-            public void onSuccess() {
-                view.onGroupSaved();
-                checkExistInPlatform(group);
-            }
 
+                @Override
+                public void onError(@Nullable String error) {
 
-            @Override
-            public void onError(@Nullable String error) {
+                    view.onGroupError(error);
+                }
+            });
 
-                view.onGroupError(error);
-            }
-        });
-
-        } catch (Exception exe){ view.onGroupError(exe.getMessage());
-            Log.d("My ", exe.getMessage());}
-
+        } catch (Exception exe) {
+            view.onGroupError(exe.getMessage());
+            Timber.d(exe);
+        }
 
 
     }
 
     @Override
     public void update(Group group) {
+        if (group.isImageChanged()) {
+            storageService.uploadGroupImage(group.getTeamImage(), group.getDocumentID(), new StorageService.Listener() {
+                @Override
+                public void onSuccess(String url) {
+                    Timber.d("Image upload success %s", group.getDocumentID());
+
+                }
+            });
+        }
 
         service.update(group, new ServiceListener() {
             @Override
@@ -93,7 +102,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         });
     }
 
-    public void checkExistInPlatform(Group group ) {
+    public void checkExistInPlatform(Group group) {
         contactService.existsInPlatform(group.getMembers(), new ContactService.Listener() {
             @Override
             public void onCompleteSearch(List<String> isExisting) {
@@ -104,12 +113,12 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     }
 
     public void sendInviteToMembers(List<String> newMembers, Group group) {
-        contactService.inviteMembers(newMembers,group, new ContactService.Listener() {
+        contactService.inviteMembers(newMembers, group, new ContactService.Listener() {
             @Override
             public void onInvited() {
 
             }
-        } );
+        });
 
     }
 
@@ -117,4 +126,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     public void setContext(Activity context) {
         this.context = context;
     }
+
+
 }

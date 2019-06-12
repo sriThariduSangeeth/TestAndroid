@@ -6,19 +6,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import app.whatsdone.android.model.User;
+import app.whatsdone.android.services.AuthServiceImpl;
 
 public class GetCurrentDetails {
 
     public Date getCurrentDateTime (){
 
-        long epochTime = 0;
         Date date = null;
         Date today = Calendar.getInstance().getTime();
 
         // Constructs a SimpleDateFormat using the given pattern
-        SimpleDateFormat crunchifyFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        SimpleDateFormat crunchifyFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz", Locale.getDefault());
 
         // format() formats a Date into a date/time string.
         String currentTime = crunchifyFormat.format(today);
@@ -29,7 +30,7 @@ public class GetCurrentDetails {
             date = crunchifyFormat.parse(currentTime);
 
             // getTime() returns the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this Date object.
-            epochTime = date.getTime();
+            //epochTime = date.getTime();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -39,12 +40,7 @@ public class GetCurrentDetails {
     }
 
     public User getCurrentUser(){
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        String avatar =  String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
-        User user = new User(userId,userName,avatar,true);
-
-        return user;
+        return AuthServiceImpl.getCurrentUser();
     }
 
 }

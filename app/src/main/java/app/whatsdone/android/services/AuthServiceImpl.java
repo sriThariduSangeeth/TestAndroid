@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
+import timber.log.Timber;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
@@ -59,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         fireUser.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "User profile updated.");
+                        Timber.tag(TAG).d("User profile updated.");
                         AuthServiceImpl.user.setAvatar(user.getAvatar());
                         AuthServiceImpl.user.setDisplayName(user.getDisplayName());
                         if(listener !=null) listener.onSuccess();
@@ -101,14 +102,14 @@ public class AuthServiceImpl implements AuthService {
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                        Log.e(TAG, "onVerificationCompleted");
+                        Timber.tag(TAG).e("onVerificationCompleted");
                         SharedPreferencesUtil.saveString(Constants.SHARED_PHONE, phoneNo);
                         signInWithPhoneAuthCredential(phoneAuthCredential, listener);
                     }
 
                     @Override
                     public void onVerificationFailed(FirebaseException e) {
-                        Log.e(TAG, e.getLocalizedMessage());
+                        Timber.e(e);
                         listener.onError(e.getLocalizedMessage());
                     }
 
@@ -118,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
                         // The SMS verification code has been sent to the provided phone number, we
                         // now need to ask the user to enter the code and then construct a credential
                         // by combining the code with a verification ID.
-                        Log.d(TAG, "onCodeSent:" + verificationId);
+                        Timber.tag(TAG).d("onCodeSent:%s", verificationId);
                         SharedPreferencesUtil.saveString(Constants.SHARED_PHONE, phoneNo);
                         // Save verification ID and resending token so we can use them later
                         String mVerificationId = verificationId;
@@ -139,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
+                        Timber.tag(TAG).d("signInWithCredential:success");
 
                         FirebaseUser user = task.getResult().getUser();
                         AuthServiceImpl.user.setDocumentID(user.getPhoneNumber());
@@ -148,6 +149,7 @@ public class AuthServiceImpl implements AuthService {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         Map<String, Object> data = new HashMap<>();
                         data.put(Constants.FIELD_USER_PHONE_NO, phoneNo);
+                        data.put(Constants.FIELD_USER_ACTIVE, 1);
                         db.collection(Constants.REF_USERS).document(phoneNo).set(data, SetOptions.merge());
 
                         user.getIdToken(false).addOnCompleteListener(context, new OnCompleteListener<GetTokenResult>() {
@@ -166,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
                         // ...
                     } else {
                         // Sign in failed, display a message and update the UI
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Timber.tag(TAG).w(task.getException(), "signInWithCredential:failure");
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                             // The verification code entered was invalid
                         }

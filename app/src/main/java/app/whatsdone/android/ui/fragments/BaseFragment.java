@@ -20,6 +20,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,32 +62,33 @@ import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
-public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView {
+public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView{
 
     private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
-    private Button addMembers;
     protected CircleImageView circleImageView;
-    private Uri selectedImage;
-    protected List<String> contactNumbers = new ArrayList<String>();
-    protected List<String> contactName = new ArrayList<String>();
+    protected List<String> contactNumbers = new ArrayList<>();
+    protected List<String> contactName = new ArrayList<>();
     private final static int RQS_PICK_CONTACT = 1;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
-    private ConstraintLayout constraintLayout;
     private List<Contact> members = new ArrayList<Contact>();
-    private SwipeMenuListView swipeListView;
+    protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
-    Set<String> contactSet = new HashSet<>();
-
+    HashSet contactSet = new HashSet<>();
+    protected Button addMembers;
+    protected  ConstraintLayout constraintLayout;
+    private boolean saveButtonClickedOnce = false;
+    protected FloatingActionButton saveFab;
 
 
     public BaseFragment() {
@@ -99,6 +101,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         super.onCreate(savedInstanceState);
 
     }
+
 
 
     @Override
@@ -115,49 +118,53 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName = view.findViewById(R.id.group_name_edit_text);
         constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
+        saveFab = view.findViewById(R.id.save_group_fab_button);
+        //imageView = view.findViewById(R.id.image_view_group);
 
         contactSet = new HashSet();
 
-        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, contactNumbers, members);
+        adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
         swipeListView.setAdapter(adapter);
 
-        //arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.member_list_layout, contactName);
-        //swipeListView.setAdapter(arrayAdapter);
         contactNumbers.addAll(group.getMembers());
-        members.addAll(ContactUtil.resolveContacts(group.getMembers()));
+        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+        checkUserForName();
+        checkUserToAddMembers();
 
-        if(group.getAvatar() != null && !group.getAvatar().isEmpty() ) {
+
+
+        if (group.getAvatar() != null && !group.getAvatar().isEmpty()) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
-        constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                showPictureDialog();
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkUserForTeamImage();
 
-            }
-        });
+                    //showPictureDialog();
+
+                }
+            });
+
         SwipeList();
 
         addMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                //intent.setDataAndType(ContactsContract.Contacts.CONTENT_URI,ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-                startActivityForResult(intent, REQUEST_CODE);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
 
-
+                }else {
+                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    //intent.setDataAndType(ContactsContract.Contacts.CONTENT_URI,ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
-
-
             }
         });
 
@@ -168,7 +175,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
 
 
-        view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
+        saveFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -193,21 +200,23 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                 } else {
 
-
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
 
                     System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
-
-
                     save();
+                    saveFab.setEnabled(false);
+                    adapter.notifyDataSetChanged();
                 }
+
 
             }
 
 
+
         });
+
 
 
         return view;
@@ -215,8 +224,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
+    public  abstract void checkUserForName();
+    public abstract void checkUserForTeamImage();
+    public abstract void checkUserToAddMembers();
 
-    public Bitmap getImageData(ImageView imageView) {
+
+  public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
@@ -248,13 +261,14 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         //goes back to the group fragment, list of groups
+       // adapter.notifyAll();
         adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
 
     @Override
     public void onGroupError(String errorMessage) {
-         Log.d("failed creating a group", errorMessage);
+        Timber.d(errorMessage);
 
     }
 
@@ -270,7 +284,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         //gallery
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            selectedImage = data.getData();
+            Uri selectedImage = data.getData();
 
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -290,14 +304,16 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 e.printStackTrace();
             }
             circleImageView.setImageBitmap(bmp);
+            group.setImageChanged(true);
+
         }
         //camera
         else if (requestCode == CAMERA) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             circleImageView.setImageBitmap(bmp);
+            group.setImageChanged(true);
 
         }
-
 
         //contacts
         switch (requestCode) {
@@ -327,7 +343,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                     String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                     String num1 = number.replaceAll("\\s+", "");
                                     oneContact.add(num1);
-                                    System.out.println(" AAAAAAAAAA   " +num1);
+                                    System.out.println(" AAAAAAAAAA   " + num1);
 
                                 }
                                 numbers.close();
@@ -354,12 +370,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                             alert.show();
                                         } else {
                                             //contactName.add(name);
-                                            if(contact != null && !contact.isEmpty()) {
-                                                contact = ContactUtil.cleanNo(contact);
+                                            if (contact != null && !contact.isEmpty()) {
+                                                contact = ContactUtil.getInstance().cleanNo(contact);
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
                                                 contacts.add(contact);
-                                                members.addAll(ContactUtil.resolveContacts(contacts));
+                                                members.addAll(ContactUtil.getInstance().resolveContacts(contacts));
                                                 adapter.notifyDataSetChanged();
                                             }
 
@@ -368,9 +384,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                 });
 
 
-
                             } catch (Exception exception) {
-                                Log.d("test ", exception.getMessage());
+                                Timber.d(exception);
                             }
                         }
                     }
@@ -389,7 +404,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-    private void showPictureDialog() {
+    protected void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
@@ -413,7 +428,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public void choosePhotoFromGallary() {
-       // requestMultiplePermissions();
+        // requestMultiplePermissions();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
@@ -439,6 +454,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
+                            Toast.makeText(getContext(), "permissions are not granted by the user!", Toast.LENGTH_SHORT).show();
+
 
                         }
                     }
@@ -506,21 +523,17 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
-                String value = adapter.getItem(position);
+                String value = adapter.getItem(position).getPhoneNumber();
 
-
-                if(value!= null && value.equals(group.getCreatedBy()))
+                if(group.getCreatedBy().equals(value))
                 {
-                    Toast.makeText(getContext(), "cannot delete " , Toast.LENGTH_SHORT).show();
-                }
-                else {
+                    Toast.makeText(getContext(), "This number can not be deleted" + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
+                } else {
                     contactNumbers.remove(value);
+                    members.remove(adapter.getItem(position));
                     adapter.notifyDataSetChanged();
-                   // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
-
+                    // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
                 }
-
-
                 return false;
 
             }
@@ -529,23 +542,19 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         });
     }
 
-    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener )
-    {
+    private void selectOneContact(Set<String> oneContact, OnContactSelectedListener listener) {
         String[] numbers = oneContact.toArray(new String[oneContact.size()]);
 
-        if (numbers.length == 0 )
+        if (numbers.length == 0)
             return;
 
-        if(numbers.length == 1) {
+        if (numbers.length == 1) {
             listener.onSelected(numbers[0]);
             return;
         }
-
         AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
         contactDialog.setTitle("Select one contact to add");
-
         contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
-
         contactDialog.show();
 
     }
@@ -554,4 +563,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
+    public boolean isSaveButtonClickedOnce() {
+        return saveButtonClickedOnce;
+    }
+
+    public void setSaveButtonClickedOnce(boolean saveButtonClickedOnce) {
+        this.saveButtonClickedOnce = saveButtonClickedOnce;
+    }
 }

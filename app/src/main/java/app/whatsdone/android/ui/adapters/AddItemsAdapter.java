@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
@@ -20,9 +23,9 @@ import app.whatsdone.android.model.Task;
 public class AddItemsAdapter extends BaseAdapter {
 
     private Context context;
-    ArrayList<CheckListItem> itemList = new ArrayList<>();
+    List<CheckListItem> itemList = new ArrayList<>();
 
-    public AddItemsAdapter(Context context, ArrayList<CheckListItem> itemListArray)
+    public AddItemsAdapter(Context context, List<CheckListItem> itemListArray)
     {
         this.context = context;
         this.itemList = itemListArray;
@@ -53,9 +56,18 @@ public class AddItemsAdapter extends BaseAdapter {
 
             TextView textView = (TextView) convertView.findViewById(R.id.checklist__item);
             ImageView imageRemove = (ImageView) convertView.findViewById(R.id.remove_image_view);
+            CheckBox checkBox = convertView.findViewById(R.id.checkbox_task);
 
             CheckListItem myTask = itemList.get(position);
             textView.setText(myTask.getTitle());
+            checkBox.setChecked(myTask.isCompleted());
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    myTask.setCompleted(isChecked);
+                }
+            });
 
 
             imageRemove.setOnClickListener(new View.OnClickListener() {

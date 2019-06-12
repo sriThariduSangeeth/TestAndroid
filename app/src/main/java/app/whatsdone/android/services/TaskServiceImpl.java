@@ -1,6 +1,9 @@
 package app.whatsdone.android.services;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +23,9 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.DateUtil;
+import timber.log.Timber;
 
 public class TaskServiceImpl implements TaskService {
 
@@ -42,24 +48,8 @@ public class TaskServiceImpl implements TaskService {
 
                         try {
 
-                            Task task = new Task();
-                            task.setDocumentID(doc.getId());
-                            if (doc.get(Constants.FIELD_TASK_TITLE) != null)
-                                task.setTitle(doc.getString(Constants.FIELD_TASK_TITLE));
-                            if (doc.get(Constants.FIELD_TASK_DESCRIPTION) != null)
-                                task.setDescription(doc.getString(Constants.FIELD_TASK_DESCRIPTION));
-                            if (doc.get(Constants.FIELD_TASK_CREATED_BY) != null)
-                                task.setCreatedBy(doc.getString(Constants.FIELD_TASK_CREATED_BY));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER) != null)
-                                task.setAssignedUser(Constants.FIELD_TASK_ASSIGNED_USER);
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserImage(Constants.FIELD_TASK_ASSIGNED_USER_NAME);
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)
-                                task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
-                            if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
-                                task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
+                            Task task = getTask(doc);
+
                             groups.add(task);
                         }catch (Exception exception) {
                             Log.d(TAG, "failed to parse group", exception);
@@ -88,35 +78,51 @@ public class TaskServiceImpl implements TaskService {
 
                         try {
 
-                            Task task = new Task();
-                            task.setDocumentID(doc.getId());
-                            if (doc.get(Constants.FIELD_TASK_TITLE) != null)
-                                task.setTitle(doc.getString(Constants.FIELD_TASK_TITLE));
-                            if (doc.get(Constants.FIELD_TASK_DESCRIPTION) != null)
-                                task.setDescription(doc.getString(Constants.FIELD_TASK_DESCRIPTION));
-                            if (doc.get(Constants.FIELD_TASK_CREATED_BY) != null)
-                                task.setCreatedBy(doc.getString(Constants.FIELD_TASK_CREATED_BY));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER) != null)
-                                task.setAssignedUser(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserImage(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
-                                task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
-                            if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)
-                                task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
-                            if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
-                                task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
-                            if (doc.get(Constants.FIELD_TASK_STATUS) != null)
-                                task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
+                            Task task = getTask(doc);
                             tasks.add(task);
                         }catch (Exception exception) {
-                            Log.d(TAG, "failed to parse group", exception);
+                            Timber.tag(TAG).d(exception, "failed to parse group");
                         }
 
                     }
 
                     serviceListener.onDataReceived(tasks);
                 });
+    }
+
+    @NonNull
+    private Task getTask(QueryDocumentSnapshot doc) {
+        Task task = new Task();
+        task.setDocumentID(doc.getId());
+        if (doc.get(Constants.FIELD_TASK_TITLE) != null)
+            task.setTitle(doc.getString(Constants.FIELD_TASK_TITLE));
+        if (doc.get(Constants.FIELD_TASK_DESCRIPTION) != null)
+            task.setDescription(doc.getString(Constants.FIELD_TASK_DESCRIPTION));
+        if (doc.get(Constants.FIELD_TASK_CREATED_BY) != null)
+            task.setCreatedBy(doc.getString(Constants.FIELD_TASK_CREATED_BY));
+        if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER) != null)
+            task.setAssignedUser(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER));
+        if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
+            task.setAssignedUserImage(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE));
+        if (doc.get(Constants.FIELD_TASK_ASSIGNED_USER_NAME) != null)
+            task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
+        if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)
+            task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
+        if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
+            task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
+        if (doc.get(Constants.FIELD_TASK_GROUP_ID) != null)
+            task.setGroupId(doc.getString(Constants.FIELD_TASK_GROUP_ID));
+        if (doc.get(Constants.FIELD_TASK_GROUP_NAME) != null)
+            task.setGroupName(doc.getString(Constants.FIELD_TASK_GROUP_NAME));
+        if (doc.get(Constants.FIELD_TASK_DUE_AT) != null)
+            task.setDueDate(doc.getDate(Constants.FIELD_TASK_DUE_AT));
+        if (doc.get(Constants.FIELD_TASK_STATUS) != null)
+            task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
+        if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
+            Object checklist = doc.get(Constants.FIELD_TASK_CHECKLIST);
+            Timber.d("%s", checklist);
+        }
+        return task;
     }
 
     @Override
@@ -137,13 +143,13 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_GROUP_NAME, task.getGroupName());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
         data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, "");
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
         data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
-        data.put(Constants.FIELD_TASK_DUE_AT, task.getDueDate());
+        data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
@@ -159,10 +165,10 @@ public class TaskServiceImpl implements TaskService {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error creating document.", taskResult.getException());
+                Timber.tag(TAG).w(taskResult.getException(), "Error creating document.");
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(taskResult.isSuccessful());
         });
     }
 
@@ -173,12 +179,13 @@ public class TaskServiceImpl implements TaskService {
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
-        data.put(Constants.FIELD_TASK_ASSIGNED_BY, task.getAssignedBy());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER, task.getAssignedUser());
+        data.put(Constants.FIELD_TASK_ASSIGNED_BY, ContactUtil.getInstance().cleanNo(task.getAssignedBy()));
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
-        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedBy());
+        data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
                 task.getCheckList()) {
@@ -196,7 +203,7 @@ public class TaskServiceImpl implements TaskService {
                 Log.w(TAG, "Error creating document.", taskResult.getException());
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
-            serviceListener.onCompleted(null);
+            serviceListener.onCompleted(taskResult.isSuccessful());
         });
     }
 
@@ -212,7 +219,7 @@ public class TaskServiceImpl implements TaskService {
                         Log.w(TAG, "Error deleting document.", task.getException());
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
-                    serviceListener.onCompleted(null);
+                    serviceListener.onCompleted(task.isSuccessful());
                 });
 
     }

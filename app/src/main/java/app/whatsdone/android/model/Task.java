@@ -1,11 +1,15 @@
 package app.whatsdone.android.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Task implements BaseEntity {
+public class Task implements BaseEntity, Parcelable {
 
     public enum TaskStatus {
         TODO(10),
@@ -35,25 +39,40 @@ public class Task implements BaseEntity {
             }
         }
 
+        public static int getIndex(TaskStatus status) {
+            switch (status) {
+
+                case TODO:
+                    return 0;
+                case IN_PROGRESS:
+                    return 1;
+                case ON_HOLD:
+                    return 2;
+                case DONE:
+                    return 3;
+            }
+            return 0;
+        }
+
         public int getValue() {
             return value;
         }
     }
 
-    private String documentID;
-    private String title;
-    private String description;
-    private Date dueDate;
+    private String documentID = "";
+    private String title = "";
+    private String description = "";
+    private Date dueDate = new Date();
     private String groupId;
     private String groupName;
-    private String assignedUser;
-    private String assignedUserName;
-    private String assignedUserImage;
+    private String assignedUser = "";
+    private String assignedUserName = "";
+    private String assignedUserImage = "";
     private String assignedBy;
     private String createdBy;
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.TODO;
     private Date updatedDate;
-    private List<CheckListItem> checkList;
+    private List<CheckListItem> checkList = new ArrayList<>();
 
 
 
@@ -175,5 +194,71 @@ public class Task implements BaseEntity {
     public Task() {
     }
 
+
+
+    protected Task(Parcel in) {
+        documentID = in.readString();
+        title = in.readString();
+        description = in.readString();
+        long tmpDueDate = in.readLong();
+        dueDate = tmpDueDate != -1 ? new Date(tmpDueDate) : null;
+        groupId = in.readString();
+        groupName = in.readString();
+        assignedUser = in.readString();
+        assignedUserName = in.readString();
+        assignedUserImage = in.readString();
+        assignedBy = in.readString();
+        createdBy = in.readString();
+        status = TaskStatus.fromInt(in.readInt());
+        long tmpUpdatedDate = in.readLong();
+        updatedDate = tmpUpdatedDate != -1 ? new Date(tmpUpdatedDate) : null;
+        if (in.readByte() == 0x01) {
+            checkList = new ArrayList<>();
+            in.readList(checkList, CheckListItem.class.getClassLoader());
+        } else {
+            checkList = new ArrayList<>();;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(documentID);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeLong(dueDate != null ? dueDate.getTime() : -1L);
+        dest.writeString(groupId);
+        dest.writeString(groupName);
+        dest.writeString(assignedUser);
+        dest.writeString(assignedUserName);
+        dest.writeString(assignedUserImage);
+        dest.writeString(assignedBy);
+        dest.writeString(createdBy);
+        dest.writeValue(status.getValue());
+        dest.writeLong(updatedDate != null ? updatedDate.getTime() : -1L);
+        if (checkList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(checkList);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 
 }

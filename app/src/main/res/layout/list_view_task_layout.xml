@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_margin="20sp"
-    >
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/remove_image_view"
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="10sp"
-        android:layout_marginRight="20sp"
         android:background="@drawable/remove_items_icon"
-        android:focusable="false" />
+        android:focusable="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/checklist__item"
-        android:layout_width="300dp"
-        android:layout_height="50sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginEnd="-5dp"
-        android:layout_marginRight="-5dp"
-        android:layout_weight="1"
-        android:gravity="left"
-        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="task1"
+        android:maxLines="1"
+        android:inputType="text"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/checkbox_task"
+        app:layout_constraintStart_toEndOf="@+id/remove_image_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkbox_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

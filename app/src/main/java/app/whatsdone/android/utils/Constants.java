@@ -35,11 +35,13 @@ public class Constants {
     public static final int TASKS_LIMIT = 10;
     public static final String FIELD_TASK_ASSIGNED_USER = "assigned_user";
     public static final String FIELD_TASK_ASSIGNED_BY = "assigned_by";
+    public static final String FIELD_TASK_ASSIGNED_BY_NAME = "assigned_by_name";
     public static final String FIELD_TASK_ASSIGNED_USER_IMAGE = "assigned_user_image";
     public static final String FIELD_TASK_DUE_AT = "due_at";
     public static final String FIELD_TASK_ASSIGNED_USER_NAME = "assigned_user_name";
     public static final String FIELD_TASK_ASSIGNEE_COMMENT = "assignee_comment";
     public static final String FIELD_TASK_CREATED_BY = "created_by";
+    public static final String FIELD_TASK_CREATED_BY_NAME = "created_by_name";
     public static final String FIELD_TASK_CREATED_AT = "created_at";
     public static final String FIELD_TASK_DESCRIPTION = "description";
     public static final String FIELD_TASK_STATUS = "status";
@@ -72,6 +74,15 @@ public class Constants {
 
     public static final String SHARED_TOKEN = "token";
     public static final String DEFULT_CHAT_IMG_URL = "https://img.icons8.com/color/100/000000/user-group-man-man.png";
-
     public static final String SHARED_PHONE = "phone_no";
+
+    public static final String ACTION_ADD_GROUP = "add_group";
+    public static final String ACTION_VIEW_GROUP = "view_group";
+    public static final String ARG_GROUP = "group";
+    public static final String ARG_ACTION = "action";
+    public static final String FIELD_USER_ACTIVE = "activated_status";
+    public static final String ACTION_ADD_TASK = "add_task";
+    public static final String GROUP_PERSONAL = "Personal";
+    public static final String ACTION_VIEW_TASK = "view_task";
+    public static final String ARG_TASK = "task";
 }

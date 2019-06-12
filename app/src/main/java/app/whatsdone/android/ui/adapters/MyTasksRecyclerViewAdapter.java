@@ -1,18 +1,26 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.DateUtil;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
@@ -61,19 +69,41 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     {
         Task task = (Task)tasks.get(i);
         recyclerViewHolderTask.textView.setText(task.getTitle());
+        recyclerViewHolderTask.groupTextView.setText(task.getGroupName());
+        if(!task.getAssignedUserImage().isEmpty())
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
 
-        recyclerViewHolderTask.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        recyclerViewHolderTask.itemView.setOnClickListener(v -> {
 
-                if(listener !=null)
-                {
-                    System.out.println("mytask");
-                    listener.onTaskClicked();
-                }
-            }
+            Intent intent = new Intent(context, InnerGroupTaskActivity.class);
+            intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+            intent.putExtra(Constants.ARG_TASK, task);
+            context.startActivity(intent);
         });
 
+        recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
+        recyclerViewHolderTask.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+
+    }
+
+    private int getStatusIndicatorColor(Task task) {
+        Date today = DateUtil.getLastMinuteDate(new Date());
+
+        if (DateUtil.isEqual(today, task.getDueDate()))
+            return R.color.LightSalmonGold;
+        else if ((today).after(task.getDueDate()))
+            return R.color.lightRed;
+        return R.color.LimeGreen;
+    }
+
+    private int getStatusIndicatorText(Task task) {
+        Date today = DateUtil.getLastMinuteDate(new Date());
+
+        if (DateUtil.isEqual(today, task.getDueDate()))
+            return R.string.task_due_soon;
+        else if ((today).after(task.getDueDate()))
+            return R.string.task_overdue;
+        return R.string.task_ontrack;
     }
 
 
@@ -84,19 +114,26 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     }
 
     //public class
-    public class RecyclerViewHolderTask extends RecyclerView.ViewHolder
+    class RecyclerViewHolderTask extends RecyclerView.ViewHolder
     {
-        public TextView textView;
+        TextView textView;
+        TextView groupTextView;
+        TextView statusIndicator;
+        ImageView imageView;
 
-        public RecyclerViewHolderTask(@NonNull View itemView) {
+
+        RecyclerViewHolderTask(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.task_text);
+            groupTextView = itemView.findViewById(R.id.group_name_text);
+            imageView = itemView.findViewById(R.id.image_view_my_task);
+            statusIndicator = itemView.findViewById(R.id.status_indicator);
         }
     }
 
     public interface OnMyTaskFragmentInteractionListener {
 
-        void onTaskClicked();
+        void onTaskClicked(Task task);
 
     }
 

@@ -39,13 +39,16 @@
 
                     <EditText
                         android:id="@+id/title_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
+                        android:hint="@string/enter_title_here"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textDirection="anyRtl" />
+                        android:textDirection="anyRtl"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp" />
 
                 </RelativeLayout>
 
@@ -58,7 +61,7 @@
 
                 <EditText
                     android:id="@+id/description_edit_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -135,7 +138,8 @@
                         android:gravity="center"
                         android:text="@string/due_date"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16sp"
+                        android:layout_marginStart="10dp" />
 
                     <TextView
                         android:id="@+id/due_date_text_view"
@@ -148,8 +152,7 @@
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:text="@string/set_due_date"
-
-                        />
+                        android:layout_marginEnd="10dp" />
 
 
                 </RelativeLayout>
@@ -173,7 +176,8 @@
                         android:gravity="center"
                         android:text="@string/assigned_to"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16sp"
+                        android:layout_marginStart="10dp" />
 
                     <TextView
                         android:id="@+id/assign_from_contacts_text_view"
@@ -185,7 +189,8 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="10dp"
                         android:gravity="center"
-                        android:text="@string/select_from_contacts" />
+                        android:text="@string/select_from_contacts"
+                        android:layout_marginEnd="10dp" />
 
                 </RelativeLayout>
 
@@ -208,7 +213,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:gravity="center"
-                        android:text="@string/assigned_to"
+                        android:text="@string/group_name"
                         android:textColor="@color/black"
                         android:textSize="16dp" />
 
@@ -247,6 +252,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <EditText
+                        android:id="@+id/checklist_add_new_item_edit_text"
+                        android:layout_width="305sp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView4"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:background="@android:color/transparent"
+                        android:ems="10" />
+
+                    <ImageView
+                        android:id="@+id/checklist_add_image_view"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:layout_below="@+id/textView4"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/add_items_icon" />
+                    <!--<CheckBox-->
+                    <!--android:id="@+id/checkbox_task_add"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
                 android:orientation="vertical">
 
                 <ListView
@@ -257,51 +304,7 @@
                     android:layout_weight="1"
                     android:dividerHeight="2dp">
                 </ListView>
-                <TextView
-                    android:id="@+id/empty"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Add CheckList Here"
-                    android:textColor="#312F2F" />
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/border">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <EditText
-                        android:id="@+id/checklist_add_new_item_edit_text"
-                        android:layout_width="305sp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:ems="10"
-                        android:layout_below="@+id/textView4"
-                        />
-
-                    <ImageView
-                        android:id="@+id/checklist_add_image_view"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_below="@+id/textView4"
-                        android:src="@drawable/add_items_icon"
-                        />
-
-                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -322,7 +325,7 @@
         android:layout_marginBottom="36dp"
         android:background="@color/fab_color"
         android:backgroundTint="@color/fab_color"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_check"
         app:backgroundTint="@color/fab_color"
         app:rippleColor="@color/fab_color" />
 

@@ -54,6 +54,8 @@
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity"/>
+        <activity android:name=".ui.activity.InnerGroupTaskActivity" />
+
         <service
             android:name=".services.WhatsDoneFirebaseMessagingService"
             android:exported="false">

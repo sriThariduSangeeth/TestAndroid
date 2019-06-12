@@ -8,7 +8,7 @@ public interface DiscussionService {
 
     void getAllDiscussion(String groupId , ServiceListener serviceListener);
 
-    void insterMessage(Message getMessage ,  ServiceListener serviceListener);
+    void insertMessage(Message getMessage , ServiceListener serviceListener);
 
     void deleteMessage ();
 

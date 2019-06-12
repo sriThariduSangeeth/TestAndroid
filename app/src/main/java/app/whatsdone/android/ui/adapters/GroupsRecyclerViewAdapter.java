@@ -1,12 +1,14 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,22 +21,28 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static android.support.constraint.Constraints.TAG;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     public List<BaseEntity> groups;
     private Context context;
-    private TextView groupNameTextView, taskCount, discussionCount;;
+    private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
     private CircleImageView imageView;
+    private RecyclerView.LayoutManager linearLayoutManager;
+   // private GroupsRecyclerViewAdapter groupsRecyclerViewAdapter;
 
 
+    private RecyclerView.Adapter adapter;
 
     public GroupsRecyclerViewAdapter(List<BaseEntity> groups, Context context) {
         this.groups = groups;
@@ -53,6 +61,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
 
         imageView = view.findViewById(R.id.image_view_group);
+       // toolbarTextView = view.findViewById(R.id.toolbar_title);
 
 
 
@@ -63,23 +72,23 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
       //  holder.progressplay.setProgress(0);
-        Group group = (Group) groups.get(position);
+        final Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
-        holder.taskCount.setText(group.getDiscussionCount()+"");
-        holder.discussionCount.setText(group. getDiscussionCount()+"");
-
+        holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
+        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
+      //  holder.setIsRecyclable(false);
 
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
-                Picasso.get().load(group.getAvatar()).into(imageView);
-                Log.d(TAG, "onBindViewHolder: ");
+                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
+                Timber.tag(TAG).d("onBindViewHolder: ");
                 System.out.println(" Avatar " + group.getAvatar());
             }
 
         }catch (Exception exception){
             System.out.println(exception.getMessage());
             exception.printStackTrace();
-            Log.e("EXE", "exception" + exception.getMessage());
+            Timber.tag("EXE").e("exception%s", exception.getMessage());
         }
 
         holder.setGroup(group);
@@ -97,6 +106,10 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
+        private RecyclerView groupRecyclerView;
+        public View view;
+
+
         private TextView groupNameTextView, taskCount, discussionCount;
         private ImageView imageView;
         private Group group;
@@ -106,22 +119,27 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            groupNameTextView = itemView.findViewById(R.id.group_text);
-            taskCount = itemView.findViewById(R.id.unread_tasks_counter);
-            discussionCount = itemView.findViewById(R.id.unread_discussion_counter);
+            groupNameTextView = (TextView) itemView.findViewById(R.id.group_text);
+            taskCount = (TextView) itemView.findViewById(R.id.unread_tasks_counter);
+            discussionCount = (TextView) itemView.findViewById(R.id.unread_discussion_counter);
+            groupRecyclerView = (RecyclerView) itemView.findViewById(R.id.group_recycler_view) ;
+            imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            if(imageView.getDrawable() == null)
+            {
+                Drawable defaultImage= itemView.getResources().getDrawable(R.drawable.user_group_man_woman3x);
+                imageView.setImageDrawable(defaultImage);
+            }
 
 
+            itemView.setOnClickListener(v -> {
+                group.setTeamImage(getImageData(imageView));
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                    group.setTeamImage(getImageData(imageView));
-                    Fragment myFragment = InnerGroupTaskFragment.newInstance(group);
+                AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                Intent intent = new Intent(activity, InnerGroupTaskActivity.class);
+                intent.putExtra("group", group);
+                activity.startActivity(intent);
 
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.group_container, myFragment).addToBackStack(null).commit();
 
-                }
             });
 
         }
@@ -156,4 +174,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public long getItemId(int position) {
         return  position;
     }
+
+
 }
