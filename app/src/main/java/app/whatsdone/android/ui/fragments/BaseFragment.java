@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -81,6 +82,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
+    protected TextView toolbarTitle;
     private List<Contact> members = new ArrayList<Contact>();
     protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
@@ -120,7 +122,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView = view.findViewById(R.id.add_members_list_view);
         saveFab = view.findViewById(R.id.save_group_fab_button);
         //imageView = view.findViewById(R.id.image_view_group);
-
+        toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         contactSet = new HashSet();
 
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);

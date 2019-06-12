@@ -64,7 +64,8 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void checkUserForName() {
-teamName.setEnabled(true);
+        teamName.setEnabled(true);
+        toolbarTitle.setText(getString(R.string.add_new_group));
     }
 
     @Override

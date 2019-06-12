@@ -18,8 +18,8 @@
     <string name="text1">text1</string>
     <string name="time">11.00</string>
     <string name="NewActivity">New Activity</string>
-    <string name="GroupDetails">Team Details</string>
-    <string name="group_name">Team Name</string>
+    <string name="GroupDetails">Group Details</string>
+    <string name="group_name">Group Name</string>
     <string name="CreateGroup">Create Group</string>
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
@@ -27,7 +27,7 @@
     <string name="Description">Description</string>
     <string name="done_image">done image</string>
     <string name="Task_Name">Task Name</string>
-    <string name="teamPhoto">Team Photo</string>
+    <string name="teamPhoto">Group Photo</string>
     <string name="members">Members</string>
     <string name="AddMembers">Add members</string>
     <string name="settings">Settings</string>
@@ -77,7 +77,7 @@
     <string name="start_typing_status">Start typing</string>
     <string name="default_notification_channel_id">whats_done_channel</string>
     <string name="enable_user_tasks">Enable user tasks</string>
-    <string name="ADD_NEW_TASK">Add Task</string>
+    <string name="add_new_task">Add Task</string>
     <string name="add_group">Add Group</string>
     <string name="enter_title_here">Enter title here</string>
     <string name="alert">Alert</string>
@@ -87,4 +87,8 @@
     <string name="task_due_soon">Due soon</string>
     <string name="add_task">Add Task</string>
     <string name="create_profile_btn_text">Create Profile</string>
+    <string name="group">Group</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="add_new_group">Add Group</string>
+    <string name="group_settings">Group Settings</string>
 </resources>

@@ -163,6 +163,7 @@ public abstract class TaskFragmentBase extends Fragment {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
                 return;
             }
+            v.setEnabled(false);
             task.setTitle(title);
             task.setDescription(getDescript.getText().toString());
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
