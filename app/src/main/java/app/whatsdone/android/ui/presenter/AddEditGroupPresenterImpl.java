@@ -16,6 +16,7 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.StorageService;
 import app.whatsdone.android.services.StorageServiceImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import timber.log.Timber;
 
 public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
@@ -42,7 +43,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
             storageService.uploadGroupImage(group.getTeamImage(), documentId, new StorageService.Listener() {
                 @Override
                 public void onSuccess(String url) {
-                    Log.d(TAG, "Image upload success " + documentId);
+                    Timber.d("Image upload success " + documentId);
 
                 }
             });
@@ -68,7 +69,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         });
 
         } catch (Exception exe){ view.onGroupError(exe.getMessage());
-            Log.d("My ", exe.getMessage());}
+            Timber.d(exe);}
 
 
 
@@ -76,6 +77,19 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
     @Override
     public void update(Group group) {
+        if(group.isImageChanged())
+        {
+            storageService.uploadGroupImage(group.getTeamImage(), group.getDocumentID(), new StorageService.Listener() {
+                @Override
+                public void onSuccess(String url) {
+                    Timber.d("Image upload success %s", group.getDocumentID());
+
+                }
+            });
+        }
+
+
+
 
         service.update(group, new ServiceListener() {
             @Override

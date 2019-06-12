@@ -118,20 +118,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbarTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  System.out.println(" current user "+AuthServiceImpl.getCurrentUser().getPhoneNo());
-                //System.out.println("created user "+group.getCreatedBy());
-                if(AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
 
                 AppCompatActivity activity = (AppCompatActivity) getContext();
                 Fragment myFragment = EditGroupFragment.newInstance(group);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "You can't edit the group", Toast.LENGTH_SHORT).show();
-
-                }
 
             }
         });

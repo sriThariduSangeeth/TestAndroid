@@ -17,6 +17,7 @@ import app.whatsdone.android.services.AuthServiceImpl;
 
 public class EditGroupFragment extends BaseFragment{
 
+
     public EditGroupFragment() {
 
     }
@@ -31,7 +32,7 @@ public class EditGroupFragment extends BaseFragment{
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+   // @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,15 @@ public class EditGroupFragment extends BaseFragment{
             this.group = group;
         }
 
+//        if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()))
+//        {
+//            teamName.setEnabled(false);
+//            constraintLayout.setClickable(false);
+//            swipeListView.setClickable(false);
+//            swipeListView.setEnabled(false);
+//            addMembers.setEnabled(false);
+//            saveFab.setEnabled(false);
+//        }
 
 //        teamName.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
@@ -52,6 +62,7 @@ public class EditGroupFragment extends BaseFragment{
 //        });
 
 
+
     }
 
     @Override
@@ -60,38 +71,42 @@ public class EditGroupFragment extends BaseFragment{
         presenter.update(this.group);
     }
 
-//    @Override
-//    public void checkUserForName() {
-//
-//            if (!AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy())) {
-//                teamName.setEnabled(false);
-//               // Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
-//               // teamName.setError("Only the creator can change Team name");
-//
-//            }
-//
-//
-//
-//
-//
-//    }
-//
-//    @Override
-//    public void checkUserForTeamImage() {
-//        if(AuthServiceImpl.getCurrentUser().toString().equals(group.getCreatedBy()))
-//            showPictureDialog();
-//
-//
-//        else
-//            Toast.makeText(getContext(), "Only admin can change the team photo", Toast.LENGTH_SHORT).show();
-//
-//    }
-//
-//    @Override
-//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//    }
-//
+    @Override
+    public void checkUserForName() {
+        System.out.println("  " + AuthServiceImpl.getCurrentUser().getPhoneNo());
+        if (!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
+            teamName.setEnabled(false);
+            // Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
+            // teamName.setError("Only the creator can change Team name");
+
+        }
+
+
+    }
+
+    @Override
+    public void checkUserForTeamImage() {
+
+        if(AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()))
+            showPictureDialog();
+
+
+        else
+            Toast.makeText(getContext(), "Only admin can edit team details", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void checkUserToAddMembers() {
+        if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
+            addMembers.setEnabled(false);
+            swipeListView.setEnabled(false);
+           // swipeListView.setActivated(false);
+            swipeListView.setClickable(false);
+            saveFab.setEnabled(false);
+        }
+
+    }
 
 
 }
