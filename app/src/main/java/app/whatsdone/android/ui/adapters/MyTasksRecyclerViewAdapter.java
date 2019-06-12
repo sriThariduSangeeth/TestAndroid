@@ -73,6 +73,8 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         if(!task.getAssignedUserImage().isEmpty())
             Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
 
+        recyclerViewHolderTask.dueDateText.setText(DateUtil.formatted(task.getDueDate()));
+
         recyclerViewHolderTask.itemView.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, InnerGroupTaskActivity.class);
@@ -119,6 +121,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         TextView textView;
         TextView groupTextView;
         TextView statusIndicator;
+        TextView dueDateText;
         ImageView imageView;
 
 
@@ -128,6 +131,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             groupTextView = itemView.findViewById(R.id.group_name_text);
             imageView = itemView.findViewById(R.id.image_view_my_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
+            dueDateText = itemView.findViewById(R.id.task_inner_date);
         }
     }
 

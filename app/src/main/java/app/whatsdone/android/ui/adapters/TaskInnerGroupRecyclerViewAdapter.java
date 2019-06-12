@@ -24,6 +24,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
 
@@ -52,11 +53,11 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
 
         Task task = (Task) taskList.get(position);
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
         myRecyclerViewHolder.status.setText(task.getStatus().toString());
         if (task.getDueDate() == null) {
-            myRecyclerViewHolder.date.setText(df.format(new GetCurrentDetails().getCurrentDateTime()));
+            myRecyclerViewHolder.date.setText(df.format(new Date()));
         } else {
             myRecyclerViewHolder.date.setText(df.format(task.getDueDate()));
         }

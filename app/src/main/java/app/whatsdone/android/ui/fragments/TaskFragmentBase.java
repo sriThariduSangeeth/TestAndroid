@@ -43,6 +43,7 @@ import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
 
 public abstract class TaskFragmentBase extends Fragment {
@@ -77,7 +78,7 @@ public abstract class TaskFragmentBase extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
-        dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
 
 
         Spinner spinner = view.findViewById(R.id.user_status);

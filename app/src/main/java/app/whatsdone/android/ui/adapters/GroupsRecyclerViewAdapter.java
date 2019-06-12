@@ -28,6 +28,7 @@ import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.utils.DateUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -76,6 +77,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.groupNameTextView.setText(group.getGroupName());
         holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
         holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
+        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate()));
       //  holder.setIsRecyclable(false);
 
         try {
@@ -110,7 +112,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         public View view;
 
 
-        private TextView groupNameTextView, taskCount, discussionCount;
+        private TextView groupNameTextView, taskCount, discussionCount, dueDate;
         private ImageView imageView;
         private Group group;
 
@@ -124,6 +126,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             discussionCount = (TextView) itemView.findViewById(R.id.unread_discussion_counter);
             groupRecyclerView = (RecyclerView) itemView.findViewById(R.id.group_recycler_view) ;
             imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            dueDate = itemView.findViewById(R.id.date);
             if(imageView.getDrawable() == null)
             {
                 Drawable defaultImage= itemView.getResources().getDrawable(R.drawable.user_group_man_woman3x);

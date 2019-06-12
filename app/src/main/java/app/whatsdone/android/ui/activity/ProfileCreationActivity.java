@@ -107,7 +107,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
     }
 
 
-    private void  requestMultiplePermissions(){
+    private void  requestMultiplePermissions(boolean isCamera){
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.CAMERA,
@@ -119,6 +119,13 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            if(!isCamera){
+                                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+                            }else {
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, CAMERA);
+                            }
                         }
 
                         // check for permanent denial of any permission
@@ -169,13 +176,11 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
 
     @Override
     public void onGallerySelected() {
-        Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+        requestMultiplePermissions(false);
     }
     public void onCameraSelected()
     {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+        requestMultiplePermissions(true);
     }
 }
 
