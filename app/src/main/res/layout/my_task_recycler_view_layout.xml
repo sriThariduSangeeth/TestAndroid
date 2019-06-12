@@ -23,7 +23,7 @@
         android:contentDescription="done image"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:src="@drawable/ic_account_circle"
+        android:src="@mipmap/ic_user_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
