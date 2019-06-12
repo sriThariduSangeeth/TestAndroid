@@ -13,6 +13,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.utils.Constants;
 
 
 public class EditGroupFragment extends BaseFragment{
@@ -26,8 +27,7 @@ public class EditGroupFragment extends BaseFragment{
 
         EditGroupFragment fragment = new EditGroupFragment();
         Bundle args = new Bundle();
-        args.putParcelable("group", group);
-
+        args.putParcelable(Constants.ARG_GROUP, group);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,32 +37,8 @@ public class EditGroupFragment extends BaseFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            Group group = getArguments().getParcelable("group");
-            this.group = group;
+            this.group = getArguments().getParcelable(Constants.ARG_GROUP);
         }
-
-//        if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()))
-//        {
-//            teamName.setEnabled(false);
-//            constraintLayout.setClickable(false);
-//            swipeListView.setClickable(false);
-//            swipeListView.setEnabled(false);
-//            addMembers.setEnabled(false);
-//            saveFab.setEnabled(false);
-//        }
-
-//        teamName.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                checkUserForName();
-//
-//                return true;
-//            }
-//        });
-
-
-
     }
 
     @Override
@@ -76,11 +52,9 @@ public class EditGroupFragment extends BaseFragment{
         System.out.println("  " + AuthServiceImpl.getCurrentUser().getPhoneNo());
         if (!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
             teamName.setEnabled(false);
-            // Toast.makeText(getContext(), "Only the creator can change Team image", Toast.LENGTH_SHORT).show();
-            // teamName.setError("Only the creator can change Team name");
-
         }
 
+        toolbarTitle.setText(getString(R.string.group_settings));
 
     }
 

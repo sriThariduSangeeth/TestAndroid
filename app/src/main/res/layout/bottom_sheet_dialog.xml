@@ -9,21 +9,15 @@
     instead of nested layouts -->
 
     <LinearLayout
+        android:id="@+id/camera_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
-
-        <ImageView
-            android:layout_width="39dp"
-            android:layout_height="42dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/cameraremovebg"
-            />
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/txtCamera"
@@ -37,21 +31,15 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/gallary_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
-
-        <ImageView
-            android:layout_width="39dp"
-            android:layout_height="42dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/gallery"
-             />
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/txtGallery"

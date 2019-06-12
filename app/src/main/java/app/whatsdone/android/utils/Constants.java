@@ -85,4 +85,5 @@ public class Constants {
     public static final String GROUP_PERSONAL = "Personal";
     public static final String ACTION_VIEW_TASK = "view_task";
     public static final String ARG_TASK = "task";
+    public static final String DATE_FORMAT = "MM/dd/yyyy";
 }

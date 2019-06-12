@@ -88,7 +88,7 @@ public class SettingFragment extends Fragment implements SettingsView {
 
     private void loadProfileImage(String avatar){
         if(avatar != null && !avatar.isEmpty()){
-            Picasso.get().load(avatar).noFade().into(binding.profilePic);
+            Picasso.get().load(avatar).placeholder(R.mipmap.ic_user_default).into(binding.profilePic);
         }
     }
 

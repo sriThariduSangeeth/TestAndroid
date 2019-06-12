@@ -134,6 +134,7 @@ public class DiscussionImpl implements DiscussionService {
     public void subscribe(String groupId, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_DISCUSSIONS)
                 .whereArrayContains(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
+                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.TASKS_LIMIT)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Timber.tag(TAG).w(e, "Discussion subscription failed");

@@ -34,6 +34,7 @@ import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 
 public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
@@ -123,13 +124,13 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             @Override
             public void onTaskDeleteClicked(int position) {
                 //task delete
-
-                service.delete(tasks.get(position).getDocumentID(), new ServiceListener() {
+                String id = tasks.get(position).getDocumentID();
+                tasks.remove(position);
+                tasksAdapter.notifyDataSetChanged();
+                service.delete(id, new ServiceListener() {
                     @Override
                     public void onSuccess() {
-                        tasksAdapter.tasks.remove(position);
-                        tasksAdapter.notifyItemRemoved(position);
-                        tasksAdapter.notifyItemRangeChanged(position, tasksAdapter.getItemCount());
+                        Timber.d("id:%s task removed", id);
                     }
                 });
 
