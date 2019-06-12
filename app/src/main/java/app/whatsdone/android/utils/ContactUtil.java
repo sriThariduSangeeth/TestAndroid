@@ -12,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -37,6 +38,14 @@ public class ContactUtil {
     private PhoneNumberUtil phoneUtil = PhoneNumberUtil.createInstance(WhatsDoneApplication.getApplication());
 
     private ContactUtil() {}
+
+    public void cleanNo(List<String> members) {
+        for (int i = 0; i < members.size(); i++) {
+            String cleaned = cleanNo(members.get(i));
+            members.set(i, cleaned);
+        }
+    }
+
     private static class LazyHolder {
         static final ContactUtil INSTANCE = new ContactUtil();
     }

@@ -23,6 +23,7 @@ import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -108,13 +109,17 @@ public class GroupServiceImpl implements GroupService {
 
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
+
+        ContactUtil.getInstance().cleanNo(group.getMembers());
+        ContactUtil.getInstance().cleanNo(group.getAdmins());
+
         data.put(Constants.FIELD_GROUP_TITLE, group.getGroupName());
-        data.put(Constants.FIELD_GROUP_CREATED_BY, group.getCreatedBy());
+        data.put(Constants.FIELD_GROUP_CREATED_BY, ContactUtil.getInstance().cleanNo(group.getCreatedBy()));
         data.put(Constants.FIELD_GROUP_TASKS_COUNT, 0);
         data.put(Constants.FIELD_GROUP_DISCUSSION_COUNT, 0);
         data.put(Constants.FIELD_GROUP_MANAGED_BY_ADMIN, true);
         data.put(Constants.FIELD_GROUP_ENABLE_USER_TASKS, true);
-        data.put(Constants.FIELD_GROUP_MEMBERS, group.getMembers());
+        data.put(Constants.FIELD_GROUP_MEMBERS,  group.getMembers());
         data.put(Constants.FIELD_GROUP_ADMINS, group.getAdmins());
         data.put(Constants.FIELD_GROUP_AVATAR, group.getAvatar());
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
@@ -123,7 +128,7 @@ public class GroupServiceImpl implements GroupService {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error creating document.", task.getException());
+                Timber.w(task.getException(), "Error creating document.");
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
             serviceListener.onCompleted(task.isSuccessful());
@@ -132,6 +137,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void update(Group group, ServiceListener serviceListener) {
+        ContactUtil.getInstance().cleanNo(group.getMembers());
+
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
         data.put(Constants.FIELD_GROUP_TITLE, group.getGroupName());
