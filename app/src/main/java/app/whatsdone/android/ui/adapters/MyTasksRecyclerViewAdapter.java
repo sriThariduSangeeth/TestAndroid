@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.utils.DateUtil;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
@@ -78,6 +80,29 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             }
         });
 
+        recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
+        recyclerViewHolderTask.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+
+    }
+
+    private int getStatusIndicatorColor(Task task) {
+        Date today = DateUtil.getLastMinuteDate(new Date());
+
+        if (DateUtil.isEqual(today, task.getDueDate()))
+            return R.color.LightSalmonGold;
+        else if ((today).after(task.getDueDate()))
+            return R.color.lightRed;
+        return R.color.LimeGreen;
+    }
+
+    private int getStatusIndicatorText(Task task) {
+        Date today = DateUtil.getLastMinuteDate(new Date());
+
+        if (DateUtil.isEqual(today, task.getDueDate()))
+            return R.string.task_due_soon;
+        else if ((today).after(task.getDueDate()))
+            return R.string.task_overdue;
+        return R.string.task_ontrack;
     }
 
 
@@ -92,6 +117,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     {
         TextView textView;
         TextView groupTextView;
+        TextView statusIndicator;
         ImageView imageView;
 
 
@@ -100,6 +126,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             textView = itemView.findViewById(R.id.task_text);
             groupTextView = itemView.findViewById(R.id.group_name_text);
             imageView = itemView.findViewById(R.id.image_view_my_task);
+            statusIndicator = itemView.findViewById(R.id.status_indicator);
         }
     }
 
