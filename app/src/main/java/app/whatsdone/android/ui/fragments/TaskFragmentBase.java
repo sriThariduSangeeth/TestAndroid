@@ -62,6 +62,7 @@ public abstract class TaskFragmentBase extends Fragment {
     protected TaskService service = new TaskServiceImpl();
 
     Task task = new Task();
+    protected TextView toolbarTitle;
 
     public TaskFragmentBase() {
     }
@@ -73,6 +74,7 @@ public abstract class TaskFragmentBase extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
         dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+
 
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
@@ -89,6 +91,7 @@ public abstract class TaskFragmentBase extends Fragment {
         getDescript.setHintTextColor(getResources().getColor(R.color.gray));
         lay = view.findViewById(R.id.select_group_view) ;
         listView =  view.findViewById(R.id.list_view_checklist);
+
         lay.setVisibility(LinearLayout.GONE);
         setupToolbar();
 
@@ -168,7 +171,12 @@ public abstract class TaskFragmentBase extends Fragment {
 
     private void setupToolbar() {
         toolbar =  getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
+        toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
+        if(title == null || title.isEmpty()){
+            toolbarTitle.setText(R.string.add_task);
+        }else {
+            toolbarTitle.setText(title);
+        }
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
     }
