@@ -62,4 +62,22 @@ public class AddGroupFragment extends BaseFragment {
         presenter.create(this.group);
     }
 
+    @Override
+    public void checkUserForName() {
+teamName.setEnabled(true);
+    }
+
+    @Override
+    public void checkUserForTeamImage() {
+
+        showPictureDialog();
+
+    }
+
+    @Override
+    public void checkUserToAddMembers() {
+
+
+    }
+
 }

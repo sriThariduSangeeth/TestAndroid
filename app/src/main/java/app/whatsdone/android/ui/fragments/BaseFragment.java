@@ -21,6 +21,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -68,6 +69,7 @@ import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -88,11 +90,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected EditText teamName;
     protected Group group;
     private List<Contact> members = new ArrayList<Contact>();
-    private SwipeMenuListView swipeListView;
+    protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
     HashSet contactSet = new HashSet<>();
-    private Button addMembers;
+    protected Button addMembers;
     protected  ConstraintLayout constraintLayout;
+    private boolean saveButtonClickedOnce = false;
+    protected FloatingActionButton saveFab;
 
 
     public BaseFragment() {
@@ -122,6 +126,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         teamName = view.findViewById(R.id.group_name_edit_text);
         constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
+        saveFab = view.findViewById(R.id.save_group_fab_button);
         //imageView = view.findViewById(R.id.image_view_group);
 
         contactSet = new HashSet();
@@ -133,7 +138,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
-        //checkUserForName();
+        checkUserForName();
+        checkUserToAddMembers();
 
 
 
@@ -145,9 +151,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    checkUserForTeamImage();
 
-                    showPictureDialog();
-                    //checkUserForTeamImage();
+                    //showPictureDialog();
 
                 }
             });
@@ -173,6 +179,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
             }
+
         });
 
 
@@ -182,7 +189,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
 
 
-        view.findViewById(R.id.save_group_fab_button).setOnClickListener(new View.OnClickListener() {
+        saveFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -224,7 +231,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             }
 
 
+
         });
+
 
 
         return view;
@@ -232,6 +241,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
+    public  abstract void checkUserForName();
+    public abstract void checkUserForTeamImage();
+    public abstract void checkUserToAddMembers();
+
 
   public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
@@ -272,7 +285,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onGroupError(String errorMessage) {
-        Log.d("failed creating a group", errorMessage);
+        Timber.d(errorMessage);
 
     }
 
@@ -390,7 +403,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
                             } catch (Exception exception) {
-                                Log.d("test ", exception.getMessage());
+                                Timber.d(exception);
                             }
                         }
                     }
@@ -459,6 +472,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
+                            Toast.makeText(getContext(), "permissions are not granted by the user!", Toast.LENGTH_SHORT).show();
+
 
                         }
                     }
@@ -564,5 +579,11 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         void onSelected(String contact);
     }
 
+    public boolean isSaveButtonClickedOnce() {
+        return saveButtonClickedOnce;
+    }
 
+    public void setSaveButtonClickedOnce(boolean saveButtonClickedOnce) {
+        this.saveButtonClickedOnce = saveButtonClickedOnce;
+    }
 }

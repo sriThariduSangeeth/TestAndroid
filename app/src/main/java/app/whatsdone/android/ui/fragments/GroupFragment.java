@@ -117,6 +117,8 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new GroupsRecyclerViewAdapter(groups, getContext());
         myrecycler.setAdapter(adapter);
+//        adapter.setHasStableIds(true);
+       // myrecycler.setItemViewCacheSize(10);
 
 
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {

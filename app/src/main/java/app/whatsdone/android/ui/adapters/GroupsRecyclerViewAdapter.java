@@ -75,7 +75,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.groupNameTextView.setText(group.getGroupName());
         holder.taskCount.setText(group.getDiscussionCount()+"");
         holder.discussionCount.setText(group. getDiscussionCount()+"");
-        holder.setIsRecyclable(false);
+      //  holder.setIsRecyclable(false);
 
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
@@ -174,9 +174,5 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         return  position;
     }
 
-//    @Override
-//    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-//        adapter.notifyDataSetChanged();
-//        super.onDetachedFromRecyclerView(recyclerView);
-//    }
+
 }
