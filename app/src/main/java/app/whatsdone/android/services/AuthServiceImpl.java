@@ -81,7 +81,9 @@ public class AuthServiceImpl implements AuthService {
                 user.setPhoneNo(firebaseUser.getPhoneNumber());
                 if (firebaseUser.getPhotoUrl() != null)
                     user.setAvatar(Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
-                user.setDisplayName(firebaseUser.getDisplayName());
+                if(firebaseUser.getDisplayName() != null) {
+                    user.setDisplayName(firebaseUser.getDisplayName());
+                }
             }
         }
 
