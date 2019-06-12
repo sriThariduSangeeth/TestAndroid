@@ -61,6 +61,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     {
         Task task = (Task)tasks.get(i);
         recyclerViewHolderTask.textView.setText(task.getTitle());
+        recyclerViewHolderTask.groupTextView.setText(task.getGroupName());
 
         recyclerViewHolderTask.textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,10 +88,13 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     public class RecyclerViewHolderTask extends RecyclerView.ViewHolder
     {
         public TextView textView;
+        public TextView groupTextView;
+
 
         public RecyclerViewHolderTask(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.task_text);
+            groupTextView = itemView.findViewById(R.id.group_name_text);
         }
     }
 
