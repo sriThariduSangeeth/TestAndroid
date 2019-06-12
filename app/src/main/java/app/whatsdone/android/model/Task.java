@@ -39,6 +39,21 @@ public class Task implements BaseEntity, Parcelable {
             }
         }
 
+        public static int getIndex(TaskStatus status) {
+            switch (status) {
+
+                case TODO:
+                    return 0;
+                case IN_PROGRESS:
+                    return 1;
+                case ON_HOLD:
+                    return 2;
+                case DONE:
+                    return 3;
+            }
+            return 0;
+        }
+
         public int getValue() {
             return value;
         }

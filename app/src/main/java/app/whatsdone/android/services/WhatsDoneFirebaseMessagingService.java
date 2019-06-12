@@ -15,7 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import app.whatsdone.android.R;
@@ -91,8 +93,10 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     private void sendRegistrationToServer(String token) {
         if(token != null && !token.isEmpty()) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            List<String> tokens = new ArrayList<>();
+            tokens.add(token);
             Map<String, Object> data = new HashMap<>();
-            data.put(Constants.FIELD_USER_DEVICE_TOKENS, new String[]{token});
+            data.put(Constants.FIELD_USER_DEVICE_TOKENS, tokens);
             db.collection(Constants.REF_USERS)
                     .document(AuthServiceImpl.getCurrentUser().getDocumentID())
                     .update(data)

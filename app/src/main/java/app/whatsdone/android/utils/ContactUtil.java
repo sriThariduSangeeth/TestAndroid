@@ -171,6 +171,18 @@ public class ContactUtil {
         return result;
     }
 
+    public static boolean validate(String phoneNo) {
+        if (phoneNo == null || phoneNo.isEmpty()) return false;
+        boolean result = false;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.createInstance(WhatsDoneApplication.getApplication());
+        try {
+            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNo, getCurrentLocale());
+            result = phoneUtil.isValidNumber(number);
+        } catch (NumberParseException ignored) {
+        }
+        return result;
+    }
+
     private static String getCurrentLocale() {
         String iso = "" ;
 

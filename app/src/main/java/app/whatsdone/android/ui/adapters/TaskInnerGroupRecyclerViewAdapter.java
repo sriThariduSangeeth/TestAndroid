@@ -60,7 +60,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
 
         Task task = (Task) taskList.get(position);
-        SimpleDateFormat df = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
         myRecyclerViewHolder.status.setText(task.getStatus().toString());
         if(task.getDueDate()== null){
