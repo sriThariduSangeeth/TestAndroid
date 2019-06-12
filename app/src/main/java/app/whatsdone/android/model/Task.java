@@ -67,7 +67,7 @@ public class Task implements BaseEntity, Parcelable {
     private String groupName;
     private String assignedUser = "";
     private String assignedUserName = "";
-    private String assignedUserImage;
+    private String assignedUserImage = "";
     private String assignedBy;
     private String createdBy;
     private TaskStatus status = TaskStatus.TODO;

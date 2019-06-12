@@ -81,14 +81,14 @@ public abstract class TaskFragmentBase extends Fragment {
 
         gettitle = view.findViewById(R.id.title_edit_text);
         gettitle.setText(task.getTitle());
+        gettitle.setHintTextColor(getResources().getColor(R.color.gray));
 
         getDescript = view.findViewById(R.id.description_edit_text);
         getDescript.setText(task.getDescription());
+        getDescript.setHintTextColor(getResources().getColor(R.color.gray));
         lay = view.findViewById(R.id.select_group_view) ;
         listView =  view.findViewById(R.id.list_view_checklist);
         lay.setVisibility(LinearLayout.GONE);
-        TextView emptyText = view.findViewById(R.id.empty);
-        listView.setEmptyView(emptyText);
         setupToolbar();
 
 
@@ -130,18 +130,20 @@ public abstract class TaskFragmentBase extends Fragment {
         imageView.setOnClickListener(this::addValue);
 
         assignFromContacts =  view.findViewById(R.id.assign_from_contacts_text_view);
-        assignFromContacts.setText(task.getAssignedUserName());
+        if(!task.getAssignedUserName().isEmpty())
+            assignFromContacts.setText(task.getAssignedUserName());
 
         assignFromContacts.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, REQUEST_CODE);
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
                     != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
                 //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
-
+            }else {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 

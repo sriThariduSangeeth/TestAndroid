@@ -79,4 +79,5 @@
     <string name="enable_user_tasks">Enable user tasks</string>
     <string name="ADD_NEW_TASK">Add Task</string>
     <string name="add_group">Add Group</string>
+    <string name="enter_title_here">Enter title here</string>
 </resources>
