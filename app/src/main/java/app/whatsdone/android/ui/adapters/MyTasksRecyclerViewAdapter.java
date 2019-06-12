@@ -67,17 +67,14 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         recyclerViewHolderTask.textView.setText(task.getTitle());
         recyclerViewHolderTask.groupTextView.setText(task.getGroupName());
         if(!task.getAssignedUserImage().isEmpty())
-            Picasso.get().load(task.getAssignedUserImage()).into(recyclerViewHolderTask.imageView);
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
 
-        recyclerViewHolderTask.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        recyclerViewHolderTask.textView.setOnClickListener(v -> {
 
-                if(listener !=null)
-                {
-                    System.out.println("mytask");
-                    listener.onTaskClicked();
-                }
+            if(listener !=null)
+            {
+                System.out.println("mytask");
+                listener.onTaskClicked();
             }
         });
 

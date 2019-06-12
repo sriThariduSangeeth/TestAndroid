@@ -71,9 +71,9 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
 
         if(task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())){
-            Picasso.get().load(task.getAssignedUserImage()).into(myRecyclerViewHolder.imag);
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(myRecyclerViewHolder.imag);
         }else {
-            myRecyclerViewHolder.imag.setImageResource(R.drawable.ic_account_circle);
+            Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.imag);
         }
 
         myRecyclerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
