@@ -38,11 +38,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:text="My Test TASK"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:layout_marginTop="8dp"
-        android:textStyle="bold"
+        android:text="My Test TASK"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_my_task"
@@ -67,13 +66,12 @@
 
 
     <TextView
-        android:id="@+id/status"
+        android:id="@+id/group_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
-        android:text="@string/todo"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_my_task"
