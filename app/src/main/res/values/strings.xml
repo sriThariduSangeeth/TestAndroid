@@ -86,4 +86,5 @@
     <string name="task_ontrack">On track</string>
     <string name="task_due_soon">Due soon</string>
     <string name="add_task">Add Task</string>
+    <string name="team_name">Enter team name here</string>
 </resources>
