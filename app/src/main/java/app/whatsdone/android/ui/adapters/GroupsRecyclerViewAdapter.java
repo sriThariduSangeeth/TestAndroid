@@ -38,7 +38,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public List<BaseEntity> groups;
     private Context context;
     private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
-    private CircleImageView imageView;
     private RecyclerView.LayoutManager linearLayoutManager;
    // private GroupsRecyclerViewAdapter groupsRecyclerViewAdapter;
 
@@ -49,8 +48,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         this.groups = groups;
         this.context = context;
         setHasStableIds(true);
-
-
     }
 
 
@@ -60,12 +57,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
-
-        imageView = view.findViewById(R.id.image_view_group);
-       // toolbarTextView = view.findViewById(R.id.toolbar_title);
-
-
-
         return new RecyclerViewHolder(view);
 
     }
@@ -79,12 +70,12 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
         holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate()));
       //  holder.setIsRecyclable(false);
-
+        holder.imageView.setTag(group);
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
-                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
-                Timber.tag(TAG).d("onBindViewHolder: ");
-                System.out.println(" Avatar " + group.getAvatar());
+                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(holder.imageView);
+            }else {
+                holder.imageView.setImageDrawable(holder.imageView.getContext().getResources().getDrawable(R.drawable.user_group_man_woman3x));
             }
 
         }catch (Exception exception){
