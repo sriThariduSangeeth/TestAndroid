@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -91,6 +94,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected  ConstraintLayout constraintLayout;
     private boolean saveButtonClickedOnce = false;
     protected FloatingActionButton saveFab;
+    protected Toolbar toolbar;
+
+
 
 
     public BaseFragment() {
@@ -106,6 +112,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,8 +120,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
+        
         contactName = new ArrayList<>();
+
         circleImageView = view.findViewById(R.id.group_photo_image_view);
         addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
