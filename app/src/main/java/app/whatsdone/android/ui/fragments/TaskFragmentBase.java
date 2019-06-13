@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
@@ -65,8 +68,8 @@ public abstract class TaskFragmentBase extends Fragment {
     private int mYear, mMonth, mDay;
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
-    private EditText addNewTask , gettitle , getDescript;
-    private LinearLayout lay ;
+    private EditText addNewTask, gettitle, getDescript;
+    private LinearLayout lay;
     protected Group group;
     private ImageView imageView;
     private final int REQUEST_CODE = 99;
@@ -107,8 +110,8 @@ public abstract class TaskFragmentBase extends Fragment {
         getDescript = view.findViewById(R.id.description_edit_text);
         getDescript.setText(task.getDescription());
         getDescript.setHintTextColor(getResources().getColor(R.color.gray));
-        lay = view.findViewById(R.id.select_group_view) ;
-        listView =  view.findViewById(R.id.list_view_checklist);
+        lay = view.findViewById(R.id.select_group_view);
+        listView = view.findViewById(R.id.list_view_checklist);
 
         lay.setVisibility(LinearLayout.GONE);
         setupToolbar();
@@ -128,7 +131,7 @@ public abstract class TaskFragmentBase extends Fragment {
             datePickerDialog = new DatePickerDialog(getContext(),
                     (view1, year, monthOfYear, dayOfMonth) -> {
                         // set day of month , month and year value in the edit text
-                        String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d",monthOfYear + 1, dayOfMonth , year);
+                        String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear + 1, dayOfMonth, year);
                         setDueDate.setText(dateValue);
                         try {
                             Date date = dateFormat.parse(dateValue);
@@ -143,7 +146,7 @@ public abstract class TaskFragmentBase extends Fragment {
         });
 
         addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
-        imageView =  view.findViewById(R.id.checklist_add_image_view) ;
+        imageView = view.findViewById(R.id.checklist_add_image_view);
 
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
@@ -151,11 +154,11 @@ public abstract class TaskFragmentBase extends Fragment {
 
         imageView.setOnClickListener(this::addValue);
 
-        assignFromContacts =  view.findViewById(R.id.assign_from_contacts_text_view);
-        if(!task.getAssignedUserName().isEmpty())
+        assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
+        if (!task.getAssignedUserName().isEmpty())
             assignFromContacts.setText(task.getAssignedUserName());
 
-        if(!isPersonalTask) {
+        if (!isPersonalTask) {
             assignFromContacts.setOnClickListener(v -> {
 
 
@@ -169,14 +172,13 @@ public abstract class TaskFragmentBase extends Fragment {
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             });
-        }else {
+        } else {
             assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
             String title = gettitle.getText().toString();
-            if(title.isEmpty())
-            {
+            if (title.isEmpty()) {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
                 return;
             }
@@ -194,11 +196,11 @@ public abstract class TaskFragmentBase extends Fragment {
     }
 
     private void setupToolbar() {
-        toolbar =  getActivity().findViewById(R.id.toolbar);
+        toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
-        if(title == null || title.isEmpty()){
+        if (title == null || title.isEmpty()) {
             toolbarTitle.setText(R.string.add_task);
-        }else {
+        } else {
             toolbarTitle.setText(title);
         }
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
@@ -207,7 +209,7 @@ public abstract class TaskFragmentBase extends Fragment {
 
     protected abstract void save();
 
-    public String returnStatus(String out){
+    public String returnStatus(String out) {
 
         if (getString(R.string.todo).equals(out)) {
             return Task.TaskStatus.TODO.name();
@@ -250,17 +252,39 @@ public abstract class TaskFragmentBase extends Fragment {
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         String num = "";
+                        Set<String> oneContact = new HashSet<>();
+
                         if (Integer.valueOf(hasNumber) == 1) {
                             Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                             while (numbers.moveToNext()) {
 
-                                String assignee =  numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                                 assignFromContacts.setText(assignee_name);
                                 task.setAssignedUserName(assignee_name);
                                 task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
+                                String num1 = assignee.replaceAll("\\s+", "");
+                                oneContact.add(num1);
+                                System.out.println(" AAAAAAAAAA   " + num1);
+
 
                             }
+
+                            numbers.close();
+                            selectOneContact(oneContact, new ContactSelectedListener() {
+                                @Override
+                                public void onSelected(String number) {
+                                   //contactName.add(name);
+                                    number = ContactUtil.getInstance().cleanNo(number);
+                                        if (number != null && !number.isEmpty()) {
+
+                                            task.setAssignedUserName(number);
+
+                                        }
+
+                                    }
+
+                            });
                         }
                     }
                     break;
@@ -275,7 +299,7 @@ public abstract class TaskFragmentBase extends Fragment {
         contactService.existsInPlatform(members, new ContactService.Listener() {
             @Override
             public void onCompleteSearch(List<ExistUser> users, List<String> isExisting) {
-                if(users.size() == 1){
+                if (users.size() == 1) {
                     ExistUser user = users.get(0);
                     task.setAssignedUserName(user.getDisplayName());
                     service.update(task, new ServiceListener() {
@@ -284,8 +308,8 @@ public abstract class TaskFragmentBase extends Fragment {
                             Timber.d("user updated");
                         }
                     });
-                }else {
-                    contactService.inviteAssignee(task.getAssignedUser(), group, task, new ContactService.Listener(){
+                } else {
+                    contactService.inviteAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
                         @Override
                         public void onInvited() {
                             Timber.d("user invited");
@@ -295,5 +319,29 @@ public abstract class TaskFragmentBase extends Fragment {
             }
         });
     }
-}
 
+
+    private void selectOneContact(Set<String> oneContact, ContactSelectedListener listener) {
+        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
+
+        if (numbers.length == 0)
+            return;
+
+        if (numbers.length == 1) {
+            listener.onSelected(numbers[0]);
+            return;
+        }
+        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
+        contactDialog.setTitle("Select one contact to add");
+        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
+        contactDialog.show();
+
+    }
+
+    interface ContactSelectedListener
+    {
+
+        void onSelected(String number);
+    }
+
+}
