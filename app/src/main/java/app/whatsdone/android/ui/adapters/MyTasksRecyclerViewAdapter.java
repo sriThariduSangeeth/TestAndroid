@@ -1,9 +1,17 @@
 package app.whatsdone.android.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +35,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     public List<BaseEntity> tasks;
     private Context context;
     private OnMyTaskFragmentInteractionListener listener;
+
 
     public MyTasksRecyclerViewAdapter(List<BaseEntity> tasks , Context context)
     {
@@ -63,6 +72,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
 */
         return new RecyclerViewHolderTask(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolderTask recyclerViewHolderTask, int i)
@@ -140,5 +150,6 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         void onTaskClicked(Task task);
 
     }
+
 
 }

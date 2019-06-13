@@ -71,7 +71,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         input.setInputListener(this);
         input.setAttachmentsListener(this);
 
-        contactList = ContactUtil.getInstance().resolveContacts(group.getMembers());
+        contactList = ContactUtil.getInstance().resolveContacts(group.getMembers() , group.getMemberDetails());
 
         adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, group.getMembers());
         adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
