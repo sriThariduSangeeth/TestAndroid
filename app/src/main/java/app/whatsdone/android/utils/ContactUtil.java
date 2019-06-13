@@ -1,14 +1,26 @@
 package app.whatsdone.android.utils;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -17,16 +29,21 @@ import java.util.List;
 
 import app.whatsdone.android.WhatsDoneApplication;
 import app.whatsdone.android.model.Contact;
+import app.whatsdone.android.model.ExistUser;
+import app.whatsdone.android.services.AuthServiceImpl;
 import io.michaelrocks.libphonenumber.android.NumberParseException;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
 import timber.log.Timber;
+
+import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class ContactUtil {
     private static final String TAG = ContactUtil.class.getSimpleName();
     private Dictionary<String, String> contacts = new Hashtable<>();
     private MyContentObserver contentObserver = new MyContentObserver();
     private boolean isObserved = false;
+    private ExistUser existUser;
     private static final String[] PROJECTION = new String[] {
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -76,7 +93,9 @@ public class ContactUtil {
         }
     }
 
-    public List<Contact> resolveContacts(List<String> phoneNumbers) {
+    public List<Contact> resolveContacts(List<String> phoneNumbers, List<ExistUser> existUsers) {
+
+       // public List<Contact> resolveContacts(List<String> phoneNumbers) {
         List<Contact> items = new ArrayList<>();
 
         if(phoneNumbers.isEmpty()) return items;
@@ -84,7 +103,7 @@ public class ContactUtil {
         try{
             if(contacts.size() == 0)
                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
-            items = filterContacts(phoneNumbers);
+            items = filterContacts(phoneNumbers, existUsers);
         }catch (Exception ex){
             Timber.tag(TAG).w(ex.getLocalizedMessage());
         }
@@ -106,6 +125,41 @@ public class ContactUtil {
         Cursor cursor = cursorLoader.loadInBackground();
         getContacts(cursor);
     }
+
+    public void getPermission(Activity activity){
+        Dexter.withActivity(activity)
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
 
     private void addObserver(ContentResolver contentResolver) {
         if(!isObserved) {
@@ -146,18 +200,47 @@ public class ContactUtil {
         contacts.put(cleanNo(phoneNumber), name);
     }
 
-    private List<Contact> filterContacts(List<String> numbers){
+    private List<Contact> filterContacts(List<String> numbers, List<ExistUser> existUsers){
+        existUser = new ExistUser();
+
+        String name = AuthServiceImpl.getCurrentUser().getDisplayName();
+        String number = AuthServiceImpl.getCurrentUser().getPhoneNo();
+
         List<Contact> items = new ArrayList<>();
+        Dictionary<String, String> memberDetails = new Hashtable<>();
+
+        if(existUsers!=null) {
+            for (ExistUser user : existUsers) {
+                memberDetails.put(user.getPhoneNumber(), user.getDisplayName());
+
+                if (user.getIsInvited().equals("true")) {
+                    memberDetails.put(user.getPhoneNumber(), "INVITED");
+                }
+            }
+        }
+
         for (String contact:numbers) {
+            Contact item = new Contact();
+
             String contactNo = cleanNo(contact);
             String contactItem = contacts.get(contactNo);
-            Contact item = new Contact();
+
             item.setDisplayName(contactNo);
             item.setPhoneNumber(contactNo);
 
-            if(contactItem != null){
+            if( contactNo.equals(number))
+            {
+                item.setDisplayName(name);
+            }
+
+            else if(contactItem != null ){
                 item.setDisplayName(contactItem);
-                item.setPhoneNumber(contactNo);
+            }
+            else
+            {
+                if(((Hashtable<String, String>) memberDetails).containsKey(contactNo)){
+                    item.setDisplayName(memberDetails.get(contactNo));
+                }
             }
 
             items.add(item);
