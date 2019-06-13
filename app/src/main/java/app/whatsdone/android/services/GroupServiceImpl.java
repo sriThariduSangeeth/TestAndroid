@@ -118,7 +118,25 @@ public class GroupServiceImpl implements GroupService {
         if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
             group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
-            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+            group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+        List<ExistUser> users = new ArrayList<>();
+        if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
+            List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
+
+            for (HashMap map :
+                    details) {
+                String phone = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_PHONE);
+                String isInvited = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
+                String displayName = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_NAME);
+
+                ExistUser user = new ExistUser();
+                user.setDisplayName(displayName);
+                user.setIsInvited(isInvited);
+                user.setPhoneNumber(phone);
+                users.add(user);
+            }
+        }
+        group.setMemberDetails(users);
         return group;
     }
 

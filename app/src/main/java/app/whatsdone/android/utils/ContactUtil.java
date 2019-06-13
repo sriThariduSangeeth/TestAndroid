@@ -158,9 +158,6 @@ public class ContactUtil {
             if(contactItem != null){
                 item.setDisplayName(contactItem);
                 item.setPhoneNumber(contactNo);
-            }else{
-                item.setDisplayName(contactNo);
-                item.setPhoneNumber(contactNo);
             }
 
             items.add(item);

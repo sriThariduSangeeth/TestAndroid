@@ -40,6 +40,8 @@ public class AddTaskFragment extends TaskFragmentBase {
                 task.setGroupName(group.getGroupName());
 
                 if(group.getDocumentID().equals(currentUserId)){
+                    this.isPersonalTask = true;
+                    this.isFromMyTasks = true;
                     if(!group.getCreatedBy().equals(currentUserId)){
                         group.setUpdatedDate(new Date());
                         group.getMembers().add(currentUserId);

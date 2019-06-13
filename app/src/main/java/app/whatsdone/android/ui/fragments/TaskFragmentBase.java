@@ -40,6 +40,7 @@ import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
@@ -57,6 +58,7 @@ import timber.log.Timber;
 
 public abstract class TaskFragmentBase extends Fragment {
     protected boolean isFromMyTasks;
+    protected boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
     private TextView setDueDate, assignFromContacts;
     private Toolbar toolbar;
@@ -153,19 +155,23 @@ public abstract class TaskFragmentBase extends Fragment {
         if(!task.getAssignedUserName().isEmpty())
             assignFromContacts.setText(task.getAssignedUserName());
 
-        assignFromContacts.setOnClickListener(v -> {
+        if(!isPersonalTask) {
+            assignFromContacts.setOnClickListener(v -> {
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
-            }else {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+            });
+        }else {
+            assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+        }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
             String title = gettitle.getText().toString();
