@@ -48,13 +48,10 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void save() {
-
         String currentUser = AuthServiceImpl.getCurrentUser().getDocumentID();
-
-        contactNumbers.add(currentUser);
         group.setCreatedBy(currentUser);
       //  group.getAdmins().add(currentUser);
-        if (group.getAdmins().size() == 0) {
+        if (group.getAdmins().isEmpty()) {
             group.getAdmins().add(currentUser);
         }
 
