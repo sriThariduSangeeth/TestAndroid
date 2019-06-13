@@ -68,6 +68,7 @@ public class Constants {
     public static final String ARG_GROUP_NAME = "group_title";
 
     public static final String URL_FIREBASE = "https://us-central1-whatsdone-f770e.cloudfunctions.net/api/";
+    public static final String URL_FIREBASE_STORAGE = "https://firebasestorage.googleapis.com/v0/b/whatsdone-f770e.appspot.com/o/";
 
     public static final int IMAGE_HEIGHT = 180;
     public static final int IMAGE_WIDTH = 180;
@@ -88,4 +89,6 @@ public class Constants {
     public static final String DATE_FORMAT = "MM/dd/yyyy";
     public static final long DISCUSSION_LIMIT = 50;
     public static final String FIELD_GROUP_MEMBERS_DETAILS = "member_details";
+
+
 }

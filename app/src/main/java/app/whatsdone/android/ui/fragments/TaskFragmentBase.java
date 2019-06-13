@@ -29,22 +29,31 @@ import android.support.v7.widget.Toolbar;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.ContactService;
+import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.UrlUtils;
+import timber.log.Timber;
 
 public abstract class TaskFragmentBase extends Fragment {
     protected boolean isFromMyTasks;
@@ -65,6 +74,8 @@ public abstract class TaskFragmentBase extends Fragment {
     //data
     protected TaskService service = new TaskServiceImpl();
     protected GroupService groupService = new GroupServiceImpl();
+    protected ContactService contactService = new ContactServiceImpl();
+
 
     Task task = new Task();
     protected TextView toolbarTitle;
@@ -168,6 +179,7 @@ public abstract class TaskFragmentBase extends Fragment {
             task.setDescription(getDescript.getText().toString());
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
             task.setUpdatedDate(new Date());
+            task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
             save();
             getActivity().onBackPressed();
 
@@ -240,7 +252,7 @@ public abstract class TaskFragmentBase extends Fragment {
                                 String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                                 assignFromContacts.setText(assignee_name);
                                 task.setAssignedUserName(assignee_name);
-                                task.setAssignedUser(assignee);
+                                task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
 
                             }
                         }
@@ -249,6 +261,33 @@ public abstract class TaskFragmentBase extends Fragment {
                 }
         }
 
+    }
+
+    protected void inviteAssignee() {
+        List<String> members = new ArrayList<>();
+        members.add(task.getAssignedUser());
+        contactService.existsInPlatform(members, new ContactService.Listener() {
+            @Override
+            public void onCompleteSearch(List<ExistUser> users, List<String> isExisting) {
+                if(users.size() == 1){
+                    ExistUser user = users.get(0);
+                    task.setAssignedUserName(user.getDisplayName());
+                    service.update(task, new ServiceListener() {
+                        @Override
+                        public void onSuccess() {
+                            Timber.d("user updated");
+                        }
+                    });
+                }else {
+                    contactService.inviteAssignee(task.getAssignedUser(), group, task, new ContactService.Listener(){
+                        @Override
+                        public void onInvited() {
+                            Timber.d("user invited");
+                        }
+                    });
+                }
+            }
+        });
     }
 }
 
