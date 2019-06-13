@@ -48,6 +48,7 @@ public class GroupServiceImpl implements GroupService {
     CloudService service;
 
     public GroupServiceImpl() {
+        AuthServiceImpl.refreshToken();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
