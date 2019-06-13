@@ -11,8 +11,8 @@ public class UrlUtils {
     public static String getUserImage(String phoneNumber) {
         if(phoneNumber == null || phoneNumber.isEmpty()) return "";
         try {
-            String path = encodeValue(String.format("images/thumbs/u/thumb_%s.jpg?alt=media", phoneNumber));
-            String outputUrl = String.format("%s%s", Constants.URL_FIREBASE_STORAGE, path);
+            String path = encodeValue(String.format("images/thumbs/u/thumb_%s.jpg", phoneNumber));
+            String outputUrl = String.format("%s%s?alt=media", Constants.URL_FIREBASE_STORAGE, path);
             URI uri = URI.create(outputUrl);
             String url =  uri.toASCIIString();
             return url;
