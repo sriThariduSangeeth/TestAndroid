@@ -21,6 +21,6 @@ public interface ContactService {
 
     void syncContacts(List<Contact> contacts, Listener listener);
     void existsInPlatform(List<String> contacts, Listener listener);
-    void inviteAssignee(Contact contact, Group group, Task task, Listener serviceListener);
+    void inviteAssignee(String contact, Group group, Task task, Listener serviceListener);
     void inviteMembers(List<String> members, Group group, Listener serviceListener);
 }

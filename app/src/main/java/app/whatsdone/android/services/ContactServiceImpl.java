@@ -1,5 +1,11 @@
 package app.whatsdone.android.services;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -33,6 +39,18 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class ContactServiceImpl implements ContactService {
     CloudService service;
     public ContactServiceImpl() {
+        String token = SharedPreferencesUtil.getString(Constants.SHARED_TOKEN);
+
+        if(token.isEmpty()){
+            FirebaseAuth.getInstance().getCurrentUser().getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull com.google.android.gms.tasks.Task<GetTokenResult> task) {
+                    if(task.isSuccessful()){
+                        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                    }
+                }
+            });
+        };
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
@@ -124,10 +142,10 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void inviteAssignee(Contact contact, Group group, Task task, Listener serviceListener) {
+    public void inviteAssignee(String contact, Group group, Task task, Listener serviceListener) {
         InviteAssigneeRequest request = new InviteAssigneeRequest();
 
-        request.setAssignee(contact.getPhoneNumber());
+        request.setAssignee(contact);
         request.setGroupTitle(group.getGroupName());
         request.setTaskId(task.getDocumentID());
         request.setTaskTitle(task.getTitle());
