@@ -15,18 +15,24 @@ import android.widget.TextView;
 import com.otaliastudios.autocomplete.AutocompletePresenter;
 import com.otaliastudios.autocomplete.RecyclerViewPresenter;
 
+import org.w3c.dom.ls.LSInput;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Contact;
+import app.whatsdone.android.model.Group;
 
 
-public class UserPresenter extends RecyclerViewPresenter<User> {
+public class UserPresenter extends RecyclerViewPresenter<Contact> {
 
     protected Adapter adapter;
+    private List<Contact> contactList = new ArrayList<>();
 
-    public UserPresenter(Context context) {
+    public UserPresenter(Context context , List<Contact> list) {
         super(context);
+        this.contactList = list;
     }
 
     @Override
@@ -45,15 +51,15 @@ public class UserPresenter extends RecyclerViewPresenter<User> {
 
     @Override
     protected void onQuery(@Nullable CharSequence query) {
-        List<User> all = User.USERS;
+        List<Contact> all = contactList;
         if (TextUtils.isEmpty(query)) {
             adapter.setData(all);
         } else {
             query = query.toString().toLowerCase();
-            List<User> list = new ArrayList<>();
-            for (User u : all) {
-                if (u.getFullname().toLowerCase().contains(query) ||
-                        u.getUsername().toLowerCase().contains(query)) {
+            List<Contact> list = new ArrayList<>();
+            for (Contact u : all) {
+                if (u.getDisplayName().toLowerCase().contains(query) ||
+                        u.getPhoneNumber().toLowerCase().contains(query)) {
                     list.add(u);
                 }
             }
@@ -65,7 +71,7 @@ public class UserPresenter extends RecyclerViewPresenter<User> {
 
     class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
 
-        private List<User> data;
+        private List<Contact> data;
 
         public class Holder extends RecyclerView.ViewHolder {
             private View root;
@@ -79,7 +85,7 @@ public class UserPresenter extends RecyclerViewPresenter<User> {
             }
         }
 
-        public void setData(List<User> data) {
+        public void setData(List<Contact> data) {
             this.data = data;
         }
 
@@ -105,12 +111,13 @@ public class UserPresenter extends RecyclerViewPresenter<User> {
                 holder.root.setOnClickListener(null);
                 return;
             }
-            final User user = data.get(position);
-            holder.fullname.setText(user.getFullname());
-            holder.username.setText("@" + user.getUsername());
+            final Contact user = data.get(position);
+            holder.fullname.setText(user.getDisplayName());
+            holder.username.setText("|" + user.getPhoneNumber());
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     dispatchClick(user);
                 }
             });

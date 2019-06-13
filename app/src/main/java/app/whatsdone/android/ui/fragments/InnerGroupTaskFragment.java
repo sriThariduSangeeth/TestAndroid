@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -111,12 +112,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
         toolbarTextView.setText(group.getGroupName());
-       // toolbar.setTitle("    ");
-
-//
-        //toolbar.setTitle(group.getGroupName());
-
-
         toolbarTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +127,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
