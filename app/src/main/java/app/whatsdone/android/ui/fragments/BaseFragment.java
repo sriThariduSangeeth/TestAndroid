@@ -1,7 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -112,7 +112,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -125,6 +124,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         
         contactName = new ArrayList<>();
+
 
         circleImageView = view.findViewById(R.id.group_photo_image_view);
         addMembers = view.findViewById(R.id.add_members_button);
@@ -143,6 +143,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+        teamName.setHintTextColor(getResources().getColor(R.color.gray));
+
         checkUserForName();
         checkUserToAddMembers();
 
