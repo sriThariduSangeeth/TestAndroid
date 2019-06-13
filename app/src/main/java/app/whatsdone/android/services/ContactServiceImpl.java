@@ -39,18 +39,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class ContactServiceImpl implements ContactService {
     CloudService service;
     public ContactServiceImpl() {
-        String token = SharedPreferencesUtil.getString(Constants.SHARED_TOKEN);
-
-        if(token.isEmpty()){
-            FirebaseAuth.getInstance().getCurrentUser().getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull com.google.android.gms.tasks.Task<GetTokenResult> task) {
-                    if(task.isSuccessful()){
-                        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
-                    }
-                }
-            });
-        };
+        AuthServiceImpl.refreshToken();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
