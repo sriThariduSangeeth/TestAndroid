@@ -73,7 +73,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         if(!task.getAssignedUserImage().isEmpty())
             Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
 
-        recyclerViewHolderTask.dueDateText.setText(DateUtil.formatted(task.getDueDate()));
+        recyclerViewHolderTask.dueDateText.setText(DateUtil.formatted(task.getDueDate(), null));
 
         recyclerViewHolderTask.itemView.setOnClickListener(v -> {
 

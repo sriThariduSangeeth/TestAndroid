@@ -1,5 +1,8 @@
 package app.whatsdone.android.utils;
 
+import android.support.annotation.Nullable;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,8 +42,23 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static String formatted(Date dueDate) {
-        SimpleDateFormat fmt = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
+    public static String formatted(Date dueDate, @Nullable String format) {
+        if(format == null)
+            format = Constants.DATE_FORMAT;
+        SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
         return fmt.format(dueDate);
+    }
+
+    public static Date parse(String dateStr, @Nullable String format) {
+        if(format == null)
+            format = Constants.DATE_FORMAT;
+        SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
+        try {
+            return fmt.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date();
     }
 }
