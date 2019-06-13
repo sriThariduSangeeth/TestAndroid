@@ -27,7 +27,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private StorageService storageService = new StorageServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
 
-
     @Override
     public void init(BaseGroupFragmentView view, Activity context) {
         this.view = view;
@@ -49,20 +48,15 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
             });
         }
 
-
         try {
-
             service.create(group, new ServiceListener() {
                 @Override
                 public void onSuccess() {
-
                     checkExistInPlatform(group);
                 }
 
-
                 @Override
                 public void onError(@Nullable String error) {
-
                     view.onGroupError(error);
                 }
             });
@@ -71,8 +65,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
             view.onGroupError(exe.getMessage());
             Timber.d(exe);
         }
-
-
     }
 
     @Override
@@ -83,7 +75,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
                 @Override
                 public void onSuccess(String url) {
                     Timber.d("Image upload success %s", group.getDocumentID());
-
                 }
             });
         }
@@ -91,9 +82,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         service.update(group, new ServiceListener() {
             @Override
             public void onSuccess() {
-
                 checkExistInPlatform(group);
-
             }
 
             @Override
@@ -111,7 +100,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
                 List<String> newUsers = new ArrayList<>();
                 for (String user :
                         group.getMembers()) {
-                    if (!isExisting.contains(user)){
+                    if (!group.getOriginalMembers().contains(user)){
                         newUsers.add(user);
                     }
                 }

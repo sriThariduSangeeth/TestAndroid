@@ -116,8 +116,11 @@ public class GroupServiceImpl implements GroupService {
             group.setTaskCount(doc.getLong(Constants.FIELD_GROUP_TASKS_COUNT).intValue());
         if (doc.get(Constants.FIELD_GROUP_UPDATED_AT) != null)
             group.setUpdatedDate(doc.getDate(Constants.FIELD_GROUP_UPDATED_AT));
-        if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
-            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
+        if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null) {
+            List<String> members = (List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS);
+            group.setMembers(members);
+            group.setOriginalMembers(members);
+        }
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
             group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
         List<ExistUser> users = new ArrayList<>();

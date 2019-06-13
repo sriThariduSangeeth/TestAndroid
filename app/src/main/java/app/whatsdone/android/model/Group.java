@@ -19,6 +19,7 @@ public class Group implements Parcelable, BaseEntity {
     private int unreadTaskCount = 0;
     private Date updatedDate;
     private List<String> members = new ArrayList<>();
+    private List<String> originalMembers = new ArrayList<>();
     private String createdBy = "";
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
@@ -217,5 +218,13 @@ public class Group implements Parcelable, BaseEntity {
 
     public List<ExistUser> getMemberDetails() {
         return memberDetails;
+    }
+
+    public List<String> getOriginalMembers() {
+        return originalMembers;
+    }
+
+    public void setOriginalMembers(List<String> originalMembers) {
+        this.originalMembers = originalMembers;
     }
 }

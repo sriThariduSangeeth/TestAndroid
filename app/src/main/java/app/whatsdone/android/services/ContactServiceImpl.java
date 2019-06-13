@@ -43,9 +43,10 @@ public class ContactServiceImpl implements ContactService {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
-
+            String header = "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN);
+            System.out.println(header);
             Request request = original.newBuilder()
-                    .header("Authorization", "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
+                    .header("Authorization", header)
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
                     .build();
