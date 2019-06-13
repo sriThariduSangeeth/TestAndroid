@@ -61,6 +61,7 @@ import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -354,27 +355,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                 selectOneContact(oneContact, new OnContactSelectedListener() {
                                     @Override
                                     public void onSelected(String contact) {
-
+                                        contact = ContactUtil.getInstance().cleanNo(contact);
                                         if (contactNumbers.contains(contact)) {
-                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                            alert.setTitle("Alert");
-                                            alert.setMessage("" + contactItem.getDisplayName() + " is already a member");
-
-                                            System.out.println("" + contactNumbers);
-
-                                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            });
-
-
-                                            alert.setNegativeButton(android.R.string.no, null);
-                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                            alert.show();
+                                            AlertUtil.showAlert(getActivity(), contactItem.getDisplayName() + " is already a member");
                                         } else {
                                             //contactName.add(name);
                                             if (contact != null && !contact.isEmpty()) {
-                                                contact = ContactUtil.getInstance().cleanNo(contact);
+
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
                                                 contacts.add(contact);

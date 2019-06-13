@@ -1,7 +1,9 @@
 package app.whatsdone.android.services;
 
 import java.io.IOException;
+import java.util.List;
 
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 
 public interface GroupService {
@@ -16,4 +18,6 @@ public interface GroupService {
     String add();
 
     void getGroupById(String groupId, ServiceListener serviceListener);
+
+    void update(Group group, List<ExistUser> users, ServiceListener serviceListener);
 }
