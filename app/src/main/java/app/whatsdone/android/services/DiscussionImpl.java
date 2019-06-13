@@ -141,9 +141,20 @@ public class DiscussionImpl implements DiscussionService {
                         return;
                     }
 
+                    Query next = null;
+                    if (value.getDocuments().size() > 0) {
+
+                        DocumentSnapshot lastVisible = value.getDocuments()
+                                .get(value.size() - 1);
+                        next = db.collection(Constants.REF_DISCUSSIONS)
+                                .whereEqualTo("group_id", Objects.requireNonNull(groupId))
+                                .orderBy("posted_at", Query.Direction.DESCENDING)
+                                .startAfter(lastVisible)
+                                .limit(10);
+                    }
+                    this.next = next;
                     ArrayList<Message> messages = new ArrayList<>();
                     for (QueryDocumentSnapshot document : value) {
-
                         try {
 
                             User user = new User(document.getString("by_user"), document.getString("user_name"), checkAvatarIsEmpty(document.getString("user_image")), true);
@@ -157,7 +168,6 @@ public class DiscussionImpl implements DiscussionService {
 
                     serviceListener.onDataReceivedForMessage(messages);
                 });
-
     }
 
     @Override

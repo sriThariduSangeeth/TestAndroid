@@ -87,7 +87,7 @@ public class Constants {
     public static final String ACTION_VIEW_TASK = "view_task";
     public static final String ARG_TASK = "task";
     public static final String DATE_FORMAT = "MM/dd/yyyy";
-    public static final long DISCUSSION_LIMIT = 50;
+    public static final long DISCUSSION_LIMIT = 10;
     public static final String FIELD_GROUP_MEMBERS_DETAILS = "member_details";
 
 
