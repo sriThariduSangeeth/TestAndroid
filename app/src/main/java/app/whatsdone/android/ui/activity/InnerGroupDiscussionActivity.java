@@ -7,13 +7,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.view.View;
 import android.widget.ArrayAdapter;
-
 
 import com.otaliastudios.autocomplete.Autocomplete;
 import com.otaliastudios.autocomplete.AutocompleteCallback;
@@ -36,7 +33,7 @@ import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.MessageActivity;
 import app.whatsdone.android.utils.UserPresenter;
 
-import static android.R.*;
+import static android.R.layout;
 
 public class InnerGroupDiscussionActivity extends MessageActivity implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
@@ -50,9 +47,6 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
     private MessageInput input;
     private Autocomplete mentionsAutocompleteAt;
     private Autocomplete mentionsAutocompleteHash;
-
-
-
     public List<Integer> atLenthList = new ArrayList<>();
 
 
@@ -62,27 +56,24 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         super.onCreate(persistentState);
         setContentView(R.layout.activity_inner_group_discussion);
 
-        this.messagesList = (MessagesList) findViewById(R.id.messagesList);
+        this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
-        toolbar = (Toolbar) findViewById(R.id.toolbarInChat);
+        toolbar = findViewById(R.id.toolbarInChat);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(group.getGroupName());
-        input = (MessageInput) findViewById(R.id.input_mes);
+        input = findViewById(R.id.input_mes);
         input.setInputListener(this);
         input.setAttachmentsListener(this);
 
-        contactList = ContactUtil.getInstance().resolveContacts(group.getMembers());
+        contactList = ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails());
 
-        adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, group.getMembers());
+        adapter = new ArrayAdapter<>(this, layout.simple_list_item_1, group.getMembers());
         adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //back to task in group;
-                onBackPressed();
-            }
+        toolbar.setNavigationOnClickListener(view -> {
+            //back to task in group;
+            onBackPressed();
         });
 
         float elevation = 6f;
@@ -129,25 +120,6 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 .build();
 
     }
-//    private void changeMemberAdapter(String mess , boolean set) {
-//
-//        if (set) {
-//            String ca = mess;
-//
-//            if (ca != null && !ca.isEmpty()) {
-//                List<String> listFound = new ArrayList<String>();
-//                for (String item : group.getMembers()) {
-//
-//                    if (item.contains(ca))
-//                        listFound.add(item);
-//                }
-//
-//                adapter = new ArrayAdapter<String>(this, layout.simple_list_item_1, listFound);
-//                viewIn.setAdapter(adapter);
-//            }
-//
-//        }
-//    }
 
     @Override
     public void onSelectionChanged(int count) {
