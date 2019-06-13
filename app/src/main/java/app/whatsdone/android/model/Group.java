@@ -23,8 +23,9 @@ public class Group implements Parcelable, BaseEntity {
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
     private boolean imageChanged = false;
+    private List<ExistUser> memberDetails;
 
-  public void Group(String groupName , String groupId , String groupAvatar ){
+    public void Group(String groupName , String groupId , String groupAvatar ){
       this.documentID = groupId;
       this.groupName = groupName;
       this.avatar = groupAvatar;
@@ -198,7 +199,7 @@ public class Group implements Parcelable, BaseEntity {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
+    public static final Creator<Group> CREATOR = new Creator<Group>() {
         @Override
         public Group createFromParcel(Parcel in) {
             return new Group(in);
@@ -209,4 +210,12 @@ public class Group implements Parcelable, BaseEntity {
             return new Group[size];
         }
     };
+
+    public void setMemberDetails(List<ExistUser> memberDetails) {
+        this.memberDetails = memberDetails;
+    }
+
+    public List<ExistUser> getMemberDetails() {
+        return memberDetails;
+    }
 }

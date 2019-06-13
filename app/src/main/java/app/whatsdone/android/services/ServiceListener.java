@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Message;
+import timber.log.Timber;
 
 public interface ServiceListener {
 
@@ -24,7 +25,7 @@ public interface ServiceListener {
 
     }
     default void onError(@Nullable String error){
-
+        Timber.e(error);
     }
 
     default void onDataReceived(BaseEntity entity){

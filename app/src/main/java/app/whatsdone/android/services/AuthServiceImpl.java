@@ -72,15 +72,30 @@ public class AuthServiceImpl implements AuthService {
                 });
     }
 
+    public static void refreshToken(){
+            FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull com.google.android.gms.tasks.Task<GetTokenResult> task) {
+                    if(task.isSuccessful()){
+                        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                    }
+                }
+            });
+    }
+
     public static User getCurrentUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() != null){
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-            user.setDocumentID(firebaseUser.getPhoneNumber());
-            user.setPhoneNo(firebaseUser.getPhoneNumber());
-            if(firebaseUser.getPhotoUrl() != null)
-                user.setAvatar(Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
-            user.setDisplayName(firebaseUser.getDisplayName());
+            if(firebaseUser != null) {
+                user.setDocumentID(firebaseUser.getPhoneNumber());
+                user.setPhoneNo(firebaseUser.getPhoneNumber());
+                if (firebaseUser.getPhotoUrl() != null)
+                    user.setAvatar(Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
+                if(firebaseUser.getDisplayName() != null) {
+                    user.setDisplayName(firebaseUser.getDisplayName());
+                }
+            }
         }
 
         return user;

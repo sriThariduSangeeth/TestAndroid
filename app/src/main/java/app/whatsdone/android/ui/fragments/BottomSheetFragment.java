@@ -7,6 +7,7 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import app.whatsdone.android.R;
@@ -38,8 +39,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.bottom_sheet_dialog, container, false);
-        TextView gallery = v.findViewById(R.id.txtGallery);
-        TextView camera = v.findViewById(R.id.txtCamera);
+        LinearLayout gallery = v.findViewById(R.id.gallary_holder);
+        LinearLayout camera = v.findViewById(R.id.camera_holder);
 
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override

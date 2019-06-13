@@ -134,9 +134,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public String add() {
+        return db.collection(Constants.REF_TASKS).document().getId();
+    }
+
+    @Override
     public void create(BaseEntity entity, ServiceListener serviceListener) {
         Task task = (Task)entity;
-        DocumentReference document = db.collection(Constants.REF_TASKS).document();
+        DocumentReference document = db.collection(Constants.REF_TASKS).document(entity.getDocumentID());
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_TASK_TITLE, task.getTitle());
         data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());

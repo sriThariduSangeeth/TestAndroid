@@ -28,6 +28,7 @@ import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.utils.DateUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -37,7 +38,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     public List<BaseEntity> groups;
     private Context context;
     private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
-    private CircleImageView imageView;
     private RecyclerView.LayoutManager linearLayoutManager;
    // private GroupsRecyclerViewAdapter groupsRecyclerViewAdapter;
 
@@ -48,8 +48,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         this.groups = groups;
         this.context = context;
         setHasStableIds(true);
-
-
     }
 
 
@@ -59,12 +57,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.group_recycler_view_layout, viewGroup, false);
-
-        imageView = view.findViewById(R.id.image_view_group);
-       // toolbarTextView = view.findViewById(R.id.toolbar_title);
-
-
-
         return new RecyclerViewHolder(view);
 
     }
@@ -76,13 +68,14 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.groupNameTextView.setText(group.getGroupName());
         holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
         holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
+        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate()));
       //  holder.setIsRecyclable(false);
-
+        holder.imageView.setTag(group);
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
-                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
-                Timber.tag(TAG).d("onBindViewHolder: ");
-                System.out.println(" Avatar " + group.getAvatar());
+                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(holder.imageView);
+            }else {
+                holder.imageView.setImageDrawable(holder.imageView.getContext().getResources().getDrawable(R.drawable.user_group_man_woman3x));
             }
 
         }catch (Exception exception){
@@ -110,7 +103,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         public View view;
 
 
-        private TextView groupNameTextView, taskCount, discussionCount;
+        private TextView groupNameTextView, taskCount, discussionCount, dueDate;
         private ImageView imageView;
         private Group group;
 
@@ -124,6 +117,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             discussionCount = (TextView) itemView.findViewById(R.id.unread_discussion_counter);
             groupRecyclerView = (RecyclerView) itemView.findViewById(R.id.group_recycler_view) ;
             imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            dueDate = itemView.findViewById(R.id.date);
             if(imageView.getDrawable() == null)
             {
                 Drawable defaultImage= itemView.getResources().getDrawable(R.drawable.user_group_man_woman3x);

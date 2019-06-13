@@ -131,17 +131,14 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             public void onLeftClicked(int position) {
                 try {
                     Group group = adapter.getGroup(position);
+                    String id = group.getDocumentID();
+                    //groups.remove(position);
+                    //adapter.notifyDataSetChanged();
                     if (group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())) {
+                        presenter.deleteTeam(id);
 
-
-                        presenter.deleteTeam(groups.get(position).getDocumentID());
-                        adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeRemoved(position, groups.size());
-                        adapter.notifyDataSetChanged();
                     } else {
-                        presenter.leaveTeam(group.getDocumentID());
-                        adapter.notifyDataSetChanged();
-
+                        presenter.leaveTeam(id);
                     }
 
                 } catch (Exception e) {

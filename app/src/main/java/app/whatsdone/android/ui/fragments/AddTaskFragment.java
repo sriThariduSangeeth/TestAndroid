@@ -40,6 +40,8 @@ public class AddTaskFragment extends TaskFragmentBase {
                 task.setGroupName(group.getGroupName());
 
                 if(group.getDocumentID().equals(currentUserId)){
+                    this.isPersonalTask = true;
+                    this.isFromMyTasks = true;
                     if(!group.getCreatedBy().equals(currentUserId)){
                         group.setUpdatedDate(new Date());
                         group.getMembers().add(currentUserId);
@@ -67,6 +69,8 @@ public class AddTaskFragment extends TaskFragmentBase {
     public void save(){
         User current = AuthServiceImpl.getCurrentUser();
         String currentUserId = current.getDocumentID();
+        String id = service.add();
+        task.setDocumentID(id);
         task.setAssignedBy(currentUserId);
         task.setCreatedBy(currentUserId);
         if(task.getAssignedUser() == null || task.getAssignedUser().isEmpty()){
@@ -92,6 +96,8 @@ public class AddTaskFragment extends TaskFragmentBase {
                     });
                 }
 
+                inviteAssignee();
+
             }
 
             @Override
@@ -100,4 +106,6 @@ public class AddTaskFragment extends TaskFragmentBase {
             }
         });
     }
+
+
 }

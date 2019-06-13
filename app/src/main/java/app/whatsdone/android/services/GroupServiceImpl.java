@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
@@ -47,6 +48,7 @@ public class GroupServiceImpl implements GroupService {
     CloudService service;
 
     public GroupServiceImpl() {
+        AuthServiceImpl.refreshToken();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
@@ -117,7 +119,25 @@ public class GroupServiceImpl implements GroupService {
         if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
             group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
-            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+            group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+        List<ExistUser> users = new ArrayList<>();
+        if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
+            List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
+
+            for (HashMap map :
+                    details) {
+                String phone = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_PHONE);
+                String isInvited = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
+                String displayName = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_NAME);
+
+                ExistUser user = new ExistUser();
+                user.setDisplayName(displayName);
+                user.setIsInvited(isInvited);
+                user.setPhoneNumber(phone);
+                users.add(user);
+            }
+        }
+        group.setMemberDetails(users);
         return group;
     }
 
@@ -274,5 +294,26 @@ public class GroupServiceImpl implements GroupService {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
+        ContactUtil.getInstance().cleanNo(group.getMembers());
+
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
+        HashMap<String, Object>  data = new HashMap<>();
+        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);
+        data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
+
+        document.update(data).addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+                serviceListener.onSuccess();
+            else {
+                Log.w(TAG, "Error updating document.", task.getException());
+
+                serviceListener.onError(task.getException().getLocalizedMessage());
+            }
+            serviceListener.onCompleted(task.isSuccessful());
+        });
     }
 }

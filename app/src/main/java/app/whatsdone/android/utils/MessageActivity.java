@@ -51,16 +51,29 @@ public abstract class MessageActivity extends AppCompatActivity implements
     protected void onStart() {
 
         super.onStart();
-        discussionService.getAllDiscussion(group.getDocumentID(), new ServiceListener() {
+        discussionService.subscribe(group.getDocumentID(), new ServiceListener() {
             @Override
             public void onDataReceivedForMessage(ArrayList<Message> messages) {
                 if(!messages.isEmpty()){
+                    messagesAdapter.clear();
                     messagesAdapter.addToEnd( messages, false);
                 }else {
                     Log.d("TAG", "There is no any messages");
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        discussionService.unSubscribe();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        discussionService.unSubscribe();
     }
 
     @Override

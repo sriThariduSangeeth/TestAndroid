@@ -39,7 +39,7 @@ public class DiscussionImpl implements DiscussionService {
 
         db.collection(Constants.REF_DISCUSSIONS)
                 .whereEqualTo(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
-                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.TASKS_LIMIT)
+                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.DISCUSSION_LIMIT)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -133,7 +133,8 @@ public class DiscussionImpl implements DiscussionService {
     @Override
     public void subscribe(String groupId, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_DISCUSSIONS)
-                .whereArrayContains(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
+                .whereEqualTo(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
+                .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.DISCUSSION_LIMIT)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Timber.tag(TAG).w(e, "Discussion subscription failed");

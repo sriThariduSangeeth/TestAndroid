@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.Manifest;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -60,6 +63,7 @@ import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
+import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -81,6 +85,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
+    protected TextView toolbarTitle;
     private List<Contact> members = new ArrayList<Contact>();
     protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
@@ -89,6 +94,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected  ConstraintLayout constraintLayout;
     private boolean saveButtonClickedOnce = false;
     protected FloatingActionButton saveFab;
+    protected Toolbar toolbar;
+
+
 
 
     public BaseFragment() {
@@ -111,8 +119,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         View view = inflater.inflate(R.layout.fragment_add_group, container, false);
 
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
+        
         contactName = new ArrayList<>();
+
+
         circleImageView = view.findViewById(R.id.group_photo_image_view);
         addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
@@ -120,7 +133,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView = view.findViewById(R.id.add_members_list_view);
         saveFab = view.findViewById(R.id.save_group_fab_button);
         //imageView = view.findViewById(R.id.image_view_group);
-
+        toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         contactSet = new HashSet();
 
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
@@ -130,6 +143,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
+        teamName.setHintTextColor(getResources().getColor(R.color.gray));
+
         checkUserForName();
         checkUserToAddMembers();
 
@@ -156,15 +171,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+                requestContactPermissions();
 
-                }else {
-                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                    //intent.setDataAndType(ContactsContract.Contacts.CONTENT_URI,ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }
             }
         });
 
@@ -203,8 +211,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
-
-                    System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
+                    if(group.getMembers().isEmpty()){
+                        group.getMembers().add(AuthServiceImpl.getCurrentUser().getDocumentID());
+                    }
                     save();
                     saveFab.setEnabled(false);
                     adapter.notifyDataSetChanged();
@@ -351,27 +360,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                 selectOneContact(oneContact, new OnContactSelectedListener() {
                                     @Override
                                     public void onSelected(String contact) {
-
+                                        contact = ContactUtil.getInstance().cleanNo(contact);
                                         if (contactNumbers.contains(contact)) {
-                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                            alert.setTitle("Alert");
-                                            alert.setMessage("" + contactItem.getDisplayName() + " is already a member");
-
-                                            System.out.println("" + contactNumbers);
-
-                                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            });
-
-
-                                            alert.setNegativeButton(android.R.string.no, null);
-                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                            alert.show();
+                                            AlertUtil.showAlert(getActivity(), contactItem.getDisplayName() + " is already a member");
                                         } else {
                                             //contactName.add(name);
                                             if (contact != null && !contact.isEmpty()) {
-                                                contact = ContactUtil.getInstance().cleanNo(contact);
+
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
                                                 contacts.add(contact);
@@ -569,5 +564,42 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     public void setSaveButtonClickedOnce(boolean saveButtonClickedOnce) {
         this.saveButtonClickedOnce = saveButtonClickedOnce;
+    }
+
+
+
+    private void requestContactPermissions() {
+        Dexter.withActivity(getActivity())
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(intent, REQUEST_CODE);
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            Toast.makeText(getContext(), "permissions are not granted by the user!", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
     }
 }

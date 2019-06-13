@@ -8,6 +8,7 @@ import java.util.List;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceBase;
@@ -36,6 +37,9 @@ public class EditTaskFragment extends TaskFragmentBase {
             this.group = arg.getParcelable(Constants.ARG_GROUP);
             this.task = arg.getParcelable(Constants.ARG_TASK);
             this.isFromMyTasks = arg.getBoolean(Constants.ACTION_VIEW_TASK, false);
+            if(task.getGroupId().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
+                isPersonalTask = true;
+            }
 
             if(group == null && isFromMyTasks){
                 groupService.getGroupById(task.getGroupId(), new ServiceListener() {

@@ -1,5 +1,11 @@
 package app.whatsdone.android.services;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -12,6 +18,7 @@ import app.whatsdone.android.model.ContactSyncRequest;
 import app.whatsdone.android.model.ContactSyncResponse;
 import app.whatsdone.android.model.ExistInPlatformRequest;
 import app.whatsdone.android.model.ExistInPlatformResponse;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.InviteAssigneeRequest;
 import app.whatsdone.android.model.InviteAssigneeResponse;
@@ -32,6 +39,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class ContactServiceImpl implements ContactService {
     CloudService service;
     public ContactServiceImpl() {
+        AuthServiceImpl.refreshToken();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
@@ -103,7 +111,13 @@ public class ContactServiceImpl implements ContactService {
             public void onResponse(@NotNull Call<ExistInPlatformResponse> call, @NotNull retrofit2.Response<ExistInPlatformResponse> response) {
                 ExistInPlatformResponse data = response.body();
                 if (data != null) {
-                    serviceListener.onCompleteSearch(data.getExistNumbers());
+                    List<String> numbers = new ArrayList<>();
+                    List<ExistUser> users = data.getUsers();
+                    for (ExistUser user :
+                            users) {
+                        numbers.add(user.getPhoneNumber());
+                    }
+                    serviceListener.onCompleteSearch(users, numbers);
                     return;
                 }
                 serviceListener.onError(null);
@@ -117,10 +131,10 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void inviteAssignee(Contact contact, Group group, Task task, Listener serviceListener) {
+    public void inviteAssignee(String contact, Group group, Task task, Listener serviceListener) {
         InviteAssigneeRequest request = new InviteAssigneeRequest();
 
-        request.setAssignee(contact.getPhoneNumber());
+        request.setAssignee(contact);
         request.setGroupTitle(group.getGroupName());
         request.setTaskId(task.getDocumentID());
         request.setTaskTitle(task.getTitle());
