@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
@@ -274,5 +275,26 @@ public class GroupServiceImpl implements GroupService {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
+        ContactUtil.getInstance().cleanNo(group.getMembers());
+
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
+        HashMap<String, Object>  data = new HashMap<>();
+        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);
+        data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
+
+        document.update(data).addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+                serviceListener.onSuccess();
+            else {
+                Log.w(TAG, "Error updating document.", task.getException());
+
+                serviceListener.onError(task.getException().getLocalizedMessage());
+            }
+            serviceListener.onCompleted(task.isSuccessful());
+        });
     }
 }

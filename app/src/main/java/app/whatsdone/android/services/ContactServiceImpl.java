@@ -12,6 +12,7 @@ import app.whatsdone.android.model.ContactSyncRequest;
 import app.whatsdone.android.model.ContactSyncResponse;
 import app.whatsdone.android.model.ExistInPlatformRequest;
 import app.whatsdone.android.model.ExistInPlatformResponse;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.InviteAssigneeRequest;
 import app.whatsdone.android.model.InviteAssigneeResponse;
@@ -103,7 +104,13 @@ public class ContactServiceImpl implements ContactService {
             public void onResponse(@NotNull Call<ExistInPlatformResponse> call, @NotNull retrofit2.Response<ExistInPlatformResponse> response) {
                 ExistInPlatformResponse data = response.body();
                 if (data != null) {
-                    serviceListener.onCompleteSearch(data.getExistNumbers());
+                    List<String> numbers = new ArrayList<>();
+                    List<ExistUser> users = data.getUsers();
+                    for (ExistUser user :
+                            users) {
+                        numbers.add(user.getPhoneNumber());
+                    }
+                    serviceListener.onCompleteSearch(users, numbers);
                     return;
                 }
                 serviceListener.onError(null);
