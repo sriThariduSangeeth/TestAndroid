@@ -50,6 +50,8 @@
                         android:layout_marginRight="10dp"
                         android:hint="@string/enter_title_here"
                         android:gravity="center"
+                        android:maxLines="1"
+                        android:inputType="text"
                         android:textColor="@color/black"
                         android:textDirection="anyRtl"
                         android:layout_alignParentEnd="true"

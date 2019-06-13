@@ -118,7 +118,7 @@ public class GroupServiceImpl implements GroupService {
         if (doc.get(Constants.FIELD_GROUP_MEMBERS) != null)
             group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_MEMBERS));
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
-            group.setMembers((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
+            group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
         return group;
     }
 
