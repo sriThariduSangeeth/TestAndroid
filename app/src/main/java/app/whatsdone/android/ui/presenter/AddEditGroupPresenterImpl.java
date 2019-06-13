@@ -108,15 +108,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         contactService.existsInPlatform(group.getMembers(), new ContactService.Listener() {
             @Override
             public void onCompleteSearch(List<ExistUser> users, List<String> isExisting) {
-                List<String> newUsers = new ArrayList<>();
-                for (String user :
-                        group.getMembers()) {
-                    if (!isExisting.contains(user)){
-                        newUsers.add(user);
-                    }
-                }
-                if(newUsers.size() > 0)
-                    sendInviteToMembers(newUsers, group);
+                sendInviteToMembers(group.getMembers(), group);
                 service.update(group, users, new ServiceListener() {
                     @Override
                     public void onSuccess() {
