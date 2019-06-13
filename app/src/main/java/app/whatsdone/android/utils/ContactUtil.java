@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import app.whatsdone.android.WhatsDoneApplication;
 import app.whatsdone.android.model.Contact;
@@ -140,8 +141,6 @@ public class ContactUtil {
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
 
-
-
                         }
                     }
 
@@ -207,7 +206,7 @@ public class ContactUtil {
         String number = AuthServiceImpl.getCurrentUser().getPhoneNo();
 
         List<Contact> items = new ArrayList<>();
-        Dictionary<String, String> memberDetails = new Hashtable<>();
+        Map<String, String> memberDetails = new Hashtable<>();
 
         if(existUsers!=null) {
             for (ExistUser user : existUsers) {
@@ -238,7 +237,7 @@ public class ContactUtil {
             }
             else
             {
-                if(((Hashtable<String, String>) memberDetails).containsKey(contactNo)){
+                if(memberDetails.containsKey(contactNo)){
                     item.setDisplayName(memberDetails.get(contactNo));
                 }
             }
