@@ -20,6 +20,7 @@ import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
 import app.whatsdone.android.ui.fragments.MyTaskFragment;
 import app.whatsdone.android.ui.fragments.SettingFragment;
+import app.whatsdone.android.utils.ContactUtil;
 
 public class GroupsActivity extends AppCompatActivity {
 
@@ -48,7 +49,7 @@ public class GroupsActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(null);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
-
+        ContactUtil.getInstance().getPermission(GroupsActivity.this);
     }
 
     private void bindWidgetsWithAnEvent()

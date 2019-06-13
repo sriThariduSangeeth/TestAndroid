@@ -1,7 +1,11 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +22,6 @@ import app.whatsdone.android.utils.Constants;
 
 public class EditGroupFragment extends BaseFragment{
 
-
     public EditGroupFragment() {
 
     }
@@ -32,13 +35,19 @@ public class EditGroupFragment extends BaseFragment{
         return fragment;
     }
 
-   // @SuppressLint("ClickableViewAccessibility")
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             this.group = getArguments().getParcelable(Constants.ARG_GROUP);
         }
+
+
+
     }
 
     @Override

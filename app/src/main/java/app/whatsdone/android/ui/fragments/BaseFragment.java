@@ -57,6 +57,7 @@ import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
@@ -96,9 +97,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected FloatingActionButton saveFab;
     protected Toolbar toolbar;
 
-
-
-
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -110,8 +108,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -122,7 +118,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
-        
         contactName = new ArrayList<>();
 
 
@@ -132,7 +127,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         constraintLayout = view.findViewById(R.id.constraintLayout3);
         swipeListView = view.findViewById(R.id.add_members_list_view);
         saveFab = view.findViewById(R.id.save_group_fab_button);
-        //imageView = view.findViewById(R.id.image_view_group);
         toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         contactSet = new HashSet();
 
@@ -140,7 +134,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView.setAdapter(adapter);
 
         contactNumbers.addAll(group.getMembers());
-        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
+        if(contactNumbers.contains(AuthServiceImpl.getCurrentUser().getPhoneNo()))
+        {
+            //
+            System.out.println(" "+ AuthServiceImpl.getCurrentUser().getDisplayName() );
+
+        }
+
+
+        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails() ));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         teamName.setHintTextColor(getResources().getColor(R.color.gray));
@@ -148,20 +150,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         checkUserForName();
         checkUserToAddMembers();
 
-
-
         if (group.getAvatar() != null && !group.getAvatar().isEmpty()) {
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
-
 
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checkUserForTeamImage();
-
                     //showPictureDialog();
-
                 }
             });
 
@@ -193,7 +190,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     alert.setTitle("Alert");
                     alert.setMessage("Team Name should not be empty");
 
-
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -219,8 +215,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     saveFab.setEnabled(false);
                     adapter.notifyDataSetChanged();
                 }
-
-
             }
 
 
@@ -239,7 +233,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     public abstract void checkUserToAddMembers();
 
 
-  public Bitmap getImageData(ImageView imageView) {
+     public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
@@ -251,7 +245,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         return bitmap;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onSave();
@@ -270,8 +263,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
     @Override
     public void onGroupSaved() {
-        //goes back to the group fragment, list of groups
-       // adapter.notifyAll();
         adapter.notifyDataSetChanged();
         getActivity().onBackPressed();
     }
@@ -371,7 +362,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                                 contactNumbers.add(contact);
                                                 List<String> contacts = new ArrayList<>();
                                                 contacts.add(contact);
-                                                members.addAll(ContactUtil.getInstance().resolveContacts(contacts));
+                                                members.addAll(ContactUtil.getInstance().resolveContacts(contacts, group.getMemberDetails()));
                                                 adapter.notifyDataSetChanged();
                                             }
 
