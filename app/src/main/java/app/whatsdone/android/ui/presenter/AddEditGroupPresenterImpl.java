@@ -36,6 +36,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
     @Override
     public void create(Group group) {
+        view.onGroupSaved();
         String documentId = service.add();
         group.setDocumentID(documentId);
 
@@ -54,7 +55,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
             service.create(group, new ServiceListener() {
                 @Override
                 public void onSuccess() {
-                    view.onGroupSaved();
+
                     checkExistInPlatform(group);
                 }
 
@@ -76,6 +77,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
     @Override
     public void update(Group group) {
+        view.onGroupSaved();
         if (group.isImageChanged()) {
             storageService.uploadGroupImage(group.getTeamImage(), group.getDocumentID(), new StorageService.Listener() {
                 @Override
@@ -89,7 +91,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
         service.update(group, new ServiceListener() {
             @Override
             public void onSuccess() {
-                view.onGroupSaved();
+
                 checkExistInPlatform(group);
 
             }

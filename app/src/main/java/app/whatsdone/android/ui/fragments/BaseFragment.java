@@ -55,9 +55,7 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenter;
 import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
@@ -83,7 +81,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
-    private User user;
+    protected TextView toolbarTitle;
     private List<Contact> members = new ArrayList<Contact>();
     protected SwipeMenuListView swipeListView;
     ListViewCustomArrayAdapter adapter;
@@ -123,21 +121,13 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView = view.findViewById(R.id.add_members_list_view);
         saveFab = view.findViewById(R.id.save_group_fab_button);
         //imageView = view.findViewById(R.id.image_view_group);
-
+        toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         contactSet = new HashSet();
 
         adapter = new ListViewCustomArrayAdapter(getActivity().getApplicationContext(), R.layout.member_list_layout, members);
         swipeListView.setAdapter(adapter);
 
-
-
         contactNumbers.addAll(group.getMembers());
-        if(contactNumbers.contains(AuthServiceImpl.getCurrentUser().getPhoneNo()))
-        {
-            //
-            System.out.println(" "+ AuthServiceImpl.getCurrentUser().getDisplayName() );
-
-        }
         members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
@@ -214,8 +204,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                     group.setTeamImage(getImageData(circleImageView));
                     group.setGroupName(teamName.getText().toString());
                     group.setMembers(contactNumbers);
-
-                    System.out.println("User doc Id" + AuthServiceImpl.getCurrentUser().getDocumentID());
+                    if(group.getMembers().isEmpty()){
+                        group.getMembers().add(AuthServiceImpl.getCurrentUser().getDocumentID());
+                    }
                     save();
                     saveFab.setEnabled(false);
                     adapter.notifyDataSetChanged();

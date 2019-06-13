@@ -95,9 +95,9 @@ public class GroupsActivity extends AppCompatActivity {
         myTaskContainerFragment = new MyTaskContainerFragment();
         settingFragment = new SettingFragment();
 
-        tabLayout.addTab(tabLayout.newTab().setText("Teams"),true);
-        tabLayout.addTab(tabLayout.newTab().setText("My Tasks"));
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.group)),true);
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.my_tasks)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.settings)));
 
 
     }

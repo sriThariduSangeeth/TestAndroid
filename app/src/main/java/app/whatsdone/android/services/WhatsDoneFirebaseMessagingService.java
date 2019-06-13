@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -83,7 +84,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * Handle time allotted to BroadcastReceivers.
      */
     private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
+        Timber.d("Short lived task is done.");
     }
 
    /*
@@ -91,19 +92,24 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        if(token != null && !token.isEmpty()) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            List<String> tokens = new ArrayList<>();
-            tokens.add(token);
-            Map<String, Object> data = new HashMap<>();
-            data.put(Constants.FIELD_USER_DEVICE_TOKENS, tokens);
-            db.collection(Constants.REF_USERS)
-                    .document(AuthServiceImpl.getCurrentUser().getDocumentID())
-                    .update(data)
-                    .addOnCompleteListener(command -> {
-                        Log.d(TAG, "command is success: " + command.isSuccessful());
-                    });
+        try {
+            if(token != null && !token.isEmpty() && !AuthServiceImpl.getCurrentUser().getDocumentID().isEmpty()) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                List<String> tokens = new ArrayList<>();
+                tokens.add(token);
+                Map<String, Object> data = new HashMap<>();
+                data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayUnion(token));
+                db.collection(Constants.REF_USERS)
+                        .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                        .update(data)
+                        .addOnCompleteListener(command -> {
+                            Timber.d("command is success: %s", command.isSuccessful());
+                        });
+            }
+        }catch (Exception ex){
+            Timber.e(ex);
         }
+
     }
 
     /**

@@ -39,6 +39,8 @@ public class ListViewCustomArrayAdapter extends ArrayAdapter<Contact> {
 
         TextView textView = convertView.findViewById((R.id.item_label));
         textView.setText(contacts.get(position).getDisplayName());
+        TextView numberView = convertView.findViewById(R.id.item_number);
+        numberView.setText(contacts.get(position).getPhoneNumber());
 
         return convertView;
 

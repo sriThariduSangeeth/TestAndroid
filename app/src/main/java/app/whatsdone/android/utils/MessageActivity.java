@@ -55,12 +55,19 @@ public abstract class MessageActivity extends AppCompatActivity implements
             @Override
             public void onDataReceivedForMessage(ArrayList<Message> messages) {
                 if(!messages.isEmpty()){
+                    messagesAdapter.clear();
                     messagesAdapter.addToEnd( messages, false);
                 }else {
                     Log.d("TAG", "There is no any messages");
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        discussionService.unSubscribe();
     }
 
     @Override

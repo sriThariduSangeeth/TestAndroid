@@ -49,6 +49,7 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
@@ -251,13 +252,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onTaskDeleteClicked(int position) {
                 //task delete
+                String id = taskInnerGroups.get(position).getDocumentID();
+                taskInnerGroups.remove(position);
+                adapter.notifyDataSetChanged();
 
-                service.delete(taskInnerGroups.get(position).getDocumentID(), new ServiceListener() {
+                service.delete(id, new ServiceListener() {
                     @Override
                     public void onSuccess() {
-                        adapter.taskList.remove(position);
-                        adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                        Timber.d("%s task deleted", id);
                     }
                 });
 
@@ -266,8 +268,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             @Override
             public void onTaskOnHoldClicked(int position) {
                 //task change status to On Hold
-                Task task = new Task();
-                task = (Task) taskInnerGroups.get(position);
+                Task task = (Task) taskInnerGroups.get(position);
                 task.setStatus(Task.TaskStatus.ON_HOLD);
                 service.update(task, new ServiceListener() {
                     @Override

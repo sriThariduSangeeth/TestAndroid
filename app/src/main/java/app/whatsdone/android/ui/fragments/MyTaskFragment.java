@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,15 +20,21 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
 import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
+import app.whatsdone.android.utils.Constants;
+import timber.log.Timber;
 
 
 public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
@@ -54,9 +61,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
 
         recycler = view.findViewById(R.id.task_recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        tasksAdapter = new MyTasksRecyclerViewAdapter(tasks , getContext());
-        tasksAdapter.setListener(this);
-        recycler.setAdapter(tasksAdapter);
+
         this.taskPresenter = new MyTaskPresenterImpl();
         this.taskPresenter.init(this);
         this.taskPresenter.loadTasks();
@@ -68,9 +73,10 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                //TODO: add personal group information here.
-                Fragment myFragment = AddTaskFragment.newInstance(new Group());
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.my_task_container, myFragment).addToBackStack(null).commit();
+                Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+                intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_ADD_TASK);
+                intent.putExtra(Constants.ARG_GROUP, GroupServiceImpl.getPersonalGroup());
+                getActivity().startActivity(intent);
 
             }
         });
@@ -90,10 +96,10 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     }
 
     @Override
-    public void onTaskClicked() {
+    public void onTaskClicked(Task task) {
         System.out.println("MyTaskFrament onTaskClicked");
         if( this.listener != null)
-            this.listener.onTaskClicked();
+            this.listener.onTaskClicked(task);
     }
 
 
@@ -101,7 +107,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
 
     public interface OnMyTaskFragmentInteractionListener {
 
-        void onTaskClicked();
+        void onTaskClicked(Task task);
 
     }
 
@@ -109,7 +115,8 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     private void setupRecyclerView()
     {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        tasksAdapter = new MyTasksRecyclerViewAdapter(tasks, getContext());
+        tasksAdapter = new MyTasksRecyclerViewAdapter(tasks , getContext());
+        tasksAdapter.setListener(this);
         recycler.setAdapter(tasksAdapter);
 
         taskSwipeController = new TaskSwipeController(new TaskSwipeControllerAction() {
@@ -117,13 +124,13 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             @Override
             public void onTaskDeleteClicked(int position) {
                 //task delete
-
-                service.delete(tasks.get(position).getDocumentID(), new ServiceListener() {
+                String id = tasks.get(position).getDocumentID();
+                tasks.remove(position);
+                tasksAdapter.notifyDataSetChanged();
+                service.delete(id, new ServiceListener() {
                     @Override
                     public void onSuccess() {
-                        tasksAdapter.tasks.remove(position);
-                        tasksAdapter.notifyItemRemoved(position);
-                        tasksAdapter.notifyItemRangeChanged(position, tasksAdapter.getItemCount());
+                        Timber.d("id:%s task removed", id);
                     }
                 });
 

@@ -1,7 +1,7 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
-import android.media.Image;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +18,8 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
@@ -71,13 +73,14 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         if(!task.getAssignedUserImage().isEmpty())
             Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
 
-        recyclerViewHolderTask.textView.setOnClickListener(v -> {
+        recyclerViewHolderTask.dueDateText.setText(DateUtil.formatted(task.getDueDate()));
 
-            if(listener !=null)
-            {
-                System.out.println("mytask");
-                listener.onTaskClicked();
-            }
+        recyclerViewHolderTask.itemView.setOnClickListener(v -> {
+
+            Intent intent = new Intent(context, InnerGroupTaskActivity.class);
+            intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+            intent.putExtra(Constants.ARG_TASK, task);
+            context.startActivity(intent);
         });
 
         recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
@@ -118,6 +121,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         TextView textView;
         TextView groupTextView;
         TextView statusIndicator;
+        TextView dueDateText;
         ImageView imageView;
 
 
@@ -127,12 +131,13 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             groupTextView = itemView.findViewById(R.id.group_name_text);
             imageView = itemView.findViewById(R.id.image_view_my_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
+            dueDateText = itemView.findViewById(R.id.task_inner_date);
         }
     }
 
     public interface OnMyTaskFragmentInteractionListener {
 
-        void onTaskClicked();
+        void onTaskClicked(Task task);
 
     }
 

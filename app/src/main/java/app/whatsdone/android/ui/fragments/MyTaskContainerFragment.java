@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Task;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.Constants;
 
 
-public class MyTaskContainerFragment extends Fragment implements MyTaskDetailsFragment.OnFragmentInteractionListener, MyTaskFragment.OnMyTaskFragmentInteractionListener{
+public class MyTaskContainerFragment extends Fragment implements MyTaskFragment.OnMyTaskFragmentInteractionListener{
     Fragment fragment;
 
     FragmentManager fragmentManager;
@@ -54,27 +58,13 @@ public class MyTaskContainerFragment extends Fragment implements MyTaskDetailsFr
         return view;
 
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-
-    }
-
-
+    
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onTaskClicked() {
-        System.out.println("Add Task clicked");
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new MyTaskDetailsFragment();
-        ((MyTaskDetailsFragment)fragment).setListener(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.my_task_container, fragment);
-        fragmentTransaction.commit();
+    public void onTaskClicked(Task task) {
+        Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+        intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+        intent.putExtra(Constants.ARG_TASK, task);
+        getActivity().startActivity(intent);
 
     }
 }
