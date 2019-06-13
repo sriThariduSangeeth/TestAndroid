@@ -40,7 +40,7 @@
                         android:gravity="center"
                         android:text="@string/Title"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="15sp" />
 
                     <EditText
                         android:id="@+id/title_edit_text"
@@ -110,7 +110,7 @@
                         android:gravity="center"
                         android:text="@string/choose_one_of_the_status"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="15sp" />
 
                     <Spinner
                         android:id="@+id/user_status"
@@ -145,7 +145,7 @@
                         android:gravity="center"
                         android:text="@string/due_date"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:layout_marginStart="10dp" />
 
                     <TextView
@@ -157,6 +157,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="10dp"
+                        android:textSize="15sp"
                         android:gravity="center"
                         android:text="@string/set_due_date"
                         android:layout_marginEnd="10dp" />
@@ -183,7 +184,7 @@
                         android:gravity="center"
                         android:text="@string/assigned_to"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:layout_marginStart="10dp" />
 
                     <TextView
@@ -196,6 +197,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="10dp"
                         android:gravity="center"
+                        android:textSize="15sp"
                         android:text="@string/select_from_contacts"
                         android:layout_marginEnd="10dp" />
 
@@ -222,7 +224,7 @@
                         android:gravity="center"
                         android:text="@string/group_name"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/select_group_name"
@@ -233,6 +235,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="10dp"
+                        android:textSize="15sp"
                         android:gravity="center"
                         android:text="@string/select_group_name" />
 
@@ -253,6 +256,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/checklist"
+                android:textSize="15sp"
                 android:layout_marginLeft="10dp"/>
 
             <LinearLayout
@@ -309,6 +313,7 @@
                     android:layout_height="100dp"
                     android:background="@drawable/border"
                     android:layout_weight="1"
+                    android:scrollbars="vertical"
                     android:dividerHeight="2dp">
                 </ListView>
 
