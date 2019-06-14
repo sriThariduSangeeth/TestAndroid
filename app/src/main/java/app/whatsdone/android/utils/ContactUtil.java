@@ -140,18 +140,24 @@ public class ContactUtil {
 
     public Contact resolveContact(String phoneNumber) {
 
-        List<Contact> items= new ArrayList<>();
+        List<Contact> items;
         List<String> phoneNumbers = new ArrayList<>();
         phoneNumbers.add(phoneNumber);
+        Contact contact = new Contact();
+        contact.setPhoneNumber(phoneNumber);
+        contact.setDisplayName(phoneNumber);
 
         try{
             if(contacts.size() == 0)
                 readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
             items = filterContacts(phoneNumbers, new ArrayList<>());
+
+            if(items.size()>0)
+                contact = items.get(0);
         }catch (Exception ex){
             Timber.tag(TAG).w(ex.getLocalizedMessage());
         }
-        return items.get(0);
+        return contact;
     }
 
     private void readContacts(Context context) {

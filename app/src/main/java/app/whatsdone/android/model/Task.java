@@ -12,10 +12,10 @@ import java.util.Map;
 public class Task implements BaseEntity, Parcelable {
 
     public enum TaskStatus {
-        TODO(10),
-        IN_PROGRESS(20),
-        ON_HOLD(30),
-        DONE(50);
+        TODO(0),
+        IN_PROGRESS(10),
+        ON_HOLD(20),
+        DONE(30);
 
         private final int value;
 
@@ -25,13 +25,13 @@ public class Task implements BaseEntity, Parcelable {
 
         public static TaskStatus fromInt(int intValue) {
             switch (intValue){
-                case 10:
+                case 0:
                     return TaskStatus.TODO;
-                case 20:
+                case 10:
                     return TaskStatus.IN_PROGRESS;
-                case 30:
+                case 20:
                     return TaskStatus.ON_HOLD;
-                case 50:
+                case 30:
                     return TaskStatus.DONE;
 
                     default:
@@ -68,6 +68,7 @@ public class Task implements BaseEntity, Parcelable {
     private String assignedUser = "";
     private String assignedUserName = "";
     private String assignedUserImage = "";
+    private String assigneeComment = "";
     private String assignedBy;
     private String createdBy;
     private TaskStatus status = TaskStatus.TODO;
@@ -191,6 +192,14 @@ public class Task implements BaseEntity, Parcelable {
         this.createdBy = createdBy;
     }
 
+    public String getAssigneeComment() {
+        return assigneeComment;
+    }
+
+    public void setAssigneeComment(String assigneeComment) {
+        this.assigneeComment = assigneeComment;
+    }
+
     public Task() {
     }
 
@@ -207,6 +216,7 @@ public class Task implements BaseEntity, Parcelable {
         assignedUser = in.readString();
         assignedUserName = in.readString();
         assignedUserImage = in.readString();
+        assigneeComment = in.readString();
         assignedBy = in.readString();
         createdBy = in.readString();
         status = TaskStatus.fromInt(in.readInt());
@@ -236,6 +246,7 @@ public class Task implements BaseEntity, Parcelable {
         dest.writeString(assignedUser);
         dest.writeString(assignedUserName);
         dest.writeString(assignedUserImage);
+        dest.writeString(assigneeComment);
         dest.writeString(assignedBy);
         dest.writeString(createdBy);
         dest.writeValue(status.getValue());
