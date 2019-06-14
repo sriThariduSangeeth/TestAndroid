@@ -72,8 +72,15 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
         });
-        myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));
-        myRecyclerViewHolder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        if(task.getStatus() == Task.TaskStatus.DONE){
+            myRecyclerViewHolder.statusIndicator.setVisibility(View.GONE);
+        }else {
+            myRecyclerViewHolder.statusIndicator.setVisibility(View.VISIBLE);
+            myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));
+            myRecyclerViewHolder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        }
+
+
     }
 
     private int getStatusIndicatorColor(Task task) {
