@@ -208,6 +208,7 @@ public abstract class TaskFragmentBase extends Fragment {
         }
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbarTitle.setClickable(false);
     }
 
     protected abstract void save();

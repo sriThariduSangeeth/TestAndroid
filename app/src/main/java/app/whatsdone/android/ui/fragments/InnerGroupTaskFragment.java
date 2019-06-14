@@ -122,9 +122,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                 Fragment myFragment = EditGroupFragment.newInstance(group);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
-
+                toolbarTextView.setClickable(false);
             }
+
         });
+
 
 
 
