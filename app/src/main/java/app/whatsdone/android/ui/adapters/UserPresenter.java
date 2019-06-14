@@ -1,4 +1,4 @@
-package app.whatsdone.android.utils;
+package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

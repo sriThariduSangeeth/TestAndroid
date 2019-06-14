@@ -1,4 +1,4 @@
-package app.whatsdone.android.utils;
+package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,9 @@ import app.whatsdone.android.model.Message;
 import app.whatsdone.android.services.DiscussionImpl;
 import app.whatsdone.android.services.DiscussionService;
 import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.LocalState;
 
 public abstract class MessageActivity extends AppCompatActivity implements
         MessagesListAdapter.SelectionListener
