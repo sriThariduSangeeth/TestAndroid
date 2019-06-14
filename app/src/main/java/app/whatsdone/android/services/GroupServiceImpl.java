@@ -130,7 +130,13 @@ public class GroupServiceImpl implements GroupService {
             for (HashMap map :
                     details) {
                 String phone = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_PHONE);
-                String isInvited = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
+                Object isInvitedObject = map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
+                boolean isInvited = false;
+                if(isInvitedObject instanceof Boolean){
+                    isInvited = (boolean) isInvitedObject;
+                }else if(isInvitedObject instanceof String) {
+                    isInvited = ((String)isInvitedObject).equals("true");
+                }
                 String displayName = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_NAME);
 
                 ExistUser user = new ExistUser();

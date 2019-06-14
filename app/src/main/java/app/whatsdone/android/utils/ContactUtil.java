@@ -261,7 +261,7 @@ public class ContactUtil {
             for (ExistUser user : existUsers) {
                 memberDetails.put(user.getPhoneNumber(), user.getDisplayName());
 
-                if (user.getIsInvited().equals("true")) {
+                if (user.getIsInvited()) {
                     memberDetails.put(user.getPhoneNumber(), user.getPhoneNumber() +"(INVITED)");
                 }
             }
