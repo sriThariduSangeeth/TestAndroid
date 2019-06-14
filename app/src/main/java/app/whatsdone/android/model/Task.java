@@ -219,7 +219,8 @@ public class Task implements BaseEntity, Parcelable {
         assigneeComment = in.readString();
         assignedBy = in.readString();
         createdBy = in.readString();
-        status = TaskStatus.fromInt(in.readInt());
+        status = TaskStatus.valueOf(in.readString());
+
         long tmpUpdatedDate = in.readLong();
         updatedDate = tmpUpdatedDate != -1 ? new Date(tmpUpdatedDate) : null;
         if (in.readByte() == 0x01) {
@@ -249,7 +250,7 @@ public class Task implements BaseEntity, Parcelable {
         dest.writeString(assigneeComment);
         dest.writeString(assignedBy);
         dest.writeString(createdBy);
-        dest.writeValue(status.getValue());
+        dest.writeString(status.name());
         dest.writeLong(updatedDate != null ? updatedDate.getTime() : -1L);
         if (checkList == null) {
             dest.writeByte((byte) (0x00));
