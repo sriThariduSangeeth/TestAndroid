@@ -165,6 +165,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
+        data.put(Constants.FIELD_TASK_ASSIGNEE_COMMENT, task.getAssigneeComment());
         data.put(Constants.FIELD_TASK_CREATED_BY, AuthServiceImpl.getCurrentUser().getDocumentID());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
@@ -202,6 +203,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
+        data.put(Constants.FIELD_TASK_ASSIGNEE_COMMENT, task.getAssigneeComment());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
