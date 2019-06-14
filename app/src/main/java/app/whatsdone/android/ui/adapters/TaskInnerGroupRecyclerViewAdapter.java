@@ -27,6 +27,10 @@ import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 
+import static app.whatsdone.android.model.Task.TaskStatus.DONE;
+import static app.whatsdone.android.model.Task.TaskStatus.ON_HOLD;
+import static app.whatsdone.android.model.Task.TaskStatus.TODO;
+
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder> {
     public List<BaseEntity> taskList;
     private Context context;
@@ -54,7 +58,20 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         Task task = (Task) taskList.get(position);
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
-        myRecyclerViewHolder.status.setText(task.getStatus().toString());
+       // myRecyclerViewHolder.status.setText(task.getStatus().toString());
+        if(task.getStatus().toString().equals("TODO"))
+        myRecyclerViewHolder.status.setText("Not Started");
+
+        if(task.getStatus().toString().equals("ON_HOLD"))
+            myRecyclerViewHolder.status.setText("On Hold");
+
+        if(task.getStatus().toString().equals("DONE"))
+            myRecyclerViewHolder.status.setText("Done");
+
+        if(task.getStatus().toString().equals("IN_PROGRESS"))
+            myRecyclerViewHolder.status.setText("In Progress");
+
+
         if (task.getDueDate() == null) {
             myRecyclerViewHolder.date.setText(df.format(new Date()));
         } else {
