@@ -97,7 +97,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="14dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="22dp"
             android:text="@string/group_name"
             android:textColor="@color/textViewColor2"
             android:textSize="15sp"
@@ -107,30 +107,36 @@
 
         </TextView>
 
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             app:counterEnabled="true"
-            app:hintEnabled="false"
-            app:hintAnimationEnabled="false"
             app:counterMaxLength="25"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/group_name_text_view"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/group_name_edit_text"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="120dp"
-                android:layout_marginLeft="120dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
+
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+
+                android:hint="@string/team_name"
                 android:inputType="text"
                 android:maxLength="25"
                 android:paddingTop="10sp"
@@ -138,8 +144,8 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:hint="@string/team_name"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/text_input_layout"
+                app:layout_constraintStart_toEndOf="@+id/group_name_text_view"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -163,7 +169,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" >
+
+    </TextView>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
