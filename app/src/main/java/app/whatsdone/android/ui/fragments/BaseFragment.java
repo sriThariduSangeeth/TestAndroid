@@ -489,8 +489,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
             }
         };
-
-        swipeListView.setMenuCreator(creator);
+        if(AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()))
+        {
+            swipeListView.setMenuCreator(creator);
+        }
         swipeListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
             @Override
             public void onSwipeStart(int position) {
