@@ -111,6 +111,22 @@ public class ContactUtil {
         return items;
     }
 
+    public Contact resolveContact(String phoneNumber) {
+
+        List<Contact> items= new ArrayList<>();
+        List<String> phoneNumbers = new ArrayList<>();
+        phoneNumbers.add(phoneNumber);
+
+        try{
+            if(contacts.size() == 0)
+                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+            items = filterContacts(phoneNumbers, new ArrayList<>());
+        }catch (Exception ex){
+            Timber.tag(TAG).w(ex.getLocalizedMessage());
+        }
+        return items.get(0);
+    }
+
     private void readContacts(Context context) {
         if (context == null)
             return;

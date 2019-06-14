@@ -92,4 +92,5 @@
     <string name="add_new_group">Add Group</string>
     <string name="group_settings">Group Settings</string>
     <string name="team_name">Enter group name here</string>
+    <string name="assigned_by">Assigned By</string>
 </resources>
