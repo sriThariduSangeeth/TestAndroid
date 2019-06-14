@@ -111,6 +111,33 @@ public class ContactUtil {
         return items;
     }
 
+    public List<ExistUser> resolveContacts(List<ExistUser> existUsers) {
+
+        List<ExistUser> items = new ArrayList<>();
+        List<String> phoneNumbers = new ArrayList<>();
+        for (ExistUser user : existUsers) {
+            phoneNumbers.add(user.getPhoneNumber());
+        }
+
+
+        if(existUsers.isEmpty()) return items;
+
+        try{
+            if(contacts.size() == 0)
+                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+            List<Contact> users = filterContacts(phoneNumbers, existUsers);
+            for (Contact user : users) {
+                ExistUser existUser = new ExistUser();
+                existUser.setPhoneNumber(user.getPhoneNumber());
+                existUser.setDisplayName(user.getDisplayName());
+                items.add(existUser);
+            }
+        }catch (Exception ex){
+            Timber.tag(TAG).w(ex.getLocalizedMessage());
+        }
+        return items;
+    }
+
     public Contact resolveContact(String phoneNumber) {
 
         List<Contact> items= new ArrayList<>();
@@ -229,7 +256,7 @@ public class ContactUtil {
                 memberDetails.put(user.getPhoneNumber(), user.getDisplayName());
 
                 if (user.getIsInvited().equals("true")) {
-                    memberDetails.put(user.getPhoneNumber(), "INVITED");
+                    memberDetails.put(user.getPhoneNumber(), user.getPhoneNumber() +"(INVITED)");
                 }
             }
         }
