@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
 import app.whatsdone.android.ui.presenter.GroupPresenter;
 import app.whatsdone.android.ui.presenter.GroupPresenterImpl;
 import app.whatsdone.android.ui.view.GroupFragmentView;
+import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
 
@@ -75,8 +77,10 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     @Override
     public void updateGroups(List<BaseEntity> groups) {
         this.groups.clear();
+        LocalState.getInstance().syncGroups(groups);
         this.groups.addAll(groups);
         adapter.notifyDataSetChanged();
+
     }
 
 
@@ -109,6 +113,14 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         super.onDetach();
         listener = null;
         presenter.unSubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalState.getInstance().syncGroups(groups);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView() {

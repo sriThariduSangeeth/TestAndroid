@@ -26,7 +26,6 @@ import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
-import app.whatsdone.android.utils.GetCurrentDetails;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder> {
     public List<BaseEntity> taskList;
@@ -80,7 +79,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     private int getStatusIndicatorColor(Task task) {
         Date today = DateUtil.getLastMinuteDate(new Date());
 
-        if (DateUtil.isEqual(today, task.getDueDate()))
+        if (DateUtil.isDateEqual(today, task.getDueDate()))
             return R.color.LightSalmonGold;
         else if ((today).after(task.getDueDate()))
             return R.color.lightRed;
@@ -90,7 +89,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     private int getStatusIndicatorText(Task task) {
         Date today = DateUtil.getLastMinuteDate(new Date());
 
-        if (DateUtil.isEqual(today, task.getDueDate()))
+        if (DateUtil.isDateEqual(today, task.getDueDate()))
             return R.string.task_due_soon;
         else if ((today).after(task.getDueDate()))
             return R.string.task_overdue;

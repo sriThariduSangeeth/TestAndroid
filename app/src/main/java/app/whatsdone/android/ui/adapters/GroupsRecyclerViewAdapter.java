@@ -66,9 +66,9 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
       //  holder.progressplay.setProgress(0);
         final Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
-        holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
-        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
-        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate()));
+        holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getUnreadTaskCount()));
+        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getUnreadDiscussionCount()));
+        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate(), null));
       //  holder.setIsRecyclable(false);
         holder.imageView.setTag(group);
         try {

@@ -21,8 +21,13 @@ public class DateUtil {
         return newDate;
     }
 
-    public static boolean isEqual(Date date1, Date date2){
+    public static boolean isDateEqual(Date date1, Date date2){
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    public static boolean isDateTimeEqual(Date date1, Date date2){
+        SimpleDateFormat fmt = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz", Locale.getDefault());
         return fmt.format(date1).equals(fmt.format(date2));
     }
 

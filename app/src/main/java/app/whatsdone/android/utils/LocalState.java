@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 
 public class LocalState {
@@ -24,10 +25,12 @@ public class LocalState {
 
     private HashMap<String, HashMap<String, Serializable>> groupsData = new HashMap<>();
 
-    public void syncGroups(List<Group> groups){
-        for (Group group : groups) {
+    public void syncGroups(List<BaseEntity> groups){
+        for (BaseEntity entity: groups) {
+            Group group = (Group)entity;
             int totalTaskCount = group.getTaskCount();
             int totalDiscussionCount = group.getDiscussionCount();
+            Date updated = group.getUpdatedDate();
             String id =  group.getDocumentID();
             if(groupsData.containsKey(id)){
                 HashMap data = groupsData.get(id);
@@ -37,20 +40,24 @@ public class LocalState {
                 Date discussionUpdated = DateUtil.parse((String) data.get(DISCUSSION_UPDATED_AT), FORMAT);
 
 
-                if(taskUpdated.before(group.getUpdatedDate())){
-                    groupsData.get(id).put(DISCUSSION_UPDATED_AT, group.getUpdatedDate());
+                if(taskUpdated.before(updated)){
                     groupsData.get(id).put(TASK_COUNT, group.getTaskCount());
+                    groupsData.get(id).put(TASK_UPDATED_AT, DateUtil.formatted(updated, FORMAT));
                     group.setUnreadTaskCount(totalTaskCount - taskCount);
-                }else {
+                } else if(DateUtil.isDateTimeEqual(taskUpdated, updated)) {
+                    group.setUnreadTaskCount(totalTaskCount);
+                } else  {
                     group.setUnreadTaskCount(0);
                 }
 
-                if(discussionUpdated.before(group.getUpdatedDate())){
-                    groupsData.get(id).put(TASK_UPDATED_AT, group.getUpdatedDate());
+                if(discussionUpdated.before(updated)){
                     groupsData.get(id).put(DISCUSSION_COUNT, group.getDiscussionCount());
+                    groupsData.get(id).put(DISCUSSION_UPDATED_AT, DateUtil.formatted(updated, FORMAT));
                     group.setUnreadDiscussionCount(totalDiscussionCount - discussionCount);
-                }else {
-                    group.setUnreadTaskCount(0);
+                }else if(DateUtil.isDateTimeEqual(discussionUpdated, updated)){
+                    group.setUnreadDiscussionCount(totalDiscussionCount);
+                } else {
+                    group.setUnreadDiscussionCount(0);
                 }
 
 
@@ -58,8 +65,8 @@ public class LocalState {
                 HashMap<String, Serializable> data = new HashMap<>();
                 data.put(TASK_COUNT, group.getTaskCount());
                 data.put(DISCUSSION_COUNT, totalTaskCount);
-                data.put(DISCUSSION_UPDATED_AT, DateUtil.formatted(group.getUpdatedDate(), FORMAT));
-                data.put(TASK_UPDATED_AT, DateUtil.formatted(group.getUpdatedDate(), FORMAT));
+                data.put(DISCUSSION_UPDATED_AT, DateUtil.formatted(updated, FORMAT));
+                data.put(TASK_UPDATED_AT, DateUtil.formatted(updated, FORMAT));
                 groupsData.put(id, data);
                 group.setUnreadDiscussionCount(totalDiscussionCount);
                 group.setUnreadTaskCount(totalTaskCount);
