@@ -63,7 +63,7 @@ public abstract class TaskFragmentBase extends Fragment {
     protected boolean isFromMyTasks;
     protected boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
-    private TextView setDueDate, assignFromContacts;
+    private TextView setDueDate, assignFromContacts, assignedBy;
     private Toolbar toolbar;
     private int mYear, mMonth, mDay;
     private AddItemsAdapter itemsAdapter;
@@ -106,6 +106,9 @@ public abstract class TaskFragmentBase extends Fragment {
         gettitle = view.findViewById(R.id.title_edit_text);
         gettitle.setText(task.getTitle());
         gettitle.setHintTextColor(getResources().getColor(R.color.gray));
+
+        assignedBy = view.findViewById(R.id.assigned_by_text);
+        assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy()).getDisplayName());
 
         getDescript = view.findViewById(R.id.description_edit_text);
         getDescript.setText(task.getDescription());

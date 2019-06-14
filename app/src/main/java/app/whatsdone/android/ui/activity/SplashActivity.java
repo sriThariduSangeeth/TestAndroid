@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -44,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         bgImage = (ImageView) findViewById(R.id.bg_image);
         layoutcenter = (LinearLayout) findViewById(R.id.layoutCenter);

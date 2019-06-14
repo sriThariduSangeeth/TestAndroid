@@ -112,7 +112,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
-        LocalState.getInstance().markTasksRead(group.getDocumentID());
+        LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbarTextView.setOnClickListener(new View.OnClickListener() {
             @Override

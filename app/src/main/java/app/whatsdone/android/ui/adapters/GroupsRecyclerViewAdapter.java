@@ -75,10 +75,14 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         if(unreadTasksCount == 0){
             holder.taskCount.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_inactive));
+        }else {
+            holder.taskCount.setBackground(context.getResources().getDrawable(R.drawable.shape_circle));
         }
 
         if(unreadDiscussionCount == 0){
             holder.groupIcon.setImageResource(R.mipmap.ic_chat_inactive);
+        }else{
+            holder.groupIcon.setImageResource(R.mipmap.ic_chat_active);
         }
 
 

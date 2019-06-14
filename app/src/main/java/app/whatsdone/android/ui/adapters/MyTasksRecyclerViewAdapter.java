@@ -82,9 +82,13 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             intent.putExtra(Constants.ARG_TASK, task);
             context.startActivity(intent);
         });
-
-        recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
-        recyclerViewHolderTask.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        if(task.getStatus() == Task.TaskStatus.DONE){
+            recyclerViewHolderTask.statusIndicator.setVisibility(View.GONE);
+        }else {
+            recyclerViewHolderTask.statusIndicator.setVisibility(View.VISIBLE);
+            recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
+            recyclerViewHolderTask.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        }
 
     }
 

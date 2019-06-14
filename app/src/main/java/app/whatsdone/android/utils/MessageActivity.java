@@ -38,7 +38,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public void onCreate(@Nullable Bundle persistentState) {
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.REF_TEAMS);
-        LocalState.getInstance().markDiscussionsRead(group.getDocumentID());
+        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         super.onCreate( persistentState);
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).into(imageView);

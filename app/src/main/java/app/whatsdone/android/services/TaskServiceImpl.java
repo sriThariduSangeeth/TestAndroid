@@ -119,8 +119,22 @@ public class TaskServiceImpl implements TaskService {
         if (doc.get(Constants.FIELD_TASK_STATUS) != null)
             task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
         if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
-            Object checklist = doc.get(Constants.FIELD_TASK_CHECKLIST);
-            Timber.d("%s", checklist);
+            try {
+                List<HashMap> checklist = (List<HashMap>) doc.get(Constants.FIELD_TASK_CHECKLIST);
+                List<CheckListItem> checkListItems = new ArrayList<>();
+                for (HashMap data : checklist) {
+                    String title = (String) data.get("title");
+                    boolean isCompleted = (boolean) data.get("is_completed");
+                    CheckListItem item = new CheckListItem();
+                    item.setCompleted(isCompleted);
+                    item.setTitle(title);
+                    checkListItems.add(item);
+                }
+                task.setCheckList(checkListItems);
+                Timber.d("%s", checklist);
+            }catch (Exception ex){
+                Timber.e(ex);
+            }
         }
         return task;
     }

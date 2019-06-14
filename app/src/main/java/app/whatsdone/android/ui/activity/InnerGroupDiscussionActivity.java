@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -55,7 +56,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
 
         super.onCreate(persistentState);
         setContentView(R.layout.activity_inner_group_discussion);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
         toolbar = findViewById(R.id.toolbarInChat);
