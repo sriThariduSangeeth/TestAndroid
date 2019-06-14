@@ -39,8 +39,6 @@ public class Task implements BaseEntity, Parcelable {
             }
         }
 
-
-
         public static int getIndex(TaskStatus status) {
             switch (status) {
 
@@ -76,7 +74,6 @@ public class Task implements BaseEntity, Parcelable {
     private TaskStatus status = TaskStatus.TODO;
     private Date updatedDate;
     private List<CheckListItem> checkList = new ArrayList<>();
-
 
 
 
@@ -230,7 +227,7 @@ public class Task implements BaseEntity, Parcelable {
             checkList = new ArrayList<>();
             in.readList(checkList, CheckListItem.class.getClassLoader());
         } else {
-            checkList = new ArrayList<>();
+            checkList = new ArrayList<>();;
         }
     }
 
@@ -238,7 +235,6 @@ public class Task implements BaseEntity, Parcelable {
     public int describeContents() {
         return 0;
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

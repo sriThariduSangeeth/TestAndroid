@@ -39,6 +39,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
     private Context context;
     private TextView groupNameTextView, taskCount, discussionCount, toolbarTextView;;
     private RecyclerView.LayoutManager linearLayoutManager;
+   // private GroupsRecyclerViewAdapter groupsRecyclerViewAdapter;
 
 
     private RecyclerView.Adapter adapter;
