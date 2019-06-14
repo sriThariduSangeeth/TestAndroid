@@ -1,5 +1,8 @@
 package app.whatsdone.android.utils;
 
+import android.support.annotation.Nullable;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +21,13 @@ public class DateUtil {
         return newDate;
     }
 
-    public static boolean isEqual(Date date1, Date date2){
+    public static boolean isDateEqual(Date date1, Date date2){
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    public static boolean isDateTimeEqual(Date date1, Date date2){
+        SimpleDateFormat fmt = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz", Locale.getDefault());
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
@@ -39,8 +47,23 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static String formatted(Date dueDate) {
-        SimpleDateFormat fmt = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
+    public static String formatted(Date dueDate, @Nullable String format) {
+        if(format == null)
+            format = Constants.DATE_FORMAT;
+        SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
         return fmt.format(dueDate);
+    }
+
+    public static Date parse(String dateStr, @Nullable String format) {
+        if(format == null)
+            format = Constants.DATE_FORMAT;
+        SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
+        try {
+            return fmt.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date();
     }
 }

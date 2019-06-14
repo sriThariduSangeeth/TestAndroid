@@ -38,6 +38,7 @@ public class AddTaskFragment extends TaskFragmentBase {
             if(group != null) {
                 task.setGroupId(group.getDocumentID());
                 task.setGroupName(group.getGroupName());
+                task.setAssignedBy(currentUserId);
 
                 if(group.getDocumentID().equals(currentUserId)){
                     this.isPersonalTask = true;

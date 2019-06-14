@@ -1,10 +1,13 @@
 package app.whatsdone.android.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class ExistUser {
+public class ExistUser implements Parcelable {
     private String phoneNumber;
     private String displayName;
     private String isInvited;
@@ -38,4 +41,39 @@ public class ExistUser {
     public void setIsInvited(String isInvited) {
         this.isInvited = isInvited;
     }
+
+    public ExistUser(){
+
+    }
+
+    protected ExistUser(Parcel in) {
+        phoneNumber = in.readString();
+        displayName = in.readString();
+        isInvited = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(phoneNumber);
+        dest.writeString(displayName);
+        dest.writeString(isInvited);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ExistUser> CREATOR = new Parcelable.Creator<ExistUser>() {
+        @Override
+        public ExistUser createFromParcel(Parcel in) {
+            return new ExistUser(in);
+        }
+
+        @Override
+        public ExistUser[] newArray(int size) {
+            return new ExistUser[size];
+        }
+    };
 }

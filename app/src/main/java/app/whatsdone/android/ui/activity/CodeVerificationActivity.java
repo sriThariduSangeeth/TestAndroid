@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class CodeVerificationActivity extends AppCompatActivity implements CodeV
         presenter.init(this, getIntent().getStringExtra(Constants.ARG_VERIFICATION_ID));
         binding.setPresenter(presenter);
         binding.setViewModel(model);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override

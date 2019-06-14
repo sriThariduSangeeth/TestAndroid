@@ -49,6 +49,7 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.LocalState;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -111,6 +112,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
+        LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbarTextView.setOnClickListener(new View.OnClickListener() {
             @Override

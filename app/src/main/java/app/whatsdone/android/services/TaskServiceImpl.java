@@ -39,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
                 .whereEqualTo(Constants.FIELD_TASK_ASSIGNED_USER, AuthServiceImpl.getCurrentUser().getDocumentID())
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
-                        Log.w(TAG, "Task subscription failed", e);
+                        Timber.tag(TAG).w(e, "Task subscription failed");
                         return;
                     }
 
@@ -52,7 +52,7 @@ public class TaskServiceImpl implements TaskService {
 
                             groups.add(task);
                         }catch (Exception exception) {
-                            Log.d(TAG, "failed to parse group", exception);
+                            Timber.d(exception, "failed to parse group");
                         }
 
                     }
@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
                 .limit(Constants.TASKS_LIMIT)
                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
-                        Log.w(TAG, "Task subscription failed", e);
+                        Timber.tag(TAG).w(e, "Task subscription failed");
                         return;
                     }
 
@@ -119,8 +119,22 @@ public class TaskServiceImpl implements TaskService {
         if (doc.get(Constants.FIELD_TASK_STATUS) != null)
             task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
         if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
-            Object checklist = doc.get(Constants.FIELD_TASK_CHECKLIST);
-            Timber.d("%s", checklist);
+            try {
+                List<HashMap> checklist = (List<HashMap>) doc.get(Constants.FIELD_TASK_CHECKLIST);
+                List<CheckListItem> checkListItems = new ArrayList<>();
+                for (HashMap data : checklist) {
+                    String title = (String) data.get("title");
+                    boolean isCompleted = (boolean) data.get("is_completed");
+                    CheckListItem item = new CheckListItem();
+                    item.setCompleted(isCompleted);
+                    item.setTitle(title);
+                    checkListItems.add(item);
+                }
+                task.setCheckList(checkListItems);
+                Timber.d("%s", checklist);
+            }catch (Exception ex){
+                Timber.e(ex);
+            }
         }
         return task;
     }
@@ -147,11 +161,11 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_GROUP_ID, task.getGroupId());
         data.put(Constants.FIELD_TASK_GROUP_NAME, task.getGroupName());
         data.put(Constants.FIELD_TASK_DESCRIPTION, task.getDescription());
-        data.put(Constants.FIELD_TASK_ASSIGNED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_ASSIGNED_BY, AuthServiceImpl.getCurrentUser().getDocumentID());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER, ContactUtil.getInstance().cleanNo(task.getAssignedUser()));
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_NAME, task.getAssignedUserName());
         data.put(Constants.FIELD_TASK_ASSIGNED_USER_IMAGE, task.getAssignedUserImage());
-        data.put(Constants.FIELD_TASK_CREATED_BY, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        data.put(Constants.FIELD_TASK_CREATED_BY, AuthServiceImpl.getCurrentUser().getDocumentID());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
@@ -205,7 +219,7 @@ public class TaskServiceImpl implements TaskService {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error creating document.", taskResult.getException());
+                Timber.tag(TAG).w(taskResult.getException(), "Error creating document.");
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
             serviceListener.onCompleted(taskResult.isSuccessful());
@@ -221,7 +235,7 @@ public class TaskServiceImpl implements TaskService {
                     if(task.isSuccessful()) {
                         serviceListener.onSuccess();
                     }else {
-                        Log.w(TAG, "Error deleting document.", task.getException());
+                        Timber.w(task.getException(), "Error deleting document.");
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
                     serviceListener.onCompleted(task.isSuccessful());

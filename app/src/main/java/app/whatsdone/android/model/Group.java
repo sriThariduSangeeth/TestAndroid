@@ -27,12 +27,12 @@ public class Group implements Parcelable, BaseEntity {
     private List<ExistUser> memberDetails;
 
     public void Group(String groupName , String groupId , String groupAvatar ){
-      this.documentID = groupId;
-      this.groupName = groupName;
-      this.avatar = groupAvatar;
-  }
+        this.documentID = groupId;
+        this.groupName = groupName;
+        this.avatar = groupAvatar;
+    }
 
-  public Bitmap getTeamImage() {
+    public Bitmap getTeamImage() {
         return teamImage;
     }
 
@@ -142,6 +142,23 @@ public class Group implements Parcelable, BaseEntity {
 
     }
 
+
+    public void setMemberDetails(List<ExistUser> memberDetails) {
+        this.memberDetails = memberDetails;
+    }
+
+    public List<ExistUser> getMemberDetails() {
+        return memberDetails;
+    }
+
+    public List<String> getOriginalMembers() {
+        return originalMembers;
+    }
+
+    public void setOriginalMembers(List<String> originalMembers) {
+        this.originalMembers = originalMembers;
+    }
+
     protected Group(Parcel in) {
         documentID = in.readString();
         groupName = in.readString();
@@ -158,6 +175,12 @@ public class Group implements Parcelable, BaseEntity {
         } else {
             members = null;
         }
+        if (in.readByte() == 0x01) {
+            originalMembers = new ArrayList<String>();
+            in.readList(originalMembers, String.class.getClassLoader());
+        } else {
+            originalMembers = null;
+        }
         createdBy = in.readString();
         if (in.readByte() == 0x01) {
             admins = new ArrayList<String>();
@@ -166,6 +189,13 @@ public class Group implements Parcelable, BaseEntity {
             admins = null;
         }
         teamImage = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+        imageChanged = in.readByte() != 0x00;
+        if (in.readByte() == 0x01) {
+            memberDetails = new ArrayList<ExistUser>();
+            in.readList(memberDetails, ExistUser.class.getClassLoader());
+        } else {
+            memberDetails = null;
+        }
     }
 
     @Override
@@ -189,6 +219,12 @@ public class Group implements Parcelable, BaseEntity {
             dest.writeByte((byte) (0x01));
             dest.writeList(members);
         }
+        if (originalMembers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(originalMembers);
+        }
         dest.writeString(createdBy);
         if (admins == null) {
             dest.writeByte((byte) (0x00));
@@ -197,10 +233,17 @@ public class Group implements Parcelable, BaseEntity {
             dest.writeList(admins);
         }
         dest.writeValue(teamImage);
+        dest.writeByte((byte) (imageChanged ? 0x01 : 0x00));
+        if (memberDetails == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(memberDetails);
+        }
     }
 
     @SuppressWarnings("unused")
-    public static final Creator<Group> CREATOR = new Creator<Group>() {
+    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
         @Override
         public Group createFromParcel(Parcel in) {
             return new Group(in);
@@ -211,20 +254,4 @@ public class Group implements Parcelable, BaseEntity {
             return new Group[size];
         }
     };
-
-    public void setMemberDetails(List<ExistUser> memberDetails) {
-        this.memberDetails = memberDetails;
-    }
-
-    public List<ExistUser> getMemberDetails() {
-        return memberDetails;
-    }
-
-    public List<String> getOriginalMembers() {
-        return originalMembers;
-    }
-
-    public void setOriginalMembers(List<String> originalMembers) {
-        this.originalMembers = originalMembers;
-    }
 }

@@ -8,8 +8,13 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 import static org.junit.Assert.*;
 
@@ -44,5 +49,17 @@ public class ExampleInstrumentedTest {
     public void testContactCleaningCleaned(){
         String cleanNo = ContactUtil.getInstance().cleanNo( "+94714411600");
         assertEquals("+94714411600", cleanNo);
+    }
+
+    @Test
+    public void persist(){
+        HashMap data = new HashMap();
+        HashMap map = new HashMap();
+        map.put("key", "value");
+        data.put("group",map);
+        SharedPreferencesUtil.save("data", data);
+        HashMap retrieved = SharedPreferencesUtil.get("data");
+        HashMap retrievedMap = (HashMap) retrieved.get("group");
+        assertEquals(retrievedMap.get("key"), "value");
     }
 }

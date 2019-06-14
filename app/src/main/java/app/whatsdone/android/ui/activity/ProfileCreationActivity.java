@@ -2,6 +2,7 @@ package app.whatsdone.android.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -48,7 +49,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
         ActivityProfileCreationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_creation);
         binding.setPresenter(presenter);
         binding.setViewModel(new ProfileViewModel(""));
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         profilePic = findViewById(R.id.profilePic);
         profilePic.setOnClickListener(v -> showBottomSheetDialogFragment());

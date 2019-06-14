@@ -66,9 +66,27 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
       //  holder.progressplay.setProgress(0);
         final Group group = (Group) groups.get(position);
         holder.groupNameTextView.setText(group.getGroupName());
-        holder.taskCount.setText(String.format(Locale.getDefault(), "%d", group.getTaskCount()));
-        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", group.getDiscussionCount()));
-        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate()));
+
+        int unreadTasksCount = group.getUnreadTaskCount();
+        int unreadDiscussionCount = group.getUnreadDiscussionCount();
+        holder.taskCount.setText(String.format(Locale.getDefault(), "%d",unreadTasksCount ));
+        holder.discussionCount.setText(String.format(Locale.getDefault(),"%d", unreadDiscussionCount));
+
+
+        if(unreadTasksCount == 0){
+            holder.taskCount.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_inactive));
+        }else {
+            holder.taskCount.setBackground(context.getResources().getDrawable(R.drawable.shape_circle));
+        }
+
+        if(unreadDiscussionCount == 0){
+            holder.groupIcon.setImageResource(R.mipmap.ic_chat_inactive);
+        }else{
+            holder.groupIcon.setImageResource(R.mipmap.ic_chat_active);
+        }
+
+
+        holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate(), null));
       //  holder.setIsRecyclable(false);
         holder.imageView.setTag(group);
         try {
@@ -104,7 +122,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
 
         private TextView groupNameTextView, taskCount, discussionCount, dueDate;
-        private ImageView imageView;
+        private ImageView imageView, groupIcon;
         private Group group;
 
 
@@ -112,11 +130,12 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            groupNameTextView = (TextView) itemView.findViewById(R.id.group_text);
-            taskCount = (TextView) itemView.findViewById(R.id.unread_tasks_counter);
-            discussionCount = (TextView) itemView.findViewById(R.id.unread_discussion_counter);
-            groupRecyclerView = (RecyclerView) itemView.findViewById(R.id.group_recycler_view) ;
+            groupNameTextView = itemView.findViewById(R.id.group_text);
+            taskCount = itemView.findViewById(R.id.unread_tasks_counter);
+            discussionCount = itemView.findViewById(R.id.unread_discussion_counter);
+            groupRecyclerView = itemView.findViewById(R.id.group_recycler_view);
             imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            groupIcon = itemView.findViewById(R.id.group_chat_icon);
             dueDate = itemView.findViewById(R.id.date);
             if(imageView.getDrawable() == null)
             {
