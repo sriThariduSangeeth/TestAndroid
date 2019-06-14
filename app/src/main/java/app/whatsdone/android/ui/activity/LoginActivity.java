@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         CCP = (CountryCodePicker)findViewById(R.id.countryCodePicker);
         model.setCountryCode("+"+CCP.getSelectedCountryCode());
         CCP.setOnCountryChangeListener(() -> model.setCountryCode(CCP.getSelectedCountryCodeWithPlus()));
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
