@@ -111,20 +111,53 @@ public class ContactUtil {
         return items;
     }
 
+    public List<ExistUser> resolveContacts(List<ExistUser> existUsers) {
+
+        List<ExistUser> items = new ArrayList<>();
+        List<String> phoneNumbers = new ArrayList<>();
+        for (ExistUser user : existUsers) {
+            phoneNumbers.add(user.getPhoneNumber());
+        }
+
+
+        if(existUsers.isEmpty()) return items;
+
+        try{
+            if(contacts.size() == 0)
+                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+            List<Contact> users = filterContacts(phoneNumbers, existUsers);
+            for (Contact user : users) {
+                ExistUser existUser = new ExistUser();
+                existUser.setPhoneNumber(user.getPhoneNumber());
+                existUser.setDisplayName(user.getDisplayName());
+                items.add(existUser);
+            }
+        }catch (Exception ex){
+            Timber.tag(TAG).w(ex.getLocalizedMessage());
+        }
+        return items;
+    }
+
     public Contact resolveContact(String phoneNumber) {
 
-        List<Contact> items= new ArrayList<>();
+        List<Contact> items;
         List<String> phoneNumbers = new ArrayList<>();
         phoneNumbers.add(phoneNumber);
+        Contact contact = new Contact();
+        contact.setPhoneNumber(phoneNumber);
+        contact.setDisplayName(phoneNumber);
 
         try{
             if(contacts.size() == 0)
                 readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
             items = filterContacts(phoneNumbers, new ArrayList<>());
+
+            if(items.size()>0)
+                contact = items.get(0);
         }catch (Exception ex){
             Timber.tag(TAG).w(ex.getLocalizedMessage());
         }
-        return items.get(0);
+        return contact;
     }
 
     private void readContacts(Context context) {
@@ -229,7 +262,7 @@ public class ContactUtil {
                 memberDetails.put(user.getPhoneNumber(), user.getDisplayName());
 
                 if (user.getIsInvited().equals("true")) {
-                    memberDetails.put(user.getPhoneNumber(), "INVITED");
+                    memberDetails.put(user.getPhoneNumber(), user.getPhoneNumber() +"(INVITED)");
                 }
             }
         }

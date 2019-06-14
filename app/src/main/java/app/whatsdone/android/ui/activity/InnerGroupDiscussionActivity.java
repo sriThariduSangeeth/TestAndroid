@@ -31,8 +31,7 @@ import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
-import app.whatsdone.android.utils.MessageActivity;
-import app.whatsdone.android.utils.UserPresenter;
+import app.whatsdone.android.ui.adapters.UserPresenter;
 
 import static android.R.layout;
 

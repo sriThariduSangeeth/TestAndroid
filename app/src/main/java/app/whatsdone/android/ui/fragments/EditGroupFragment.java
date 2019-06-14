@@ -84,7 +84,7 @@ public class EditGroupFragment extends BaseFragment{
         if(!AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()) || isPersonalGroup()) {
             addMembers.setEnabled(false);
             addMembers.setVisibility(View.GONE);
-            swipeListView.setEnabled(false);
+            swipeListView.setEnabled(true);
             teamName.setEnabled(false);
            // swipeListView.setActivated(false);
             swipeListView.setClickable(false);
