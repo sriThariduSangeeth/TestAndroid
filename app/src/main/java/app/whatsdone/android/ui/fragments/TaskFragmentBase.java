@@ -59,7 +59,7 @@ import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
-public abstract class TaskFragmentBase extends Fragment {
+public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener {
     protected boolean isFromMyTasks;
     protected boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
@@ -164,16 +164,11 @@ public abstract class TaskFragmentBase extends Fragment {
         if (!isPersonalTask) {
             assignFromContacts.setOnClickListener(v -> {
 
+                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance((ArrayList<ExistUser>) group.getMemberDetails());
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                fragment.show(getChildFragmentManager(), "Contacts");
 
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }
+
             });
         } else {
             assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
@@ -348,4 +343,26 @@ public abstract class TaskFragmentBase extends Fragment {
         void onSelected(String number);
     }
 
+    @Override
+    public void onContactPickerClicked(int position) {
+        Timber.d(group.getMembers().get(position));
+        ExistUser user = group.getMemberDetails().get(position);
+        assignFromContacts.setText(user.getDisplayName());
+        task.setAssignedUserName(user.getDisplayName());
+        task.setAssignedUser(user.getPhoneNumber());
+    }
+
+    @Override
+    public void onContactButtonClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+
+        } else {
+
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+    }
 }
