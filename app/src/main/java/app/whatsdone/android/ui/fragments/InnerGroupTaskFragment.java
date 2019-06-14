@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -34,8 +33,6 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.model.UserStatus;
-import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -49,7 +46,6 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.LocalState;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -57,6 +53,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
+    //private List<Task> taskListInnerGroups = new ArrayList<>();
+    private ArrayList<String> listOfTask = new ArrayList<>();
+//    private TaskList taskList = new TaskList();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private FloatingActionButton mainFab;
     private Toolbar toolbar;
@@ -109,7 +108,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         groupName = (EditText) view.findViewById(R.id.group_name_edit_text) ;
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
 
-
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
@@ -128,10 +126,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         });
 
 
-
-
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +157,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     }
 
+    private List<String> putTaskListToArray(List<BaseEntity> list){
+        List<String> tasksList = new ArrayList<>();
+        for (BaseEntity task: list) {
+            tasksList.add(((Task) task).getTitle());
+        }
 
+        return tasksList;
+    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -179,8 +181,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         switch (item.getItemId())
         {
             case R.id.discussion:
+                //open discussion activity
                 Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
                 intent.putExtra(Constants.REF_TEAMS, group);
+                intent.putStringArrayListExtra(Constants.REF_TASKS, listOfTask);
                 startActivity(intent);
 
                 return true;
@@ -235,7 +239,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
+        this.listOfTask.clear();
         taskInnerGroups.addAll(tasks);
+        listOfTask.addAll(putTaskListToArray(tasks));
         adapter.notifyDataSetChanged();
     }
 

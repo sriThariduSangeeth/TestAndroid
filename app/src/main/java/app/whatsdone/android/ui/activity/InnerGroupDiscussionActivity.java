@@ -29,9 +29,12 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Message;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
-import app.whatsdone.android.ui.adapters.UserPresenter;
+import app.whatsdone.android.utils.MessageActivity;
+import app.whatsdone.android.utils.TaskPresenter;
+import app.whatsdone.android.utils.UserPresenter;
 
 import static android.R.layout;
 
@@ -82,6 +85,8 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         AutocompletePolicy policy1 = new CharPolicy('#');
         // Look for @mentions\
         AutocompletePresenter<Contact> presenter = new UserPresenter(this , contactList);
+        AutocompletePresenter<String> presenterTask = new TaskPresenter(this , taskList);
+
         AutocompleteCallback<Contact> callback = new AutocompleteCallback<Contact>() {
             @Override
             public boolean onPopupItemClicked(Editable editable, Contact item) {
@@ -103,6 +108,27 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
             }
         };
 
+        AutocompleteCallback<String> callbackTask = new AutocompleteCallback<String>() {
+            @Override
+            public boolean onPopupItemClicked(Editable editable, String item) {
+                // Replace query text with the full name.
+                int[] range = CharPolicy.getQueryRange(editable);
+                if (range == null) return false;
+                int start = range[0];
+                int end = range[1];
+                String replacement = item;
+                editable.replace(start, end, replacement);
+                editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+replacement.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return true;
+            }
+
+            @Override
+            public void onPopupVisibilityChanged(boolean shown) {
+
+            }
+        };
+
         mentionsAutocompleteAt = Autocomplete.<Contact>on(input.getInputEditText())
                 .with(elevation)
                 .with(backgroundDrawable)
@@ -111,12 +137,12 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 .with(callback)
                 .build();
 
-        mentionsAutocompleteHash =Autocomplete.<Contact>on(input.getInputEditText())
+        mentionsAutocompleteHash =Autocomplete.<String>on(input.getInputEditText())
                 .with(elevation)
                 .with(backgroundDrawable)
                 .with(policy1)
-                .with(presenter)
-                .with(callback)
+                .with(presenterTask)
+                .with(callbackTask)
                 .build();
 
     }
