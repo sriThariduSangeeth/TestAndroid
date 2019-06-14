@@ -159,12 +159,12 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
         if (!task.getAssignedUserName().isEmpty())
-            assignFromContacts.setText(task.getAssignedUserName());
+            assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser()).getDisplayName());
 
         if (!isPersonalTask) {
             assignFromContacts.setOnClickListener(v -> {
-
-                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance((ArrayList<ExistUser>) group.getMemberDetails());
+                ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
 
                 fragment.show(getChildFragmentManager(), "Contacts");
 
