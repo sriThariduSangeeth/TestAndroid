@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimaryDark">#4398A8</color>
+    <color name="colorAccent">#68C9DB</color>
     <color name="toolbarColor">#68C9DB</color>
     <color name="toolbarText">#f2f2f2</color>
 <color name="textViewColor">#999999</color>
@@ -182,7 +182,7 @@
     <color name="bluelight">#49acd5</color>
     <color name="orange">#ef9235</color>
     <color name="green">#45bc4b</color>
-    <color name="fab_color">#448AFF</color>
+    <color name="fab_color">@color/colorAccent</color>
     <color name="ivory_dark">#f7e8d9</color>
     <color name="light_gray">#dcdbdb</color>
 
