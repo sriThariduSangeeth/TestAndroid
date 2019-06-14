@@ -17,4 +17,11 @@
     <style name="Button.Danger" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@android:color/holo_red_light</item>
     </style>
+
+
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
