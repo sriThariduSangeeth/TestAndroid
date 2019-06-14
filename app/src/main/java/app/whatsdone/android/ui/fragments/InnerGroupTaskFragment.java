@@ -46,6 +46,7 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.LocalState;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 

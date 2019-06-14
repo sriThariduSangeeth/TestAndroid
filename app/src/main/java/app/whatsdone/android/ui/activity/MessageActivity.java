@@ -38,7 +38,6 @@ public abstract class MessageActivity extends AppCompatActivity implements
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
     public List<String> taskList = new ArrayList<>();
     public Group group;
-    public TaskList tasks;
 
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
