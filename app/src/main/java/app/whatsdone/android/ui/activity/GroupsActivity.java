@@ -22,6 +22,7 @@ import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
 import app.whatsdone.android.ui.fragments.MyTaskFragment;
 import app.whatsdone.android.ui.fragments.SettingFragment;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.LocalState;
 
 public class GroupsActivity extends AppCompatActivity {
 
@@ -40,6 +41,7 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        LocalState.getInstance().reloadFromDisk();
         tabLayout = findViewById(R.id.tab_layout);
 
         setupTabLayout();
@@ -117,5 +119,11 @@ public class GroupsActivity extends AppCompatActivity {
                 //onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalState.getInstance().persistData();
     }
 }

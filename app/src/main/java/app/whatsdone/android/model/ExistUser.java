@@ -11,7 +11,7 @@ import java.util.List;
 public class ExistUser implements Parcelable {
     private String phoneNumber;
     private String displayName;
-    private String isInvited;
+    private boolean isInvited;
 
 
     @JsonProperty("phone_no")
@@ -40,13 +40,13 @@ public class ExistUser implements Parcelable {
 
     @JsonProperty("is_invited")
     @PropertyName("is_invited")
-    public String getIsInvited() {
+    public boolean getIsInvited() {
         return isInvited;
     }
 
     @JsonProperty("is_invited")
     @PropertyName("is_invited")
-    public void setIsInvited(String isInvited) {
+    public void setIsInvited(boolean isInvited) {
         this.isInvited = isInvited;
     }
 
@@ -57,7 +57,7 @@ public class ExistUser implements Parcelable {
     protected ExistUser(Parcel in) {
         phoneNumber = in.readString();
         displayName = in.readString();
-        isInvited = in.readString();
+        isInvited = in.readByte() != 0x00;;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ExistUser implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(phoneNumber);
         dest.writeString(displayName);
-        dest.writeString(isInvited);
+        dest.writeByte((byte) (isInvited ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

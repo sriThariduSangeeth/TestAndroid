@@ -94,4 +94,5 @@ public class Constants {
     public static final String FIELD_GROUP_MEMBERS_DETAILS_PHONE = "phone_no";
     public static final String FIELD_GROUP_MEMBERS_DETAILS_INVITED = "is_invited";
     public static final String FIELD_GROUP_MEMBERS_DETAILS_NAME = "display_name";
+    public static final String SHARED_STATE_GROUPS = "group_state";
 }
