@@ -98,7 +98,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != TaskSwipeController.ButtonsState.GONE) {
                 if (buttonShowedState == TaskSwipeController.ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == ButtonsState.RIGHT_DONE_VISIBLE) dX = Math.min(dX, -buttonWidth);
+                if (buttonShowedState == ButtonsState.RIGHT_DONE_VISIBLE) dX = Math.min(dX, -rightSwipeWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {

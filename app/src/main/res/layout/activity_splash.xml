@@ -20,16 +20,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <ImageView
         android:id="@+id/bubble_bokeh"
-        android:contentDescription="@string/app_name"
         android:layout_width="1429dp"
         android:layout_height="742dp"
         android:layout_marginBottom="8dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintHorizontal_bias="0.104"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.315"
@@ -112,7 +111,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="162dp"
         android:gravity="center"
-        android:indeterminateTint="@color/colorPrimaryDark"
+        android:indeterminateTint="@color/fab_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -97,6 +97,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
 
 
+
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -151,6 +152,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
         imageView = view.findViewById(R.id.checklist_add_image_view);
 
+        addNewTask.setFocusable(true);
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
         listView.setAdapter(itemsAdapter);
@@ -190,6 +192,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             getActivity().onBackPressed();
 
         });
+
         return view;
     }
 
@@ -211,7 +214,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     public String returnStatus(String out) {
 
         if (getString(R.string.todo).equals(out)) {
-            return Task.TaskStatus.TODO.name();
+           return Task.TaskStatus.TODO.name();
         } else if (getString(R.string.in_progress).equals(out)) {
             return Task.TaskStatus.IN_PROGRESS.name();
         } else if (getString(R.string.on_hold).equals(out)) {
