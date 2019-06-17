@@ -5,7 +5,7 @@
    >
 
     <solid
-        android:color="@color/CornflowerBlue"/>
+        android:color="@color/fab_color"/>
 
     <size
         android:width="2sp"

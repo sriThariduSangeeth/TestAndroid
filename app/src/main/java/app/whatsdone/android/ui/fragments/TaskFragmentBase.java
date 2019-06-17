@@ -11,6 +11,7 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -69,7 +70,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
     private EditText addNewTask, gettitle, getDescript;
-    private LinearLayout lay;
+    private ConstraintLayout lay;
     protected Group group;
     private ImageView imageView;
     private final int REQUEST_CODE = 99;
@@ -95,6 +96,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
+
 
 
         Spinner spinner = view.findViewById(R.id.user_status);
@@ -151,6 +153,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
         imageView = view.findViewById(R.id.checklist_add_image_view);
 
+        addNewTask.setFocusable(true);
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
         listView.setAdapter(itemsAdapter);
@@ -190,6 +193,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             getActivity().onBackPressed();
 
         });
+
         return view;
     }
 
@@ -211,7 +215,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     public String returnStatus(String out) {
 
         if (getString(R.string.todo).equals(out)) {
-            return Task.TaskStatus.TODO.name();
+           return Task.TaskStatus.TODO.name();
         } else if (getString(R.string.in_progress).equals(out)) {
             return Task.TaskStatus.IN_PROGRESS.name();
         } else if (getString(R.string.on_hold).equals(out)) {
