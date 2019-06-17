@@ -41,10 +41,10 @@ public class LocalState {
                 int discussionCount = Integer.parseInt((String) data.get(DISCUSSION_COUNT_READ));
 
                 groupsData.get(id).put(DISCUSSION_COUNT, String.valueOf(totalDiscussionCount));
-                group.setUnreadDiscussionCount(totalDiscussionCount - discussionCount);
+                group.setUnreadDiscussionCount(Math.max(totalDiscussionCount - discussionCount, 0));
 
                 groupsData.get(id).put(TASK_COUNT, String.valueOf(totalTaskCount));
-                group.setUnreadTaskCount(totalTaskCount - taskCount);
+                group.setUnreadTaskCount(Math.max(totalTaskCount - taskCount, 0));
 
             }else {
                 HashMap<String, Serializable> data = new HashMap<>();
