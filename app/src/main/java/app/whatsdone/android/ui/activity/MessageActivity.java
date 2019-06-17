@@ -14,6 +14,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
@@ -22,7 +23,6 @@ import app.whatsdone.android.services.DiscussionService;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
-import app.whatsdone.android.utils.LocalState;
 
 public abstract class MessageActivity extends AppCompatActivity implements
         MessagesListAdapter.SelectionListener
@@ -35,13 +35,15 @@ public abstract class MessageActivity extends AppCompatActivity implements
     protected MessagesListAdapter<Message> messagesAdapter;
     private DiscussionService discussionService = new DiscussionImpl();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
+    public List<String> taskList = new ArrayList<>();
     public Group group;
 
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.REF_TEAMS);
-        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
+        taskList = intent.getStringArrayListExtra("tasks");
+
         super.onCreate( persistentState);
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).into(imageView);

@@ -57,8 +57,7 @@
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
-        <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity" />
         <activity android:name=".ui.activity.InnerGroupTaskActivity"
             android:windowSoftInputMode="adjustPan"
            />

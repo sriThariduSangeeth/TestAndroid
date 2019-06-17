@@ -55,6 +55,7 @@ import timber.log.Timber;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
+    private ArrayList<String> listOfTask = new ArrayList<>();
     private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
@@ -181,6 +182,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             case R.id.discussion:
                 Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
                 intent.putExtra(Constants.REF_TEAMS, group);
+                intent.putStringArrayListExtra(Constants.REF_TASKS, listOfTask);
                 startActivity(intent);
 
                 return true;
@@ -235,9 +237,20 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
+        this.listOfTask.clear();
         taskInnerGroups.addAll(tasks);
+        listOfTask.addAll(putTaskListToArray(tasks));
         adapter.notifyDataSetChanged();
     }
+
+    private List<String> putTaskListToArray(List<BaseEntity> list){
+        List<String> tasksList = new ArrayList<>();
+        for (BaseEntity task: list) {
+            tasksList.add(((Task) task).getTitle());
+        }
+
+        return tasksList;
+    };
 
     private void setupRecyclerView()
     {

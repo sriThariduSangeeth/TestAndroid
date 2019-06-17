@@ -12,8 +12,7 @@
         android:id="@+id/toolbarInChat"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/toolbarColor"
-        app:titleTextColor="@color/white"
+        android:background="@color/white"
         android:gravity="center_vertical"
         app:layout_collapseMode="pin"
         app:layout_scrollFlags="scroll|enterAlways"
@@ -61,7 +60,7 @@
             android:scrollingCache="true"
             android:smoothScrollbar="true" />
 
-        
+
 
         <com.stfalcon.chatkit.messages.MessageInput
             android:inputType="textNoSuggestions"
