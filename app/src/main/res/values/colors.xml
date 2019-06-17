@@ -10,12 +10,13 @@
 
     <color name="colorPrimary">#387c87</color>
     <color name="colorPrimaryDark">#387c87</color>
-    <color name="colorAccent">#46a5b8</color>
-    <color name="toolbarColor">#46a5b8</color>
+    <color name="colorAccent">#3f909f</color>
+    <color name="toolbarColor">#3f909f</color>
     <color name="toolbarText">#f2f2f2</color>
     <color name="textViewColor">#999999</color>
     <color name="chatBubbleColor">#2BAFAA</color>
-    <color name="fab_color">#2a5a5e</color>
+    <color name="fab_color">#68cadb</color>
+    <color name="button_color">#68cadb</color>
 
     <color name="textViewColor2">#606060</color>
     <color name="grey">#dfdfdf</color>

@@ -68,7 +68,7 @@ public class GroupSwipeController extends Callback {
         int swipedPosition = viewHolder.getAdapterPosition();
         GroupsRecyclerViewAdapter adapter = (GroupsRecyclerViewAdapter) recyclerView.getAdapter();
         Group group = adapter.getGroup(swipedPosition);
-               
+
     }
 
     //layout direction of the view
