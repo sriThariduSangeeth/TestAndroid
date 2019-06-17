@@ -8,15 +8,16 @@
 <!--<color name="textViewColor">#999999</color>-->
     <!--<color name="chatBubbleColor">#2BAFAA</color>-->
 
-    <color name="colorPrimary">#387c87</color>
-    <color name="colorPrimaryDark">#387c87</color>
-    <color name="colorAccent">#3f909f</color>
-    <color name="toolbarColor">#3f909f</color>
+    <color name="colorPrimary">#001a70</color>
+    <color name="colorPrimaryDark">#001a70</color>
+    <color name="colorAccent">#1e3590</color>
+    <color name="toolbarColor">#1e3590</color>
     <color name="toolbarText">#f2f2f2</color>
     <color name="textViewColor">#999999</color>
     <color name="chatBubbleColor">#2BAFAA</color>
-    <color name="fab_color">#68cadb</color>
-    <color name="button_color">#68cadb</color>
+    <color name="fab_color">#0000f9</color>
+    <color name="button_color">#0000f9</color>
+    <color name="default_icon_color">#4f61b2</color>
 
     <color name="textViewColor2">#606060</color>
     <color name="grey">#dfdfdf</color>

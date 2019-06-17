@@ -90,6 +90,9 @@ dependencies {
 
     implementation 'com.otaliastudios:autocomplete:1.1.0'
 
+    //
+    implementation 'com.github.ivbaranov:materiallettericon:0.2.3'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

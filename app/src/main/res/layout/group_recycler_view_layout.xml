@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recycler_view_layout"
@@ -12,26 +11,28 @@
     android:orientation="horizontal">
 
     <!--<shape-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:shape="oval"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toStartOf="@+id/unread_tasks_counter">-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:shape="oval"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toStartOf="@+id/unread_tasks_counter">-->
 
-        <!--<solid android:color="#e42828" />-->
+    <!--<solid android:color="#e42828" />-->
 
-        <!--<stroke-->
-            <!--android:width="5dp"-->
-            <!--android:color="#3b91d7" />-->
-        <!--&lt;!&ndash; Set the same value for both width and height to get a circular shape &ndash;&gt;-->
-        <!--<size-->
-            <!--android:width="250dp"-->
-            <!--android:height="250dp" />-->
+    <!--<stroke-->
+    <!--android:width="5dp"-->
+    <!--android:color="#3b91d7" />-->
+    <!--&lt;!&ndash; Set the same value for both width and height to get a circular shape &ndash;&gt;-->
+    <!--<size-->
+    <!--android:width="250dp"-->
+    <!--android:height="250dp" />-->
     <!--</shape>-->
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view_group"
-        android:layout_width="80sp"
+        android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
@@ -46,22 +47,40 @@
 
     </de.hdodenhof.circleimageview.CircleImageView>
 
+    <com.github.ivbaranov.mli.MaterialLetterIcon
+        android:id="@+id/image_view_group_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingEnd="20sp"
+        android:paddingRight="20sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.github.ivbaranov.mli.MaterialLetterIcon>
+
 
     <TextView
         android:id="@+id/group_text"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="15dp"
         android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/image_view_group"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent">
 
 
     </TextView>
-<!--
+    <!--
     <TextView
         android:id="@+id/group_task_assigned"
         android:layout_width="wrap_content"
@@ -83,11 +102,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:paddingEnd="20sp"
         android:paddingRight="20sp"
-        android:text="@string/date"
 
+        android:text="@string/date"
         android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintRight_toRightOf="parent"
@@ -98,23 +119,22 @@
         android:id="@+id/group_chat_icon"
         android:layout_width="20sp"
         android:layout_height="20sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="3dp"
 
+        android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="10dp"
         android:contentDescription="chat image"
         android:src="@mipmap/ic_chat_active"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <TextView
         android:id="@+id/unread_discussion_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="13dp"
@@ -125,14 +145,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toEndOf="@+id/group_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/date"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <TextView
         android:id="@+id/unread_tasks_counter"
         android:layout_width="20sp"
         android:layout_height="20sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
@@ -144,8 +163,21 @@
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/group_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/date"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="89dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="40dp" />
     <!--    <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
