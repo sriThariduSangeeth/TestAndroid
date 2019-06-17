@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,6 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
 import static android.support.constraint.Constraints.TAG;
+import static com.github.ivbaranov.mli.MaterialLetterIcon.Shape.CIRCLE;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     public List<BaseEntity> groups;
@@ -91,9 +93,22 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.imageView.setTag(group);
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
+                holder.imageViewIcon.setVisibility(View.GONE);
+                holder.imageView.setVisibility(View.VISIBLE);
                 Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(holder.imageView);
             }else {
-                holder.imageView.setImageDrawable(holder.imageView.getContext().getResources().getDrawable(R.drawable.user_group_man_woman3x));
+                holder.imageViewIcon.setVisibility(View.VISIBLE);
+                holder.imageView.setVisibility(View.GONE);
+                holder.imageViewIcon
+                        .setShapeColor(context.getResources().getColor(R.color.default_icon_color));
+                holder.imageViewIcon.setShapeType(CIRCLE);
+                holder.imageViewIcon.setLetter(group.getGroupName().substring(0,1));
+                holder.imageViewIcon.setLetterColor(context.getResources().getColor(R.color.white));
+                holder.imageViewIcon.setLetterSize(20);
+
+
+
+              //  holder.imageView.setImageDrawable(holder.imageView.getContext().getResources().getDrawable(R.drawable.user_group_man_woman3x));
             }
 
         }catch (Exception exception){
@@ -123,6 +138,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         private TextView groupNameTextView, taskCount, discussionCount, dueDate;
         private ImageView imageView, groupIcon;
+        private MaterialLetterIcon imageViewIcon;
         private Group group;
 
 
@@ -135,12 +151,31 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             discussionCount = itemView.findViewById(R.id.unread_discussion_counter);
             groupRecyclerView = itemView.findViewById(R.id.group_recycler_view);
             imageView =(CircleImageView) itemView.findViewById(R.id.image_view_group);
+            imageViewIcon = itemView.findViewById(R.id.image_view_group_icon);
             groupIcon = itemView.findViewById(R.id.group_chat_icon);
             dueDate = itemView.findViewById(R.id.date);
             if(imageView.getDrawable() == null)
             {
+//                MaterialLetterIcon icon = new MaterialLetterIcon.Builder(context) //
+//                        .shapeColor(context.getResources().getColor(R.color.colorAccent))
+//                        .shapeType(CIRCLE)
+//                        .letter("S")
+//                        .letterColor(context.getResources().getColor(R.color.white))
+//                        .letterSize(26)
+//                        .lettersNumber(1)
+//
+//                        .initials(false)
+//                        .initialsNumber(2)
+//                        .create();
+                imageViewIcon
+                        .setShapeColor(context.getResources().getColor(R.color.colorAccent));
+                imageViewIcon.setShapeType(CIRCLE);
+                imageViewIcon.setLetter("G");
+                imageViewIcon.setLetterColor(context.getResources().getColor(R.color.white));
+                imageViewIcon.setLetterSize(26);
+                imageViewIcon.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.GONE);
                 Drawable defaultImage= itemView.getResources().getDrawable(R.drawable.user_group_man_woman3x);
-                imageView.setImageDrawable(defaultImage);
             }
 
 
