@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationConfig;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class SharedPreferencesUtil {
             editor.putString(key, value);
             editor.apply();
         }catch (Exception ex){
-            Log.d("SHARED", ex.getLocalizedMessage());
+            Timber.e(ex);
         }
 
     }
@@ -52,7 +53,7 @@ public class SharedPreferencesUtil {
         }
     }
 
-    public static HashMap get(String key){
+    public static HashMap<String, HashMap<String, Serializable>> get(String key){
         try {
             SharedPreferences sharedPref = WhatsDoneApplication.getApplication().getSharedPreferences("app", Context.MODE_PRIVATE);
             String data = sharedPref.getString(key, "");
@@ -83,11 +84,11 @@ public class SharedPreferencesUtil {
         return output;
     }
 
-    private static HashMap desSerialize(String data) {
+    private static HashMap<String, HashMap<String, Serializable>> desSerialize(String data) {
         ObjectMapper mapper = new ObjectMapper();
 
         mapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
-        HashMap obj = null;
+        HashMap<String, HashMap<String, Serializable>> obj = null;
 
             try {
                 obj = mapper.readValue(data, HashMap.class);

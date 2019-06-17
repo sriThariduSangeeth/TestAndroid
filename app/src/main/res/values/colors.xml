@@ -12,7 +12,7 @@
     <color name="grey">#dfdfdf</color>
     <color name="black">#000000</color>
     <color name="white">#fff</color>
-<color name="background">#EEEEEE</color>
+    <color name="background">#EEEEEE</color>
     <color name="lightOrange">#fdf2df</color>
     <color name="lightDarkerOrange">#ebd6ab</color>
     <color name="colorte">#a932e1</color>
