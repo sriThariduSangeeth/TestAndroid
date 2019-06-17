@@ -15,10 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -95,7 +97,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             if(!TextUtils.isEmpty(group.getAvatar())) {
                 holder.imageViewIcon.setVisibility(View.GONE);
                 holder.imageView.setVisibility(View.VISIBLE);
-                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(holder.imageView);
+                Picasso.get().load(group.getAvatar()).placeholder(R.drawable.user_group_man_woman3x).into(holder.imageView,getCallBack(holder.imageView) );
             }else {
                 holder.imageViewIcon.setVisibility(View.VISIBLE);
                 holder.imageView.setVisibility(View.GONE);
@@ -119,6 +121,22 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         holder.setGroup(group);
 
+    }
+
+    public Callback getCallBack(final ImageView imageView) {
+        return new Callback() {
+            @Override
+            public void onSuccess() {
+                ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .75f, ScaleAnimation.RELATIVE_TO_SELF, .75f);
+                scale.setDuration(400);
+                imageView.startAnimation(scale);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
     }
 
     @Override

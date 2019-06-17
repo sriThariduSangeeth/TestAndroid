@@ -6,8 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_marginTop="1sp"
-    android:background="@color/white"
+    android:background="@drawable/custom_ripple"
     android:orientation="horizontal">
 
     <!--<shape-->
