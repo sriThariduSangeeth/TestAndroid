@@ -133,14 +133,15 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         //delete
         leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidth, itemView.getBottom());
         p.setColor(redfordelete);
-        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
+        //p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard));
+        p.setTextSize(2);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("DELETE", c, leftButton, p);
 
         //in progress
         rightInProgressButton = new RectF(itemView.getRight() - rightSwipeWidth, itemView.getTop(), itemView.getRight()-2*buttonWidth, itemView.getBottom());
         p.setColor(yellowforinprogress);
-        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard));
         c.drawRoundRect(rightInProgressButton, corners, corners, p);
         drawText("In Progress", c, rightInProgressButton, p);
 
@@ -148,7 +149,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         //onHold
         rightOnHoldButton = new RectF(itemView.getRight()-buttonWidth , itemView.getTop(), itemView.getRight(), itemView.getBottom());
         p.setColor(grayforonhold);
-        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard));
         c.drawRoundRect(rightOnHoldButton, corners, corners, p);
         drawText("On Hold", c, rightOnHoldButton, p);
 
@@ -156,7 +157,7 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         //done
         rightDoneButton = new RectF(itemView.getRight()-2*buttonWidth, itemView.getTop(), itemView.getRight()-buttonWidth, itemView.getBottom());
         p.setColor(bluefordone);
-        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.input_button_margin));
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard));
         c.drawRoundRect(rightDoneButton, corners, corners, p);
         drawText("Done", c, rightDoneButton, p);
 
@@ -186,13 +187,12 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
     }
 
     private void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 30;
         p.setColor(Color.WHITE);
         p.setAntiAlias(true);
-        p.setTextSize(textSize);
+        p.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard));
 
         float textWidth = p.measureText(text);
-        c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(textSize/2), p);
+        c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(context.getResources().getDimensionPixelSize(R.dimen.text_size_standard)/2), p);
     }
 
     public void onDraw(Canvas c) {
