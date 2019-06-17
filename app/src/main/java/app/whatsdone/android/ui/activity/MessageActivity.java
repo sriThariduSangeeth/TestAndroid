@@ -23,6 +23,7 @@ import app.whatsdone.android.services.DiscussionService;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.LocalState;
 
 public abstract class MessageActivity extends AppCompatActivity implements
         MessagesListAdapter.SelectionListener
@@ -40,11 +41,11 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
     @Override
     public void onCreate(@Nullable Bundle persistentState) {
+        super.onCreate( persistentState);
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.REF_TEAMS);
         taskList = intent.getStringArrayListExtra("tasks");
-
-        super.onCreate( persistentState);
+        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).into(imageView);
         };
