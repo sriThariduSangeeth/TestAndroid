@@ -81,8 +81,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private AddEditGroupPresenter presenter;
     private TaskService service = new TaskServiceImpl();
     private TextView toolbarTextView;
-    private List<BaseEntity> doneTaskList = new ArrayList<>();
-    private List<BaseEntity> notDoneTaskList = new ArrayList<>();
 
     public static InnerGroupTaskFragment newInstance(Group group){
 
@@ -229,9 +227,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     private Collection<? extends BaseEntity> sort(List<BaseEntity> tasks) {
         LocalState.getInstance().syncTasks(tasks);
+        Task task = new Task();
+
+
         List<BaseEntity> unreadTask = new ArrayList<>();
 
         List<BaseEntity> doneTasks = new ArrayList<>();
+        List<BaseEntity> notDoneTasks = new ArrayList<>();
+
         List<BaseEntity> overdueTasks= new ArrayList<>();
         List<BaseEntity> dueSoonTasks = new ArrayList<>();
         List<BaseEntity> onTrackTasks = new ArrayList<>();
@@ -239,11 +242,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         // List 2 = done tasks
         // list1 sort by unread then by task label
         // append list 1 + list 2
+        for(int i = 0; i<tasks.size(); i++)
+        {
 
+        }
         Collections.sort(tasks, unreadTaskCompare);
       //  unreadTask.addAll(tasks);
 
         Collections.sort(tasks, doneTaskCompare);
+        doneTasks.addAll(tasks);
+
        // doneTasks.addAll(unreadTask);
 
     //    Collections.sort(doneTasks, dueSoonTaskCompare);
