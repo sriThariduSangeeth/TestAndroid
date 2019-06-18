@@ -106,14 +106,17 @@ public class AuthServiceImpl implements AuthService {
 
 
     public static void refreshToken(){
-            FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull com.google.android.gms.tasks.Task<GetTokenResult> task) {
-                    if(task.isSuccessful()){
+        try {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
                         SharedPreferencesUtil.save(Constants.SHARED_TOKEN, task.getResult().getToken());
                     }
-                }
-            });
+                });
+            }
+        }catch (Exception ex){
+            Timber.e(ex);
+        }
     }
 
     public static User getCurrentUser() {
