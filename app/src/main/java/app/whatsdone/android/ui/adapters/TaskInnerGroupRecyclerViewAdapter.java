@@ -93,17 +93,17 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         TextDrawable ic1 = builder.build(task.getTitle().substring(0,1), colorGen);
 
         if(task.getStatus() == TODO)
-        myRecyclerViewHolder.status.setText("Not Started");
+        myRecyclerViewHolder.status.setText(R.string.todo);
 
         if(task.getStatus()== ON_HOLD)
-            myRecyclerViewHolder.status.setText("On Hold");
+            myRecyclerViewHolder.status.setText(R.string.on_hold);
 
         if(task.getStatus() == DONE) {
-            myRecyclerViewHolder.status.setText("Done");
+            myRecyclerViewHolder.status.setText(R.string.done);
            }
 
-        if(task.getStatus()== ON_HOLD)
-            myRecyclerViewHolder.status.setText("In Progress");
+        if(task.getStatus()== Task.TaskStatus.IN_PROGRESS)
+            myRecyclerViewHolder.status.setText(R.string.in_progress);
 
 
         if (task.getDueDate() == null) {
