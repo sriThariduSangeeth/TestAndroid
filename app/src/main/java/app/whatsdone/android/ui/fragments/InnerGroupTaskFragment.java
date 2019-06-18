@@ -115,17 +115,13 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         this.group = args.getParcelable("group");
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
-        toolbarTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        toolbar.setOnClickListener(v -> {
 
-                AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
+            AppCompatActivity activity = (AppCompatActivity) getContext();
+            Fragment myFragment = EditGroupFragment.newInstance(group);
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
-                toolbarTextView.setClickable(false);
-            }
-
+            toolbarTextView.setClickable(false);
         });
 
 
@@ -224,6 +220,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        toolbar.setOnClickListener(null);
         toolbar.setNavigationIcon(null);
         toolbar.setTitle("Whats Done");
         taskInnerGroupPresenter.unSubscribe();

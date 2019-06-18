@@ -21,6 +21,7 @@ import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.view.SettingsView;
 import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import timber.log.Timber;
 
@@ -94,7 +95,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 
     @Override
     public void syncContacts() {
-        contactService.syncContacts(new ArrayList<>(), new ContactService.Listener() {
+        contactService.syncContacts(ContactUtil.getInstance().getContacts(), new ContactService.Listener() {
             @Override
             public void onContactsSynced(int added, int deleted) {
                 Timber.tag(TAG).d("added: " + added + "deleted: " + deleted);
