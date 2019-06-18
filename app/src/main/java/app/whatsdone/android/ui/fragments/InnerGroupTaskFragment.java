@@ -175,22 +175,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item ) {
+         Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
+         intent.putExtra(Constants.REF_TEAMS, group);
+         startActivity(intent);
 
-        switch (item.getItemId())
-        {
-            case R.id.discussion:
-                Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
-                intent.putExtra(Constants.REF_TEAMS, group);
-                startActivity(intent);
+         return true;
 
-                return true;
-
-
-             default:
-                 break;
-        }
-
-        return false;
     }
 
     @Override
