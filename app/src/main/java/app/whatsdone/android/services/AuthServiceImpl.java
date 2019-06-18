@@ -27,15 +27,28 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import app.whatsdone.android.model.User;
+import app.whatsdone.android.model.UserUpdateRequest;
+import app.whatsdone.android.model.UserUpdateResponse;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ServiceFactory;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class AuthServiceImpl implements AuthService {
     final static String TAG = AuthServiceImpl.class.getSimpleName();
     private static User user = new User();
+    private final CloudService service;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Activity context;
+
+    public AuthServiceImpl() {
+        Retrofit retrofit = ServiceFactory.getRetrofitService();
+        service = retrofit.create(CloudService.class);
+    }
 
     public void setContext(Activity context) {
         this.context = context;
@@ -67,10 +80,33 @@ public class AuthServiceImpl implements AuthService {
                     }else {
                         if(listener != null )listener.onError(task.getException().getLocalizedMessage());
                     }
-
-
                 });
+
+        notifyProfileUpdated(user.getDisplayName(), user.getAvatar(), user.getDocumentID());
     }
+
+    private void notifyProfileUpdated(String displayName, String avatar, String id) {
+        UserUpdateRequest request = new UserUpdateRequest(displayName, avatar, id);
+
+        Call<UserUpdateResponse> call = service.onUserUpdated(request);
+
+        call.enqueue(new Callback<UserUpdateResponse>() {
+            @Override
+            public void onResponse(Call<UserUpdateResponse> call, Response<UserUpdateResponse> response) {
+                UserUpdateResponse data = response.body();
+                if(data != null && data.isSuccess()){
+                    Timber.d("%d records updated for user %s", data.getCount(), id);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserUpdateResponse> call, Throwable t) {
+                Timber.e(t);
+            }
+        });
+    }
+
+
 
     public static void refreshToken(){
             FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

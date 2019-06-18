@@ -33,6 +33,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     private ContactService contactService = new ContactServiceImpl();
     private boolean isSaving = false;
     private boolean userLoaded = false;
+    private boolean isChanged = false;
 
     public SettingsPresenterImpl(SettingsView view, SettingsViewModel model){
         this.view = view;
@@ -44,12 +45,13 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         Timber.tag(TAG).d("save clicked");
 
         // debounce the save call.
-        if(!isSaving && userLoaded) {
+        if(!isSaving && userLoaded && isChanged) {
             isSaving = true;
             User user = new User();
             user.setDocumentID(AuthServiceImpl.getCurrentUser().getDocumentID());
             user.setPhoneNo(AuthServiceImpl.getCurrentUser().getDocumentID());
             user.setDisplayName(model.getDisplayName());
+            user.setAvatar(model.getAvatar());
             user.setEnableNotifications(model.isEnableNotifications());
             user.setStatus(UserStatus.forInt(model.status.get()));
             service.update(user, new AuthService.Listener() {
@@ -123,7 +125,14 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     }
 
     @Override
+    public void onChanged() {
+        if(userLoaded)
+            this.isChanged = true;
+    }
+
+    @Override
     public void uploadUserImage(Bitmap image) {
+        this.isChanged = true;
         StorageService storageService = new StorageServiceImpl();
         storageService.uploadUserImage(image, new StorageService.Listener() {
             @Override

@@ -26,6 +26,7 @@ import app.whatsdone.android.model.InviteMembersRequest;
 import app.whatsdone.android.model.InviteMembersResponse;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ServiceFactory;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -37,35 +38,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ContactServiceImpl implements ContactService {
-    CloudService service;
+    private CloudService service;
     public ContactServiceImpl() {
-        AuthServiceImpl.refreshToken();
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(chain -> {
-            Request original = chain.request();
-            String header = "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN);
-            System.out.println(header);
-            Request request = original.newBuilder()
-                    .header("Authorization", header)
-                    .header("Accept", "application/json")
-                    .method(original.method(), original.body())
-                    .build();
-
-            return chain.proceed(request);
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .baseUrl(Constants.URL_FIREBASE)
-                .client(client)
-                .build();
-
+        Retrofit retrofit = ServiceFactory.getRetrofitService();
         service = retrofit.create(CloudService.class);
-
     }
-
-
 
     @Override
     public void syncContacts(List<Contact> contacts, Listener serviceListener) {

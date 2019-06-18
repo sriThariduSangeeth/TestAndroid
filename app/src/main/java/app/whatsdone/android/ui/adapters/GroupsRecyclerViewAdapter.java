@@ -83,8 +83,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate(), null));
       //  holder.setIsRecyclable(false);
         holder.imageView.setTag(group);
-        TextDrawable placeHolder = TextDrawable.builder()
-                .buildRect(group.getGroupName().substring(0,1), Color.RED); // radius in px
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
         //int color1 = generator.getRandomColor();
