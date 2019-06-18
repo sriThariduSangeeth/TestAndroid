@@ -27,6 +27,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import app.whatsdone.android.WhatsDoneApplication;
 import app.whatsdone.android.model.Contact;
@@ -44,7 +45,6 @@ public class ContactUtil {
     private Dictionary<String, String> contacts = new Hashtable<>();
     private MyContentObserver contentObserver = new MyContentObserver();
     private boolean isObserved = false;
-    private ExistUser existUser;
     private static final String[] PROJECTION = new String[] {
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -249,7 +249,7 @@ public class ContactUtil {
     }
 
     private List<Contact> filterContacts(List<String> numbers, List<ExistUser> existUsers){
-        existUser = new ExistUser();
+        ExistUser existUser = new ExistUser();
 
         String name = AuthServiceImpl.getCurrentUser().getDisplayName();
         String number = AuthServiceImpl.getCurrentUser().getPhoneNo();
