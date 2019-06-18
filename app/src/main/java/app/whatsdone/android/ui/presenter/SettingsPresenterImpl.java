@@ -105,7 +105,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     @Override
     public void logout() {
         authService.logout();
-        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, "");
+        SharedPreferencesUtil.save(Constants.SHARED_TOKEN, "");
         view.onLogout();
     }
 
@@ -128,6 +128,15 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void onChanged() {
         if(userLoaded)
             this.isChanged = true;
+    }
+
+    @Override
+    public void toggleNotifications() {
+        if(model.isEnableNotifications()){
+            service.enableNotifications();
+        }else {
+            service.disableNotifications();
+        }
     }
 
     @Override

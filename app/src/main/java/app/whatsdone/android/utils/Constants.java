@@ -9,7 +9,7 @@ public class Constants {
     public static final String FIELD_USER_DISPLAY_NAME = "name";
     public static final String FIELD_USER_DEVICE_TOKENS = "deviceTokens";
     public static final String FIELd_USER_STATUS = "status";
-    public static final String FIELd_USER_ENABLE_NOTIFICATIONS = "enable_notifications";
+    public static final String FIELD_USER_ENABLE_NOTIFICATIONS = "enable_notifications";
 
 
     public static final String ARG_VERIFICATION_ID = "arg_verification_id";
@@ -95,4 +95,5 @@ public class Constants {
     public static final String FIELD_GROUP_MEMBERS_DETAILS_INVITED = "is_invited";
     public static final String FIELD_GROUP_MEMBERS_DETAILS_NAME = "display_name";
     public static final String SHARED_STATE_GROUPS = "group_state";
+    public static final String DISABLE_NOTIFICATION = "disable_notifications";
 }

@@ -18,7 +18,7 @@ import app.whatsdone.android.WhatsDoneApplication;
 import timber.log.Timber;
 
 public class SharedPreferencesUtil {
-    public static void saveString(String key, String value){
+    public static void save(String key, String value){
         try {
             SharedPreferences sharedPref = WhatsDoneApplication.getApplication().getSharedPreferences("app", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();

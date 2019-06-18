@@ -11,6 +11,7 @@ public interface SettingsPresenter {
     void logout();
     void initUser();
     void onChanged();
+    void toggleNotifications();
 
     void uploadUserImage(Bitmap image);
 }
