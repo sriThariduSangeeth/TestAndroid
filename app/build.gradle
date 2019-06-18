@@ -91,7 +91,7 @@ dependencies {
     implementation 'com.otaliastudios:autocomplete:1.1.0'
 
     //
-    implementation 'com.github.ivbaranov:materiallettericon:0.2.3'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
 }
 
