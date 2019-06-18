@@ -97,7 +97,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:checked="@={model.enableNotifications}"
-            android:onCheckedChanged="@{() -> presenter.onChanged()}"
+            android:onClick="@{() -> presenter.toggleNotifications()}"
             android:text="@string/notifications_hint"
             android:textColor="@color/textViewColor2"
             android:textSize="15sp"

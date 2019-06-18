@@ -133,7 +133,7 @@ public class User implements BaseEntity, IUser {
                 phoneNumber = (String) data.get(Constants.FIELD_USER_PHONE_NO);
                 avatar = (String) data.get(Constants.FIELD_USER_AVATAR);
                 deviceTokens = (List<String>) data.get(Constants.FIELD_USER_DEVICE_TOKENS);
-                if ((boolean) data.get(Constants.FIELd_USER_ENABLE_NOTIFICATIONS))
+                if ((boolean) data.get(Constants.FIELD_USER_ENABLE_NOTIFICATIONS))
                     enableUserNotifications = true;
                 status = UserStatus.valueOf((String)data.get(Constants.FIELd_USER_STATUS));
             }catch (Exception e){

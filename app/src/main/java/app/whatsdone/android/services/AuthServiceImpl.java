@@ -1,11 +1,9 @@
 package app.whatsdone.android.services;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +21,6 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import app.whatsdone.android.model.User;
@@ -113,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
                 @Override
                 public void onComplete(@NonNull com.google.android.gms.tasks.Task<GetTokenResult> task) {
                     if(task.isSuccessful()){
-                        SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                        SharedPreferencesUtil.save(Constants.SHARED_TOKEN, task.getResult().getToken());
                     }
                 }
             });
@@ -154,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
                     @Override
                     public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                         Timber.tag(TAG).e("onVerificationCompleted");
-                        SharedPreferencesUtil.saveString(Constants.SHARED_PHONE, phoneNo);
+                        SharedPreferencesUtil.save(Constants.SHARED_PHONE, phoneNo);
                         signInWithPhoneAuthCredential(phoneAuthCredential, listener);
                     }
 
@@ -171,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
                         // now need to ask the user to enter the code and then construct a credential
                         // by combining the code with a verification ID.
                         Timber.tag(TAG).d("onCodeSent:%s", verificationId);
-                        SharedPreferencesUtil.saveString(Constants.SHARED_PHONE, phoneNo);
+                        SharedPreferencesUtil.save(Constants.SHARED_PHONE, phoneNo);
                         // Save verification ID and resending token so we can use them later
                         String mVerificationId = verificationId;
                         PhoneAuthProvider.ForceResendingToken mResendToken = token;
@@ -208,7 +205,7 @@ public class AuthServiceImpl implements AuthService {
                             public void onComplete(@NonNull Task<GetTokenResult> task) {
                                 if(task.isSuccessful()) {
                                     System.out.println(task.getResult().getToken());
-                                    SharedPreferencesUtil.saveString(Constants.SHARED_TOKEN, task.getResult().getToken());
+                                    SharedPreferencesUtil.save(Constants.SHARED_TOKEN, task.getResult().getToken());
                                     listener.onSuccess();
                                 }else {
                                     listener.onError(task.getException().getLocalizedMessage());
