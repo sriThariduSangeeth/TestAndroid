@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.TextDrawable;
 
+
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.ON_HOLD;
 import static app.whatsdone.android.model.Task.TaskStatus.TODO;
@@ -52,16 +54,12 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.task_inner_recycler_view_layout, viewGroup, false);
+
         return new MyRecyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
-///
-
-//
-
-
 
         Task task = (Task) taskList.get(position);
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
@@ -70,7 +68,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-
 
         int colorGen = generator.getColor(task.getTitle());
         System.out.println(myRecyclerViewHolder.image.getLayoutParams().height);
@@ -89,8 +86,10 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         if(task.getStatus().toString().equals("ON_HOLD"))
             myRecyclerViewHolder.status.setText("On Hold");
 
-        if(task.getStatus().toString().equals("DONE"))
+        if(task.getStatus().toString().equals("DONE")) {
             myRecyclerViewHolder.status.setText("Done");
+           
+        }
 
         if(task.getStatus().toString().equals("IN_PROGRESS"))
             myRecyclerViewHolder.status.setText("In Progress");
@@ -103,8 +102,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         }
 
         if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
-            //myRecyclerViewHolder.image.setImageDrawable(ic1);
-            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(myRecyclerViewHolder.image, getCallBack(myRecyclerViewHolder.image));
+              Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(myRecyclerViewHolder.image, getCallBack(myRecyclerViewHolder.image));
         } else {
             myRecyclerViewHolder.image.setImageDrawable(ic1);
           //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
@@ -117,6 +115,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         });
         if(task.getStatus() == Task.TaskStatus.DONE){
             myRecyclerViewHolder.statusIndicator.setVisibility(View.GONE);
+
         }else {
             myRecyclerViewHolder.statusIndicator.setVisibility(View.VISIBLE);
             myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));
@@ -151,7 +150,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         return taskList.size();
     }
 
-    class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
+    public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView groupTaskText, date, status;
         private ImageView image;
         TextView statusIndicator;

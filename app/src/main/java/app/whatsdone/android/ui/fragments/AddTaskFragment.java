@@ -98,6 +98,7 @@ public class AddTaskFragment extends TaskFragmentBase {
                 }
 
                 inviteAssignee();
+                task.setUnreadTask(true);
 
             }
 

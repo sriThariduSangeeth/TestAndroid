@@ -324,6 +324,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
        // setHasOptionsMenu(true);
     }
 
+    private void sortTasks()
+    {
+
+    }
 
 }
 

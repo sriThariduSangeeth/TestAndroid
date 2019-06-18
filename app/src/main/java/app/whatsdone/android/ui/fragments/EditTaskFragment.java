@@ -51,6 +51,9 @@ public class EditTaskFragment extends TaskFragmentBase {
             }
         }
         this.title = "Edit Task";
+
+
+
     }
 
     public void save(){
@@ -71,6 +74,7 @@ public class EditTaskFragment extends TaskFragmentBase {
                     });
                 }
 
+                task.setUnreadTask(true);
             }
 
             @Override
