@@ -28,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import app.whatsdone.android.R;
@@ -55,7 +58,7 @@ import timber.log.Timber;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
-    private ArrayList<String> listOfTask = new ArrayList<>();
+    public ArrayList<String> listOfTask = new ArrayList<>();
     private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
@@ -92,6 +95,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         //OnBackPressedCallback callback = new OnBackPressedCallback(true);
         setHasOptionsMenu(true);
+
 
 
     }
@@ -224,17 +228,30 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
         this.listOfTask.clear();
-        taskInnerGroups.addAll(tasks);
+        taskInnerGroups.addAll(sort(tasks));
         listOfTask.addAll(putTaskListToArray(tasks));
         adapter.notifyDataSetChanged();
     }
+
+    private Collection<? extends BaseEntity> sort(List<BaseEntity> tasks) {
+        LocalState.getInstance().syncTasks(tasks);
+        // List1 = no done tasks
+        // List 2 = done tasks
+
+        // list1 sort by unread then by task label
+        // append list 1 + list 2
+        Collections.sort(tasks, unreadTaskCompare);
+        return tasks;
+    }
+
+    public static Comparator<BaseEntity> unreadTaskCompare =
+            (task1, task2) -> ((Task)task1).isUnreadTask() ? -1 : ((Task)task2).isUnreadTask() ? 1 : 0;
 
     private List<String> putTaskListToArray(List<BaseEntity> list){
         List<String> tasksList = new ArrayList<>();
         for (BaseEntity task: list) {
             tasksList.add(((Task) task).getTitle());
         }
-
         return tasksList;
     };
 
@@ -324,10 +341,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
        // setHasOptionsMenu(true);
     }
 
-    private void sortTasks()
-    {
-
-    }
 
 }
 

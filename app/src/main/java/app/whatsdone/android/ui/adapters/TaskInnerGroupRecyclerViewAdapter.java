@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +70,15 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
        // myRecyclerViewHolder.status.setText(task.getStatus().toString());
 
 
+        System.out.println("dasdsadad " + task.isUnreadTask());
+        if(task.isUnreadTask()){
+
+            myRecyclerViewHolder.groupTaskText.setTypeface(myRecyclerViewHolder.groupTaskText.getTypeface(), Typeface.BOLD);
+        }else {
+            myRecyclerViewHolder.groupTaskText.setTypeface(myRecyclerViewHolder.groupTaskText.getTypeface(), Typeface.NORMAL);
+        }
+
+
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
         int colorGen = generator.getColor(task.getTitle());
@@ -80,18 +92,17 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                 .rect();
         TextDrawable ic1 = builder.build(task.getTitle().substring(0,1), colorGen);
 
-        if(task.getStatus().toString().equals("TODO"))
+        if(task.getStatus() == TODO)
         myRecyclerViewHolder.status.setText("Not Started");
 
-        if(task.getStatus().toString().equals("ON_HOLD"))
+        if(task.getStatus()== ON_HOLD)
             myRecyclerViewHolder.status.setText("On Hold");
 
-        if(task.getStatus().toString().equals("DONE")) {
+        if(task.getStatus() == DONE) {
             myRecyclerViewHolder.status.setText("Done");
-           
-        }
+           }
 
-        if(task.getStatus().toString().equals("IN_PROGRESS"))
+        if(task.getStatus()== ON_HOLD)
             myRecyclerViewHolder.status.setText("In Progress");
 
 
@@ -121,8 +132,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));
             myRecyclerViewHolder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
-
-
     }
 
     private int getStatusIndicatorColor(Task task) {

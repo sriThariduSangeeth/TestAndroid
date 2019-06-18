@@ -14,6 +14,7 @@ import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceBase;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
 public class EditTaskFragment extends TaskFragmentBase {
@@ -36,6 +37,7 @@ public class EditTaskFragment extends TaskFragmentBase {
         if(arg != null) {
             this.group = arg.getParcelable(Constants.ARG_GROUP);
             this.task = arg.getParcelable(Constants.ARG_TASK);
+            LocalState.getInstance().setTaskRead(this.task);
             this.isFromMyTasks = arg.getBoolean(Constants.ACTION_VIEW_TASK, false);
             if(task.getGroupId().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
                 isPersonalTask = true;
@@ -74,7 +76,6 @@ public class EditTaskFragment extends TaskFragmentBase {
                     });
                 }
 
-                task.setUnreadTask(true);
             }
 
             @Override
