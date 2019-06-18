@@ -5,14 +5,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -23,11 +21,9 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import app.whatsdone.android.WhatsDoneApplication;
 import app.whatsdone.android.model.Contact;
@@ -37,8 +33,6 @@ import io.michaelrocks.libphonenumber.android.NumberParseException;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
 import timber.log.Timber;
-
-import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class ContactUtil {
     private static final String TAG = ContactUtil.class.getSimpleName();
