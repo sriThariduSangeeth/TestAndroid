@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.ContactRequestItem;
@@ -45,14 +47,15 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void syncContacts(List<Contact> contacts, Listener serviceListener) {
+    public void syncContacts(Map<String, String> contacts, Listener serviceListener) {
 
         ContactSyncRequest request = new ContactSyncRequest();
         List<ContactRequestItem> items = new ArrayList<>();
-        for (Contact contact:contacts) {
+        for (String key:contacts.keySet()) {
             ContactRequestItem item = new ContactRequestItem();
-            item.setContactName(contact.getDisplayName());
-            item.setContactNo(contact.getPhoneNumber());
+            item.setContactName(contacts.get(key));
+            item.setContactNo(key);
+            items.add(item);
         }
         request.setContacts(items);
         request.setByUser(AuthServiceImpl.getCurrentUser().getDocumentID());

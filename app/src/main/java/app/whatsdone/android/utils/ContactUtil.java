@@ -42,7 +42,7 @@ import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class ContactUtil {
     private static final String TAG = ContactUtil.class.getSimpleName();
-    private Dictionary<String, String> contacts = new Hashtable<>();
+    private Map<String, String> contacts = new Hashtable<>();
     private MyContentObserver contentObserver = new MyContentObserver();
     private boolean isObserved = false;
     private static final String[] PROJECTION = new String[] {
@@ -60,6 +60,10 @@ public class ContactUtil {
             String cleaned = cleanNo(members.get(i));
             members.set(i, cleaned);
         }
+    }
+
+    public Map<String, String> getContacts() {
+        return contacts;
     }
 
     private static class LazyHolder {
