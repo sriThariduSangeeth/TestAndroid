@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.ContactRequestItem;
@@ -26,6 +28,7 @@ import app.whatsdone.android.model.InviteMembersRequest;
 import app.whatsdone.android.model.InviteMembersResponse;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ServiceFactory;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -37,45 +40,22 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ContactServiceImpl implements ContactService {
-    CloudService service;
+    private CloudService service;
     public ContactServiceImpl() {
-        AuthServiceImpl.refreshToken();
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(chain -> {
-            Request original = chain.request();
-            String header = "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN);
-            System.out.println(header);
-            Request request = original.newBuilder()
-                    .header("Authorization", header)
-                    .header("Accept", "application/json")
-                    .method(original.method(), original.body())
-                    .build();
-
-            return chain.proceed(request);
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .baseUrl(Constants.URL_FIREBASE)
-                .client(client)
-                .build();
-
+        Retrofit retrofit = ServiceFactory.getRetrofitService();
         service = retrofit.create(CloudService.class);
-
     }
 
-
-
     @Override
-    public void syncContacts(List<Contact> contacts, Listener serviceListener) {
+    public void syncContacts(Map<String, String> contacts, Listener serviceListener) {
 
         ContactSyncRequest request = new ContactSyncRequest();
         List<ContactRequestItem> items = new ArrayList<>();
-        for (Contact contact:contacts) {
+        for (String key:contacts.keySet()) {
             ContactRequestItem item = new ContactRequestItem();
-            item.setContactName(contact.getDisplayName());
-            item.setContactNo(contact.getPhoneNumber());
+            item.setContactName(contacts.get(key));
+            item.setContactNo(key);
+            items.add(item);
         }
         request.setContacts(items);
         request.setByUser(AuthServiceImpl.getCurrentUser().getDocumentID());

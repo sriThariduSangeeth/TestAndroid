@@ -9,4 +9,6 @@ public interface UserService extends ServiceBase {
         }
     }
     void getById(String id, Listener listener);
+    void disableNotifications();
+    void enableNotifications();
 }

@@ -1,6 +1,8 @@
 package app.whatsdone.android.services;
 
+import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.ExistUser;
@@ -19,7 +21,7 @@ public interface ContactService {
        }
     }
 
-    void syncContacts(List<Contact> contacts, Listener listener);
+    void syncContacts(Map<String, String> contacts, Listener listener);
     void existsInPlatform(List<String> contacts, Listener listener);
     void inviteAssignee(String contact, Group group, Task task, Listener serviceListener);
     void inviteMembers(List<String> members, Group group, Listener serviceListener);

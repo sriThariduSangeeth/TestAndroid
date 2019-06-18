@@ -55,6 +55,7 @@ import timber.log.Timber;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
+    private ArrayList<String> listOfTask = new ArrayList<>();
     private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
@@ -114,17 +115,13 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         this.group = args.getParcelable("group");
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
-        toolbarTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        toolbar.setOnClickListener(v -> {
 
-                AppCompatActivity activity = (AppCompatActivity) getContext();
-                Fragment myFragment = EditGroupFragment.newInstance(group);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
+            AppCompatActivity activity = (AppCompatActivity) getContext();
+            Fragment myFragment = EditGroupFragment.newInstance(group);
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
 
-                toolbarTextView.setClickable(false);
-            }
-
+            toolbarTextView.setClickable(false);
         });
 
 
@@ -212,6 +209,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        toolbar.setOnClickListener(null);
         toolbar.setNavigationIcon(null);
         toolbar.setTitle("Whats Done");
         taskInnerGroupPresenter.unSubscribe();
@@ -225,9 +223,20 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
+        this.listOfTask.clear();
         taskInnerGroups.addAll(tasks);
+        listOfTask.addAll(putTaskListToArray(tasks));
         adapter.notifyDataSetChanged();
     }
+
+    private List<String> putTaskListToArray(List<BaseEntity> list){
+        List<String> tasksList = new ArrayList<>();
+        for (BaseEntity task: list) {
+            tasksList.add(((Task) task).getTitle());
+        }
+
+        return tasksList;
+    };
 
     private void setupRecyclerView()
     {

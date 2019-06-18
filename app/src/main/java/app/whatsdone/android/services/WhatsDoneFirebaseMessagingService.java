@@ -9,21 +9,19 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.activity.SplashActivity;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 import timber.log.Timber;
 
 public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService {
@@ -94,17 +92,19 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     private void sendRegistrationToServer(String token) {
         try {
             if(token != null && !token.isEmpty() && !AuthServiceImpl.getCurrentUser().getDocumentID().isEmpty()) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                List<String> tokens = new ArrayList<>();
-                tokens.add(token);
-                Map<String, Object> data = new HashMap<>();
-                data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayUnion(token));
-                db.collection(Constants.REF_USERS)
-                        .document(AuthServiceImpl.getCurrentUser().getDocumentID())
-                        .update(data)
-                        .addOnCompleteListener(command -> {
-                            Timber.d("command is success: %s", command.isSuccessful());
-                        });
+                if (SharedPreferencesUtil.getString(Constants.DISABLE_NOTIFICATION).isEmpty()) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayUnion(token));
+                    db.collection(Constants.REF_USERS)
+                            .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                            .update(data)
+                            .addOnCompleteListener(command -> {
+                                if (command.isSuccessful())
+                                    SharedPreferencesUtil.save(Constants.FIELD_USER_DEVICE_TOKENS, token);
+                                Timber.d("command is success: %s", command.isSuccessful());
+                            });
+                }
             }
         }catch (Exception ex){
             Timber.e(ex);

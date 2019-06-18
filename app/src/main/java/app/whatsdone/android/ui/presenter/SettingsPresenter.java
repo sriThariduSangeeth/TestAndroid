@@ -10,6 +10,8 @@ public interface SettingsPresenter {
     void syncContacts();
     void logout();
     void initUser();
+    void onChanged();
+    void toggleNotifications();
 
     void uploadUserImage(Bitmap image);
 }
