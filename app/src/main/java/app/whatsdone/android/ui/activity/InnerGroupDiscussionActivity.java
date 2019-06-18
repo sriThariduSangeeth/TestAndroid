@@ -73,6 +73,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
 
 
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(view -> {
             //back to task in group;
             onBackPressed();
