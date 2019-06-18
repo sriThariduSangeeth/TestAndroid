@@ -17,8 +17,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
+//import com.amulyakhare.textdrawable.TextDrawable;
+//import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +29,9 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.DateUtil;
+import app.whatsdone.android.utils.TextDrawable;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -87,7 +89,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
 
         //int color1 = generator.getRandomColor();
 
-        int color2 = generator.getColor(group.getGroupName());
+        int colorGen = generator.getColor(group.getGroupName());
         System.out.println(holder.imageView.getLayoutParams().height);
         TextDrawable.IBuilder builder = TextDrawable.builder()
                 .beginConfig()
@@ -96,7 +98,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                 .height(holder.imageView.getLayoutParams().height)
                 .endConfig()
                 .rect();
-        TextDrawable ic1 = builder.build(group.getGroupName().substring(0,1), color2);
+        TextDrawable ic1 = builder.build(group.getGroupName().substring(0,1), colorGen);
         try {
             if(!TextUtils.isEmpty(group.getAvatar())) {
                 Picasso.get().load(group.getAvatar()).placeholder(ic1).into(holder.imageView,getCallBack(holder.imageView) );

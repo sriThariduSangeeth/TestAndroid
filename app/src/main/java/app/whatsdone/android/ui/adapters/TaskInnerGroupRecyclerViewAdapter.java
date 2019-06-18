@@ -12,6 +12,7 @@ import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -24,8 +25,10 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
+import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
+import app.whatsdone.android.utils.TextDrawable;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.ON_HOLD;
@@ -54,11 +57,32 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     @Override
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
+///
+
+//
+
+
 
         Task task = (Task) taskList.get(position);
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
        // myRecyclerViewHolder.status.setText(task.getStatus().toString());
+
+
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+
+
+        int colorGen = generator.getColor(task.getTitle());
+        System.out.println(myRecyclerViewHolder.image.getLayoutParams().height);
+        TextDrawable.IBuilder builder = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(4)
+                .width(myRecyclerViewHolder.image.getLayoutParams().width)
+                .height(myRecyclerViewHolder.image.getLayoutParams().height)
+                .endConfig()
+                .rect();
+        TextDrawable ic1 = builder.build(task.getTitle().substring(0,1), colorGen);
+
         if(task.getStatus().toString().equals("TODO"))
         myRecyclerViewHolder.status.setText("Not Started");
 
@@ -79,9 +103,11 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         }
 
         if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
-            Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
+            //myRecyclerViewHolder.image.setImageDrawable(ic1);
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(myRecyclerViewHolder.image, getCallBack(myRecyclerViewHolder.image));
         } else {
-            Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
+            myRecyclerViewHolder.image.setImageDrawable(ic1);
+          //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
         }
 
         myRecyclerViewHolder.itemView.setOnClickListener(v -> {
@@ -138,5 +164,22 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             status = itemView.findViewById(R.id.status_inner_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
         }
+    }
+
+
+
+    private Callback getCallBack(final ImageView imageView) {
+        return new Callback() {
+            @Override
+            public void onSuccess() {
+                imageView.setAlpha(0f);
+                imageView.animate().setDuration(500).alpha(1f).start();
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
     }
 }
