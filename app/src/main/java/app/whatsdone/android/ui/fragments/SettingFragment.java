@@ -48,9 +48,10 @@ public class SettingFragment extends Fragment implements SettingsView {
         System.out.println("settings fragment");
 
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
+        User current =  AuthServiceImpl.getCurrentUser();
 
-        this.model = new SettingsViewModel(AuthServiceImpl.getCurrentUser().getDisplayName(), true, UserStatus.Available, "");
-        this.loadProfileImage(AuthServiceImpl.getCurrentUser().getAvatar());
+        this.model = new SettingsViewModel(current.getDisplayName(), true, UserStatus.Available, current.getAvatar());
+        this.loadProfileImage(current.getAvatar());
         this.presenter = new SettingsPresenterImpl(this, model);
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
@@ -95,7 +96,7 @@ public class SettingFragment extends Fragment implements SettingsView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.save(model);
+        //presenter.save(model);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)

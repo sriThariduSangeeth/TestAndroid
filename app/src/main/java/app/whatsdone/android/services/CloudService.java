@@ -12,6 +12,8 @@ import app.whatsdone.android.model.InviteMembersRequest;
 import app.whatsdone.android.model.InviteMembersResponse;
 import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
+import app.whatsdone.android.model.UserUpdateRequest;
+import app.whatsdone.android.model.UserUpdateResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -31,4 +33,7 @@ public interface CloudService {
 
     @POST("leaveGroup")
     Call<LeaveGroupResponse> leaveGroup(@Body LeaveGroupRequest request);
+
+    @POST("onUserUpdated")
+    Call<UserUpdateResponse> onUserUpdated(@Body UserUpdateRequest request);
 }
