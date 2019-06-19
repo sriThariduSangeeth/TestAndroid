@@ -104,6 +104,7 @@ public class LocalState {
     public void persistData(){
         try {
             SharedPreferencesUtil.save(Constants.SHARED_STATE_GROUPS, groupsData);
+            SharedPreferencesUtil.save(Constants.SHARED_STATE_TASKS, taskData);
         }catch (Exception ex){
             Timber.e(ex);
         }
@@ -111,8 +112,13 @@ public class LocalState {
 
     public void reloadFromDisk(){
         HashMap<String, HashMap<String, Serializable>> data = SharedPreferencesUtil.get(Constants.SHARED_STATE_GROUPS);
+        HashMap<String, String> tasks = SharedPreferencesUtil.get(Constants.SHARED_STATE_TASKS);
         if(data != null){
             groupsData = data;
+        }
+
+        if(tasks != null){
+            taskData = tasks;
         }
     }
 }
