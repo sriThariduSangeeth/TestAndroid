@@ -43,6 +43,7 @@
             android:value="@string/default_notification_channel_id" />
         <!-- [END fcm_default_channel] -->
         <activity android:name="app.whatsdone.android.ui.activity.SplashActivity"
+            android:launchMode= "singleInstance"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,7 +54,12 @@
         </activity>
 
         <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" android:launchMode= "singleInstance">
+            <intent-filter>
+                <action android:name="GROUP_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>

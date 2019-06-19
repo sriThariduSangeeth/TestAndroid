@@ -180,7 +180,8 @@ public class ContactUtil {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+                            if(contacts.isEmpty())
+                                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
                         }
 
                         // check for permanent denial of any permission
