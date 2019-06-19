@@ -28,6 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
@@ -49,13 +53,14 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.LocalState;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView {
 
-    private ArrayList<String> listOfTask = new ArrayList<>();
+    public ArrayList<String> listOfTask = new ArrayList<>();
     private static Group groupobj;
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
@@ -76,6 +81,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private AddEditGroupPresenter presenter;
     private TaskService service = new TaskServiceImpl();
     private TextView toolbarTextView;
+    private List<BaseEntity> doneTaskList = new ArrayList<>();
+    private List<BaseEntity> notDoneTaskList = new ArrayList<>();
 
     public static InnerGroupTaskFragment newInstance(Group group){
 
@@ -89,11 +96,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //OnBackPressedCallback callback = new OnBackPressedCallback(true);
         setHasOptionsMenu(true);
-
-
     }
 
     @SuppressLint("ResourceType")
@@ -110,7 +114,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         groupName = (EditText) view.findViewById(R.id.group_name_edit_text) ;
         contactListView = (ListView) view.findViewById(R.id.add_members_list_view);
 
-
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
@@ -124,11 +127,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             toolbarTextView.setClickable(false);
         });
 
-
-
-
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,9 +135,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             }
         });
 
-
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
-
         this.taskInnerGroupPresenter = new TaskInnerGroupPresenterImpl();
         this.taskInnerGroupPresenter.init(this);
         this.taskInnerGroupPresenter.loadTasksInner(group.getDocumentID());
@@ -172,23 +169,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item ) {
+         Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
+         intent.putExtra(Constants.REF_TEAMS, group);
+         startActivity(intent);
 
-        switch (item.getItemId())
-        {
-            case R.id.discussion:
-                Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
-                intent.putExtra(Constants.REF_TEAMS, group);
-                intent.putStringArrayListExtra(Constants.REF_TASKS, listOfTask);
-                startActivity(intent);
+         return true;
 
-                return true;
-
-
-             default:
-                 break;
-        }
-
-        return false;
     }
 
     @Override
@@ -235,17 +221,66 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
         this.listOfTask.clear();
-        taskInnerGroups.addAll(tasks);
+        taskInnerGroups.addAll(sort(tasks));
         listOfTask.addAll(putTaskListToArray(tasks));
         adapter.notifyDataSetChanged();
     }
+
+
+    private Collection<? extends BaseEntity> sort(List<BaseEntity> tasks) {
+        LocalState.getInstance().syncTasks(tasks);
+        List<BaseEntity> unreadTask = new ArrayList<>();
+
+        List<BaseEntity> doneTasks = new ArrayList<>();
+        List<BaseEntity> overdueTasks= new ArrayList<>();
+        List<BaseEntity> dueSoonTasks = new ArrayList<>();
+        List<BaseEntity> onTrackTasks = new ArrayList<>();
+        // List1 = no done tasks
+        // List 2 = done tasks
+        // list1 sort by unread then by task label
+        // append list 1 + list 2
+
+        Collections.sort(tasks, unreadTaskCompare);
+      //  unreadTask.addAll(tasks);
+
+        Collections.sort(tasks, doneTaskCompare);
+       // doneTasks.addAll(unreadTask);
+
+    //    Collections.sort(doneTasks, dueSoonTaskCompare);
+      //  dueSoonTasks.addAll(doneTasks);
+
+    //    Collections.sort(dueSoonTasks, overdueTaskCompare);
+   //     overdueTasks.addAll(dueSoonTasks);
+      //  Collections.sort(tasks, onTrackTaskCompare);
+
+        return tasks;
+    }
+    static Date today = DateUtil.getLastMinuteDate(new Date());
+
+    public static Comparator<BaseEntity> unreadTaskCompare =
+            (task1, task2) -> ((Task)task1).isUnreadTask() ? -1 : ((Task)task2).isUnreadTask() ? 1 : 0;
+
+    public static Comparator<BaseEntity> readTaskCompare =
+            (task1, task2) -> !((Task)task1).isUnreadTask() ? -1 : !((Task)task2).isUnreadTask() ? 1 : 0;
+
+    public static Comparator<BaseEntity> doneTaskCompare =
+            (task1, task2) -> ((Task)task1).getStatus()== Task.TaskStatus.DONE ? 1 : ((Task)task2).getStatus()== Task.TaskStatus.DONE ? -1 : 0;
+
+    public static Comparator<BaseEntity> dueSoonTaskCompare =
+            (task1, task2) -> DateUtil.isDateEqual(today,((Task)task1).getDueDate())  ? -1 : DateUtil.isDateEqual(today,((Task)task2).getDueDate())? 1 : 0;
+
+//    public static Comparator<BaseEntity> onTrackTaskCompare =
+//            (task1, task2) -> ((Task)task1).getStatus()== Task.TaskStatus.DONE ? -1 : ((Task)task2).getStatus()== Task.TaskStatus.DONE ? 1 : 0;
+
+    public static Comparator<BaseEntity> overdueTaskCompare =
+            (task1, task2) -> (today).after(((Task)task1).getDueDate()) ? -1 : (today).after(((Task)task2).getDueDate()) ? 1 : 0;
+
 
     private List<String> putTaskListToArray(List<BaseEntity> list){
         List<String> tasksList = new ArrayList<>();
         for (BaseEntity task: list) {
             tasksList.add(((Task) task).getTitle());
         }
-
         return tasksList;
     };
 

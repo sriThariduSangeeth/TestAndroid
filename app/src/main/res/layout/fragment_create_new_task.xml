@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
-   >
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout4"
@@ -52,6 +49,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
+            android:textSize="15sp"
             android:hint="@string/enter_title_here"
             android:inputType="text"
             android:maxLines="1"
@@ -80,6 +78,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:textSize="15sp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -390,6 +389,8 @@
             android:layout_below="@+id/textView4"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            android:hint="@string/add_checklist_items_here"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="22dp"
             android:layout_marginLeft="22dp"

@@ -74,6 +74,7 @@ public class Task implements BaseEntity, Parcelable {
     private TaskStatus status = TaskStatus.TODO;
     private Date updatedDate;
     private List<CheckListItem> checkList = new ArrayList<>();
+    private boolean unreadTask = false;
 
 
 
@@ -198,6 +199,14 @@ public class Task implements BaseEntity, Parcelable {
 
     public void setAssigneeComment(String assigneeComment) {
         this.assigneeComment = assigneeComment;
+    }
+
+    public void setUnreadTask(boolean unreadTask) {
+        this.unreadTask = unreadTask;
+    }
+
+    public boolean isUnreadTask() {
+        return unreadTask;
     }
 
     public Task() {

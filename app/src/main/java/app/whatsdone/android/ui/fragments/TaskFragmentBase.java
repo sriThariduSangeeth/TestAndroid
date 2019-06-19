@@ -192,6 +192,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             save();
             getActivity().onBackPressed();
 
+
         });
 
         return view;
