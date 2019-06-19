@@ -25,6 +25,7 @@ import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.DateUtil;
+import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
 public class TaskServiceImpl implements TaskService {
@@ -206,6 +207,10 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNEE_COMMENT, task.getAssigneeComment());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+
+        // sync with local state
+        LocalState.getInstance().setTaskRead(task);
+
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :

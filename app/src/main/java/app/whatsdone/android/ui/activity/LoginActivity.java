@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.hbb20.CountryCodePicker;
 
@@ -24,7 +23,6 @@ import app.whatsdone.android.utils.Constants;
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private CountryCodePicker CCP;
-    private EditText txtNumber;
     private Button nextButton;
 
     @Override
@@ -37,10 +35,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         binding.setPresenter(presenter);
         binding.setModel(model);
 
-        txtNumber = (EditText)findViewById(R.id.phoneNumber);
-        nextButton = (Button)findViewById(R.id.nextButton);
+        nextButton = findViewById(R.id.nextButton);
 
-        CCP = (CountryCodePicker)findViewById(R.id.countryCodePicker);
+        CCP = findViewById(R.id.countryCodePicker);
         model.setCountryCode("+"+CCP.getSelectedCountryCode());
         CCP.setOnCountryChangeListener(() -> model.setCountryCode(CCP.getSelectedCountryCodeWithPlus()));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -89,5 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public void enableNext() {
         nextButton.setEnabled(true);
+        nextButton.setTextColor(getResources().getColor(R.color.fab_color));
+        nextButton.setBackgroundColor(0xFFFFFFFF);
     }
 }
