@@ -53,13 +53,13 @@
         </activity>
 
         <activity android:name="app.whatsdone.android.ui.activity.GroupsActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name="app.whatsdone.android.ui.activity.LoginActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.ProfileCreationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity" />
         <activity android:name=".ui.activity.InnerGroupTaskActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name=".services.WhatsDoneFirebaseMessagingService"
