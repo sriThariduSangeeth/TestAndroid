@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.otaliastudios:autocomplete:1.1.0'
+    implementation 'com.github.hydrated:SwipeRevealLayout:960abd4'
 
 
 }

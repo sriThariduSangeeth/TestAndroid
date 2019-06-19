@@ -5,21 +5,22 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,27 +29,33 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.TextDrawable;
 
-
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
+import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
 import static app.whatsdone.android.model.Task.TaskStatus.ON_HOLD;
 import static app.whatsdone.android.model.Task.TaskStatus.TODO;
+import static app.whatsdone.android.utils.SortUtil.getStatusIndicatorColor;
+import static app.whatsdone.android.utils.SortUtil.getStatusIndicatorText;
 
 public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder> {
-    public List<BaseEntity> taskList;
+    private List<BaseEntity> taskList;
     private Context context;
     private Group group;
+    private SwipeListener listener;
+    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
-    public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group) {
+    public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group, SwipeListener listener) {
 
         this.taskList = tasks;
         this.context = context;
         this.group = group;
+        this.listener = listener;
     }
 
     @NonNull
@@ -56,123 +63,154 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int index) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-        View view = layoutInflater.inflate(R.layout.task_inner_recycler_view_layout, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.swipe_layout_tasks, viewGroup, false);
 
         return new MyRecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder myRecyclerViewHolder, int position) {
+    public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder holder, int position) {
 
         Task task = (Task) taskList.get(position);
+
+        if (task != null) {
+            try {
+                binderHelper.bind(holder.swipeLayout, task.getDocumentID());
+            }catch (NullPointerException ignored){}
+
+        }
+
+
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
-        myRecyclerViewHolder.groupTaskText.setText(task.getTitle());
-       // myRecyclerViewHolder.status.setText(task.getStatus().toString());
-
-
-        System.out.println("dasdsadad " + task.isUnreadTask());
-        if(task.isUnreadTask()){
-
-            myRecyclerViewHolder.groupTaskText.setTypeface(myRecyclerViewHolder.groupTaskText.getTypeface(), Typeface.BOLD);
-        }else {
-            myRecyclerViewHolder.groupTaskText.setTypeface(myRecyclerViewHolder.groupTaskText.getTypeface(), Typeface.NORMAL);
+        holder.groupTaskText.setText(task.getTitle());
+        if (task.isUnreadTask()) {
+            holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.BOLD);
+        } else {
+            holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.NORMAL);
         }
 
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
-        int colorGen = generator.getColor(task.getTitle());
+        int colorGen = generator.getColor(task.getAssignedUser());
         TextDrawable.IBuilder builder = TextDrawable.builder()
                 .beginConfig()
                 .withBorder(4)
-                .width(myRecyclerViewHolder.image.getLayoutParams().width)
-                .height(myRecyclerViewHolder.image.getLayoutParams().height)
+                .width(holder.image.getLayoutParams().width)
+                .height(holder.image.getLayoutParams().height)
                 .endConfig()
                 .rect();
-        TextDrawable ic1 = builder.build(task.getTitle().substring(0,1), colorGen);
+        TextDrawable ic1 = builder.build(task.getTitle().substring(0, 1), colorGen);
 
-        if(task.getStatus() == TODO)
-        myRecyclerViewHolder.status.setText(R.string.todo);
+        if (task.getStatus() == TODO) {
+            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.status.setText(R.string.todo);
+        }
 
-        if(task.getStatus()== ON_HOLD)
-            myRecyclerViewHolder.status.setText(R.string.on_hold);
+        if (task.getStatus() == ON_HOLD) {
+            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.status.setText(R.string.on_hold);
+            holder.inprogressBtn.setVisibility(View.VISIBLE);
+            holder.onholdBtn.setVisibility(View.GONE);
+            holder.doneBtn.setVisibility(View.VISIBLE);
+        }
 
-        if(task.getStatus() == DONE) {
-            myRecyclerViewHolder.status.setText(R.string.done);
-           }
+        if (task.getStatus() == DONE) {
+            holder.status.setText(R.string.done);
+            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT);
+            holder.inprogressBtn.setVisibility(View.GONE);
+            holder.onholdBtn.setVisibility(View.GONE);
+            holder.doneBtn.setVisibility(View.GONE);
+        }
 
-        if(task.getStatus()== Task.TaskStatus.IN_PROGRESS)
-            myRecyclerViewHolder.status.setText(R.string.in_progress);
+        if (task.getStatus() == Task.TaskStatus.IN_PROGRESS) {
+            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.status.setText(R.string.in_progress);
+            holder.inprogressBtn.setVisibility(View.GONE);
+            holder.onholdBtn.setVisibility(View.VISIBLE);
+            holder.doneBtn.setVisibility(View.VISIBLE);
+        }
 
 
         if (task.getDueDate() == null) {
-            myRecyclerViewHolder.date.setText(df.format(new Date()));
+            holder.date.setText(df.format(new Date()));
         } else {
-            myRecyclerViewHolder.date.setText(df.format(task.getDueDate()));
+            holder.date.setText(df.format(task.getDueDate()));
         }
 
         if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
-              Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(myRecyclerViewHolder.image, getCallBack(myRecyclerViewHolder.image));
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(holder.image, getCallBack(holder.image));
         } else {
-            myRecyclerViewHolder.image.setImageDrawable(ic1);
-          //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
+            holder.image.setImageDrawable(ic1);
+            //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
         }
 
-        myRecyclerViewHolder.itemView.setOnClickListener(v -> {
+        holder.frontLayout.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
         });
-        if(task.getStatus() == Task.TaskStatus.DONE){
-            myRecyclerViewHolder.statusIndicator.setVisibility(View.GONE);
+        if (task.getStatus() == Task.TaskStatus.DONE) {
+            holder.statusIndicator.setVisibility(View.GONE);
 
-        }else {
-            myRecyclerViewHolder.statusIndicator.setVisibility(View.VISIBLE);
-            myRecyclerViewHolder.statusIndicator.setText(getStatusIndicatorText(task));
-            myRecyclerViewHolder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        } else {
+            holder.statusIndicator.setVisibility(View.VISIBLE);
+            holder.statusIndicator.setText(getStatusIndicatorText(task));
+            holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
+
+        holder.deleteLayout.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDelete(task);
+            }
+        });
+
+        holder.onholdBtn.setOnClickListener(click -> {
+            if(listener != null)
+                listener.onChangeStatus(task, ON_HOLD);
+        });
+
+        holder.inprogressBtn.setOnClickListener(click -> {
+            if(listener != null)
+                listener.onChangeStatus(task, IN_PROGRESS);
+        });
+
+        holder.doneBtn.setOnClickListener(click -> {
+            if(listener != null)
+                listener.onChangeStatus(task, DONE);
+        });
     }
 
-    public static int getStatusIndicatorColor(Task task) {
-        Date today = DateUtil.getLastMinuteDate(new Date());
-
-        if (DateUtil.isDateEqual(today, task.getDueDate()))
-            return R.color.LightSalmonGold;
-        else if ((today).after(task.getDueDate()))
-            return R.color.lightRed;
-        return R.color.LimeGreen;
-    }
-
-    public static int getStatusIndicatorText(Task task) {
-        Date today = DateUtil.getLastMinuteDate(new Date());
-
-        if (DateUtil.isDateEqual(today, task.getDueDate()))
-            return R.string.task_due_soon;
-        else if ((today).after(task.getDueDate()))
-            return R.string.task_overdue;
-        return R.string.task_ontrack;
-    }
 
     @Override
     public int getItemCount() {
         return taskList.size();
     }
 
-    public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
-        private TextView groupTaskText, date, status;
-        private ImageView image;
-        TextView statusIndicator;
+    class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
+        private final SwipeRevealLayout swipeLayout;
+        private final View frontLayout;
+        private final View deleteLayout;
+        private final TextView groupTaskText, date, status;
+        private final TextView inprogressBtn, onholdBtn, doneBtn;
+        private final ImageView image;
+        private final TextView statusIndicator;
 
         MyRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            frontLayout = itemView.findViewById(R.id.front_layout);
+            deleteLayout = itemView.findViewById(R.id.delete_layout);
             groupTaskText = itemView.findViewById(R.id.task_inner_text);
             image = itemView.findViewById(R.id.image_view_task_inner_group);
             date = itemView.findViewById(R.id.task_inner_date);
             status = itemView.findViewById(R.id.status_inner_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
+            inprogressBtn = itemView.findViewById(R.id.first_status);
+            onholdBtn = itemView.findViewById(R.id.second_status);
+            doneBtn = itemView.findViewById(R.id.third_status);
         }
     }
-
 
 
     private Callback getCallBack(final ImageView imageView) {
@@ -188,5 +226,11 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
             }
         };
+    }
+
+    public interface SwipeListener {
+        void onDelete(Task task);
+
+        void onChangeStatus(Task task, Task.TaskStatus status);
     }
 }
