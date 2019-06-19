@@ -23,17 +23,16 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Message;
-import app.whatsdone.android.model.Task;
-import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.ui.adapters.TaskPresenter;
 import app.whatsdone.android.ui.adapters.UserPresenter;
+import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.GetCurrentDetails;
 
 import static android.R.layout;
 
@@ -43,13 +42,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         DialogInterface.OnClickListener   {
 
     private MessagesList messagesList;
-    private ArrayAdapter<String> adapter;
-    private List<Contact> contactList;
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
-    private MessageInput input;
-    private Autocomplete mentionsAutocompleteAt;
-    private Autocomplete mentionsAutocompleteHash;
-    public List<Integer> atLenthList = new ArrayList<>();
 
 
     @Override
@@ -62,14 +55,14 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         initAdapter();
         toolbar = findViewById(R.id.toolbarInChat);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(group.getGroupName());
-        input = findViewById(R.id.input_mes);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(group.getGroupName());
+        MessageInput input = findViewById(R.id.input_mes);
         input.setInputListener(this);
         input.setAttachmentsListener(this);
 
-        contactList = ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails());
+        List<Contact> contactList = ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails());
 
-        adapter = new ArrayAdapter<>(this, layout.simple_list_item_1, group.getMembers());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, layout.simple_list_item_1, group.getMembers());
         adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
 
 
@@ -115,9 +108,8 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 if (range == null) return false;
                 int start = range[0];
                 int end = range[1];
-                String replacement = item;
-                editable.replace(start, end, replacement);
-                editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+replacement.length(),
+                editable.replace(start, end, item);
+                editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+ item.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return true;
             }
@@ -127,8 +119,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
 
             }
         };
-
-        mentionsAutocompleteAt = Autocomplete.<Contact>on(input.getInputEditText())
+        Autocomplete.<Contact>on(input.getInputEditText())
                 .with(elevation)
                 .with(backgroundDrawable)
                 .with(policy)
@@ -136,7 +127,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 .with(callback)
                 .build();
 
-        mentionsAutocompleteHash =Autocomplete.<String>on(input.getInputEditText())
+        Autocomplete.<String>on(input.getInputEditText())
                 .with(elevation)
                 .with(backgroundDrawable)
                 .with(policy1)

@@ -36,10 +36,16 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Timber.tag(TAG).d("From: " + remoteMessage.getFrom());
+        Timber.tag(TAG).d("From: %s", remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
+            if (remoteMessage.getData()!=null){
+                for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    Timber.d(TAG, "key, " + key + " value " + value);
+                }}
             Timber.tag(TAG).d("Message data payload: %s", remoteMessage.getData());
 
             if (/* Check if data needs to be processed by long running job */ true) {
@@ -71,6 +77,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * Schedule async work using WorkManager.
      */
     private void scheduleJob() {
+        sendNotification("Local notification");
         // [START dispatch_job]
 //        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
 //                .build();
