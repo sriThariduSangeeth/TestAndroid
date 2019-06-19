@@ -11,6 +11,7 @@ import app.whatsdone.android.model.Task;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.Constants.DATETIME_FORMAT;
+import static app.whatsdone.android.utils.Constants.FIELD_GROUP_UPDATED_AT;
 
 public class LocalState {
     private static final String TASK_COUNT = "task_count";
@@ -66,12 +67,26 @@ public class LocalState {
                 HashMap data = groupsData.get(id);
                 int taskCount = Integer.parseInt((String) data.get(TASK_COUNT_READ));
                 int discussionCount = Integer.parseInt((String) data.get(DISCUSSION_COUNT_READ));
+                Date updated = group.getUpdatedDate();
+                if(data.containsKey(FIELD_GROUP_UPDATED_AT)){
+                    updated = DateUtil.parse((String) data.get(FIELD_GROUP_UPDATED_AT), DATETIME_FORMAT);
+                }
 
                 groupsData.get(id).put(DISCUSSION_COUNT, String.valueOf(totalDiscussionCount));
                 group.setUnreadDiscussionCount(Math.max(totalDiscussionCount - discussionCount, 0));
 
-                groupsData.get(id).put(TASK_COUNT, String.valueOf(totalTaskCount));
-                group.setUnreadTaskCount(Math.max(totalTaskCount - taskCount, 0));
+
+                if(updated.before(group.getUpdatedDate()) || DateUtil.isDateTimeEqual(updated, group.getUpdatedDate())){
+
+
+                    groupsData.get(id).put(TASK_COUNT, String.valueOf(totalTaskCount));
+                    group.setUnreadTaskCount(Math.max(totalTaskCount - taskCount, 0));
+                }else {
+
+                    groupsData.get(id).put(TASK_COUNT_READ, String.valueOf(totalTaskCount));
+                    groupsData.get(id).put(TASK_COUNT, String.valueOf(totalTaskCount));
+                    group.setUnreadTaskCount(0);
+                }
 
             }else {
                 HashMap<String, Serializable> data = new HashMap<>();
@@ -90,6 +105,7 @@ public class LocalState {
         if(groupsData.containsKey(groupId)) {
             groupsData.get(groupId).put(TASK_COUNT_READ, String.valueOf(count));
             groupsData.get(groupId).put(TASK_COUNT, String.valueOf(count));
+            groupsData.get(groupId).put(FIELD_GROUP_UPDATED_AT, DateUtil.formatted(DateUtil.addTime(new Date(), 1), DATETIME_FORMAT));
         }
     }
 

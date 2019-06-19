@@ -39,8 +39,7 @@ import app.whatsdone.android.utils.LocalState;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
 
-public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, SwipeListener
-{
+public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, SwipeListener {
 
     public ArrayList<String> listOfTask = new ArrayList<>();
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
@@ -64,7 +63,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //OnBackPressedCallback callback = new OnBackPressedCallback(true);
         setHasOptionsMenu(true);
     }
 
@@ -110,24 +108,19 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         setupRecyclerView();
 
-        if(group.getGroupName().equals("Personal"))
-        {
+        if (group.getGroupName().equals("Personal")) {
             setHasOptionsMenu(false);
         }
 
-       return view;
+        return view;
 
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-
-            inflater.inflate(R.menu.task_menu_items, menu);
+        inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
-
     }
 
     @Override
@@ -186,5 +179,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onTaskClicked(Task task) {
 
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
+    }
+
 }
 

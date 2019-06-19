@@ -59,6 +59,7 @@ import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
@@ -198,6 +199,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
             save();
+            LocalState.getInstance().setTaskRead(this.task);
             getActivity().getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
             );
