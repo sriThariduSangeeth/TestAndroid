@@ -156,7 +156,7 @@ public class GroupsActivity extends AppCompatActivity {
         Bundle args = intent.getExtras();
         if(args != null && args.containsKey(Constants.ARG_ACTION)){
             if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
-                tabLayout.getTabAt(2).select();
+                tabLayout.getTabAt(1).select();
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
             }
         }
