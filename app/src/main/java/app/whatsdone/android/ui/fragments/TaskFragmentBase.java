@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -197,6 +198,10 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
             save();
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
+
             getActivity().onBackPressed();
 
 
