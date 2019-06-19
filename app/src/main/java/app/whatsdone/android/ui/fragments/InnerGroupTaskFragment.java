@@ -132,6 +132,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         });
 
         setupRecyclerView();
+
+        if(group.getGroupName().equals("Personal"))
+        {
+            setHasOptionsMenu(false);
+        }
+
        return view;
 
     }
@@ -141,7 +147,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.task_menu_items, menu);
+
+            inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
 
@@ -236,22 +243,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         return unreadTasks;
     }
-    static Date today = DateUtil.getLastMinuteDate(new Date());
-
-    public static Comparator<BaseEntity> unreadTaskCompare =
-            (task1, task2) -> ((Task)task1).isUnreadTask() ? -1 : ((Task)task2).isUnreadTask() ? 1 : 0;
-
-    public static Comparator<BaseEntity> readTaskCompare =
-            (task1, task2) -> !((Task)task1).isUnreadTask() ? -1 : !((Task)task2).isUnreadTask() ? 1 : 0;
-
-    public static Comparator<BaseEntity> doneTaskCompare =
-            (task1, task2) -> ((Task)task1).getStatus()== Task.TaskStatus.DONE ? 1 : ((Task)task2).getStatus()== Task.TaskStatus.DONE ? -1 : 0;
-
-    public static Comparator<BaseEntity> dueSoonTaskCompare =
-            (task1, task2) -> DateUtil.isDateEqual(today,((Task)task1).getDueDate())  ? -1 : DateUtil.isDateEqual(today,((Task)task2).getDueDate())? 1 : 0;
-
-//    public static Comparator<BaseEntity> onTrackTaskCompare =
-//            (task1, task2) -> ((Task)task1).getStatus()== Task.TaskStatus.DONE ? -1 : ((Task)task2).getStatus()== Task.TaskStatus.DONE ? 1 : 0;
 
     public static Comparator<BaseEntity> overdueTaskCompare =
             (entity1, entity2) -> {
