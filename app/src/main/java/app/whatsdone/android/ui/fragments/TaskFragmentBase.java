@@ -147,6 +147,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
 
                     }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             datePickerDialog.show();
         });
 
