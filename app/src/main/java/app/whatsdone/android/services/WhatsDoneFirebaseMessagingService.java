@@ -132,7 +132,9 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, GroupsActivity.class);
         intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+        intent.putExtra("click_action", "GROUP_ACTIVITY");
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
