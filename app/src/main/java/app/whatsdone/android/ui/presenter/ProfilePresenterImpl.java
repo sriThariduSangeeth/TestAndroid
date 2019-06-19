@@ -12,6 +12,7 @@ import app.whatsdone.android.services.StorageServiceImpl;
 import app.whatsdone.android.services.UserService;
 import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.view.ProfileView;
+import app.whatsdone.android.utils.TextUtil;
 
 public class ProfilePresenterImpl implements ProfilePresenter {
 
@@ -28,7 +29,10 @@ public class ProfilePresenterImpl implements ProfilePresenter {
 
     @Override
     public void updateProfile(String displayName) {
-
+        if(TextUtil.isNullOrEmpty(displayName)){
+            view.showValidationError();
+            return;
+        }
         User user = AuthServiceImpl.getCurrentUser();
         user.setDisplayName(displayName);
         try{

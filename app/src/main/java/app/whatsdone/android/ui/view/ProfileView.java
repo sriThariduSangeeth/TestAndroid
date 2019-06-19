@@ -4,4 +4,6 @@ public interface ProfileView {
     void onProfileUpdated();
 
     void dismiss();
+
+    void showValidationError();
 }

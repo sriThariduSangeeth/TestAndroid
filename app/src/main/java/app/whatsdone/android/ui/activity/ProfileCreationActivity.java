@@ -31,6 +31,7 @@ import app.whatsdone.android.ui.presenter.ProfilePresenter;
 import app.whatsdone.android.ui.presenter.ProfilePresenterImpl;
 import app.whatsdone.android.ui.view.ProfileView;
 import app.whatsdone.android.ui.viewmodel.ProfileViewModel;
+import app.whatsdone.android.utils.AlertUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.media.MediaRecorder.VideoSource.CAMERA;
@@ -158,13 +159,17 @@ public class ProfileCreationActivity extends AppCompatActivity implements Profil
     @Override
     public void onProfileUpdated() {
         Intent intent = new Intent(ProfileCreationActivity.this,GroupsActivity.class);
-
         startActivity(intent);
     }
 
     @Override
     public void dismiss() {
         finish();
+    }
+
+    @Override
+    public void showValidationError() {
+        AlertUtil.showAlert(this, "Name cannot be empty");
     }
 
     @Override
