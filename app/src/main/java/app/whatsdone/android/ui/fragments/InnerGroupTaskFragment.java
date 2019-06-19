@@ -29,6 +29,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
+import app.whatsdone.android.ui.adapters.SwipeListener;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
@@ -38,7 +39,7 @@ import app.whatsdone.android.utils.LocalState;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
 
-public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, TaskInnerGroupRecyclerViewAdapter.SwipeListener
+public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, SwipeListener
 {
 
     public ArrayList<String> listOfTask = new ArrayList<>();
@@ -179,6 +180,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onChangeStatus(Task task, Task.TaskStatus status) {
         presenter.setStatus(task, status);
+    }
+
+    @Override
+    public void onTaskClicked(Task task) {
+
     }
 }
 
