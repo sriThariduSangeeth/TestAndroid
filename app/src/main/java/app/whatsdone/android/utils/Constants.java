@@ -98,4 +98,5 @@ public class Constants {
     public static final String SHARED_STATE_GROUPS = "group_state";
     public static final String DISABLE_NOTIFICATION = "disable_notifications";
     public static final String SHARED_STATE_TASKS = "task_state";
+    public static final String ARG_TYPE = "type";
 }

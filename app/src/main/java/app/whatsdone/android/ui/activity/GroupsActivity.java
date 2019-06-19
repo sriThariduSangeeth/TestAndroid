@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
+
+import java.sql.Time;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
@@ -21,8 +25,10 @@ import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
 import app.whatsdone.android.ui.fragments.MyTaskFragment;
 import app.whatsdone.android.ui.fragments.SettingFragment;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.LocalState;
+import timber.log.Timber;
 
 public class GroupsActivity extends AppCompatActivity {
 
@@ -52,7 +58,18 @@ public class GroupsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(null);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, groupContainerFragment).commit();
+        Fragment fragment = groupContainerFragment;
+
+        if(getIntent().getExtras() != null){
+            Bundle args = getIntent().getExtras();
+            if(args.containsKey(Constants.ARG_ACTION)){
+                if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
+                    fragment = myTaskContainerFragment;
+                }
+            }
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, fragment).commit();
         ContactUtil.getInstance().getPermission(GroupsActivity.this);
     }
 
@@ -107,6 +124,12 @@ public class GroupsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Timber.d("onStart");
+    }
+
     //back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,5 +148,25 @@ public class GroupsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         LocalState.getInstance().persistData();
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Timber.d("onResume");
+        Fragment fragment;
+        if(getIntent().getExtras() != null){
+            Bundle args = getIntent().getExtras();
+            if(args.containsKey(Constants.ARG_ACTION)){
+                if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
+                    fragment = myTaskContainerFragment;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, fragment).commit();
+                }
+            }
+        }
+
+
     }
 }

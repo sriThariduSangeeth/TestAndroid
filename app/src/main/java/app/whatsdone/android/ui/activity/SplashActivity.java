@@ -21,13 +21,11 @@ import android.widget.TextView;
 import app.whatsdone.android.R;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
+import timber.log.Timber;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private final int DURATION = 3000;
-    private Thread mSplashThread;
     private ProgressBar progressBar = null;
-    public boolean logedUser, flag = true;
     private ImageView bgImage , bgImageCurve;
     private Animation uptodown, downtoup, logopopup;
     private LinearLayout layoutcenter , layoutWelcome;
@@ -37,24 +35,42 @@ public class SplashActivity extends AppCompatActivity {
 
     public SplashActivity() {
     }
-//    SharedPreferences sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        bgImage = (ImageView) findViewById(R.id.bg_image);
-        layoutcenter = (LinearLayout) findViewById(R.id.layoutCenter);
-        layoutWelcome = (LinearLayout) findViewById(R.id.txtWelcome);
-        downtoup = (Animation) AnimationUtils.loadAnimation(getApplicationContext(), R.anim.downtoup);
-        uptodown = (Animation) AnimationUtils.loadAnimation(getApplicationContext(), R.anim.uptodowm);
-        logopopup = (Animation) AnimationUtils.loadAnimation(getApplicationContext(), R.anim.logopopup);
-        txt1 = (TextView) findViewById(R.id.lbl1);
-        but1 = (Button) findViewById(R.id.mainbutton);
+
+        Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                for (String key : bundle.keySet()) {
+                    Object value = bundle.get(key);
+                    Timber.d("%s %s (%s", key,
+                            value.toString(), value.getClass().getName());
+                }
+
+                if(bundle.containsKey(Constants.ARG_TYPE)){
+                    String type = bundle.getString(Constants.ARG_TYPE);
+                    if(type.equals(Constants.ARG_TASK)){
+                        Intent activeIntent = new Intent(getBaseContext(), GroupsActivity.class);
+                        activeIntent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+                        startActivity(activeIntent);
+                        finish();
+                    }
+                }
+            }
+
+
+        progressBar = findViewById(R.id.progressBar);
+        bgImage = findViewById(R.id.bg_image);
+        layoutcenter = findViewById(R.id.layoutCenter);
+        layoutWelcome = findViewById(R.id.txtWelcome);
+        downtoup = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.downtoup);
+        uptodown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.uptodowm);
+        logopopup = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.logopopup);
+        txt1 = findViewById(R.id.lbl1);
+        but1 = findViewById(R.id.mainbutton);
         txt1.setVisibility(View.GONE);
         but1.setVisibility(View.GONE);
         layoutWelcome.setVisibility(View.GONE);
@@ -91,15 +107,15 @@ public class SplashActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             // wait(1000);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
                 progressBar.setProgress(25);
                 // wait(2000);
-                Thread.sleep(1000);
+                Thread.sleep(100);
                 progressBar.setProgress(50);
                 //  wait(1500);
-                Thread.sleep(1000);
+                Thread.sleep(100);
                 progressBar.setProgress(80);
-                Thread.sleep(500);
+                Thread.sleep(50);
                 progressBar.setProgress(100);
             } catch (InterruptedException e) {
                 Thread.interrupted();
@@ -118,8 +134,8 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(String name) {
             super.onPostExecute(name);
 
-            layoutcenter.animate().setStartDelay(550).translationY(-halftohalfhight*2).scaleX(0.8f).scaleY(0.8f);
-            progressBar.animate().setStartDelay(400).translationY(1000).alpha(0);
+            layoutcenter.animate().setStartDelay(55).translationY(-halftohalfhight*2).scaleX(0.8f).scaleY(0.8f);
+            progressBar.animate().setStartDelay(40).translationY(1000).alpha(0);
 
             if (!SharedPreferencesUtil.getString(Constants.SHARED_TOKEN).equals("")) {
                 // change activity to chat screen
@@ -131,7 +147,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 };
 
-                mHandler.postDelayed(changeChatWindow, 600);
+                mHandler.postDelayed(changeChatWindow, 60);
 
             } else {
                 // change activity logging part
@@ -145,7 +161,7 @@ public class SplashActivity extends AppCompatActivity {
                 layoutWelcome.setAnimation(downtoup);
 
 
-                bgImage.animate().setStartDelay(500).translationY(-(halftohalfhight*5)).setDuration(800).withEndAction(new Runnable() {
+                bgImage.animate().setStartDelay(50).translationY(-(halftohalfhight*5)).setDuration(80).withEndAction(new Runnable() {
                     @Override
                     public void run() {
 
