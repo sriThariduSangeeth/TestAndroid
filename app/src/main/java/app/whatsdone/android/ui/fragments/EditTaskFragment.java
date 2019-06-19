@@ -59,6 +59,7 @@ public class EditTaskFragment extends TaskFragmentBase {
     }
 
     public void save(){
+
         service.update(task, new ServiceListener() {
             @Override
             public void onSuccess() {

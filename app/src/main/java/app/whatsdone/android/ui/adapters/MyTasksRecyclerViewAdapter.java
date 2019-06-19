@@ -27,8 +27,10 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
+import app.whatsdone.android.utils.TextDrawable;
 
 public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecyclerViewAdapter.RecyclerViewHolderTask> {
 
@@ -75,17 +77,30 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolderTask recyclerViewHolderTask, int i)
+    public void onBindViewHolder(@NonNull RecyclerViewHolderTask holder, int i)
     {
         Task task = (Task)tasks.get(i);
-        recyclerViewHolderTask.textView.setText(task.getTitle());
-        recyclerViewHolderTask.groupTextView.setText(task.getGroupName());
+        holder.textView.setText(task.getTitle());
+        holder.groupTextView.setText(task.getGroupName());
+
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+
+        int colorGen = generator.getColor(task.getTitle());
+        TextDrawable.IBuilder builder = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(4)
+                .width(holder.imageView.getLayoutParams().width)
+                .height(holder.imageView.getLayoutParams().height)
+                .endConfig()
+                .rect();
+        TextDrawable icon = builder.build(task.getTitle().substring(0,1), colorGen);
+
         if(!task.getAssignedUserImage().isEmpty())
-            Picasso.get().load(task.getAssignedUserImage()).placeholder(R.mipmap.ic_user_default).into(recyclerViewHolderTask.imageView);
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(icon).into(holder.imageView);
 
-        recyclerViewHolderTask.dueDateText.setText(DateUtil.formatted(task.getDueDate(), null));
+        holder.dueDateText.setText(DateUtil.formatted(task.getDueDate(), null));
 
-        recyclerViewHolderTask.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, InnerGroupTaskActivity.class);
             intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
@@ -93,11 +108,11 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             context.startActivity(intent);
         });
         if(task.getStatus() == Task.TaskStatus.DONE){
-            recyclerViewHolderTask.statusIndicator.setVisibility(View.GONE);
+            holder.statusIndicator.setVisibility(View.GONE);
         }else {
-            recyclerViewHolderTask.statusIndicator.setVisibility(View.VISIBLE);
-            recyclerViewHolderTask.statusIndicator.setText(getStatusIndicatorText(task));
-            recyclerViewHolderTask.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+            holder.statusIndicator.setVisibility(View.VISIBLE);
+            holder.statusIndicator.setText(getStatusIndicatorText(task));
+            holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
 
     }

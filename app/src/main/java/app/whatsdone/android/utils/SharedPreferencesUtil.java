@@ -53,7 +53,7 @@ public class SharedPreferencesUtil {
         }
     }
 
-    public static HashMap<String, HashMap<String, Serializable>> get(String key){
+    public static HashMap get(String key){
         try {
             SharedPreferences sharedPref = WhatsDoneApplication.getApplication().getSharedPreferences("app", Context.MODE_PRIVATE);
             String data = sharedPref.getString(key, "");
@@ -84,11 +84,13 @@ public class SharedPreferencesUtil {
         return output;
     }
 
-    private static HashMap<String, HashMap<String, Serializable>> desSerialize(String data) {
+    private static HashMap desSerialize(String data) {
+        if(TextUtil.isNullOrEmpty(data)) return null;
+        
         ObjectMapper mapper = new ObjectMapper();
 
         mapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
-        HashMap<String, HashMap<String, Serializable>> obj = null;
+        HashMap obj = null;
 
             try {
                 obj = mapper.readValue(data, HashMap.class);
