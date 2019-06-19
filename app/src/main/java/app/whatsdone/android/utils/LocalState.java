@@ -7,7 +7,10 @@ import java.util.List;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.Task;
 import timber.log.Timber;
+
+import static app.whatsdone.android.utils.Constants.DATETIME_FORMAT;
 
 public class LocalState {
     private static final String TASK_COUNT = "task_count";
@@ -27,6 +30,31 @@ public class LocalState {
     }
 
     private HashMap<String, HashMap<String, Serializable>> groupsData = new HashMap<>();
+    private HashMap<String, String> taskData = new HashMap<>();
+
+    public void syncTasks(List<BaseEntity> tasks){
+        for (BaseEntity entity: tasks) {
+            Task task = (Task) entity;
+
+            if(taskData.containsKey(task.getDocumentID())){
+                Date date = DateUtil.parse(taskData.get(entity.getDocumentID()), DATETIME_FORMAT);
+                if(date.after(task.getUpdatedDate())){
+                    task.setUnreadTask(false);
+                }
+                else {
+                    taskData.put(task.getDocumentID(), DateUtil.formatted(task.getUpdatedDate(), DATETIME_FORMAT));
+                    task.setUnreadTask(true);
+                }
+            }else {
+                task.setUnreadTask(true);
+                taskData.put(task.getDocumentID(), DateUtil.formatted(task.getUpdatedDate(), DATETIME_FORMAT));
+            }
+        }
+    }
+
+    public void setTaskRead(Task task){
+        taskData.put(task.getDocumentID(), DateUtil.formatted(new Date(), DATETIME_FORMAT));
+    }
 
     public void syncGroups(List<BaseEntity> groups){
         for (BaseEntity entity: groups) {

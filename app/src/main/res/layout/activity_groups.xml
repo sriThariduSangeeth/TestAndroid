@@ -28,12 +28,13 @@
         android:id="@+id/toolbar_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="fill"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp"
         android:textSize="20sp"
         android:textColor="@color/white"
         android:text="@string/app_name"
         android:focusableInTouchMode="true"
-        android:paddingTop="5sp" />
+       />
    </android.support.v7.widget.Toolbar>
     <!--
     <TextView
@@ -55,6 +56,7 @@
         app:tabBackground="@color/toolbarColor"
         app:tabIndicatorColor="@color/white"
         app:tabIndicatorHeight="3sp"
+
         app:tabRippleColor="@color/background"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
