@@ -93,8 +93,6 @@ public class ContactUtil {
     }
 
     public List<Contact> resolveContacts(List<String> phoneNumbers, List<ExistUser> existUsers) {
-
-       // public List<Contact> resolveContacts(List<String> phoneNumbers) {
         List<Contact> items = new ArrayList<>();
 
         if(phoneNumbers.isEmpty()) return items;

@@ -77,7 +77,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * Schedule async work using WorkManager.
      */
     private void scheduleJob() {
-        sendNotification("Local notification");
+        //sendNotification("Local notification");
         // [START dispatch_job]
 //        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
 //                .build();

@@ -36,6 +36,8 @@ import app.whatsdone.android.ui.view.MyTaskFragmentView;
 import app.whatsdone.android.utils.Constants;
 import timber.log.Timber;
 
+import static app.whatsdone.android.utils.SortUtil.sort;
+
 
 public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
 
@@ -90,7 +92,7 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     @Override
     public void updateTasks(List<BaseEntity> tasks) {
         this.tasks.clear();
-        this.tasks.addAll(tasks);
+        this.tasks.addAll(sort(tasks));
         tasksAdapter.notifyDataSetChanged();
 
     }

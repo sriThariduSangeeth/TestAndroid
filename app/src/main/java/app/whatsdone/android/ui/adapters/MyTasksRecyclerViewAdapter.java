@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -81,11 +82,18 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     {
         Task task = (Task)tasks.get(i);
         holder.textView.setText(task.getTitle());
+        if(task.isUnreadTask()){
+            holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.BOLD);
+        }else {
+            holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.NORMAL);
+        }
+
+
         holder.groupTextView.setText(task.getGroupName());
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
-        int colorGen = generator.getColor(task.getTitle());
+        int colorGen = generator.getColor(task.getAssignedUser());
         TextDrawable.IBuilder builder = TextDrawable.builder()
                 .beginConfig()
                 .withBorder(4)
