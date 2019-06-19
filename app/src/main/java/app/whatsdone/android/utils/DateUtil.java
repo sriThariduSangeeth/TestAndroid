@@ -39,6 +39,14 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static Date addTime(Date date, int seconds)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.SECOND, seconds); //minus number would decrement the days
+        return cal.getTime();
+    }
+
     public static Date removeDays(Date date, int days)
     {
         Calendar cal = Calendar.getInstance();

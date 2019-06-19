@@ -85,6 +85,8 @@ public class SharedPreferencesUtil {
     }
 
     private static HashMap desSerialize(String data) {
+        if(TextUtil.isNullOrEmpty(data)) return null;
+        
         ObjectMapper mapper = new ObjectMapper();
 
         mapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);

@@ -209,31 +209,32 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     private Collection<? extends BaseEntity> sort(List<BaseEntity> tasks) {
         LocalState.getInstance().syncTasks(tasks);
-        List<BaseEntity> unreadTask = new ArrayList<>();
-
+        List<BaseEntity> unreadTasks = new ArrayList<>();
+        List<BaseEntity> readTasks = new ArrayList<>();
         List<BaseEntity> doneTasks = new ArrayList<>();
-        List<BaseEntity> overdueTasks= new ArrayList<>();
-        List<BaseEntity> dueSoonTasks = new ArrayList<>();
-        List<BaseEntity> onTrackTasks = new ArrayList<>();
+        for (BaseEntity task : tasks) {
+            if(((Task)task).getStatus() == Task.TaskStatus.DONE){
+                doneTasks.add(task);
+            }else {
+                if(((Task)task).isUnreadTask())
+                    unreadTasks.add(task);
+                else
+                    readTasks.add(task);
+            }
+        }
+
         // List1 = no done tasks
         // List 2 = done tasks
         // list1 sort by unread then by task label
         // append list 1 + list 2
 
-        Collections.sort(tasks, unreadTaskCompare);
-      //  unreadTask.addAll(tasks);
+        Collections.sort(unreadTasks, overdueTaskCompare);
+        Collections.sort(readTasks, overdueTaskCompare);
 
-        Collections.sort(tasks, doneTaskCompare);
-       // doneTasks.addAll(unreadTask);
+        unreadTasks.addAll(readTasks);
+        unreadTasks.addAll(doneTasks);
 
-    //    Collections.sort(doneTasks, dueSoonTaskCompare);
-      //  dueSoonTasks.addAll(doneTasks);
-
-    //    Collections.sort(dueSoonTasks, overdueTaskCompare);
-   //     overdueTasks.addAll(dueSoonTasks);
-      //  Collections.sort(tasks, onTrackTaskCompare);
-
-        return tasks;
+        return unreadTasks;
     }
     static Date today = DateUtil.getLastMinuteDate(new Date());
 
@@ -253,7 +254,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 //            (task1, task2) -> ((Task)task1).getStatus()== Task.TaskStatus.DONE ? -1 : ((Task)task2).getStatus()== Task.TaskStatus.DONE ? 1 : 0;
 
     public static Comparator<BaseEntity> overdueTaskCompare =
-            (task1, task2) -> (today).after(((Task)task1).getDueDate()) ? -1 : (today).after(((Task)task2).getDueDate()) ? 1 : 0;
+            (entity1, entity2) -> {
+                Task task1 = (Task)entity1;
+                Task task2 = (Task)entity2;
+
+                int task1Label = TaskInnerGroupRecyclerViewAdapter.getStatusIndicatorText(task1);
+                int task2Label = TaskInnerGroupRecyclerViewAdapter.getStatusIndicatorText(task2);
+                return task1Label == R.string.task_overdue ? -1 : task2Label == R.string.task_overdue ? 1
+                        : task1Label == R.string.task_due_soon ? -1 : task2Label == R.string.task_due_soon ? 1
+                        : 0;
+            };
 
 
     private List<String> putTaskListToArray(List<BaseEntity> list){

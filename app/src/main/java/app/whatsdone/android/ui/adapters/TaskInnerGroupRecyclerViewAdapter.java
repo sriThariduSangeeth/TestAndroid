@@ -82,7 +82,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
         int colorGen = generator.getColor(task.getTitle());
-        System.out.println(myRecyclerViewHolder.image.getLayoutParams().height);
         TextDrawable.IBuilder builder = TextDrawable.builder()
                 .beginConfig()
                 .withBorder(4)
@@ -134,7 +133,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         }
     }
 
-    private int getStatusIndicatorColor(Task task) {
+    public static int getStatusIndicatorColor(Task task) {
         Date today = DateUtil.getLastMinuteDate(new Date());
 
         if (DateUtil.isDateEqual(today, task.getDueDate()))
@@ -144,7 +143,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         return R.color.LimeGreen;
     }
 
-    private int getStatusIndicatorText(Task task) {
+    public static int getStatusIndicatorText(Task task) {
         Date today = DateUtil.getLastMinuteDate(new Date());
 
         if (DateUtil.isDateEqual(today, task.getDueDate()))
