@@ -150,23 +150,15 @@ public class GroupsActivity extends AppCompatActivity {
         LocalState.getInstance().persistData();
     }
 
-
-
     @Override
-    protected void onResume() {
-        super.onResume();
-        Timber.d("onResume");
-        Fragment fragment;
-        if(getIntent().getExtras() != null){
-            Bundle args = getIntent().getExtras();
-            if(args.containsKey(Constants.ARG_ACTION)){
-                if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
-                    fragment = myTaskContainerFragment;
-                    getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, fragment).commit();
-                }
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle args = intent.getExtras();
+        if(args != null && args.containsKey(Constants.ARG_ACTION)){
+            if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
+                tabLayout.getTabAt(1).select();
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
             }
         }
-
-
     }
 }
