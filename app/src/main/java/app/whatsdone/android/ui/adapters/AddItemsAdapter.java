@@ -3,12 +3,15 @@ package app.whatsdone.android.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +26,7 @@ import app.whatsdone.android.model.Task;
 public class AddItemsAdapter extends BaseAdapter {
 
     private Context context;
-    List<CheckListItem> itemList = new ArrayList<>();
+    List<CheckListItem> itemList;
 
     public AddItemsAdapter(Context context, List<CheckListItem> itemListArray)
     {
@@ -47,35 +50,43 @@ public class AddItemsAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        convertView = null;
 
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_view_task_layout, null);
 
-            TextView textView = (TextView) convertView.findViewById(R.id.checklist__item);
-            ImageView imageRemove = (ImageView) convertView.findViewById(R.id.remove_image_view);
+            EditText textView = convertView.findViewById(R.id.checklist__item);
+            ImageView imageRemove = convertView.findViewById(R.id.remove_image_view);
             CheckBox checkBox = convertView.findViewById(R.id.checkbox_task);
 
             CheckListItem myTask = itemList.get(position);
             textView.setText(myTask.getTitle());
             checkBox.setChecked(myTask.isCompleted());
 
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            textView.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    myTask.setCompleted(isChecked);
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    myTask.setTitle(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
 
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> myTask.setCompleted(isChecked));
 
-            imageRemove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemList.remove(position);
-                    notifyDataSetChanged();
-                }
+
+            imageRemove.setOnClickListener(v -> {
+                itemList.remove(position);
+                notifyDataSetChanged();
             });
         }
 

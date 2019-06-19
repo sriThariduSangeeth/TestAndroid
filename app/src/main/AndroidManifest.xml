@@ -65,7 +65,7 @@
         <activity android:name="app.whatsdone.android.ui.activity.CodeVerificationActivity"/>
         <activity android:name="app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity" />
         <activity android:name=".ui.activity.InnerGroupTaskActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" android:launchMode= "singleInstance" />
 
         <service
             android:name=".services.WhatsDoneFirebaseMessagingService"

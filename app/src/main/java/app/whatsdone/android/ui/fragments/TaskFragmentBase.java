@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +58,7 @@ import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -69,10 +71,10 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     private int mYear, mMonth, mDay;
     private AddItemsAdapter itemsAdapter;
     private ListView listView;
-    private EditText addNewTask, gettitle, getDescript;
+    private EditText gettitle, getDescript;
+    private Button addChecklistBtn;
     private ConstraintLayout lay;
     protected Group group;
-    private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private DateFormat dateFormat;
@@ -96,7 +98,6 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
-
 
 
         Spinner spinner = view.findViewById(R.id.user_status);
@@ -151,15 +152,13 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             datePickerDialog.show();
         });
 
-        addNewTask = view.findViewById(R.id.checklist_add_new_item_edit_text);
-        imageView = view.findViewById(R.id.checklist_add_image_view);
+        addChecklistBtn = view.findViewById(R.id.add_check_list);
 
-        addNewTask.setFocusable(true);
 
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
         listView.setAdapter(itemsAdapter);
 
-        imageView.setOnClickListener(this::addValue);
+        addChecklistBtn.setOnClickListener(this::addValue);
 
         assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
         if (!task.getAssignedUserName().isEmpty())
@@ -184,6 +183,13 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
                 return;
             }
+            List<CheckListItem> nonEmpty = new ArrayList<>();
+            for (CheckListItem checkListItem : task.getCheckList()) {
+                if(!TextUtil.isNullOrEmpty(checkListItem.getTitle())){
+                    nonEmpty.add(checkListItem);
+                }
+            }
+            task.setCheckList(nonEmpty);
             v.setEnabled(false);
             task.setTitle(title);
             task.setDescription(getDescript.getText().toString());
@@ -217,7 +223,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     public String returnStatus(String out) {
 
         if (getString(R.string.todo).equals(out)) {
-           return Task.TaskStatus.TODO.name();
+            return Task.TaskStatus.TODO.name();
         } else if (getString(R.string.in_progress).equals(out)) {
             return Task.TaskStatus.IN_PROGRESS.name();
         } else if (getString(R.string.on_hold).equals(out)) {
@@ -230,18 +236,13 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     }
 
     public void addValue(View v) {
-        String name = addNewTask.getText().toString();
-        if (name.isEmpty()) {
-            Toast.makeText(getContext().getApplicationContext(), " empty",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            CheckListItem checkListItem = new CheckListItem();
-            checkListItem.setTitle(name);
-            checkListItem.setCompleted(false);
-            task.getCheckList().add(checkListItem);
-            itemsAdapter.notifyDataSetChanged();
-            addNewTask.setText("");
-        }
+        String name = "";
+        CheckListItem checkListItem = new CheckListItem();
+        checkListItem.setTitle(name);
+        checkListItem.setCompleted(false);
+        task.getCheckList().add(checkListItem);
+        itemsAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -279,15 +280,15 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                             selectOneContact(oneContact, new ContactSelectedListener() {
                                 @Override
                                 public void onSelected(String number) {
-                                   //contactName.add(name);
+                                    //contactName.add(name);
                                     number = ContactUtil.getInstance().cleanNo(number);
-                                        if (number != null && !number.isEmpty()) {
+                                    if (number != null && !number.isEmpty()) {
 
-                                            task.setAssignedUserName(number);
-
-                                        }
+                                        task.setAssignedUserName(number);
 
                                     }
+
+                                }
 
                             });
                         }
@@ -343,8 +344,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
     }
 
-    interface ContactSelectedListener
-    {
+    interface ContactSelectedListener {
 
         void onSelected(String number);
     }

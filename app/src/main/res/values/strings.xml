@@ -93,7 +93,7 @@
     <string name="group_settings">Group Settings</string>
     <string name="team_name">Enter group name here</string>
     <string name="assigned_by">Assigned by</string>
-    <string name="add_checklist_items_here">Type here to add the checklist</string>
+    <string name="add_checklist_items_here">Add item to the checklist</string>
     <string name="delete">Delete</string>
 
 </resources>
