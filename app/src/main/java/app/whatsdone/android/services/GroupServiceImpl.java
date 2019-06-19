@@ -326,4 +326,21 @@ public class GroupServiceImpl implements GroupService {
             serviceListener.onCompleted(task.isSuccessful());
         });
     }
+
+    @Override
+    public void subscribe(String id, ServiceListener serviceListener) {
+        listener = db.collection(Constants.REF_TEAMS)
+                .document(id)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Timber.tag(TAG).w(e, "Team subscription failed");
+                        return;
+                    }
+                    Timber.tag(TAG).d(value.toString());
+
+                    Group group = getGroup(value);
+
+                    serviceListener.onDataReceived(group);
+                });
+    }
 }

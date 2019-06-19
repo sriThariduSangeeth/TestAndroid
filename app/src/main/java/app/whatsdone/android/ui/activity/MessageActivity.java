@@ -16,10 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.services.DiscussionImpl;
 import app.whatsdone.android.services.DiscussionService;
+import app.whatsdone.android.services.GroupService;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
@@ -35,6 +38,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
     private DiscussionService discussionService = new DiscussionImpl();
+    private GroupService groupService = new GroupServiceImpl();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
     public List<String> taskList = new ArrayList<>();
     public Group group;
@@ -45,7 +49,6 @@ public abstract class MessageActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.REF_TEAMS);
         taskList = intent.getStringArrayListExtra("tasks");
-        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).into(imageView);
         };
@@ -54,9 +57,9 @@ public abstract class MessageActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onStart() {
-
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         discussionService.subscribe(group.getDocumentID(), new ServiceListener() {
             @Override
             public void onDataReceivedForMessage(ArrayList<Message> messages) {
@@ -68,18 +71,29 @@ public abstract class MessageActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        groupService.subscribe(group.getDocumentID(), new ServiceListener(){
+            @Override
+            public void onDataReceived(BaseEntity entity) {
+                group.setDiscussionCount(((Group)entity).getDiscussionCount());
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         discussionService.unSubscribe();
+        groupService.unSubscribe();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), messagesAdapter.getItemCount());
         discussionService.unSubscribe();
+        groupService.unSubscribe();
     }
 
     @Override
