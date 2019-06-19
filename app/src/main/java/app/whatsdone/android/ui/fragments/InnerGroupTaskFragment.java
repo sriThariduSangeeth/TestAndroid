@@ -108,7 +108,13 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         });
 
         setupRecyclerView();
-        return view;
+
+        if(group.getGroupName().equals("Personal"))
+        {
+            setHasOptionsMenu(false);
+        }
+
+       return view;
 
     }
 
@@ -116,7 +122,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.task_menu_items, menu);
+
+            inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
 
