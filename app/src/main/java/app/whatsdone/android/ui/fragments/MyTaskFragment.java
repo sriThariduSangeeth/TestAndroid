@@ -28,6 +28,7 @@ import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
+import app.whatsdone.android.ui.adapters.SwipeListener;
 import app.whatsdone.android.ui.adapters.TaskSwipeController;
 import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
@@ -39,17 +40,17 @@ import timber.log.Timber;
 import static app.whatsdone.android.utils.SortUtil.sort;
 
 
-public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTasksRecyclerViewAdapter.OnMyTaskFragmentInteractionListener {
+public class MyTaskFragment extends Fragment implements MyTaskFragmentView, SwipeListener {
 
 
     private List<BaseEntity> tasks = new ArrayList<>();
     private MyTasksRecyclerViewAdapter tasksAdapter;
     private MyTaskPresenter taskPresenter;
-    private FloatingActionButton addFab;
-    private TaskSwipeController taskSwipeController;
     private OnMyTaskFragmentInteractionListener listener;
     private RecyclerView recycler;
-    private TaskService service = new TaskServiceImpl();
+
+    public MyTaskFragment() {
+    }
 
     public void setListener(OnMyTaskFragmentInteractionListener listener) {
         System.out.println("setting listener + " + listener.getClass().getCanonicalName());
@@ -68,19 +69,13 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
         this.taskPresenter.init(this);
         this.taskPresenter.loadTasks();
 
+        view.findViewById(R.id.add_new_my_task_fab).setOnClickListener(v -> {
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+            intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_ADD_TASK);
+            intent.putExtra(Constants.ARG_GROUP, GroupServiceImpl.getPersonalGroup());
+            getActivity().startActivity(intent);
 
-//add new my task frag
-
-        view.findViewById(R.id.add_new_my_task_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
-                intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_ADD_TASK);
-                intent.putExtra(Constants.ARG_GROUP, GroupServiceImpl.getPersonalGroup());
-                getActivity().startActivity(intent);
-
-            }
         });
 
         setHasOptionsMenu(false);
@@ -104,69 +99,32 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
             this.listener.onTaskClicked(task);
     }
 
-
-
-
-    public interface OnMyTaskFragmentInteractionListener {
-
-        void onTaskClicked(Task task);
-
+    @Override
+    public void onDelete(Task task) {
+        taskPresenter.delete(task);
     }
 
+    @Override
+    public void onChangeStatus(Task task, Task.TaskStatus status) {
+        taskPresenter.setStatus(task, status);
+    }
 
+    public interface OnMyTaskFragmentInteractionListener {
+        void onTaskClicked(Task task);
+    }
     private void setupRecyclerView()
     {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         tasksAdapter = new MyTasksRecyclerViewAdapter(tasks , getContext());
         tasksAdapter.setListener(this);
         recycler.setAdapter(tasksAdapter);
-
-        taskSwipeController = new TaskSwipeController(new TaskSwipeControllerAction() {
-
-            @Override
-            public void onTaskDeleteClicked(int position) {
-                //task delete
-                String id = tasks.get(position).getDocumentID();
-                tasks.remove(position);
-                tasksAdapter.notifyDataSetChanged();
-                service.delete(id, new ServiceListener() {
-                    @Override
-                    public void onSuccess() {
-                        Timber.d("id:%s task removed", id);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onTaskOnHoldClicked(int position) {
-                //task change status to On Hold
-
-            }
-
-            @Override
-            public void onTaskInProgressClicked(int position) {
-                //Task change status to In Progress
-            }
-
-            @Override
-            public void onTaskDoneClicked(int position) {
-                //Task change status to Done
-            }
-        });
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(taskSwipeController);
-        itemTouchhelper.attachToRecyclerView(recycler);
-
-        recycler.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                taskSwipeController.onDraw(c);
-                taskSwipeController.setContext(getContext());
-            }
-        });
-
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        taskPresenter.unSubscribe();
+    }
 
 }
 

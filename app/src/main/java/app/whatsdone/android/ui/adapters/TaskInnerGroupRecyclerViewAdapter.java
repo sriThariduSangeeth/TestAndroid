@@ -73,12 +73,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         Task task = (Task) taskList.get(position);
 
-        if (task != null) {
-            try {
-                binderHelper.bind(holder.swipeLayout, task.getDocumentID());
-            }catch (NullPointerException ignored){}
 
-        }
 
 
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
@@ -101,6 +96,49 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                 .endConfig()
                 .rect();
         TextDrawable ic1 = builder.build(task.getTitle().substring(0, 1), colorGen);
+
+        setStatusIcons(holder, task);
+
+
+        if (task.getDueDate() == null) {
+            holder.date.setText(df.format(new Date()));
+        } else {
+            holder.date.setText(df.format(task.getDueDate()));
+        }
+
+        if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(holder.image, getCallBack(holder.image));
+        } else {
+            holder.image.setImageDrawable(ic1);
+            //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
+        }
+
+        holder.frontLayout.setOnClickListener(v -> {
+            holder.swipeLayout.close(false);
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
+        });
+        if (task.getStatus() == Task.TaskStatus.DONE) {
+            holder.statusIndicator.setVisibility(View.GONE);
+
+        } else {
+            holder.statusIndicator.setVisibility(View.VISIBLE);
+            holder.statusIndicator.setText(getStatusIndicatorText(task));
+            holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
+        }
+
+
+    }
+
+    private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
+
+        if (task != null) {
+            try {
+                binderHelper.bind(holder.swipeLayout, task.getDocumentID());
+            }catch (NullPointerException ignored){}
+
+        }
 
         if (task.getStatus() == TODO) {
             holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
@@ -131,34 +169,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             holder.doneBtn.setVisibility(View.VISIBLE);
         }
 
-
-        if (task.getDueDate() == null) {
-            holder.date.setText(df.format(new Date()));
-        } else {
-            holder.date.setText(df.format(task.getDueDate()));
-        }
-
-        if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
-            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(holder.image, getCallBack(holder.image));
-        } else {
-            holder.image.setImageDrawable(ic1);
-            //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
-        }
-
-        holder.frontLayout.setOnClickListener(v -> {
-            AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
-        });
-        if (task.getStatus() == Task.TaskStatus.DONE) {
-            holder.statusIndicator.setVisibility(View.GONE);
-
-        } else {
-            holder.statusIndicator.setVisibility(View.VISIBLE);
-            holder.statusIndicator.setText(getStatusIndicatorText(task));
-            holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
-        }
-
         holder.deleteLayout.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDelete(task);
@@ -179,6 +189,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             if(listener != null)
                 listener.onChangeStatus(task, DONE);
         });
+
+
     }
 
 
@@ -191,21 +203,22 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         private final SwipeRevealLayout swipeLayout;
         private final View frontLayout;
         private final View deleteLayout;
-        private final TextView groupTaskText, date, status;
         private final TextView inprogressBtn, onholdBtn, doneBtn;
+        private final TextView groupTaskText, date, status;
         private final ImageView image;
         private final TextView statusIndicator;
 
         MyRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            swipeLayout = itemView.findViewById(R.id.swipe_layout);
-            frontLayout = itemView.findViewById(R.id.front_layout);
-            deleteLayout = itemView.findViewById(R.id.delete_layout);
+
             groupTaskText = itemView.findViewById(R.id.task_inner_text);
             image = itemView.findViewById(R.id.image_view_task_inner_group);
             date = itemView.findViewById(R.id.task_inner_date);
             status = itemView.findViewById(R.id.status_inner_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            frontLayout = itemView.findViewById(R.id.front_layout);
+            deleteLayout = itemView.findViewById(R.id.delete_layout);
             inprogressBtn = itemView.findViewById(R.id.first_status);
             onholdBtn = itemView.findViewById(R.id.second_status);
             doneBtn = itemView.findViewById(R.id.third_status);
@@ -228,9 +241,5 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         };
     }
 
-    public interface SwipeListener {
-        void onDelete(Task task);
 
-        void onChangeStatus(Task task, Task.TaskStatus status);
-    }
 }

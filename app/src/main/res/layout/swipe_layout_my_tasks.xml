@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:mode="same_level">
+
+    <RelativeLayout
+        android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#ffcc0000">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/lightRed"
+            android:textColor="@android:color/white"
+            android:text="@string/delete"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/status_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#ffcc0000">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/first_status"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@color/LightSalmonGold"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="@string/in_progress"
+                android:textSize="@dimen/text_size_standard"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/second_status"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/first_status"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:background="@color/MidnightBluelight"
+                android:text="@string/on_hold"
+                android:textSize="@dimen/text_size_standard"
+                android:layout_alignParentEnd="true" />
+            <TextView
+                android:id="@+id/third_status"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/first_status"
+                android:textSize="@dimen/text_size_standard"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:background="@color/gray"
+                android:text="@string/done"
+                android:layout_alignParentEnd="true" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light">
+
+        <include layout="@layout/my_task_recycler_view_layout" />
+    </LinearLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

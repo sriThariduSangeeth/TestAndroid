@@ -12,6 +12,7 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
+import timber.log.Timber;
 
 public class MyTaskPresenterImpl implements MyTaskPresenter {
     private MyTaskFragmentView view;
@@ -26,6 +27,11 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
     }
 
     @Override
+    public void unSubscribe() {
+        service.unSubscribe();
+    }
+
+    @Override
     public void loadTasks() {
 
        service.subscribeForUser(new ServiceListener() {
@@ -37,5 +43,36 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
        });
 
 
+    }
+
+    @Override
+    public void delete(Task task) {
+        service.delete(task.getDocumentID(), new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("Task deleted %s", task.getTitle());
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                Timber.e(error);
+            }
+        });
+    }
+
+    @Override
+    public void setStatus(Task task, Task.TaskStatus status) {
+        task.setStatus(status);
+        service.update(task, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("Task updated %s", task.getTitle());
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                Timber.e(error);
+            }
+        });
     }
 }
