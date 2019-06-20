@@ -6,8 +6,8 @@ android {
         applicationId "app.whatsdone.android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 14
-        versionName "1.96"
+        versionCode 15
+        versionName "1.97"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -87,6 +87,7 @@ dependencies {
 
     implementation 'com.otaliastudios:autocomplete:1.1.0'
     implementation 'com.github.hydrated:SwipeRevealLayout:960abd4'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
 
 
 }
