@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -67,8 +68,11 @@ public class SettingFragment extends Fragment implements SettingsView {
     }
 
     public void onImageEdit() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,RESULT_LOAD_IMAGE);
+        //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //startActivityForResult(intent,RESULT_LOAD_IMAGE);
+
+        CropImage.activity()
+                .start(getContext(), this);
     }
 
     @Override
@@ -125,6 +129,23 @@ public class SettingFragment extends Fragment implements SettingsView {
             }
             binding.profilePic.setImageBitmap(bmp);
             presenter.uploadUserImage(bmp);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                Bitmap bmp = null;
+                try {
+                    bmp = getBitmapFromUri(resultUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                binding.profilePic.setImageBitmap(bmp);
+                presenter.uploadUserImage(bmp);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
 
     }
