@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,13 +59,14 @@ import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
-public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener {
+public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{
     protected boolean isFromMyTasks;
     protected boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
@@ -101,7 +103,6 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
 
-
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -124,39 +125,37 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         lay.setVisibility(LinearLayout.GONE);
         setupToolbar();
 
-
         setDueDate = view.findViewById(R.id.due_date_text_view);
         setDueDate.setText(dateFormat.format(task.getDueDate()));
+        final Calendar calendar = Calendar.getInstance();
 
-        setDueDate.setOnClickListener(v -> {
+        setDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar.setTime(task.getDueDate());
+                    datePickerDialog = new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view1, int year, int monthOfYear, int dayOfMonth) {
+                                    // set day of month , month and year value in the edit text
+                                    String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear + 1, dayOfMonth, year);
+                                    setDueDate.setText(dateValue);
+                                    try {
+                                        Date date = dateFormat.parse(dateValue);
+                                        task.setDueDate(date);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-            // Get Current Date
-            final Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
-
-            datePickerDialog = new DatePickerDialog(getContext(),
-                    (view1, year, monthOfYear, dayOfMonth) -> {
-                        // set day of month , month and year value in the edit text
-                        String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear + 1, dayOfMonth, year);
-                        setDueDate.setText(dateValue);
-                        try {
-                            Date date = dateFormat.parse(dateValue);
-                            task.setDueDate(date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePickerDialog.show();
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+            }
         });
 
+
         addChecklistBtn = view.findViewById(R.id.add_check_list);
-
-
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
         listView.setAdapter(itemsAdapter);
 
@@ -378,4 +377,5 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             startActivityForResult(intent, REQUEST_CODE);
         }
     }
+
 }
