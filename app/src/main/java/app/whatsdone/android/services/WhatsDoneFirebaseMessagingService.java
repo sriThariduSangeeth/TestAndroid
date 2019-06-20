@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.ui.activity.GroupsActivity;
 import app.whatsdone.android.ui.activity.SplashActivity;
+import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import timber.log.Timber;
@@ -48,13 +50,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
                 }}
             Timber.tag(TAG).d("Message data payload: %s", remoteMessage.getData());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
+            handleNow(remoteMessage);
 
         }
 
@@ -77,7 +73,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * Schedule async work using WorkManager.
      */
     private void scheduleJob() {
-        sendNotification("Local notification");
+        //sendNotification("Local notification");
         // [START dispatch_job]
 //        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
 //                .build();
@@ -87,9 +83,18 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
 
     /**
      * Handle time allotted to BroadcastReceivers.
+     * @param remoteMessage
      */
-    private void handleNow() {
+    private void handleNow(RemoteMessage remoteMessage) {
         Timber.d("Short lived task is done.");
+        if(remoteMessage.getData().get("type").equals("task")){
+            String title = remoteMessage.getNotification().getTitle();
+            String body = remoteMessage.getNotification().getBody();
+            String clickAction = remoteMessage.getNotification().getClickAction();
+
+            Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
+            sendNotification(title, body);
+        }
     }
 
    /*
@@ -124,9 +129,13 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    private void sendNotification(String title, String messageBody) {
+        Intent intent = new Intent(this, GroupsActivity.class);
+        if(title.indexOf(Constants.NOTIFICATION_TO_ME) > 0)
+            intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+        intent.putExtra(Constants.ARG_CLICK_ACTION, Constants.ACTION_GROUP_ACTIVITY);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -135,7 +144,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(getString(R.string.app_name))
+                        .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
@@ -147,7 +156,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
+                    title,
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }

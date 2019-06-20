@@ -93,8 +93,6 @@ public class ContactUtil {
     }
 
     public List<Contact> resolveContacts(List<String> phoneNumbers, List<ExistUser> existUsers) {
-
-       // public List<Contact> resolveContacts(List<String> phoneNumbers) {
         List<Contact> items = new ArrayList<>();
 
         if(phoneNumbers.isEmpty()) return items;
@@ -182,7 +180,8 @@ public class ContactUtil {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
+                            if(contacts.isEmpty())
+                                readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
                         }
 
                         // check for permanent denial of any permission

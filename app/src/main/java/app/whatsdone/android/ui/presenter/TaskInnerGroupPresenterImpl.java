@@ -7,10 +7,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
+import timber.log.Timber;
 
 public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     private static final String TAG = TaskInnerGroupPresenterImpl.class.getSimpleName();
@@ -38,8 +40,34 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     }
 
     @Override
-    public void deleteTaskInner() {
+    public void deleteTaskInner(String id) {
+        service.delete(id, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("Task deleted %s", id);
+            }
 
+            @Override
+            public void onError(@Nullable String error) {
+                Timber.e(error);
+            }
+        });
+    }
+
+    @Override
+    public void setStatus(Task task, Task.TaskStatus status) {
+        task.setStatus(status);
+        service.update(task, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("Task updated %s", task.getTitle());
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                Timber.e(error);
+            }
+        });
     }
 
     @Override

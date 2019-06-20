@@ -13,9 +13,12 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
@@ -27,6 +30,7 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.LocalState;
+import timber.log.Timber;
 
 public abstract class MessageActivity extends AppCompatActivity implements
         MessagesListAdapter.SelectionListener
@@ -50,7 +54,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
         group = intent.getParcelableExtra(Constants.REF_TEAMS);
         taskList = intent.getStringArrayListExtra("tasks");
         imageLoader = (imageView, url, payload) -> {
-            Picasso.get().load(url).into(imageView);
+            Picasso.get().load(url).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
         };
         senderId = getCurrentDetails.getCurrentUser().getId();
 
@@ -67,7 +71,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
                     messagesAdapter.clear();
                     messagesAdapter.addToEnd( messages, false);
                 }else {
-                    Log.d("TAG", "There is no any messages");
+                    Timber.d("There is no any messages");
                 }
             }
         });
@@ -98,7 +102,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
-        Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
+        Timber.i("onLoadMore: " + page + " " + totalItemsCount);
 
         new Handler().postDelayed(() -> {
             discussionService.loadRestMessages( group.getDocumentID() , new ServiceListener() {
@@ -129,5 +133,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
         return message;
     }
+
+
 
 }

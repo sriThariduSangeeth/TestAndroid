@@ -145,7 +145,6 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
         c.drawRoundRect(rightInProgressButton, corners, corners, p);
         drawText("In Progress", c, rightInProgressButton, p);
 
-
         //onHold
         rightOnHoldButton = new RectF(itemView.getRight()-buttonWidth , itemView.getTop(), itemView.getRight(), itemView.getBottom());
         p.setColor(grayforonhold);
@@ -163,21 +162,15 @@ public class TaskSwipeController extends ItemTouchHelper.Callback{
 
 
         if (buttonShowedState == ButtonsState.RIGHT_DONE_VISIBLE) {
-            buttonInstance = rightOnHoldButton;
-
-
+            buttonInstance = rightDoneButton;
         }
 
         if (buttonShowedState == ButtonsState.RIGHT_IN_PROGRESS_VISIBLE) {
-            buttonInstance1 = rightDoneButton;
-
-
+            buttonInstance1 = rightInProgressButton;
         }
 
-        if (buttonShowedState == ButtonsState.RIGHT_IN_PROGRESS_VISIBLE) {
+        if (buttonShowedState == ButtonsState.RIGHT_ON_HOLD_VISIBLE) {
             buttonInstance2 = rightOnHoldButton;
-
-
         }
 
 
