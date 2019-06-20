@@ -180,7 +180,7 @@ public class DiscussionImpl implements DiscussionService {
 
     private String checkAvatarIsEmpty(String url) {
         if (url == null || url.isEmpty()) {
-            url = Constants.DEFULT_CHAT_IMG_URL;
+            url = null;
         }
         return url;
     }
