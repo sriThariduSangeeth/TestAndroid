@@ -23,12 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import java.text.DateFormat;
@@ -59,12 +57,13 @@ import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.DateUtil;
-import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
+
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.GREEN;
 
 public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{
     protected boolean isFromMyTasks;
@@ -77,6 +76,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     private ListView listView;
     private EditText gettitle, getDescript;
     private Button addChecklistBtn;
+    protected Button acknowledgeButton;
     private ConstraintLayout lay;
     protected Group group;
     private final int REQUEST_CODE = 99;
@@ -103,6 +103,11 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
 
+        acknowledgeButton = view.findViewById(R.id.acknowledge_button);
+        acknowledgeButton.setEnabled(false);
+        acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
+
+
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -110,6 +115,52 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         spinner.setSelection(Task.TaskStatus.getIndex(task.getStatus()), true);
 
         gettitle = view.findViewById(R.id.title_edit_text);
+
+        if(!task.getAssignedBy().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && task.getAssignedUser().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()))
+        {
+            if(task.isAcknowledged()) {
+                acknowledgeButton.setEnabled(false);
+                acknowledgeButton.setTextColor(GREEN);
+                acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
+
+            } else  {
+                acknowledgeButton.setEnabled(true);
+                acknowledgeButton.setClickable(true);
+                acknowledgeButton.setTextColor(BLUE);
+
+                acknowledgeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        task.setAcknowledged(true);
+                        acknowledgeButton.setEnabled(false);
+                        acknowledgeButton.setTextColor(GREEN);
+                        acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
+                    }
+                });
+            }
+        }
+
+
+        else if(task.getAssignedBy().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && !task.getAssignedUser().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && task.getAssignedUser()!=null && !task.getAssignedUser().isEmpty())
+        {
+            if(task.isAcknowledged())
+            {
+                acknowledgeButton.setTextColor(GREEN);
+                acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
+                acknowledgeButton.setEnabled(false);
+            } else {
+                acknowledgeButton.setText(getResources().getString(R.string.acknowledge_pending));
+                acknowledgeButton.setEnabled(false);
+                acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
+            }
+        }
+
+        else
+            acknowledgeButton.setVisibility(View.GONE);
+
+
+
+
         gettitle.setText(task.getTitle());
         gettitle.setHintTextColor(getResources().getColor(R.color.gray));
 
@@ -162,8 +213,11 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         addChecklistBtn.setOnClickListener(this::addValue);
 
         assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
-        if (!task.getAssignedUserName().isEmpty())
+
+        if (!task.getAssignedUserName().isEmpty()) {
             assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser()).getDisplayName());
+
+        }
 
         if (!isPersonalTask) {
             assignFromContacts.setOnClickListener(v -> {

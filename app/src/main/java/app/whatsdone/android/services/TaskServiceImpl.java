@@ -1,12 +1,7 @@
 package app.whatsdone.android.services;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.text.format.DateUtils;
-import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -117,6 +112,10 @@ public class TaskServiceImpl implements TaskService {
             task.setGroupName(doc.getString(Constants.FIELD_TASK_GROUP_NAME));
         if (doc.get(Constants.FIELD_TASK_DUE_AT) != null)
             task.setDueDate(doc.getDate(Constants.FIELD_TASK_DUE_AT));
+
+        if (doc.get(Constants.ACKNOWLEDGED) != null)
+            task.setAcknowledged(doc.getBoolean(Constants.ACKNOWLEDGED));
+
         if (doc.get(Constants.FIELD_TASK_STATUS) != null)
             task.setStatus(Task.TaskStatus.fromInt(doc.getLong(Constants.FIELD_TASK_STATUS).intValue()));
         if (doc.get(Constants.FIELD_TASK_CHECKLIST) != null) {
@@ -172,6 +171,8 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
+        data.put(Constants.ACKNOWLEDGED, task.isAcknowledged());
+
         List<Object> checkListItems = new ArrayList<>();
         for (CheckListItem item :
                 task.getCheckList()) {
@@ -207,6 +208,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNEE_COMMENT, task.getAssigneeComment());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.ACKNOWLEDGED, task.isAcknowledged());
 
         // sync with local state
         LocalState.getInstance().setTaskRead(task);
