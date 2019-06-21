@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,16 +14,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +43,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -57,7 +54,6 @@ import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
-import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.adapters.ListViewCustomArrayAdapter;
@@ -73,16 +69,13 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
-public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView{
+public abstract class BaseFragment extends Fragment implements BaseGroupFragmentView {
 
-    private static final int RESULT_LOAD_IMAGE = 0;
     private OnAddFragmentInteractionListener mListener;
     protected CircleImageView circleImageView;
     protected List<String> contactNumbers = new ArrayList<>();
     protected List<String> contactName = new ArrayList<>();
-    private final static int RQS_PICK_CONTACT = 1;
     private final int REQUEST_CODE = 99;
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     protected AddEditGroupPresenter presenter;
     protected EditText teamName;
     protected Group group;
@@ -92,7 +85,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     ListViewCustomArrayAdapter adapter;
     HashSet contactSet = new HashSet<>();
     protected Button addMembers;
-    protected  ConstraintLayout constraintLayout;
+    protected ConstraintLayout constraintLayout;
     private boolean saveButtonClickedOnce = false;
     protected FloatingActionButton saveFab;
     protected Toolbar toolbar;
@@ -100,7 +93,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     public BaseFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +112,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         contactName = new ArrayList<>();
 
-
         circleImageView = view.findViewById(R.id.group_photo_image_view);
         addMembers = view.findViewById(R.id.add_members_button);
         teamName = view.findViewById(R.id.group_name_edit_text);
@@ -134,15 +125,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         swipeListView.setAdapter(adapter);
 
         contactNumbers.addAll(group.getMembers());
-        if(contactNumbers.contains(AuthServiceImpl.getCurrentUser().getPhoneNo()))
-        {
-            //
-            System.out.println(" "+ AuthServiceImpl.getCurrentUser().getDisplayName() );
 
-        }
-
-
-        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails() ));
+        members.addAll(ContactUtil.getInstance().resolveContacts(group.getMembers(), group.getMemberDetails()));
         adapter.notifyDataSetChanged();
         teamName.setText(group.getGroupName());
         teamName.setHintTextColor(getResources().getColor(R.color.gray));
@@ -154,13 +138,12 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             Picasso.get().load(group.getAvatar()).into(circleImageView);
         }
 
-            constraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkUserForTeamImage();
-                    //showPictureDialog();
-                }
-            });
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkUserForTeamImage();
+            }
+        });
 
         SwipeList();
 
@@ -180,47 +163,38 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         ((AddEditGroupPresenterImpl) presenter).setContext(getActivity());
 
 
-        saveFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        saveFab.setOnClickListener(v -> {
 
-                if (teamName.getText().toString().isEmpty()) {
+            if (teamName.getText().toString().isEmpty()) {
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setTitle("Alert");
-                    alert.setMessage("Team Name should not be empty");
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Alert");
+                alert.setMessage("Team Name should not be empty");
 
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                alert.setPositiveButton("OK", (dialog, which) -> {
 
-                        }
-                    });
+                });
 
 
-                    alert.setNegativeButton(android.R.string.no, null);
-                    alert.setIcon(android.R.drawable.ic_dialog_alert);
-                    alert.show();
+                alert.setNegativeButton(android.R.string.no, null);
+                alert.setIcon(android.R.drawable.ic_dialog_alert);
+                alert.show();
 
 
-                } else {
+            } else {
 
-                    group.setTeamImage(getImageData(circleImageView));
-                    group.setGroupName(teamName.getText().toString());
-                    group.setMembers(contactNumbers);
-                    String current = AuthServiceImpl.getCurrentUser().getDocumentID();
-                    if(!group.getMembers().contains(current)){
-                        group.getMembers().add(current);
-                    }
-                    save();
-                    saveFab.setEnabled(false);
-                    adapter.notifyDataSetChanged();
+                group.setTeamImage(getImageData(circleImageView));
+                group.setGroupName(teamName.getText().toString());
+                group.setMembers(contactNumbers);
+                String current = AuthServiceImpl.getCurrentUser().getDocumentID();
+                if (!group.getMembers().contains(current)) {
+                    group.getMembers().add(current);
                 }
+                save();
+                saveFab.setEnabled(false);
+                adapter.notifyDataSetChanged();
             }
-
-
-
         });
-
 
 
         return view;
@@ -228,12 +202,15 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
     public abstract void save();
-    public  abstract void checkUserForName();
+
+    public abstract void checkUserForName();
+
     public abstract void checkUserForTeamImage();
+
     public abstract void checkUserToAddMembers();
 
 
-     public Bitmap getImageData(ImageView imageView) {
+    public Bitmap getImageData(ImageView imageView) {
         //Get the data from an ImageView as bytes
         if (imageView == null) return null;
         Drawable drawable = imageView.getDrawable();
@@ -241,8 +218,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         if (drawable == null) return null;
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        return bitmap;
+        return ((BitmapDrawable) drawable).getBitmap();
     }
 
     public void onButtonPressed(Uri uri) {
@@ -283,37 +259,23 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             return;
         }
 
-        //gallery
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                Bitmap bmp = null;
+                try {
+                    bmp = getBitmapFromUri(resultUri);
+                } catch (IOException e) {
 
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContext().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            Bitmap bmp = null;
-            try {
-                bmp = getBitmapFromUri(selectedImage);
-            } catch (IOException e) {
-
-                e.printStackTrace();
+                    e.printStackTrace();
+                }
+                circleImageView.setImageBitmap(bmp);
+                group.setImageChanged(true);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Timber.e(error);
             }
-            circleImageView.setImageBitmap(bmp);
-            group.setImageChanged(true);
-
-        }
-        //camera
-        else if (requestCode == CAMERA) {
-            Bitmap bmp = (Bitmap) data.getExtras().get("data");
-            circleImageView.setImageBitmap(bmp);
-            group.setImageChanged(true);
-
         }
 
         //contacts
@@ -344,29 +306,25 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                                     String number = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                     String num1 = number.replaceAll("\\s+", "");
                                     oneContact.add(num1);
-                                    System.out.println(" AAAAAAAAAA   " + num1);
 
                                 }
                                 numbers.close();
 
-                                selectOneContact(oneContact, new OnContactSelectedListener() {
-                                    @Override
-                                    public void onSelected(String contact) {
-                                        contact = ContactUtil.getInstance().cleanNo(contact);
-                                        if (contactNumbers.contains(contact)) {
-                                            AlertUtil.showAlert(getActivity(), contactItem.getDisplayName() + " is already a member");
-                                        } else {
-                                            //contactName.add(name);
-                                            if (contact != null && !contact.isEmpty()) {
+                                selectOneContact(oneContact, contact -> {
+                                    contact = ContactUtil.getInstance().cleanNo(contact);
+                                    if (contactNumbers.contains(contact)) {
+                                        AlertUtil.showAlert(getActivity(), contactItem.getDisplayName() + " is already a member");
+                                    } else {
+                                        //contactName.add(name);
+                                        if (contact != null && !contact.isEmpty()) {
 
-                                                contactNumbers.add(contact);
-                                                List<String> contacts = new ArrayList<>();
-                                                contacts.add(contact);
-                                                members.addAll(ContactUtil.getInstance().resolveContacts(contacts, group.getMemberDetails()));
-                                                adapter.notifyDataSetChanged();
-                                            }
-
+                                            contactNumbers.add(contact);
+                                            List<String> contacts = new ArrayList<>();
+                                            contacts.add(contact);
+                                            members.addAll(ContactUtil.getInstance().resolveContacts(contacts, group.getMemberDetails()));
+                                            adapter.notifyDataSetChanged();
                                         }
+
                                     }
                                 });
 
@@ -390,41 +348,9 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
         return image;
     }
 
-
     protected void showPictureDialog() {
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
-        pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {
-                "Select photo from gallery",
-                "Capture photo from camera"};
-        pictureDialog.setItems(pictureDialogItems,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                choosePhotoFromGallary();
-                                break;
-                            case 1:
-                                takePhotoFromCamera();
-                                break;
-                        }
-                    }
-                });
-        pictureDialog.show();
-    }
-
-    public void choosePhotoFromGallary() {
-        // requestMultiplePermissions();
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, RESULT_LOAD_IMAGE);
-    }
-
-    private void takePhotoFromCamera() {
         requestMultiplePermissions();
-
     }
-
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(getActivity())
@@ -435,8 +361,8 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(getContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(intent, CAMERA);
+                            CropImage.activity()
+                                    .start(getContext(), BaseFragment.this);
                         }
 
                         // check for permanent denial of any permission
@@ -462,35 +388,24 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                 .check();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        //swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-        return true;
-    }
-
 
     public void SwipeList() {
 
 
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
-                SwipeMenuItem item1 = new SwipeMenuItem(
-                        getContext());
-                item1.setBackground(new ColorDrawable(Color.RED));
+        SwipeMenuCreator creator = menu -> {
+            swipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
+            SwipeMenuItem item1 = new SwipeMenuItem(
+                    getContext());
+            item1.setBackground(new ColorDrawable(Color.RED));
 
-                item1.setWidth(200);
-                item1.setTitle("DELETE ");
-                item1.setTitleSize(18);
-                item1.setTitleColor(Color.WHITE);
-                menu.addMenuItem(item1);
+            item1.setWidth(200);
+            item1.setTitle("DELETE ");
+            item1.setTitleSize(18);
+            item1.setTitleColor(Color.WHITE);
+            menu.addMenuItem(item1);
 
-            }
         };
-        if(AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy()))
-        {
+        if (AuthServiceImpl.getCurrentUser().getPhoneNo().equals(group.getCreatedBy())) {
             swipeListView.setMenuCreator(creator);
         }
         swipeListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
@@ -508,25 +423,19 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             }
         });
 
-        swipeListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+        swipeListView.setOnMenuItemClickListener((position, menu, index) -> {
 
-                String value = adapter.getItem(position).getPhoneNumber();
+            String value = adapter.getItem(position).getPhoneNumber();
 
-                if(group.getCreatedBy().equals(value))
-                {
-                    Toast.makeText(getContext(), "This number can not be deleted" + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
-                } else {
-                    contactNumbers.remove(value);
-                    members.remove(adapter.getItem(position));
-                    adapter.notifyDataSetChanged();
-                    // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
-                }
-                return false;
-
+            if (group.getCreatedBy().equals(value)) {
+                Toast.makeText(getContext(), "This number can not be deleted" + contactNumbers.get(position), Toast.LENGTH_SHORT).show();
+            } else {
+                contactNumbers.remove(value);
+                members.remove(adapter.getItem(position));
+                adapter.notifyDataSetChanged();
+                // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
             }
-
+            return false;
 
         });
     }
@@ -561,7 +470,6 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     }
 
 
-
     private void requestContactPermissions() {
         Dexter.withActivity(getActivity())
                 .withPermissions(Manifest.permission.READ_CONTACTS)
@@ -587,12 +495,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
                         token.continuePermissionRequest();
                     }
                 }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(getContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
+                withErrorListener(error -> Toast.makeText(getContext(), "Some Error! ", Toast.LENGTH_SHORT).show())
                 .onSameThread()
                 .check();
     }

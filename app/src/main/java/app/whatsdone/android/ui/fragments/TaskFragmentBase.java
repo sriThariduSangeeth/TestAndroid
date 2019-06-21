@@ -50,6 +50,8 @@ import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.LogService;
+import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -87,9 +89,11 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     protected TaskService service = new TaskServiceImpl();
     protected GroupService groupService = new GroupServiceImpl();
     protected ContactService contactService = new ContactServiceImpl();
+    protected LogService logService = new LogServiceImpl();
 
 
     Task task = new Task();
+    Task original = new Task();
     protected TextView toolbarTitle;
 
     public TaskFragmentBase() {
@@ -256,16 +260,14 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             getActivity().getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
             );
-
             getActivity().onBackPressed();
-
-
         });
 
         return view;
     }
 
     private void setupToolbar() {
+        this.setHasOptionsMenu(true);
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         if (title == null || title.isEmpty()) {
@@ -273,6 +275,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         } else {
             toolbarTitle.setText(title);
         }
+
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbarTitle.setClickable(false);

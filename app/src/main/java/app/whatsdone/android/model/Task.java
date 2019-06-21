@@ -3,13 +3,74 @@ package app.whatsdone.android.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.whatsdone.android.utils.TextUtil;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
 public class Task implements BaseEntity, Parcelable {
+
+    public Task getClone() {
+        Task task;
+        try {
+            Parcel parcel = Parcel.obtain();
+            this.writeToParcel(parcel,0);
+            parcel.setDataPosition(0);
+            task = Task.CREATOR.createFromParcel(parcel);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return task;
+    }
+
+    private Task deserialize(String data) {
+        if(TextUtil.isNullOrEmpty(data)) return null;
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+        Task obj = null;
+
+        try {
+            obj = mapper.readValue(data, Task.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return obj;
+    }
+
+    private static  String serialize(Object obj, boolean pretty) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+        String output = "";
+        try {
+
+            if (pretty) {
+                output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+            }else {
+                output = mapper.writeValueAsString(obj);
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
 
     public enum TaskStatus {
         TODO(0),

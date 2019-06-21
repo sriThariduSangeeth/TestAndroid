@@ -97,5 +97,6 @@
     <string name="delete">Delete</string>
     <string name="acknowledged">Acknowledged</string>
     <string name="acknowledge_pending">Acknowledge pending</string>
+    <string name="activity_log">AcivityLog</string>
 
 </resources>

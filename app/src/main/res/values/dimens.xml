@@ -5,4 +5,5 @@
     <dimen name="text_size_standard">12sp</dimen>
     <dimen name="tab_height">104dp</dimen>
     <dimen name="list_height">380dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

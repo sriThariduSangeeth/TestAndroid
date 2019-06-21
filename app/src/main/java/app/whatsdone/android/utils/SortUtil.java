@@ -34,7 +34,7 @@ public class SortUtil {
         Collections.sort(unreadTasks, overdueTaskCompare);
         Collections.sort(readTasks, overdueTaskCompare);
 
-        unreadTasks.addAll(readTasks);
+        unreadTasks.addAll(readTasks); 
         unreadTasks.addAll(doneTasks);
 
         return unreadTasks;

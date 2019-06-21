@@ -48,7 +48,9 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.presenter = new GroupPresenterImpl();
+        this.presenter.init(this);
+        this.presenter.subscribe();
     }
 
     @Override
@@ -59,8 +61,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
 
-        this.presenter = new GroupPresenterImpl();
-        this.presenter.init(this);
+
 
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(v -> {
@@ -77,10 +78,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     @Override
     public void updateGroups(List<BaseEntity> groups) {
-        this.groups.clear();
-        LocalState.getInstance().syncGroups(groups);
-        this.groups.addAll(groups);
-        adapter.notifyDataSetChanged();
+        if(this.adapter != null) {
+            this.groups.clear();
+            LocalState.getInstance().syncGroups(groups);
+            this.groups.addAll(groups);
+            adapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -113,7 +116,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     public void onDetach() {
         super.onDetach();
         listener = null;
-        presenter.unSubscribe();
     }
 
     @Override
@@ -176,9 +178,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
 
         });
-        presenter.subscribe();
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unSubscribe();
+    }
 }
 

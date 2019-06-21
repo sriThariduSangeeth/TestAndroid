@@ -1,19 +1,33 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import java.util.Date;
 import java.util.List;
 
+import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.model.User;
+import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceBase;
 import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
@@ -31,12 +45,29 @@ public class EditTaskFragment extends TaskFragmentBase {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.single_task_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment fragment = ActivityLogFragment.newInstance(task.getDocumentID());
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.task_container, fragment).commit();
+
+        return true;
+
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arg = getArguments();
         if(arg != null) {
             this.group = arg.getParcelable(Constants.ARG_GROUP);
             this.task = arg.getParcelable(Constants.ARG_TASK);
+            this.original = this.task.getClone();
+
             LocalState.getInstance().setTaskRead(this.task);
             this.isFromMyTasks = arg.getBoolean(Constants.ACTION_VIEW_TASK, false);
             if(task.getGroupId().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
@@ -63,6 +94,9 @@ public class EditTaskFragment extends TaskFragmentBase {
         service.update(task, new ServiceListener() {
             @Override
             public void onSuccess() {
+
+                addLogs();
+
                 Timber.d("task created");
                 List<String> members = group.getMembers();
                 if(!members.contains(task.getAssignedUser())){
@@ -82,6 +116,93 @@ public class EditTaskFragment extends TaskFragmentBase {
             @Override
             public void onError(@Nullable String error) {
                 Timber.e(error);
+            }
+        });
+    }
+
+    private void addLogs() {
+        User current = AuthServiceImpl.getCurrentUser();
+        LogEvent event = new LogEvent();
+        event.setDocumentID(task.getDocumentID());
+        event.setGroupId(group.getDocumentID());
+
+        if(original != null){
+            if(!original.getTitle().equals(task.getTitle())){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.TITLE_CHANGE, new Date(),
+                                original.getTitle(), task.getTitle()));
+            }
+            if(!original.getDescription().equals(task.getDescription())){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.DETAIL_CHANGE, new Date(),
+                                original.getDescription(), task.getDescription()));
+            }
+            if(original.getStatus() != task.getStatus()){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.STATUS_CHANGE, new Date(),
+                                original.getStatus().name(), task.getStatus().name() ));
+            }
+
+            if(!original.getAssignedUser().equals(task.getAssignedUser())){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.ASSIGNEE_CHANGE, new Date(),
+                                original.getAssignedUser(), task.getAssignedUser()));
+            }
+
+            if(!DateUtil.isDateTimeEqual(original.getDueDate(), task.getDueDate())){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.DUE_CHANGE, new Date(),
+                                DateUtil.formatted(original.getDueDate(), null),
+                                DateUtil.formatted(task.getDueDate(), null)));
+            }
+
+            if(original.getCheckList().size() != task.getCheckList().size()){
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.CHECKLIST_CHANGE, new Date(),
+                                String.valueOf(original.getCheckList().size()),
+                                String.valueOf(task.getCheckList().size())
+                                ));
+            }else {
+                for (int i = 0; i < original.getCheckList().size(); i++) {
+                    CheckListItem originalItem = original.getCheckList().get(i);
+                    CheckListItem newItem = original.getCheckList().get(i);
+
+                    if(!newItem.getTitle().equals(originalItem.getTitle()) || newItem.isCompleted() != originalItem.isCompleted()){
+                        event.getLogs().add(
+                                new Change(
+                                        current.getDocumentID(),
+                                        current.getDisplayName(),
+                                        Change.ChangeType.CHECKLIST_CHANGE, new Date(),
+                                        String.valueOf(original.getCheckList().size()),
+                                        String.valueOf(task.getCheckList().size())
+                                ));
+                        break;
+                    }
+                }
+            }
+        }
+        logService.update(event, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("log added");
             }
         });
     }

@@ -33,6 +33,7 @@ import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
+import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
@@ -84,17 +85,8 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
 
         holder.groupTextView.setText(task.getGroupName());
 
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
 
-        int colorGen = generator.getColor(task.getAssignedUser());
-        TextDrawable.IBuilder builder = TextDrawable.builder()
-                .beginConfig()
-                .withBorder(4)
-                .width(holder.imageView.getLayoutParams().width)
-                .height(holder.imageView.getLayoutParams().height)
-                .endConfig()
-                .rect();
-        TextDrawable icon = builder.build(task.getTitle().substring(0,1), colorGen);
+        TextDrawable icon = IconFactory.getInstance().get(holder.imageView, task);
 
         if(!task.getAssignedUserImage().isEmpty())
             Picasso.get().load(task.getAssignedUserImage()).placeholder(icon).into(holder.imageView);
