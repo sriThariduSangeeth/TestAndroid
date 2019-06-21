@@ -34,6 +34,7 @@ import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
@@ -84,18 +85,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.NORMAL);
         }
 
-
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-
-        int colorGen = generator.getColor(task.getAssignedUser());
-        TextDrawable.IBuilder builder = TextDrawable.builder()
-                .beginConfig()
-                .withBorder(4)
-                .width(holder.image.getLayoutParams().width)
-                .height(holder.image.getLayoutParams().height)
-                .endConfig()
-                .rect();
-        TextDrawable ic1 = builder.build(task.getTitle().substring(0, 1), colorGen);
+        TextDrawable icon = IconFactory.getInstance().get(holder.image, task);
 
         setStatusIcons(holder, task);
 
@@ -107,9 +97,9 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         }
 
         if (task.getAssignedUserImage() != null && !task.getAssignedUserImage().isEmpty() && URLUtil.isValidUrl(task.getAssignedUserImage())) {
-            Picasso.get().load(task.getAssignedUserImage()).placeholder(ic1).into(holder.image, getCallBack(holder.image));
+            Picasso.get().load(task.getAssignedUserImage()).placeholder(icon).into(holder.image);
         } else {
-            holder.image.setImageDrawable(ic1);
+            holder.image.setImageDrawable(icon);
             //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
         }
 

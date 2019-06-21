@@ -1,16 +1,15 @@
 package app.whatsdone.android.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
 import java.util.List;
 
-import app.whatsdone.android.R;
+import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.User;
-import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
@@ -83,6 +82,22 @@ public class AddTaskFragment extends TaskFragmentBase {
         service.create(task, new ServiceListener() {
             @Override
             public void onSuccess() {
+                LogEvent event = new LogEvent();
+                event.setDocumentID(task.getDocumentID());
+                event.setGroupId(group.getDocumentID());
+                event.getLogs().add(
+                        new Change(
+                                current.getDocumentID(),
+                                current.getDisplayName(),
+                                Change.ChangeType.CREATED, new Date(),
+                                "", "" ));
+                logService.create(event, new ServiceListener() {
+                    @Override
+                    public void onSuccess() {
+                        Timber.d("log added");
+                    }
+                });
+
                 Timber.d("task created");
                 List<String> members = group.getMembers();
                 if(!members.contains(task.getAssignedUser())){

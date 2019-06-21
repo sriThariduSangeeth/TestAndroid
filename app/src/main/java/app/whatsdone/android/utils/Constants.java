@@ -102,4 +102,13 @@ public class Constants {
     public static final String NOTIFICATION_TO_ME = "assigned you";
     public static final String ARG_CLICK_ACTION = "click_action";
     public static final String ACTION_GROUP_ACTIVITY = "GROUP_ACTIVITY";
+    public static final String REF_LOGS = "activity_log";
+    public static final String FIELD_LOG_GROUP_ID = "group_id";
+    public static final String FIELD_LOG_LOGS = "logs";
+    public static final String FIELD_LOG_LOGS_BY_USER = "by_user";
+    public static final String FIELD_LOG_LOGS_BY_USERNAME = "by_user_name";
+    public static final String FIELD_LOG_LOGS_VALUE_FROM = "value_from";
+    public static final String FIELD_LOG_LOGS_VALUE_TO = "value_to";
+    public static final String FIELD_LOG_LOGS_DATE = "ts";
+    public static final String FIELD_LOG_LOGS_TYPE = "type";
 }

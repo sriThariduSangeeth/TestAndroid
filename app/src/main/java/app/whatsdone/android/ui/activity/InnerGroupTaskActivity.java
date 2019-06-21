@@ -8,15 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.ui.fragments.ActivityLogFragment;
 import app.whatsdone.android.ui.fragments.AddGroupFragment;
 import app.whatsdone.android.ui.fragments.AddTaskFragment;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragment;
 import app.whatsdone.android.utils.Constants;
 
-public class InnerGroupTaskActivity extends AppCompatActivity {
+public class InnerGroupTaskActivity extends AppCompatActivity implements ActivityLogFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,5 +49,10 @@ public class InnerGroupTaskActivity extends AppCompatActivity {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.task_container, fragment).commit();
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(Change item) {
+
     }
 }

@@ -36,7 +36,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class SettingFragment extends Fragment implements SettingsView {
 
-    private static int RESULT_LOAD_IMAGE = 1;
     FragmentSettingsBinding binding;
     private SettingsViewModel model;
     private SettingsPresenter presenter;
@@ -44,9 +43,6 @@ public class SettingFragment extends Fragment implements SettingsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        System.out.println("settings fragment");
 
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         User current =  AuthServiceImpl.getCurrentUser();
@@ -62,15 +58,7 @@ public class SettingFragment extends Fragment implements SettingsView {
 
     }
 
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
     public void onImageEdit() {
-        //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //startActivityForResult(intent,RESULT_LOAD_IMAGE);
-
         CropImage.activity()
                 .start(getContext(), this);
     }
@@ -106,30 +94,6 @@ public class SettingFragment extends Fragment implements SettingsView {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data)
-        {
-            Uri selectedImage = data.getData();
-
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            Bitmap bmp = null;
-            try {
-                bmp = getBitmapFromUri(selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            binding.profilePic.setImageBitmap(bmp);
-            presenter.uploadUserImage(bmp);
-        }
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
