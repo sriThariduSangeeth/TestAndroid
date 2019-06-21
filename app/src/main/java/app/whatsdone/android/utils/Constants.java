@@ -52,6 +52,7 @@ public class Constants {
     public static final String FIELD_TASK_CHECKLIST = "checklist";
     public static final String FIELD_TASK_CHECKLIST_TITLE = "title";
     public static final String FIELD_TASK_CHECKLIST_COMPLETED = "is_completed";
+    public static final String ACKNOWLEDGED = "is_acknowledged";
 
 
 

@@ -136,6 +136,7 @@ public class Task implements BaseEntity, Parcelable {
     private Date updatedDate;
     private List<CheckListItem> checkList = new ArrayList<>();
     private boolean unreadTask = false;
+    private boolean acknowledge = false;
 
 
 
@@ -270,6 +271,15 @@ public class Task implements BaseEntity, Parcelable {
         return unreadTask;
     }
 
+    public void setAcknowledged(boolean acknowledge) {
+        this.acknowledge = acknowledge;
+    }
+
+    public boolean isAcknowledged() {
+        return acknowledge;
+    }
+
+
     public Task() {
     }
 
@@ -289,6 +299,7 @@ public class Task implements BaseEntity, Parcelable {
         assigneeComment = in.readString();
         assignedBy = in.readString();
         createdBy = in.readString();
+        acknowledge = in.readByte() != 0x00;
         status = TaskStatus.valueOf(in.readString());
 
         long tmpUpdatedDate = in.readLong();
@@ -320,6 +331,7 @@ public class Task implements BaseEntity, Parcelable {
         dest.writeString(assigneeComment);
         dest.writeString(assignedBy);
         dest.writeString(createdBy);
+        dest.writeByte((byte) (acknowledge ? 0x01 : 0x00));
         dest.writeString(status.name());
         dest.writeLong(updatedDate != null ? updatedDate.getTime() : -1L);
         if (checkList == null) {

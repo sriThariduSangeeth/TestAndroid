@@ -75,7 +75,7 @@
             <EditText
                 android:id="@+id/description_edit_text"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
@@ -88,6 +88,7 @@
                 android:hint="@string/Description"
                 android:inputType="textMultiLine"
                 android:lines="4"
+                android:scrollbars="vertical"
                 android:maxLines="4"
                 android:textColor="@color/black"
                 android:textSize="15sp"
@@ -356,6 +357,21 @@
 
         </android.support.constraint.ConstraintLayout>
 
+
+        <Button
+            android:id="@+id/acknowledge_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:text="Acknowledge"
+            android:textColor="@color/button_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/select_group_view" />
+
+
+
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
@@ -369,20 +385,15 @@
             android:text="@string/checklist"
             android:textColor="@color/textViewColor"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/select_group_view" />
+            app:layout_constraintTop_toBottomOf="@+id/acknowledge_button"  />
 
 
         <Button
             android:id="@+id/add_check_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:background="@color/white"
             android:text="@string/add_checklist_items_here"
             android:textAlignment="center"
@@ -396,7 +407,7 @@
             android:id="@+id/list_view_checklist"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_height"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="1dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:background="@drawable/border"

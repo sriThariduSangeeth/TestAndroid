@@ -95,6 +95,8 @@
     <string name="assigned_by">Assigned by</string>
     <string name="add_checklist_items_here">Add item to the checklist</string>
     <string name="delete">Delete</string>
+    <string name="acknowledged">Acknowledged</string>
+    <string name="acknowledge_pending">Acknowledge pending</string>
     <string name="activity_log">AcivityLog</string>
 
 </resources>
