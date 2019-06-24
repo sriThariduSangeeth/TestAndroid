@@ -35,6 +35,7 @@ import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
@@ -81,6 +82,14 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, Swip
         setHasOptionsMenu(false);
         setupRecyclerView();
       return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalState.getInstance().syncTasks(tasks);
+        if(tasksAdapter != null)
+            tasksAdapter.notifyDataSetChanged();
     }
 
 

@@ -123,8 +123,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             dueDate = itemView.findViewById(R.id.date);
 
             itemView.setOnClickListener(v -> {
-                //group.setTeamImage(getImageData(imageView));
-
                 AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
                 Intent intent = new Intent(activity, InnerGroupTaskActivity.class);
                 intent.putExtra("group", group);
