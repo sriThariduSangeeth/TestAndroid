@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
-import app.whatsdone.android.ui.adapters.SwipeListener;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
@@ -73,7 +71,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Group group = new Group();
     public EditText groupName;
     private TextView toolbarTextView;
-    private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Task task;
@@ -85,7 +82,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
-        args.putParcelable("group", group);
+        args.putParcelable(Constants.ARG_GROUP, group);
         instance.setArguments(args);
         return instance;
     }
@@ -107,10 +104,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTextView = getActivity().findViewById(R.id.toolbar_task_title);
         groupName = view.findViewById(R.id.group_name_edit_text);
-        imageView = view.findViewById(R.id.image_view_task_inner_group);
 
         Bundle args = getArguments();
-        this.group = args.getParcelable("group");
+        this.group = args.getParcelable(Constants.ARG_GROUP);
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
@@ -246,7 +242,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
                         if (Integer.valueOf(hasNumber) == 1) {
                             Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                            while (numbers.moveToNext()) {
+                            while (numbers != null && numbers.moveToNext()) {
 
                                 String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
@@ -257,7 +253,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                                 oneContact.add(num1);
                             }
 
-                            numbers.close();
+                            if (numbers != null) {
+                                numbers.close();
+                            }
                             selectOneContact(oneContact, number -> {
                                 number = ContactUtil.getInstance().cleanNo(number);
                                 if (number != null && !number.isEmpty()) {
@@ -278,7 +276,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                             });
                         }
                     }
-                    c.close();
+                    if (c != null) {
+                        c.close();
+                    }
                     break;
                 }
         }
