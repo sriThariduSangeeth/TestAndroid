@@ -21,9 +21,6 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
     @Override
     public void init(MyTaskFragmentView view) {
         this.view = view;
-
-
-
     }
 
     @Override
@@ -37,12 +34,9 @@ public class MyTaskPresenterImpl implements MyTaskPresenter {
        service.subscribeForUser(new ServiceListener() {
            @Override
            public void onDataReceived(List<BaseEntity> tasks) {
-
                view.updateTasks(tasks);
            }
        });
-
-
     }
 
     @Override

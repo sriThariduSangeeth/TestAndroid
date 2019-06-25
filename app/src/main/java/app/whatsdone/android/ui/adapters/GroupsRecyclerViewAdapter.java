@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -78,9 +77,7 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             holder.groupIcon.setImageResource(R.mipmap.ic_chat_active);
         }
 
-
         holder.dueDate.setText(DateUtil.formatted(group.getUpdatedDate(), null));
-      //  holder.setIsRecyclable(false);
         holder.imageView.setTag(group);
         TextDrawable ic1 = iconFactory.get(holder.imageView, group);
         try {
@@ -126,8 +123,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
             dueDate = itemView.findViewById(R.id.date);
 
             itemView.setOnClickListener(v -> {
-                //group.setTeamImage(getImageData(imageView));
-
                 AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
                 Intent intent = new Intent(activity, InnerGroupTaskActivity.class);
                 intent.putExtra("group", group);

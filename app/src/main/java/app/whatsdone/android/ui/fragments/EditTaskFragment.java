@@ -29,11 +29,12 @@ import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.ObjectComparer;
 import timber.log.Timber;
 
 public class EditTaskFragment extends TaskFragmentBase {
 
-    public static EditTaskFragment newInstance(Group group, Task task, boolean isMyTask){
+    public static EditTaskFragment newInstance(Group group, Task task, boolean isMyTask) {
 
         EditTaskFragment instance = new EditTaskFragment();
         Bundle args = new Bundle();
@@ -63,18 +64,18 @@ public class EditTaskFragment extends TaskFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arg = getArguments();
-        if(arg != null) {
+        if (arg != null) {
             this.group = arg.getParcelable(Constants.ARG_GROUP);
             this.task = arg.getParcelable(Constants.ARG_TASK);
             this.original = this.task.getClone();
 
             LocalState.getInstance().setTaskRead(this.task);
             this.isFromMyTasks = arg.getBoolean(Constants.ACTION_VIEW_TASK, false);
-            if(task.getGroupId().equals(AuthServiceImpl.getCurrentUser().getDocumentID())){
+            if (task.getGroupId().equals(AuthServiceImpl.getCurrentUser().getDocumentID())) {
                 isPersonalTask = true;
             }
 
-            if(group == null && isFromMyTasks){
+            if (group == null && isFromMyTasks) {
                 groupService.getGroupById(task.getGroupId(), new ServiceListener() {
                     @Override
                     public void onDataReceived(BaseEntity entity) {
@@ -84,121 +85,42 @@ public class EditTaskFragment extends TaskFragmentBase {
             }
         }
         this.title = "Edit Task";
-
-
-
     }
 
-    public void save(){
+    public void save() {
+        LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
 
-        service.update(task, new ServiceListener() {
-            @Override
-            public void onSuccess() {
+        if (event.getLogs().size() > 0)
+            service.update(task, new ServiceListener() {
+                @Override
+                public void onSuccess() {
 
-                addLogs();
+                    addLogs(event);
 
-                Timber.d("task created");
-                List<String> members = group.getMembers();
-                if(!members.contains(task.getAssignedUser())){
-                    members.add(task.getAssignedUser());
+                    Timber.d("task created");
+                    List<String> members = group.getMembers();
+                    if (!members.contains(task.getAssignedUser())) {
+                        members.add(task.getAssignedUser());
 
-                    GroupService groupService = new GroupServiceImpl();
-                    groupService.update(group, new ServiceListener() {
-                        @Override
-                        public void onCompleted(boolean isSuccessful) {
-                            Timber.d("group update completed: %s", isSuccessful);
-                        }
-                    });
-                }
-
-            }
-
-            @Override
-            public void onError(@Nullable String error) {
-                Timber.e(error);
-            }
-        });
-    }
-
-    private void addLogs() {
-        User current = AuthServiceImpl.getCurrentUser();
-        LogEvent event = new LogEvent();
-        event.setDocumentID(task.getDocumentID());
-        event.setGroupId(group.getDocumentID());
-
-        if(original != null){
-            if(!original.getTitle().equals(task.getTitle())){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.TITLE_CHANGE, new Date(),
-                                original.getTitle(), task.getTitle()));
-            }
-            if(!original.getDescription().equals(task.getDescription())){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.DETAIL_CHANGE, new Date(),
-                                original.getDescription(), task.getDescription()));
-            }
-            if(original.getStatus() != task.getStatus()){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.STATUS_CHANGE, new Date(),
-                                original.getStatus().name(), task.getStatus().name() ));
-            }
-
-            if(!original.getAssignedUser().equals(task.getAssignedUser())){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.ASSIGNEE_CHANGE, new Date(),
-                                original.getAssignedUser(), task.getAssignedUser()));
-            }
-
-            if(!DateUtil.isDateTimeEqual(original.getDueDate(), task.getDueDate())){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.DUE_CHANGE, new Date(),
-                                DateUtil.formatted(original.getDueDate(), null),
-                                DateUtil.formatted(task.getDueDate(), null)));
-            }
-
-            if(original.getCheckList().size() != task.getCheckList().size()){
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.CHECKLIST_CHANGE, new Date(),
-                                String.valueOf(original.getCheckList().size()),
-                                String.valueOf(task.getCheckList().size())
-                                ));
-            }else {
-                for (int i = 0; i < original.getCheckList().size(); i++) {
-                    CheckListItem originalItem = original.getCheckList().get(i);
-                    CheckListItem newItem = original.getCheckList().get(i);
-
-                    if(!newItem.getTitle().equals(originalItem.getTitle()) || newItem.isCompleted() != originalItem.isCompleted()){
-                        event.getLogs().add(
-                                new Change(
-                                        current.getDocumentID(),
-                                        current.getDisplayName(),
-                                        Change.ChangeType.CHECKLIST_CHANGE, new Date(),
-                                        String.valueOf(original.getCheckList().size()),
-                                        String.valueOf(task.getCheckList().size())
-                                ));
-                        break;
+                        GroupService groupService = new GroupServiceImpl();
+                        groupService.update(group, new ServiceListener() {
+                            @Override
+                            public void onCompleted(boolean isSuccessful) {
+                                Timber.d("group update completed: %s", isSuccessful);
+                            }
+                        });
                     }
                 }
-            }
-        }
+
+                @Override
+                public void onError(@Nullable String error) {
+                    Timber.e(error);
+                }
+            });
+    }
+
+    private void addLogs(LogEvent event) {
+
         logService.update(event, new ServiceListener() {
             @Override
             public void onSuccess() {
