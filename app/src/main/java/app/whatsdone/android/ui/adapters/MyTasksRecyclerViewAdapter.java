@@ -221,7 +221,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             statusIndicator = itemView.findViewById(R.id.status_indicator);
             dueDateText = itemView.findViewById(R.id.task_inner_date);
 
-            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout_my);
             frontLayout = itemView.findViewById(R.id.front_layout_my);
             deleteLayout = itemView.findViewById(R.id.delete_layout);
             inprogressBtn = itemView.findViewById(R.id.first_status);
