@@ -15,7 +15,7 @@ import app.whatsdone.android.model.Task;
 
 public class SortUtil {
 
-    public static Collection<? extends BaseEntity> sort(List<BaseEntity> tasks) {
+    public static List<BaseEntity> sort(List<BaseEntity> tasks) {
         LocalState.getInstance().syncTasks(tasks);
         List<BaseEntity> unreadTasks = new ArrayList<>();
         List<BaseEntity> readTasks = new ArrayList<>();

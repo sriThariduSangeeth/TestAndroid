@@ -51,8 +51,8 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public void onCreate(@Nullable Bundle persistentState) {
         super.onCreate( persistentState);
         Intent intent = getIntent();
-        group = intent.getParcelableExtra(Constants.REF_TEAMS);
-        taskList = intent.getStringArrayListExtra("tasks");
+        group = intent.getParcelableExtra(Constants.ARG_GROUP);
+        taskList = intent.getStringArrayListExtra(Constants.ARG_TASK);
         imageLoader = (imageView, url, payload) -> {
             Picasso.get().load(url).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
         };

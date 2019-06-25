@@ -156,7 +156,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
-        intent.putExtra(Constants.REF_TEAMS, group);
+        intent.putExtra(Constants.ARG_GROUP, group);
+        intent.putExtra(Constants.ARG_TASK, listOfTask);
         startActivity(intent);
 
         return true;
@@ -176,8 +177,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
         this.listOfTask.clear();
-        taskInnerGroups.addAll(sort(tasks));
-        listOfTask.addAll(putTaskListToArray(tasks));
+        List<BaseEntity> sorted = sort(tasks);
+        taskInnerGroups.addAll(sorted);
+        listOfTask.addAll(putTaskListToArray(sorted));
         adapter.notifyDataSetChanged();
     }
 
@@ -225,8 +227,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             case (REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
                     Uri contactData = data.getData();
-                    Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                    if (c.moveToFirst()) {
+                    Cursor c = null;
+                    if (contactData != null)
+                        c = getContext().getContentResolver().query(contactData, null, null, null, null);
+                    if (c != null && c.moveToFirst()) {
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         String num = "";
@@ -243,34 +247,27 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                                 task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
                                 String num1 = assignee.replaceAll("\\s+", "");
                                 oneContact.add(num1);
-                                System.out.println(" AAAAAAAAAA   " + num1);
-
-
                             }
 
                             numbers.close();
-                            selectOneContact(oneContact, new TaskFragmentBase.ContactSelectedListener() {
-                                @Override
-                                public void onSelected(String number) {
-                                    //contactName.add(name);
-                                    number = ContactUtil.getInstance().cleanNo(number);
-                                    if (number != null && !number.isEmpty()) {
+                            selectOneContact(oneContact, number -> {
+                                number = ContactUtil.getInstance().cleanNo(number);
+                                if (number != null && !number.isEmpty()) {
 
-                                        task.setAssignedUserName(number);
+                                    task.setAssignedUser(number);
 
-                                        taskService.update(task, new ServiceListener() {
-                                            @Override
-                                            public void onSuccess() {
+                                    taskService.update(task, new ServiceListener() {
+                                        @Override
+                                        public void onSuccess() {
 
-                                            }
-                                        });
-                                    }
-
+                                        }
+                                    });
                                 }
 
                             });
                         }
                     }
+                    c.close();
                     break;
                 }
         }
