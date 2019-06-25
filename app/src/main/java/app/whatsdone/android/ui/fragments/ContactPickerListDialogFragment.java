@@ -35,6 +35,11 @@ public class ContactPickerListDialogFragment extends BottomSheetDialogFragment {
     private static final String ARG_CONTACTS = "contacts";
     private Listener mListener;
 
+
+    public void setListener(Listener mListener) {
+        this.mListener = mListener;
+    }
+
     // TODO: Customize parameters
     public static ContactPickerListDialogFragment newInstance(ArrayList<ExistUser> contacts) {
         final ContactPickerListDialogFragment fragment = new ContactPickerListDialogFragment();
@@ -75,10 +80,12 @@ public class ContactPickerListDialogFragment extends BottomSheetDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         final Fragment parent = getParentFragment();
-        if (parent != null) {
-            mListener = (Listener) parent;
-        } else {
-            mListener = (Listener) context;
+        if(mListener == null) {
+            if (parent != null) {
+                mListener = (Listener) parent;
+            } else {
+                mListener = (Listener) context;
+            }
         }
     }
 

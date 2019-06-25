@@ -215,14 +215,14 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
 
         RecyclerViewHolderTask(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.task_text);
+            textView = itemView.findViewById(R.id.task_text_my);
             groupTextView = itemView.findViewById(R.id.group_name_text);
             imageView = itemView.findViewById(R.id.image_view_my_task);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
             dueDateText = itemView.findViewById(R.id.task_inner_date);
 
             swipeLayout = itemView.findViewById(R.id.swipe_layout);
-            frontLayout = itemView.findViewById(R.id.front_layout);
+            frontLayout = itemView.findViewById(R.id.front_layout_my);
             deleteLayout = itemView.findViewById(R.id.delete_layout);
             inprogressBtn = itemView.findViewById(R.id.first_status);
             onholdBtn = itemView.findViewById(R.id.second_status);

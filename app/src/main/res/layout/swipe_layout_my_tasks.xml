@@ -70,7 +70,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/front_layout"
+        android:id="@+id/front_layout_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light">

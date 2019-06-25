@@ -1,9 +1,16 @@
 package app.whatsdone.android.ui.adapters;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -21,21 +28,28 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
+import app.whatsdone.android.ui.fragments.ContactPickerListDialogFragment;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
+import app.whatsdone.android.ui.fragments.InnerGroupTaskFragmentListener;
 import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
+import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -48,15 +62,20 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     private List<BaseEntity> taskList;
     private Context context;
     private Group group;
-    private SwipeListener listener;
+    private Task task;
+    private InnerGroupTaskFragmentListener listener;
+    private FragmentManager fragmentManager;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
+    private TaskService taskService = new TaskServiceImpl();
 
-    public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group, SwipeListener listener) {
+    public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group, InnerGroupTaskFragmentListener listener, FragmentManager fragmentManager) {
 
         this.taskList = tasks;
         this.context = context;
         this.group = group;
         this.listener = listener;
+        this.fragmentManager = fragmentManager;
+        // this.task = task;
     }
 
     @NonNull
@@ -66,6 +85,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.swipe_layout_tasks, viewGroup, false);
 
+
         return new MyRecyclerViewHolder(view);
     }
 
@@ -73,9 +93,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder holder, int position) {
 
         Task task = (Task) taskList.get(position);
-
-
-
 
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         holder.groupTaskText.setText(task.getTitle());
@@ -117,8 +134,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             holder.statusIndicator.setText(getStatusIndicatorText(task));
             holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
-
-
     }
 
     private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
@@ -180,6 +195,40 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                 listener.onChangeStatus(task, DONE);
         });
 
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
+                fragment.setListener(new ContactPickerListDialogFragment.Listener() {
+                    @Override
+                    public void onContactPickerClicked(int position) {
+                        Timber.d(group.getMembers().get(position));
+                        ExistUser user = group.getMemberDetails().get(position);
+                        task.setAssignedUserName(user.getDisplayName());
+                        task.setAssignedUser(user.getPhoneNumber());
+                        taskService.update(task, new ServiceListener() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onContactButtonClicked() {
+                        listener.onContactButtonClicked(task);
+
+
+
+                    }
+                });
+                fragment.show(fragmentManager, "Contacts");
+            }
+        });
+
+
 
     }
 
@@ -212,6 +261,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             inprogressBtn = itemView.findViewById(R.id.first_status);
             onholdBtn = itemView.findViewById(R.id.second_status);
             doneBtn = itemView.findViewById(R.id.third_status);
+
+
         }
     }
 
