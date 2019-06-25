@@ -13,7 +13,8 @@ public class Change {
         STATUS_CHANGE,
         DUE_CHANGE,
         ASSIGNEE_CHANGE,
-        CHECKLIST_CHANGE
+        CHECKLIST_CHANGE,
+        ACKNOWLEGDE_CHANGE
     }
 
     private String byUser;

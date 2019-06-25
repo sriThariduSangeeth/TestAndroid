@@ -45,6 +45,15 @@ public class ObjectComparer {
                                 original.getStatus().name(), task.getStatus().name()));
             }
 
+            if (original.isAcknowledged() != task.isAcknowledged()) {
+                event.getLogs().add(
+                        new Change(
+                                currentUserId,
+                                currentUserName,
+                                Change.ChangeType.ACKNOWLEGDE_CHANGE, new Date(),
+                                String.valueOf(original.isAcknowledged()), String.valueOf((task.isAcknowledged()))));
+            }
+
             if (!original.getAssignedUser().equals(task.getAssignedUser())) {
                 event.getLogs().add(
                         new Change(
