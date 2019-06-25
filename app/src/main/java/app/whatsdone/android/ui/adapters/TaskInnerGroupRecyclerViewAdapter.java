@@ -197,40 +197,32 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                 listener.onChangeStatus(task, DONE);
         });
         System.out.println("members "+group.getMembers());
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.image.setOnClickListener(v -> {
 
-                ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
-                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
-                fragment.setListener(new ContactPickerListDialogFragment.Listener() {
-                    @Override
-                    public void onContactPickerClicked(int position) {
-                        Timber.d(group.getMembers().get(position));
+            ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+            ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
+            fragment.setListener(new ContactPickerListDialogFragment.Listener() {
+                @Override
+                public void onContactPickerClicked(int position) {
 
-                        ExistUser user = group.getMemberDetails().get(position);
-                        task.setAssignedUserName(user.getDisplayName());
-                       // task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDisplayName());
-                        task.setAssignedUser(user.getPhoneNumber());
-                        task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
-                        taskService.update(task, new ServiceListener() {
-                            @Override
-                            public void onSuccess() {
+                    ExistUser user = group.getMemberDetails().get(position);
+                    task.setAssignedUserName(user.getDisplayName());
+                    task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+                    task.setAssignedUser(user.getPhoneNumber());
+                    task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
+                    listener.onContactSelected(task);
 
-                            }
-                        });
-                    }
+                }
 
-                    @Override
-                    public void onContactButtonClicked() {
-                        listener.onContactButtonClicked(task);
+                @Override
+                public void onContactButtonClicked() {
+                    listener.onContactButtonClicked(task);
 
 
 
-                    }
-                });
-                fragment.show(fragmentManager, "Contacts");
-            }
+                }
+            });
+            fragment.show(fragmentManager, "Contacts");
         });
 
 

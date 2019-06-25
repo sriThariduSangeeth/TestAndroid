@@ -17,9 +17,7 @@ public class LocalState {
     private static final String TASK_COUNT_READ = "task_count_read";
     private static final String DISCUSSION_COUNT = "discussion_count";
     private static final String DISCUSSION_COUNT_READ = "discussion_count_read";
-    private static final String TASK_UPDATED_AT = "task_updated_at";
-    private static final String DISCUSSION_UPDATED_AT = "discussion_updated_at";
-    private static final String FORMAT = "MMM dd yyyy HH:mm:ss.SSS zzz";
+
     private LocalState() {}
 
     private static class LazyHolder {
@@ -81,10 +79,8 @@ public class LocalState {
             }else {
                 HashMap<String, Serializable> data = new HashMap<>();
                 data.put(TASK_COUNT, String.valueOf(totalTaskCount));
-                data.put(TASK_COUNT_READ, String.valueOf(0));
                 data.put(TASK_COUNT_READ,isFirstTime ? String.valueOf(totalTaskCount) : String.valueOf(0));
                 data.put(DISCUSSION_COUNT,  String.valueOf(totalDiscussionCount));
-                data.put(DISCUSSION_COUNT_READ, String.valueOf(0));
                 data.put(DISCUSSION_COUNT_READ,isFirstTime ? String.valueOf(totalDiscussionCount): String.valueOf(0));
                 groupsData.put(id, data);
                 group.setUnreadDiscussionCount(totalDiscussionCount);

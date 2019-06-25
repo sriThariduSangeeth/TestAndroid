@@ -432,6 +432,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
             } else {
                 contactNumbers.remove(value);
                 members.remove(adapter.getItem(position));
+                if(group.getMemberDetails().get(position) != null
+                        && group.getMemberDetails().get(position).getPhoneNumber().equals(value)) {
+                    group.getMemberDetails().remove(position);
+                }
                 adapter.notifyDataSetChanged();
                 // Toast.makeText(getContext(), "Deleted " + contactNumbers.get(position), Toast.LENGTH_SHORT).show()
             }
