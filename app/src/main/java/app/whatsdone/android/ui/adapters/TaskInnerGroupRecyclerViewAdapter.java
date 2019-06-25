@@ -38,6 +38,7 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -49,6 +50,7 @@ import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
+import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
@@ -194,7 +196,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             if(listener != null)
                 listener.onChangeStatus(task, DONE);
         });
-
+        System.out.println("members "+group.getMembers());
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,9 +207,12 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                     @Override
                     public void onContactPickerClicked(int position) {
                         Timber.d(group.getMembers().get(position));
+
                         ExistUser user = group.getMemberDetails().get(position);
                         task.setAssignedUserName(user.getDisplayName());
+                       // task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDisplayName());
                         task.setAssignedUser(user.getPhoneNumber());
+                        task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
                         taskService.update(task, new ServiceListener() {
                             @Override
                             public void onSuccess() {
