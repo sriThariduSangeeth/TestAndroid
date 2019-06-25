@@ -106,49 +106,6 @@ public class AddTaskFragment extends TaskFragmentBase {
                     }
                 });
 
-                Timber.d("task created");
-                List<String> members = group.getMembers();
-                List<ExistUser> users = new ArrayList<>();
-
-
-                if(!members.contains(task.getAssignedUser())){
-                    members.add(task.getAssignedUser());
-
-                    DocumentSnapshot doc= null;
-                    if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
-                        List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
-
-                        for (HashMap map :
-                                details) {
-                            String phone = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_PHONE);
-                            Object isInvitedObject = map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
-                            boolean isInvited = false;
-                            if(isInvitedObject instanceof Boolean){
-                                isInvited = (boolean) isInvitedObject;
-                            }else if(isInvitedObject instanceof String) {
-                                isInvited = ((String)isInvitedObject).equals("true");
-                            }
-                            String displayName = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_NAME);
-
-                            ExistUser user = new ExistUser();
-                            user.setDisplayName(displayName);
-                            user.setIsInvited(isInvited);
-                            user.setPhoneNumber(phone);
-                            users.add(user);
-                        }}
-
-                    group.setMembers(members);
-                    group.setMemberDetails(users);
-                    GroupService groupService = new GroupServiceImpl();
-                    groupService.update(group, new ServiceListener() {
-                        @Override
-                        public void onCompleted(boolean isSuccessful) {
-                            Timber.d("group update completed: %s", isSuccessful);
-                        }
-                    });
-                }
-
-
                 inviteAssignee();
 
             }

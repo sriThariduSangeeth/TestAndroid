@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -45,7 +46,7 @@ public class GroupServiceImpl implements GroupService {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     public static Group personalGroup = new Group();
     private ListenerRegistration listener;
-    CloudService service;
+    private CloudService service;
 
     public GroupServiceImpl() {
         AuthServiceImpl.refreshToken();
@@ -320,6 +321,29 @@ public class GroupServiceImpl implements GroupService {
                 serviceListener.onSuccess();
             else {
                 Log.w(TAG, "Error updating document.", task.getException());
+
+                serviceListener.onError(task.getException().getLocalizedMessage());
+            }
+            serviceListener.onCompleted(task.isSuccessful());
+        });
+    }
+
+    @Override
+    public void update(Group group, ExistUser user, ServiceListener serviceListener) {
+        ContactUtil.getInstance().cleanNo(group.getMembers());
+
+        DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
+        HashMap<String, Object>  data = new HashMap<>();
+
+        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, FieldValue.arrayUnion(user));
+        data.put(Constants.FIELD_GROUP_MEMBERS, FieldValue.arrayUnion(user.getPhoneNumber()));
+        data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
+
+        document.update(data).addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+                serviceListener.onSuccess();
+            else {
+                Timber.tag(TAG).w(task.getException(), "Error updating document.");
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }

@@ -39,6 +39,10 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.ContactService;
+import app.whatsdone.android.services.ContactServiceImpl;
+import app.whatsdone.android.services.GroupService;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -50,7 +54,10 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.UrlUtils;
+import timber.log.Timber;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
 
@@ -71,6 +78,8 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Task task;
     private TaskService taskService = new TaskServiceImpl();
+    private ContactService contactService = new ContactServiceImpl();
+    private GroupService groupService = new GroupServiceImpl();
 
     public static InnerGroupTaskFragment newInstance(Group group) {
 
@@ -233,7 +242,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                     if (c != null && c.moveToFirst()) {
                         String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                         String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                        String num = "";
                         Set<String> oneContact = new HashSet<>();
 
                         if (Integer.valueOf(hasNumber) == 1) {
@@ -255,13 +263,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                                 if (number != null && !number.isEmpty()) {
 
                                     task.setAssignedUser(number);
-
+                                    task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+                                    task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
                                     taskService.update(task, new ServiceListener() {
                                         @Override
                                         public void onSuccess() {
-
+                                            Timber.d("user updated");
                                         }
                                     });
+
+                                    new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
                                 }
 
                             });
@@ -303,6 +314,17 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, REQUEST_CODE);
         }
+    }
+
+    @Override
+    public void onContactSelected(Task task) {
+        taskService.update(task, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("user updated");
+            }
+        });
+        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
     }
 
 }

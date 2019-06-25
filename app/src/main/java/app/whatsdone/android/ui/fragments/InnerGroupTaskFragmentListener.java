@@ -5,4 +5,5 @@ import app.whatsdone.android.ui.adapters.SwipeListener;
 
 public interface InnerGroupTaskFragmentListener extends SwipeListener {
     void onContactButtonClicked(Task task);
+    void onContactSelected(Task task);
 }

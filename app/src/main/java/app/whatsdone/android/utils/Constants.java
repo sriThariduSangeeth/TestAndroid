@@ -112,4 +112,5 @@ public class Constants {
     public static final String FIELD_LOG_LOGS_VALUE_TO = "value_to";
     public static final String FIELD_LOG_LOGS_DATE = "ts";
     public static final String FIELD_LOG_LOGS_TYPE = "type";
+    public static final String INVITED = "Invited";
 }

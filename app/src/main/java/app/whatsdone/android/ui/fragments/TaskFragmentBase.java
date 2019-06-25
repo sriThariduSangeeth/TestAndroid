@@ -52,13 +52,13 @@ import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
-import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
@@ -363,30 +363,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     }
 
     protected void inviteAssignee() {
-        List<String> members = new ArrayList<>();
-        members.add(task.getAssignedUser());
-        contactService.existsInPlatform(members, new ContactService.Listener() {
-            @Override
-            public void onCompleteSearch(List<ExistUser> users, List<String> isExisting) {
-                if (users.size() == 1) {
-                    ExistUser user = users.get(0);
-                    task.setAssignedUserName(user.getDisplayName());
-                    service.update(task, new ServiceListener() {
-                        @Override
-                        public void onSuccess() {
-                            Timber.d("user updated");
-                        }
-                    });
-                } else {
-                    contactService.inviteAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
-                        @Override
-                        public void onInvited() {
-                            Timber.d("user invited");
-                        }
-                    });
-                }
-            }
-        });
+        new InviteAssigneeUtil(task, contactService, service, group, groupService).invite();
     }
 
 

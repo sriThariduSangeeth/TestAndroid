@@ -20,6 +20,7 @@ public interface GroupService {
     void getGroupById(String groupId, ServiceListener serviceListener);
 
     void update(Group group, List<ExistUser> users, ServiceListener serviceListener);
+    void update(Group group, ExistUser users, ServiceListener serviceListener);
 
     void subscribe(String id, ServiceListener serviceListener);
 }

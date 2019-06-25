@@ -1,6 +1,5 @@
 package app.whatsdone.android.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,26 +7,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.Change;
-import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.model.User;
-import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
-import app.whatsdone.android.services.ServiceBase;
 import app.whatsdone.android.services.ServiceListener;
-import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.ObjectComparer;
 import timber.log.Timber;
@@ -91,26 +82,14 @@ public class EditTaskFragment extends TaskFragmentBase {
 
         LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
 
-        if (event.getLogs().size() > 0)
+        if (!event.getLogs().isEmpty())
             service.update(task, new ServiceListener() {
                 @Override
                 public void onSuccess() {
 
                     addLogs(event);
-
                     Timber.d("task created");
-                    List<String> members = group.getMembers();
-                    if (!members.contains(task.getAssignedUser())) {
-                        members.add(task.getAssignedUser());
-
-                        GroupService groupService = new GroupServiceImpl();
-                        groupService.update(group, new ServiceListener() {
-                            @Override
-                            public void onCompleted(boolean isSuccessful) {
-                                Timber.d("group update completed: %s", isSuccessful);
-                            }
-                        });
-                    }
+                    inviteAssignee();
                 }
 
                 @Override
