@@ -139,6 +139,13 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalState.getInstance().syncTasks(taskInnerGroups);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
