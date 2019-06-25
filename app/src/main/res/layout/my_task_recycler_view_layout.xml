@@ -33,7 +33,7 @@
 
 
     <TextView
-        android:id="@+id/task_text"
+        android:id="@+id/task_text_my"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
