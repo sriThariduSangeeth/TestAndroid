@@ -3,10 +3,15 @@ package app.whatsdone.android.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.User;
@@ -14,6 +19,8 @@ import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import timber.log.Timber;
 
 public class AddTaskFragment extends TaskFragmentBase {
@@ -73,6 +80,7 @@ public class AddTaskFragment extends TaskFragmentBase {
         task.setDocumentID(id);
         task.setAssignedBy(currentUserId);
         task.setCreatedBy(currentUserId);
+
         if(task.getAssignedUser() == null || task.getAssignedUser().isEmpty()){
             task.setAssignedUser(currentUserId);
             task.setAssignedUserName(current.getDisplayName());
@@ -100,9 +108,37 @@ public class AddTaskFragment extends TaskFragmentBase {
 
                 Timber.d("task created");
                 List<String> members = group.getMembers();
+                List<ExistUser> users = new ArrayList<>();
+
+
                 if(!members.contains(task.getAssignedUser())){
                     members.add(task.getAssignedUser());
 
+                    DocumentSnapshot doc= null;
+                    if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
+                        List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
+
+                        for (HashMap map :
+                                details) {
+                            String phone = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_PHONE);
+                            Object isInvitedObject = map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_INVITED);
+                            boolean isInvited = false;
+                            if(isInvitedObject instanceof Boolean){
+                                isInvited = (boolean) isInvitedObject;
+                            }else if(isInvitedObject instanceof String) {
+                                isInvited = ((String)isInvitedObject).equals("true");
+                            }
+                            String displayName = (String)map.get(Constants.FIELD_GROUP_MEMBERS_DETAILS_NAME);
+
+                            ExistUser user = new ExistUser();
+                            user.setDisplayName(displayName);
+                            user.setIsInvited(isInvited);
+                            user.setPhoneNumber(phone);
+                            users.add(user);
+                        }}
+
+                    group.setMembers(members);
+                    group.setMemberDetails(users);
                     GroupService groupService = new GroupServiceImpl();
                     groupService.update(group, new ServiceListener() {
                         @Override
@@ -111,6 +147,7 @@ public class AddTaskFragment extends TaskFragmentBase {
                         }
                     });
                 }
+
 
                 inviteAssignee();
 

@@ -1,13 +1,20 @@
 package app.whatsdone.android.ui.fragments;
 
-
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,15 +26,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
 import app.whatsdone.android.ui.adapters.SwipeListener;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
@@ -35,11 +49,13 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.LocalState;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
 
-public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, SwipeListener {
+
+public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, InnerGroupTaskFragmentListener {
 
     public ArrayList<String> listOfTask = new ArrayList<>();
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
@@ -50,6 +66,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Group group = new Group();
     public EditText groupName;
     private TextView toolbarTextView;
+    private ImageView imageView;
+    private final int REQUEST_CODE = 99;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private Task task;
+    private TaskService taskService = new TaskServiceImpl();
 
     public static InnerGroupTaskFragment newInstance(Group group) {
 
@@ -77,6 +98,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTextView = getActivity().findViewById(R.id.toolbar_task_title);
         groupName = view.findViewById(R.id.group_name_edit_text);
+        imageView = view.findViewById(R.id.image_view_task_inner_group);
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
@@ -111,6 +133,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         if (group.getGroupName().equals("Personal")) {
             setHasOptionsMenu(false);
         }
+
 
         return view;
 
@@ -168,7 +191,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     private void setupRecyclerView() {
         myRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TaskInnerGroupRecyclerViewAdapter(taskInnerGroups, getContext(), group, this);
+        adapter = new TaskInnerGroupRecyclerViewAdapter(taskInnerGroups, getContext(), group, this, getFragmentManager());
         myRecycler.setAdapter(adapter);
     }
 
@@ -191,6 +214,98 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onDetach() {
         super.onDetach();
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case (REQUEST_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
+                    if (c.moveToFirst()) {
+                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String num = "";
+                        Set<String> oneContact = new HashSet<>();
+
+                        if (Integer.valueOf(hasNumber) == 1) {
+                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                            while (numbers.moveToNext()) {
+
+                                String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+                                task.setAssignedUserName(assignee_name);
+                                task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
+                                String num1 = assignee.replaceAll("\\s+", "");
+                                oneContact.add(num1);
+                                System.out.println(" AAAAAAAAAA   " + num1);
+
+
+                            }
+
+                            numbers.close();
+                            selectOneContact(oneContact, new TaskFragmentBase.ContactSelectedListener() {
+                                @Override
+                                public void onSelected(String number) {
+                                    //contactName.add(name);
+                                    number = ContactUtil.getInstance().cleanNo(number);
+                                    if (number != null && !number.isEmpty()) {
+
+                                        task.setAssignedUserName(number);
+
+                                        taskService.update(task, new ServiceListener() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+                                        });
+                                    }
+
+                                }
+
+                            });
+                        }
+                    }
+                    break;
+                }
+        }
+
+    }
+
+    private void selectOneContact(Set<String> oneContact, TaskFragmentBase.ContactSelectedListener listener) {
+        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
+
+        if (numbers.length == 0)
+            return;
+
+        if (numbers.length == 1) {
+            listener.onSelected(numbers[0]);
+            return;
+        }
+        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
+        contactDialog.setTitle("Select one contact to add");
+        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
+        contactDialog.show();
+
+    }
+
+    public void onContactButtonClicked(Task task) {
+        this.task = task;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext().checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+
+        } else {
+
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, REQUEST_CODE);
+        }
     }
 
 }

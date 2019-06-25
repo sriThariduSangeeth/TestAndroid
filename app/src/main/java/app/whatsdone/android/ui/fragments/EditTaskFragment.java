@@ -88,6 +88,7 @@ public class EditTaskFragment extends TaskFragmentBase {
     }
 
     public void save() {
+
         LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
 
         if (event.getLogs().size() > 0)
