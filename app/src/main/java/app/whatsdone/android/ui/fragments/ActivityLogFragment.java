@@ -40,6 +40,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
     private LogService service = new LogServiceImpl();
     private MyActivityLogRecyclerViewAdapter adapter;
 
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -70,6 +71,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activitylog_list, container, false);
+
 
         // Set the adapter
         if (view instanceof RecyclerView) {

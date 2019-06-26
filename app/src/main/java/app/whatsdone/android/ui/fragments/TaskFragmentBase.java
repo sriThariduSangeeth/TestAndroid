@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -14,7 +12,6 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
@@ -57,6 +52,7 @@ import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
@@ -228,12 +224,16 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
                 ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
 
+
+
                 fragment.show(getChildFragmentManager(), "Contacts");
+                assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
 
 
             });
         } else {
             assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
@@ -255,6 +255,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
+           // assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+            task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
             save();
             LocalState.getInstance().setTaskRead(this.task);
             getActivity().getWindow().setSoftInputMode(
@@ -315,50 +317,13 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         switch (requestCode) {
             case (REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri contactData = data.getData();
-                    Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                    if (c.moveToFirst()) {
-                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                        String num = "";
-                        Set<String> oneContact = new HashSet<>();
+                    new ContactReaderUtil(data, getContext(), task).selectContact(task -> {
+                        assignFromContacts.setText(task.getAssignedUserName());
+                    });
 
-                        if (Integer.valueOf(hasNumber) == 1) {
-                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                            while (numbers.moveToNext()) {
-
-                                String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                assignFromContacts.setText(assignee_name);
-                                task.setAssignedUserName(assignee_name);
-                                task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
-                                String num1 = assignee.replaceAll("\\s+", "");
-                                oneContact.add(num1);
-                                System.out.println(" AAAAAAAAAA   " + num1);
-
-
-                            }
-
-                            numbers.close();
-                            selectOneContact(oneContact, new ContactSelectedListener() {
-                                @Override
-                                public void onSelected(String number) {
-                                    //contactName.add(name);
-                                    number = ContactUtil.getInstance().cleanNo(number);
-                                    if (number != null && !number.isEmpty()) {
-
-                                        task.setAssignedUserName(number);
-
-                                    }
-
-                                }
-
-                            });
-                        }
-                    }
                     break;
                 }
-        }
+        }//
 
     }
 
@@ -366,28 +331,6 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         new InviteAssigneeUtil(task, contactService, service, group, groupService).invite();
     }
 
-
-    private void selectOneContact(Set<String> oneContact, ContactSelectedListener listener) {
-        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
-
-        if (numbers.length == 0)
-            return;
-
-        if (numbers.length == 1) {
-            listener.onSelected(numbers[0]);
-            return;
-        }
-        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
-        contactDialog.setTitle("Select one contact to add");
-        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
-        contactDialog.show();
-
-    }
-
-    interface ContactSelectedListener {
-
-        void onSelected(String number);
-    }
 
     @Override
     public void onContactPickerClicked(int position) {

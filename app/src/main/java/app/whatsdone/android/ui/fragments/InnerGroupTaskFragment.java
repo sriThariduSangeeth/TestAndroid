@@ -47,12 +47,13 @@ import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupDiscussionActivity;
-import app.whatsdone.android.ui.adapters.SwipeListener;
 import app.whatsdone.android.ui.adapters.TaskInnerGroupRecyclerViewAdapter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactReadListner;
+import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
@@ -235,70 +236,20 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         switch (requestCode) {
             case (REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri contactData = data.getData();
-                    Cursor c = null;
-                    if (contactData != null)
-                        c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                    if (c != null && c.moveToFirst()) {
-                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                        Set<String> oneContact = new HashSet<>();
-
-                        if (Integer.valueOf(hasNumber) == 1) {
-                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                            while (numbers.moveToNext()) {
-
-                                String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                                task.setAssignedUserName(assignee_name);
-                                task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
-                                String num1 = assignee.replaceAll("\\s+", "");
-                                oneContact.add(num1);
+                    new ContactReaderUtil(data, getContext(), task).selectContact(task -> {
+                        task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+                        task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
+                        taskService.update(task, new ServiceListener() {
+                            @Override
+                            public void onSuccess() {
+                                Timber.d("user updated");
                             }
-
-                            numbers.close();
-                            selectOneContact(oneContact, number -> {
-                                number = ContactUtil.getInstance().cleanNo(number);
-                                if (number != null && !number.isEmpty()) {
-
-                                    task.setAssignedUser(number);
-                                    task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
-                                    task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
-                                    taskService.update(task, new ServiceListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Timber.d("user updated");
-                                        }
-                                    });
-
-                                    new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
-                                }
-
-                            });
-                        }
-                    }
-                    c.close();
+                        });
+                        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
+                    });
                     break;
                 }
         }
-
-    }
-
-    private void selectOneContact(Set<String> oneContact, TaskFragmentBase.ContactSelectedListener listener) {
-        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
-
-        if (numbers.length == 0)
-            return;
-
-        if (numbers.length == 1) {
-            listener.onSelected(numbers[0]);
-            return;
-        }
-        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
-        contactDialog.setTitle("Select one contact to add");
-        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
-        contactDialog.show();
 
     }
 
