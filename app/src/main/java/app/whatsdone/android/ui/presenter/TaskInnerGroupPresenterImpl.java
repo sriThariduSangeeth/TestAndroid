@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.List;
@@ -7,20 +8,29 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.LogService;
+import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
+import app.whatsdone.android.utils.ObjectComparer;
 import timber.log.Timber;
 
 public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     private static final String TAG = TaskInnerGroupPresenterImpl.class.getSimpleName();
     private TaskInnerGroupFragmentView view;
     TaskService service = new TaskServiceImpl();
+    LogService logService = new LogServiceImpl();
+    Task original = new Task();
+    Task task = new Task();
 
     @Override
     public void init(TaskInnerGroupFragmentView view) {
+
         this.view = view;
     }
 
@@ -56,10 +66,16 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
 
     @Override
     public void setStatus(Task task, Task.TaskStatus status) {
+        this.original = this.task.getClone();
         task.setStatus(status);
+
+        LogEvent event = ObjectComparer.isEqual(original, task, task.getDocumentID());
+
+        if (!event.getLogs().isEmpty())
         service.update(task, new ServiceListener() {
             @Override
             public void onSuccess() {
+                addLogs(event);
                 Timber.d("Task updated %s", task.getTitle());
             }
 
@@ -70,8 +86,19 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
         });
     }
 
+    private void addLogs(LogEvent event) {
+
+        logService.update(event, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("log added");
+            }
+        });
+    }
     @Override
     public void unSubscribe() {
         service.unSubscribe();
     }
+
+
 }

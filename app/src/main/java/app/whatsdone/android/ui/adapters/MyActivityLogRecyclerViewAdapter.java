@@ -53,7 +53,7 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
         holder.mContentView.setText(generateText(mValues.get(position)));
-        holder.date.setText( mValues.get(position).getDate().toString());
+        holder.date.setText(DateFormat.getDateInstance().format(date) );
 
         System.out.println(" image " +UrlUtils.getUserImage(mValues.get(position).getByUser()));
         System.out.println(" num " +mValues.get(position).getByUser());
