@@ -17,6 +17,7 @@ import app.whatsdone.android.ui.fragments.ActivityLogFragment.OnListFragmentInte
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.UrlUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.http.Url;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -31,7 +32,6 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
     private final List<Change> mValues;
     private final OnListFragmentInteractionListener mListener;
     private UrlUtils urlUtils = new UrlUtils();
-    private CircleImageView imageView;
 
     public MyActivityLogRecyclerViewAdapter(List<Change> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -48,15 +48,19 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-       // Change change = new Change();
         Date date = mValues.get(position).getDate();
 
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
         holder.mContentView.setText(generateText(mValues.get(position)));
         holder.date.setText( mValues.get(position).getDate().toString());
-       // holder.imageView.set(); picasso
-     //   Picasso.get().load(UrlUtils.getUserImage(mValues.get(position).getByUser())).into(holder.imageView);
+
+        System.out.println(" image " +UrlUtils.getUserImage(mValues.get(position).getByUser()));
+        System.out.println(" num " +mValues.get(position).getByUser());
+        Picasso.get().load(UrlUtils.getUserImage(mValues.get(position).getByUser())).into(holder.imageView);
+
+        if(!URLUtil.isValidUrl(UrlUtils.getUserImage(mValues.get(position).getByUser())))
+            Picasso.get().load(R.drawable.user_group_man_woman3x).into(holder.imageView);
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
