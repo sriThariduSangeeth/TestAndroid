@@ -23,6 +23,6 @@ public interface ContactService {
 
     void syncContacts(Map<String, String> contacts, Listener listener);
     void existsInPlatform(List<String> contacts, Listener listener);
-    void inviteAssignee(String contact, Group group, Task task, Listener serviceListener);
-    void inviteMembers(List<String> members, Group group, Listener serviceListener);
+    void notifyAssignee(String contact, Group group, Task task, Listener serviceListener);
+    void notifyMembers(List<String> members, Group group, Listener serviceListener);
 }

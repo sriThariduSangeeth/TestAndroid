@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -36,12 +37,15 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.LogService;
+import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -51,9 +55,12 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactReadListner;
+import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -71,18 +78,23 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Group group = new Group();
     public EditText groupName;
     private TextView toolbarTextView;
+    private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private Task task;
+    private Task task = new Task();
     private TaskService taskService = new TaskServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
     private GroupService groupService = new GroupServiceImpl();
+    Task original = new Task();
+    LogService logService = new LogServiceImpl();
+
+
 
     public static InnerGroupTaskFragment newInstance(Group group) {
 
         InnerGroupTaskFragment instance = new InnerGroupTaskFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Constants.ARG_GROUP, group);
+        args.putParcelable("group", group);
         instance.setArguments(args);
         return instance;
     }
@@ -91,6 +103,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @SuppressLint("ResourceType")
@@ -104,9 +117,12 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTextView = getActivity().findViewById(R.id.toolbar_task_title);
         groupName = view.findViewById(R.id.group_name_edit_text);
+        imageView = view.findViewById(R.id.image_view_task_inner_group);
 
         Bundle args = getArguments();
-        this.group = args.getParcelable(Constants.ARG_GROUP);
+        this.group = args.getParcelable("group");
+
+
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
@@ -123,7 +139,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
         this.presenter = new TaskInnerGroupPresenterImpl();
-        this.presenter.init(this);
+        this.presenter.init(this, group);
         this.presenter.loadTasksInner(group.getDocumentID());
 
         //fab
@@ -231,74 +247,20 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         switch (requestCode) {
             case (REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri contactData = data.getData();
-                    Cursor c = null;
-                    if (contactData != null)
-                        c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                    if (c != null && c.moveToFirst()) {
-                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                        Set<String> oneContact = new HashSet<>();
-
-                        if (Integer.valueOf(hasNumber) == 1) {
-                            Cursor numbers = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                            while (numbers != null && numbers.moveToNext()) {
-
-                                String assignee = numbers.getString(numbers.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                String assignee_name = numbers.getString(numbers.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                                task.setAssignedUserName(assignee_name);
-                                task.setAssignedUser(ContactUtil.getInstance().cleanNo(assignee));
-                                String num1 = assignee.replaceAll("\\s+", "");
-                                oneContact.add(num1);
+                    new ContactReaderUtil(data, getContext(), task).selectContact(task -> {
+                        task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+                        task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
+                        taskService.update(task, new ServiceListener() {
+                            @Override
+                            public void onSuccess() {
+                                Timber.d("user updated");
                             }
-
-                            if (numbers != null) {
-                                numbers.close();
-                            }
-                            selectOneContact(oneContact, number -> {
-                                number = ContactUtil.getInstance().cleanNo(number);
-                                if (number != null && !number.isEmpty()) {
-
-                                    task.setAssignedUser(number);
-                                    task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
-                                    task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
-                                    taskService.update(task, new ServiceListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Timber.d("user updated");
-                                        }
-                                    });
-
-                                    new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
-                                }
-
-                            });
-                        }
-                    }
-                    if (c != null) {
-                        c.close();
-                    }
+                        });
+                        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
+                    });
                     break;
                 }
         }
-
-    }
-
-    private void selectOneContact(Set<String> oneContact, TaskFragmentBase.ContactSelectedListener listener) {
-        String[] numbers = oneContact.toArray(new String[oneContact.size()]);
-
-        if (numbers.length == 0)
-            return;
-
-        if (numbers.length == 1) {
-            listener.onSelected(numbers[0]);
-            return;
-        }
-        AlertDialog.Builder contactDialog = new AlertDialog.Builder(getContext());
-        contactDialog.setTitle("Select one contact to add");
-        contactDialog.setItems(numbers, (dialog, which) -> listener.onSelected(numbers[which]));
-        contactDialog.show();
 
     }
 
@@ -318,14 +280,29 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
+        //this.original = original.getClone();
+
+    //    LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
+       // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
+
             @Override
             public void onSuccess() {
+                task.setAcknowledged(false);
+               // addLogs(event);
                 Timber.d("user updated");
             }
         });
         new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
     }
+    private void addLogs(LogEvent event) {
 
+        logService.update(event, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("log added");
+            }
+        });
+    }
 }
 
