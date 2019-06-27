@@ -118,7 +118,7 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     }
 
     public void sendInviteToMembers(List<String> newMembers, Group group) {
-        contactService.inviteMembers(newMembers, group, new ContactService.Listener() {
+        contactService.notifyMembers(newMembers, group, new ContactService.Listener() {
             @Override
             public void onInvited() {
 

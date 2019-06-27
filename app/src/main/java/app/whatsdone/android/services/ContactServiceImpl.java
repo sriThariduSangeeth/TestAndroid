@@ -112,7 +112,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void inviteAssignee(String contact, Group group, Task task, Listener serviceListener) {
+    public void notifyAssignee(String contact, Group group, Task task, Listener serviceListener) {
         InviteAssigneeRequest request = new InviteAssigneeRequest();
 
         request.setAssignee(contact);
@@ -141,7 +141,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void inviteMembers(List<String> members, Group group, Listener serviceListener) {
+    public void notifyMembers(List<String> members, Group group, Listener serviceListener) {
         InviteMembersRequest request = new InviteMembersRequest();
         request.setMembers(members);
         request.setGroupId(group.getDocumentID());

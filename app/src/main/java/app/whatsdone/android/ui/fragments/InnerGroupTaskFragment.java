@@ -81,7 +81,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private Task task;
+    private Task task = new Task();
     private TaskService taskService = new TaskServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
     private GroupService groupService = new GroupServiceImpl();
@@ -121,7 +121,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
-        this.task = args.getParcelable(Constants.ARG_TASK);
 
 
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
@@ -281,16 +280,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
-//        this.original = this.task.getClone();
+        //this.original = original.getClone();
 
-      //  LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
+    //    LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
        // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
 
             @Override
             public void onSuccess() {
                 task.setAcknowledged(false);
-              //  addLogs(event);
+               // addLogs(event);
                 Timber.d("user updated");
             }
         });

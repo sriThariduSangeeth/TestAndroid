@@ -230,8 +230,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
 
                 fragment.show(getChildFragmentManager(), "Contacts");
-                assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
-                task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
+
                 task.setAcknowledged(false);
 
 
@@ -351,6 +350,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         assignFromContacts.setText(user.getDisplayName());
         task.setAssignedUserName(user.getDisplayName());
         task.setAssignedUser(user.getPhoneNumber());
+        assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+        task.setAssignedBy(AuthServiceImpl.getCurrentUser().getPhoneNo());
     }
 
     @Override

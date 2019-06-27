@@ -70,7 +70,7 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     @Override
     public void setStatus(Task task, Task.TaskStatus status) {
 
-       // this.original = this.task.getClone();
+        this.original = task.getClone();
         task.setStatus(status);
 
         LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
