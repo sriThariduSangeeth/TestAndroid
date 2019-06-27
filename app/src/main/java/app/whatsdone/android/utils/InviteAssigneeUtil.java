@@ -49,8 +49,8 @@ public class InviteAssigneeUtil {
                     });
 
                     addUserToGroup(user);
-                } else {
-                    contactService.inviteAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
+                }
+                    contactService.notifyAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
                         @Override
                         public void onInvited() {
                             Timber.d("user invited");
@@ -61,7 +61,7 @@ public class InviteAssigneeUtil {
                         }
                     });
 
-                }
+
 
 
             }
