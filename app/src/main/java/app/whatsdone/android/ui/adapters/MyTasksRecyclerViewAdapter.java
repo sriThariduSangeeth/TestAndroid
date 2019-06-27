@@ -56,8 +56,6 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     public List<BaseEntity> tasks;
     private Context context;
     private MyTaskFragmentListener listener;
-    private FragmentManager fragmentManager;
-    private Group group;
 
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
@@ -120,44 +118,6 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             holder.statusIndicator.setText(getStatusIndicatorText(task));
             holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
-
-
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!task.getGroupName().equals("Personal"))// personal
-                    {
-                        System.out.println("group name " + task.getGroupName());
-                 //   ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(task..getMemberDetails());
-//                    ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
-//                    fragment.setListener(new ContactPickerListDialogFragment.Listener() {
-//                        @Override
-//                        public void onContactPickerClicked(int position) {
-//
-//                            ExistUser user = group.getMemberDetails().get(position);
-//                            task.setAssignedUserName(user.getDisplayName());
-//                            task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
-//                            task.setAssignedUser(user.getPhoneNumber());
-//                            task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
-//                            listener.onContactSelected(task);
-//
-//                        }
-//
-//                        @Override
-//                        public void onContactButtonClicked() {
-//                            listener.onContactButtonClicked(task);
-//
-//
-//                        }
-//                    });
-//                    fragment.show(fragmentManager, "Contacts");
-                    }
-                    else {
-                        Toast.makeText(context, "Personal tasks cannot be assigned to another",Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-
 
         setStatusIcons(holder, task);
 
