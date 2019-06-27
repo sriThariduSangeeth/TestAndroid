@@ -37,12 +37,15 @@ import java.util.Set;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.LogService;
+import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -57,6 +60,7 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -81,6 +85,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private TaskService taskService = new TaskServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
     private GroupService groupService = new GroupServiceImpl();
+    Task original = new Task();
+    LogService logService = new LogServiceImpl();
+
+
 
     public static InnerGroupTaskFragment newInstance(Group group) {
 
@@ -95,6 +103,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @SuppressLint("ResourceType")
@@ -112,6 +121,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
+        this.task = args.getParcelable(Constants.ARG_TASK);
+
+
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
@@ -128,7 +140,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
         this.presenter = new TaskInnerGroupPresenterImpl();
-        this.presenter.init(this);
+        this.presenter.init(this, group);
         this.presenter.loadTasksInner(group.getDocumentID());
 
         //fab
@@ -269,14 +281,29 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
+//        this.original = this.task.getClone();
+
+      //  LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
+       // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
+
             @Override
             public void onSuccess() {
+                task.setAcknowledged(false);
+              //  addLogs(event);
                 Timber.d("user updated");
             }
         });
         new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
     }
+    private void addLogs(LogEvent event) {
 
+        logService.update(event, new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                Timber.d("log added");
+            }
+        });
+    }
 }
 

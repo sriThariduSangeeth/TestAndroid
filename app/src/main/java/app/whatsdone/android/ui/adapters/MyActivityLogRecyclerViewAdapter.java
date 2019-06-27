@@ -49,15 +49,12 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Date date = mValues.get(position).getDate();
-
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
+      //  holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
         holder.mContentView.setText(generateText(mValues.get(position)));
-        holder.date.setText(DateFormat.getDateInstance().format(date) );
-
-        System.out.println(" image " +UrlUtils.getUserImage(mValues.get(position).getByUser()));
-        System.out.println(" num " +mValues.get(position).getByUser());
-        Picasso.get().load(UrlUtils.getUserImage(mValues.get(position).getByUser())).into(holder.imageView);
+        holder.date.setText(DateFormat.getDateTimeInstance().format(date) );
+      //  DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date)
+            Picasso.get().load(UrlUtils.getUserImage(mValues.get(position).getByUser())).into(holder.imageView);
 
         if(!URLUtil.isValidUrl(UrlUtils.getUserImage(mValues.get(position).getByUser())))
             Picasso.get().load(R.drawable.user_group_man_woman3x).into(holder.imageView);
