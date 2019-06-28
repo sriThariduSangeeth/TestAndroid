@@ -45,7 +45,6 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void save(SettingsViewModel model) {
         Timber.tag(TAG).d("save clicked");
 
-       // isChanged = true;
         // debounce the save call.
         if(!isSaving && userLoaded && isChanged) {
             isSaving = true;
@@ -136,7 +135,6 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void toggleNotifications() {
         if(model.isEnableNotifications()){
             service.enableNotifications();
-            isChanged = true;
         }else {
             service.disableNotifications();
         }

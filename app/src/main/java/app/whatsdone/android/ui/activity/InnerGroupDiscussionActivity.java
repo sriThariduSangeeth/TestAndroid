@@ -88,7 +88,8 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
                 if (range == null) return false;
                 int start = range[0];
                 int end = range[1];
-                String replacement = item.getDisplayName();
+                String replacement = ContactUtil.getInstance().cleanNo(item.getPhoneNumber());
+                //String replacement = item.getDisplayName();
                 editable.replace(start, end, replacement);
                 editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+replacement.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
