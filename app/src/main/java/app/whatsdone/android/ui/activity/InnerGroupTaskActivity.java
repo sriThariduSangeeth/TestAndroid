@@ -40,7 +40,7 @@ public class InnerGroupTaskActivity extends AppCompatActivity implements Activit
             }else if(action != null && action.equals(Constants.ACTION_ADD_TASK)){
                 fragment = AddTaskFragment.newInstance(group);
             }else if(action != null && action.equals(Constants.ACTION_VIEW_TASK)){
-                fragment = EditTaskFragment.newInstance(group, task, true);
+                fragment = EditTaskFragment.newInstance(group, task);
             }
 
             else {

@@ -34,12 +34,6 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.ContactService;
-import app.whatsdone.android.services.ContactServiceImpl;
-import app.whatsdone.android.services.GroupService;
-import app.whatsdone.android.services.GroupServiceImpl;
-import app.whatsdone.android.services.LogService;
-import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -68,16 +62,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Group group = new Group();
     public EditText groupName;
     private TextView toolbarTextView;
-    private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Task task = new Task();
     private TaskService taskService = new TaskServiceImpl();
-    private ContactService contactService = new ContactServiceImpl();
-    private GroupService groupService = new GroupServiceImpl();
-    Task original = new Task();
-    LogService logService = new LogServiceImpl();
-
 
 
     public static InnerGroupTaskFragment newInstance(Group group) {
@@ -107,7 +95,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTextView = getActivity().findViewById(R.id.toolbar_task_title);
         groupName = view.findViewById(R.id.group_name_edit_text);
-        imageView = view.findViewById(R.id.image_view_task_inner_group);
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");

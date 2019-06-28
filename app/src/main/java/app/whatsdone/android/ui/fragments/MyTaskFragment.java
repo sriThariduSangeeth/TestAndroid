@@ -143,7 +143,6 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
                 Timber.d("user updated");
             }
         });
-       // new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
 
     }
 

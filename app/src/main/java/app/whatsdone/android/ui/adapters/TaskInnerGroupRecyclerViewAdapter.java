@@ -1,24 +1,16 @@
 package app.whatsdone.android.ui.adapters;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,19 +31,16 @@ import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.fragments.ContactPickerListDialogFragment;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragmentListener;
-import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.UrlUtils;
-import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -125,7 +114,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         holder.frontLayout.setOnClickListener(v -> {
             holder.swipeLayout.close(false);
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            Fragment myFragment = EditTaskFragment.newInstance(group, task, true);
+            Fragment myFragment = EditTaskFragment.newInstance(group, task);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
         });
         if (task.getStatus() == Task.TaskStatus.DONE) {

@@ -21,7 +21,7 @@ import timber.log.Timber;
 
 public class EditTaskFragment extends TaskFragmentBase {
 
-    public static EditTaskFragment newInstance(Group group, Task task, boolean isMyTask) {
+    public static EditTaskFragment newInstance(Group group, Task task) {
 
         EditTaskFragment instance = new EditTaskFragment();
         Bundle args = new Bundle();
