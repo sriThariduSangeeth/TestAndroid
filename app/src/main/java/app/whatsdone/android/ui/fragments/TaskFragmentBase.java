@@ -287,15 +287,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     }
 
     protected abstract void save();
-    private void addLogs(LogEvent event) {
 
-        logService.update(event, new ServiceListener() {
-            @Override
-            public void onSuccess() {
-                Timber.d("log added");
-            }
-        });
-    }
     public String returnStatus(String out) {
 
         if (getString(R.string.todo).equals(out)) {

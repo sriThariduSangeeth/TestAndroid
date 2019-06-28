@@ -280,6 +280,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
+        task.setAcknowledged(false);
         //this.original = original.getClone();
 
        // LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
@@ -288,7 +289,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
             @Override
             public void onSuccess() {
-                task.setAcknowledged(false);
+
                 //addLogs(event);
                 Timber.d("user updated");
             }
