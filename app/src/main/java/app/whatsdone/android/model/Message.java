@@ -44,6 +44,11 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
 
     @Override
     public String getText() {
+
+        return text;
+    }
+
+    public String getPlainText() {
         return text;
     }
 

@@ -74,7 +74,7 @@ public class DiscussionImpl implements DiscussionService {
         DocumentReference document = db.collection(Constants.REF_DISCUSSIONS).document();
         HashMap<String, Object> data = new HashMap<>();
         data.put(Constants.FIELD_DISCUSSION_GROUP_ID, getMessage.getId());
-        data.put(Constants.FIELD_DISCUSSION_MESSAGE, getMessage.getText());
+        data.put(Constants.FIELD_DISCUSSION_MESSAGE, getMessage.getPlainText());
         data.put(Constants.FIELD_DISCUSSION_POSTED_AT, getMessage.getCreatedAt());
         data.put(Constants.FIELD_DISCUSSION_USER_ID, getMessage.getUser().getId());
         data.put(Constants.FIELD_DISCUSSION_USER_NAME, getMessage.getUser().getName());

@@ -78,7 +78,6 @@ public class AddTaskFragment extends TaskFragmentBase {
         String currentUserId = current.getDocumentID();
         String id = service.add();
         task.setDocumentID(id);
-      //  task.setAssignedBy(currentUserId);
         task.setCreatedBy(currentUserId);
 
         if(task.getAssignedUser() == null || task.getAssignedUser().isEmpty()){
