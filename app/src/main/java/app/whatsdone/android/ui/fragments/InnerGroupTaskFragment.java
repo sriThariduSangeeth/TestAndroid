@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,14 +27,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
@@ -55,12 +49,8 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.ContactReadListner;
 import app.whatsdone.android.utils.ContactReaderUtil;
-import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
-import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -256,7 +246,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                                 Timber.d("user updated");
                             }
                         });
-                        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
                     });
                     break;
                 }
@@ -280,10 +269,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
-        //this.original = original.getClone();
-
-    //    LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
-       // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
 
             @Override
@@ -291,16 +276,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                 task.setAcknowledged(false);
                // addLogs(event);
                 Timber.d("user updated");
-            }
-        });
-        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
-    }
-    private void addLogs(LogEvent event) {
-
-        logService.update(event, new ServiceListener() {
-            @Override
-            public void onSuccess() {
-                Timber.d("log added");
             }
         });
     }

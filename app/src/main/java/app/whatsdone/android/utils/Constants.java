@@ -113,4 +113,5 @@ public class Constants {
     public static final String FIELD_LOG_LOGS_DATE = "ts";
     public static final String FIELD_LOG_LOGS_TYPE = "type";
     public static final String INVITED = "Invited";
+    public static final String FIELD_TASK_UPDATED_BY = "updated_by";
 }
