@@ -282,14 +282,14 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onContactSelected(Task task) {
         //this.original = original.getClone();
 
-    //    LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
+       // LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
        // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
 
             @Override
             public void onSuccess() {
                 task.setAcknowledged(false);
-               // addLogs(event);
+                //addLogs(event);
                 Timber.d("user updated");
             }
         });
