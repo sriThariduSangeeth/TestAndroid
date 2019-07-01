@@ -40,7 +40,7 @@ public class EditTaskFragment extends TaskFragmentBase {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment fragment = ActivityLogFragment.newInstance(task.getDocumentID());
+        Fragment fragment = ActivityLogFragment.newInstance(task.getDocumentID(), group);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.task_container, fragment).commit();
 
         return true;

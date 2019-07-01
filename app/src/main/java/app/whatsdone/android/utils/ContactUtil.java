@@ -9,6 +9,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
 
@@ -134,8 +135,9 @@ public class ContactUtil {
         return items;
     }
 
-    public Contact resolveContact(String phoneNumber) {
-
+    public Contact resolveContact(String phoneNumber,@Nullable List<ExistUser> members) {
+        if(members == null)
+            members = new ArrayList<>();
         List<Contact> items;
         List<String> phoneNumbers = new ArrayList<>();
         phoneNumbers.add(phoneNumber);
@@ -146,7 +148,7 @@ public class ContactUtil {
         try{
             if(contacts.size() == 0)
                 readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
-            items = filterContacts(phoneNumbers, new ArrayList<>());
+            items = filterContacts(phoneNumbers, members);
 
             if(items.size()>0)
                 contact = items.get(0);

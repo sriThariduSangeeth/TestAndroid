@@ -170,7 +170,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         gettitle.setHintTextColor(getResources().getColor(R.color.gray));
 
         assignedBy = view.findViewById(R.id.assigned_by_text);
-        assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy()).getDisplayName());
+        assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy(), group.getMemberDetails()).getDisplayName());
 
         getDescript = view.findViewById(R.id.description_edit_text);
         getDescript.setText(task.getDescription());
@@ -220,7 +220,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
 
         if (!task.getAssignedUserName().isEmpty()) {
-            assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser()).getDisplayName());
+            assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser(), group.getMemberDetails()).getDisplayName());
 
         }
 

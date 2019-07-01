@@ -1,9 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.util.Log;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -13,14 +9,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.Discussion;
-import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
+import app.whatsdone.android.model.MessageFormatter;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.utils.Constants;
 import timber.log.Timber;
@@ -131,7 +123,7 @@ public class DiscussionImpl implements DiscussionService {
     }
 
     @Override
-    public void subscribe(String groupId, ServiceListener serviceListener) {
+    public void subscribe(String groupId, MessageFormatter formatter, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_DISCUSSIONS)
                 .whereEqualTo(Constants.FIELD_DISCUSSION_GROUP_ID, Objects.requireNonNull(groupId))
                 .orderBy(Constants.FIELD_DISCUSSION_POSTED_AT, Query.Direction.DESCENDING).limit(Constants.DISCUSSION_LIMIT)
@@ -159,6 +151,7 @@ public class DiscussionImpl implements DiscussionService {
 
                             User user = new User(document.getString("by_user"), document.getString("user_name"), checkAvatarIsEmpty(document.getString("user_image")), true);
                             Message message = new Message(document.getId(), user, document.getString("message"), document.getDate("posted_at"));
+                            message.setMessageFormatter(formatter);
                             messages.add(message);
                         } catch (Exception exception) {
                             Timber.d(exception, "failed to parse group");

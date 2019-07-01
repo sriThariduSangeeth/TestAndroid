@@ -1,6 +1,5 @@
 package app.whatsdone.android.model;
 
-import android.speech.tts.Voice;
 import android.support.annotation.Nullable;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
@@ -10,6 +9,7 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 import java.util.Date;
 
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.TextUtil;
 
 public class Message implements IMessage, MessageContentType.Image,MessageContentType,BaseEntity {
 
@@ -18,14 +18,10 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
     private Date createdAt;
     private User user;
     private Image image;
-    private Voice voice;
+    private MessageFormatter messageFormatter;
 
     public  Message(){
 
-    }
-
-    public Message(String id, User user, String text) {
-        this(id, user, text, new Date());
     }
 
     public Message(String id, User user, String text, Date createdAt) {
@@ -46,16 +42,20 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
 
     @Override
     public String getText() {
+        if(TextUtil.isNullOrEmpty(text)) return text;
+        String textMessage = text;
 
-        return text;
+        if(messageFormatter != null)
+            textMessage = messageFormatter.formatMessage(textMessage);
+
+
+
+
+
+        return textMessage;
     }
 
     public String getPlainText() {
-
-        String mentionedNumber = (ContactUtil.getInstance().cleanNo(text));
-       // String name = ContactUtil.getInstance().resolveContact(mentionedNumber).getDisplayName();
-
-
         return text;
     }
     @Override
@@ -88,31 +88,16 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
 
     }
 
+    public void setMessageFormatter(MessageFormatter messageFormatter) {
+        this.messageFormatter = messageFormatter;
+    }
+
     public static class Image {
 
         private String url;
 
         public Image(String url) {
             this.url = url;
-        }
-    }
-
-    public static class Voice {
-
-        private String url;
-        private int duration;
-
-        public Voice(String url, int duration) {
-            this.url = url;
-            this.duration = duration;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public int getDuration() {
-            return duration;
         }
     }
 
@@ -126,10 +111,6 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
 
     public void setImage(Image image) {
         this.image = image;
-    }
-
-    public void setVoice(Voice voice) {
-        this.voice = voice;
     }
 
 }

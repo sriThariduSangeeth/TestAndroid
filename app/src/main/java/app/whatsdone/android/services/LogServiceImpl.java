@@ -15,6 +15,7 @@ import java.util.Map;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
@@ -61,7 +62,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void getByTaskId(String id, ServiceListener serviceListener) {
+    public void getByTaskId(String id, Group group, ServiceListener serviceListener) {
         db.collection(Constants.REF_LOGS).document(id)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -79,7 +80,7 @@ public class LogServiceImpl implements LogService {
                            LogEvent event = new LogEvent();
                            event.setDocumentID(id);
                            event.setGroupId(doc.getString(Constants.FIELD_LOG_GROUP_ID));
-                           event.setLogs(getChanges((List<HashMap<String, Object>>) doc.get(Constants.FIELD_LOG_LOGS)));
+                           event.setLogs(getChanges((List<HashMap<String, Object>>) doc.get(Constants.FIELD_LOG_LOGS), group));
 
                            serviceListener.onDataReceived(event);
                        } catch (Exception e) {
@@ -94,7 +95,7 @@ public class LogServiceImpl implements LogService {
                 });
     }
 
-    private List<Change> getChanges(List<HashMap<String, Object>> data){
+    private List<Change> getChanges(List<HashMap<String, Object>> data, Group group){
         List<Change> changes = new ArrayList<>();
         for (HashMap<String, Object> datum : data) {
             try {
@@ -102,7 +103,7 @@ public class LogServiceImpl implements LogService {
                 String byUser = (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER);
                 Change change = new Change(
                         byUser,
-                        ContactUtil.getInstance().resolveContact(byUser).getDisplayName(),
+                        ContactUtil.getInstance().resolveContact(byUser, group.getMemberDetails()).getDisplayName(),
                         changeType,
                         ((Timestamp) datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM) != null ?
