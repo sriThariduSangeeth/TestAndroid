@@ -129,6 +129,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
 
+        holder.swipeLayout.setMinFlingVelocity(50);
+
         if (task != null) {
             try {
                 binderHelper.bind(holder.swipeLayout, task.getDocumentID());

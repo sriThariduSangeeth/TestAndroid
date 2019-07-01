@@ -21,7 +21,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:paddingEnd="20sp"
-
+        tools:src="@drawable/whatdoneicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
