@@ -84,7 +84,7 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
         switch (change.getType()){
             case ASSIGNEE_CHANGE:
-                return String.format("%s %s %s %s","Changed assignee ", ContactUtil.getInstance().resolveContact(getValueFromText(change.getValueFrom())).getDisplayName(),"to ",change.getValueTo());
+                return String.format("%s %s %s %s","Changed assignee ", getValueFromText(ContactUtil.getInstance().resolveContact(change.getValueFrom()).getDisplayName()),"to ",ContactUtil.getInstance().resolveContact(change.getValueTo()).getDisplayName());
             case CHECKLIST_CHANGE:
                // return String.format("%s %s %s %s","Checklist items count changed from ",change.getValueFrom(),"to ",change.getValueTo());
                 return String.format("%s %s %s %s","Checklist items count changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());

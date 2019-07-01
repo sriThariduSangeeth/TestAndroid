@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="244dp"
+        android:layout_width="242dp"
 
         android:layout_height="40dp"
 
@@ -68,7 +68,7 @@
 
     <TextView
         android:id="@+id/updated_date"
-        android:layout_width="130dp"
+        android:layout_width="100dp"
         android:layout_height="14dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
