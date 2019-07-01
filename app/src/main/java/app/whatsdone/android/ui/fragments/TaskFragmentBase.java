@@ -12,6 +12,8 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +72,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     protected TextView setDueDate, assignFromContacts, assignedBy;
     private Toolbar toolbar;
     private AddItemsAdapter itemsAdapter;
-    private ListView listView;
+    private RecyclerView listView;
     private EditText getTitle, getDescription;
     private Button addChecklistBtn;
     protected Button acknowledgeButton;
@@ -201,6 +203,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
 
         addChecklistBtn.setOnClickListener(this::addValue);

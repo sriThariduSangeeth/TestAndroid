@@ -8,7 +8,6 @@
     tools:context=".ui.fragments.GroupFragment"
     android:layout_gravity="center|center_vertical"
 
-
     >
 
 
