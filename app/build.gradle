@@ -6,8 +6,8 @@ android {
         applicationId "app.whatsdone.android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 18
-        versionName "1.99-beta"
+        versionCode 19
+        versionName "1.991-beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
