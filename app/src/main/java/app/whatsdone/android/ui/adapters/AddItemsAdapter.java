@@ -3,6 +3,7 @@ package app.whatsdone.android.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
         CheckListItem myTask = itemList.get(position);
         viewHolder.textView.setText(myTask.getTitle());
-        viewHolder.checkBox.setChecked(myTask.isCompleted());
+        changedColors(viewHolder, myTask);
 
         viewHolder.textView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -63,13 +65,26 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
             }
         });
 
-        viewHolder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> myTask.setCompleted(isChecked));
+        viewHolder.toggleComplete.setOnClickListener((buttonView) -> {
+            myTask.setCompleted(!myTask.isCompleted());
+            changedColors(viewHolder, myTask);
+        });
 
 
-        viewHolder.imageRemove.setOnClickListener(v -> {
+        viewHolder.delete.setOnClickListener(v -> {
             itemList.remove(position);
             notifyDataSetChanged();
         });
+    }
+
+    private void changedColors(@NonNull ViewHolder viewHolder, CheckListItem myTask) {
+        if(myTask.isCompleted()) {
+            viewHolder.first_status.setBackgroundColor(viewHolder.first_status.getContext().getResources().getColor(R.color.LimeGreen));
+            viewHolder.textView.setPaintFlags(viewHolder.textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }else {
+            viewHolder.first_status.setBackgroundColor(viewHolder.first_status.getContext().getResources().getColor(R.color.CornflowerBlue));
+            viewHolder.textView.setPaintFlags(viewHolder.textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 
     @Override
@@ -85,14 +100,15 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         EditText textView;
-        CheckBox checkBox;
-        ImageView imageRemove;
+        View delete;
+        View toggleComplete;
+        TextView first_status;
         ViewHolder(@NonNull View convertView) {
             super(convertView);
-
+            delete = convertView.findViewById(R.id.delete_layout);
+            toggleComplete = convertView.findViewById(R.id.status_layout);
             textView = convertView.findViewById(R.id.checklist__item);
-            imageRemove = convertView.findViewById(R.id.remove_image_view);
-            checkBox = convertView.findViewById(R.id.checkbox_task);
+            first_status = convertView.findViewById(R.id.first_status);
         }
     }
 }
