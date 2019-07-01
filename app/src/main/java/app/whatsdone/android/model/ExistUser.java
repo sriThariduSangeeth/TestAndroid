@@ -12,6 +12,7 @@ public class ExistUser implements Parcelable {
     private String phoneNumber;
     private String displayName;
     private boolean isInvited;
+    private String profileImage;
 
 
     @JsonProperty("phone_no")
@@ -57,6 +58,7 @@ public class ExistUser implements Parcelable {
     protected ExistUser(Parcel in) {
         phoneNumber = in.readString();
         displayName = in.readString();
+        profileImage = in.readString();
         isInvited = in.readByte() != 0x00;;
     }
 
@@ -69,6 +71,7 @@ public class ExistUser implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(phoneNumber);
         dest.writeString(displayName);
+        dest.writeString(profileImage);
         dest.writeByte((byte) (isInvited ? 0x01 : 0x00));
     }
 
@@ -84,4 +87,16 @@ public class ExistUser implements Parcelable {
             return new ExistUser[size];
         }
     };
+
+    @JsonProperty("profile_image")
+    @PropertyName("profile_image")
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    @JsonProperty("profile_image")
+    @PropertyName("profile_image")
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }
