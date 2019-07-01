@@ -85,7 +85,7 @@ public class ObjectComparer {
             } else {
                 for (int i = 0; i < original.getCheckList().size(); i++) {
                     CheckListItem originalItem = original.getCheckList().get(i);
-                    CheckListItem newItem = original.getCheckList().get(i);
+                    CheckListItem newItem = task.getCheckList().get(i);
 
                     if (!newItem.getTitle().equals(originalItem.getTitle())
                             || newItem.isCompleted() != originalItem.isCompleted()) {

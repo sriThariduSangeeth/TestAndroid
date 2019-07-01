@@ -23,21 +23,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
@@ -50,16 +46,15 @@ import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.LocalState;
-import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
+import static app.whatsdone.android.utils.Constants.ARG_TASK;
 import static app.whatsdone.android.utils.SortUtil.sort;
 
 
 public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFragmentView, InnerGroupTaskFragmentListener {
 
-    public ArrayList<String> listOfTask = new ArrayList<>();
     private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     private TaskInnerGroupRecyclerViewAdapter adapter;
     private Toolbar toolbar;
@@ -161,7 +156,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getContext(), InnerGroupDiscussionActivity.class);
         intent.putExtra(Constants.ARG_GROUP, group);
-        intent.putExtra(Constants.ARG_TASK, listOfTask);
+        intent.putExtra(ARG_TASK, Lists.transform(taskInnerGroups, t -> (Task)t).toArray());
         startActivity(intent);
 
         return true;
@@ -180,19 +175,9 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void updateTaskInner(List<BaseEntity> tasks) {
         this.taskInnerGroups.clear();
-        this.listOfTask.clear();
         List<BaseEntity> sorted = sort(tasks);
         taskInnerGroups.addAll(sorted);
-        listOfTask.addAll(putTaskListToArray(sorted));
         adapter.notifyDataSetChanged();
-    }
-
-    private List<String> putTaskListToArray(List<BaseEntity> list) {
-        List<String> tasksList = new ArrayList<>();
-        for (BaseEntity task : list) {
-            tasksList.add(((Task) task).getTitle());
-        }
-        return tasksList;
     }
 
     private void setupRecyclerView() {
