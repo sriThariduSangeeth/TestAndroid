@@ -13,9 +13,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Change;
-import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.fragments.ActivityLogFragment.OnListFragmentInteractionListener;
-import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.TextUtil;

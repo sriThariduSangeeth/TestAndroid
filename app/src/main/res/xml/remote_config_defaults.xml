@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>app_name</key>
+        <value>WhatsDone</value>
+    </entry>
+    <entry>
+        <key>max_task_count</key>
+        <value>50</value>
+    </entry>
+    <entry>
+        <key>max_message_count</key>
+        <value>50</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->
