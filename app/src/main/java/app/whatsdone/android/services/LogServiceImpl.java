@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -93,16 +94,22 @@ public class LogServiceImpl implements LogService {
     private List<Change> getChanges(List<HashMap<String, Object>> data){
         List<Change> changes = new ArrayList<>();
         for (HashMap<String, Object> datum : data) {
-            Change change = new Change(
-                    (String)datum.get(Constants.FIELD_LOG_LOGS_BY_USER),
-                    (String)datum.get(Constants.FIELD_LOG_LOGS_BY_USERNAME),
-                    Change.ChangeType.valueOf((String)datum.get(Constants.FIELD_LOG_LOGS_TYPE)),
-                    ((Timestamp)datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
-                    (String)datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM),
-                    (String)datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO)
+            try {
+                Change change = new Change(
+                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER),
+                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USERNAME),
+                        Change.ChangeType.valueOf((String) datum.get(Constants.FIELD_LOG_LOGS_TYPE)),
+                        ((Timestamp) datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
+                        datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM) != null ?
+                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM).toString() : "",
+                        datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO) != null ?
+                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO).toString() : ""
 
-            );
-            changes.add(change);
+                );
+                changes.add(change);
+            }catch (Exception e){
+                Timber.e(e);
+            }
         }
 
         return changes;
