@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
@@ -13,8 +14,11 @@ import com.squareup.picasso.Picasso;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.ui.fragments.ActivityLogFragment.OnListFragmentInteractionListener;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.UrlUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.http.Url;
@@ -26,12 +30,13 @@ import java.util.List;
 import java.util.Locale;
 
 import static app.whatsdone.android.utils.SharedPreferencesUtil.get;
-
+import app.whatsdone.android.utils.IconFactory;
 public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyActivityLogRecyclerViewAdapter.ViewHolder> {
 
     private final List<Change> mValues;
     private final OnListFragmentInteractionListener mListener;
     private UrlUtils urlUtils = new UrlUtils();
+    private IconFactory iconFactory = IconFactory.getInstance();
 
     public MyActivityLogRecyclerViewAdapter(List<Change> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -48,11 +53,16 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final Change group = (Change) mValues.get(position);
         Date date = mValues.get(position).getDate();
         holder.mItem = mValues.get(position);
-      //  holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
+        holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
         holder.mContentView.setText(generateText(mValues.get(position)));
         holder.date.setText(DateFormat.getDateTimeInstance().format(date) );
+
+
+        //TextDrawable ic1 = iconFactory.get(holder.imageView, mValues.get(position));
+
       holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
                 // Notify the active callbacks interface (the activity, if the
@@ -60,15 +70,101 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
                 mListener.onListFragmentInteraction(holder.mItem);
             }
         });
+        holder.imageView.setTag(mValues.get(position));
+        TextDrawable ic1 = iconFactory.get(holder.imageView,group);
+        holder.imageView.setImageDrawable(ic1);
+        //holder.imageView.setImageResource(generateImageResource(mValues.get(position)));
+    }
+
+    private static String getValueFromText(String val){
+        return val.equals("")||val==null?"":"from "+val;
     }
 
     private String generateText(Change change) {
-        return String.format("%s %s %s to %s ",
-                change.getByUserName(),
-                change.getType(),
-                change.getValueFrom(),
-                change.getValueTo());
+
+        switch (change.getType()){
+            case ASSIGNEE_CHANGE:
+                return String.format("%s %s %s %s","Changed assignee ", getValueFromText(ContactUtil.getInstance().resolveContact(change.getValueFrom()).getDisplayName()),"to ",ContactUtil.getInstance().resolveContact(change.getValueTo()).getDisplayName());
+            case CHECKLIST_CHANGE:
+               // return String.format("%s %s %s %s","Checklist items count changed from ",change.getValueFrom(),"to ",change.getValueTo());
+                return String.format("%s %s %s %s","Checklist items count changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+            //return ;
+            case CREATED:
+                return String.format("%s %s ","Task created by ",change.getByUserName());
+            //return "Task created by";
+            case DETAIL_CHANGE:
+                return String.format("%s %s %s %s","Description changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+            //return "Description changed from";
+            case DUE_CHANGE:
+                return String.format("%s %s %s %s","Due date changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+
+            //return "Due date changed from";
+            case STATUS_CHANGE:
+                return String.format("%s %s %s %s","Task status changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+
+            //return "Task status changed from";
+            case TITLE_CHANGE:
+                return String.format("%s %s %s %s","Title changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+
+            //return "Title changed from";
+            case ACKNOWLEGDE_CHANGE:
+            return String.format("%s %s %s %s","Acknowledge changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo());
+
+            default:
+                return "";
+
+        }
+
+
+
+
+
+
+
+//        return String.format("%s %s %s to %s ",
+//                change.getByUserName(),
+//                change.getType(),
+//                change.getValueFrom(),
+//                change.getValueTo());
     }
+
+    private int generateImageResource(Change change) {
+
+        switch (change.getType()){
+            case ASSIGNEE_CHANGE:
+                return R.drawable.discussion;
+            case CHECKLIST_CHANGE:
+                return R.drawable.discussion;
+            case CREATED:
+                return R.drawable.chat_icon;
+            case DETAIL_CHANGE:
+                return R.drawable.discussion;
+            case DUE_CHANGE:
+                return R.drawable.chat_icon;
+            case STATUS_CHANGE:
+                return R.drawable.chat_icon;
+            case TITLE_CHANGE:
+                return R.drawable.chat_icon;
+            case ACKNOWLEGDE_CHANGE:
+                return R.drawable.chat_icon;
+            default:
+                return R.drawable.chat_icon;
+
+        }
+
+
+
+
+
+
+
+//        return String.format("%s %s %s to %s ",
+//                change.getByUserName(),
+//                change.getType(),
+//                change.getValueFrom(),
+//                change.getValueTo());
+    }
+
 
     @Override
     public int getItemCount() {
@@ -80,6 +176,8 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
         final TextView mIdView;
         final TextView mContentView;
         final TextView date;
+        final CircleImageView imageView;
+
 
         Change mItem;
 
@@ -89,6 +187,8 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
             date = view.findViewById(R.id.updated_date);
             mIdView = view.findViewById(R.id.item_number);
             mContentView = view.findViewById(R.id.content);
+            imageView=view.findViewById(R.id.image);
+
 
         }
 

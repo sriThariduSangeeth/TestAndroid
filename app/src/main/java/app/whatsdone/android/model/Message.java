@@ -8,7 +8,6 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.TextUtil;
 
 public class Message implements IMessage, MessageContentType.Image,MessageContentType,BaseEntity {
@@ -48,12 +47,9 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
         if(messageFormatter != null)
             textMessage = messageFormatter.formatMessage(textMessage);
 
-
-
-
-
         return textMessage;
     }
+
 
     public String getPlainText() {
         return text;
