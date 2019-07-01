@@ -53,20 +53,16 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     private List<BaseEntity> taskList;
     private Context context;
     private Group group;
-    private Task task;
     private InnerGroupTaskFragmentListener listener;
     private FragmentManager fragmentManager;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
-    private TaskService taskService = new TaskServiceImpl();
 
     public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group, InnerGroupTaskFragmentListener listener, FragmentManager fragmentManager) {
-
         this.taskList = tasks;
         this.context = context;
         this.group = group;
         this.listener = listener;
         this.fragmentManager = fragmentManager;
-        // this.task = task;
     }
 
     @NonNull

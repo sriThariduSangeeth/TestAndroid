@@ -98,5 +98,6 @@
     <string name="acknowledged">Acknowledged</string>
     <string name="acknowledge_pending">Acknowledge pending</string>
     <string name="activity_log">AcivityLog</string>
+    <string name="no_task">No Task here!</string>
 
 </resources>

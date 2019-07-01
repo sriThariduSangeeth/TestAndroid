@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.common.collect.Lists;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +25,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.DiscussionImpl;
 import app.whatsdone.android.services.DiscussionService;
 import app.whatsdone.android.services.GroupService;
@@ -32,6 +35,8 @@ import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.GetCurrentDetails;
 import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
+
+import static app.whatsdone.android.utils.Constants.ARG_TASK;
 
 public abstract class MessageActivity extends AppCompatActivity implements
         MessagesListAdapter.SelectionListener
@@ -45,7 +50,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     private DiscussionService discussionService = new DiscussionImpl();
     private GroupService groupService = new GroupServiceImpl();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
-    public List<String> taskList = new ArrayList<>();
+    public List<Task> taskList = new ArrayList<>();
     public Group group;
 
     @Override
@@ -53,7 +58,10 @@ public abstract class MessageActivity extends AppCompatActivity implements
         super.onCreate( persistentState);
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.ARG_GROUP);
-        taskList = intent.getStringArrayListExtra(Constants.ARG_TASK);
+        Object[] data = (Object[]) intent.getExtras().get(ARG_TASK);
+        for (Object datum : data) {
+            taskList.add((Task) datum);
+        }
         imageLoader = (ImageView imageView, String url, Object payload) -> {
             Picasso.get().load(url).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
         };
