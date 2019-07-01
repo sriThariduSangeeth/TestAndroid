@@ -50,6 +50,8 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
         return text;
     }
 
+
+
     public String getPlainText() {
 
         String mentionedNumber = (ContactUtil.getInstance().cleanNo(text));

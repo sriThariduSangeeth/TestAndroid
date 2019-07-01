@@ -143,6 +143,9 @@ public class ContactUtil {
         contact.setPhoneNumber(phoneNumber);
         contact.setDisplayName(phoneNumber);
 
+        if(TextUtil.isNullOrEmpty(phoneNumber))
+            return contact;
+
         try{
             if(contacts.size() == 0)
                 readContacts(WhatsDoneApplication.getApplication().getApplicationContext());
