@@ -35,6 +35,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
@@ -49,6 +50,7 @@ import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -261,15 +263,10 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onContactSelected(Task task) {
         task.setAcknowledged(false);
-        this.original = this.task.getClone();
-
-        LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
-       // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
 
             @Override
             public void onSuccess() {
-                addLogs(event);
                 Timber.d("user updated");
             }
         });
