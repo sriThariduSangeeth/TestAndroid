@@ -16,7 +16,10 @@ import java.util.Map;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.LogEvent;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.DateUtil;
 import timber.log.Timber;
 
 public class LogServiceImpl implements LogService {
@@ -95,23 +98,37 @@ public class LogServiceImpl implements LogService {
         List<Change> changes = new ArrayList<>();
         for (HashMap<String, Object> datum : data) {
             try {
+                Change.ChangeType changeType = Change.ChangeType.valueOf((String) datum.get(Constants.FIELD_LOG_LOGS_TYPE));
+                String byUser = (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER);
                 Change change = new Change(
-                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER),
-                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USERNAME),
-                        Change.ChangeType.valueOf((String) datum.get(Constants.FIELD_LOG_LOGS_TYPE)),
+                        byUser,
+                        ContactUtil.getInstance().resolveContact(byUser).getDisplayName(),
+                        changeType,
                         ((Timestamp) datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM) != null ?
-                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM).toString() : "",
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM), changeType): "",
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO) != null ?
-                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO).toString() : ""
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO), changeType) : ""
 
                 );
                 changes.add(change);
             }catch (Exception e){
+                Timber.d("%s", datum);
                 Timber.e(e);
             }
         }
 
         return changes;
+    }
+
+    private String getValueForChangeType(Object data, Change.ChangeType changeType){
+        switch (changeType){
+            case STATUS_CHANGE:
+                return Task.TaskStatus.fromInt(Integer.parseInt(data.toString())).name();
+            case DUE_CHANGE:
+                return DateUtil.formatted(((Timestamp)data).toDate(),null);
+                default:
+                    return String.valueOf(data);
+        }
     }
 }
