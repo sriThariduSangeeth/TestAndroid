@@ -6,15 +6,14 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
@@ -107,9 +106,9 @@ public class LogServiceImpl implements LogService {
                         changeType,
                         ((Timestamp) datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM) != null ?
-                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM), changeType): "",
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM), changeType, group.getMemberDetails()): "",
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO) != null ?
-                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO), changeType) : ""
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO), changeType, group.getMemberDetails()) : ""
 
                 );
                 changes.add(change);
@@ -122,8 +121,10 @@ public class LogServiceImpl implements LogService {
         return changes;
     }
 
-    private String getValueForChangeType(Object data, Change.ChangeType changeType){
+    private String getValueForChangeType(Object data, Change.ChangeType changeType, List<ExistUser> memberDetails){
         switch (changeType){
+            case ASSIGNEE_CHANGE:
+                return ContactUtil.getInstance().resolveContact(data.toString(),memberDetails).getDisplayName();
             case STATUS_CHANGE:
                 return Task.TaskStatus.fromInt(Integer.parseInt(data.toString())).name();
             case DUE_CHANGE:
