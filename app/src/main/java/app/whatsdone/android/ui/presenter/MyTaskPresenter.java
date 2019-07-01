@@ -1,4 +1,5 @@
 package app.whatsdone.android.ui.presenter;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 

@@ -26,7 +26,7 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     TaskService service = new TaskServiceImpl();
     LogService logService = new LogServiceImpl();
     Task original = new Task();
-    Task task = new Task();
+
     Group group;
 
     @Override

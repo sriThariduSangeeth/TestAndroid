@@ -53,13 +53,7 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
       //  holder.mIdView.setText(String.format(Locale.getDefault(), "%d", position + 1));
         holder.mContentView.setText(generateText(mValues.get(position)));
         holder.date.setText(DateFormat.getDateTimeInstance().format(date) );
-      //  DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date)
-            Picasso.get().load(UrlUtils.getUserImage(mValues.get(position).getByUser())).into(holder.imageView);
-
-        if(!URLUtil.isValidUrl(UrlUtils.getUserImage(mValues.get(position).getByUser())))
-            Picasso.get().load(R.drawable.user_group_man_woman3x).into(holder.imageView);
-
-        holder.mView.setOnClickListener(v -> {
+      holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
@@ -86,7 +80,7 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
         final TextView mIdView;
         final TextView mContentView;
         final TextView date;
-        final CircleImageView imageView;
+
         Change mItem;
 
         public ViewHolder(View view) {
@@ -95,7 +89,7 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
             date = view.findViewById(R.id.updated_date);
             mIdView = view.findViewById(R.id.item_number);
             mContentView = view.findViewById(R.id.content);
-            imageView = view.findViewById(R.id.user_image);
+
         }
 
         @NonNull

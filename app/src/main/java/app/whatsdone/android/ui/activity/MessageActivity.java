@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -53,7 +54,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         group = intent.getParcelableExtra(Constants.ARG_GROUP);
         taskList = intent.getStringArrayListExtra(Constants.ARG_TASK);
-        imageLoader = (imageView, url, payload) -> {
+        imageLoader = (ImageView imageView, String url, Object payload) -> {
             Picasso.get().load(url).placeholder(R.drawable.user_group_man_woman3x).into(imageView);
         };
         senderId = getCurrentDetails.getCurrentUser().getId();
