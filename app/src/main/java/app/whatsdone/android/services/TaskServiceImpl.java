@@ -48,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
 
                             groups.add(task);
                         }catch (Exception exception) {
-                            Timber.d(exception, "failed to parse group");
+                            Timber.d(exception, "failed to parse task");
                         }
 
                     }
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
                             Task task = getTask(doc);
                             tasks.add(task);
                         }catch (Exception exception) {
-                            Timber.tag(TAG).d(exception, "failed to parse group");
+                            Timber.tag(TAG).d(exception, "failed to parse task");
                         }
 
                     }
