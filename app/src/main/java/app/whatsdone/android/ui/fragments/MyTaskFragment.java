@@ -22,26 +22,27 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.ContactService;
+import app.whatsdone.android.services.ContactServiceImpl;
+import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.adapters.MyTasksRecyclerViewAdapter;
-import app.whatsdone.android.ui.adapters.SwipeListener;
-import app.whatsdone.android.ui.adapters.TaskSwipeController;
-import app.whatsdone.android.ui.adapters.TaskSwipeControllerAction;
 import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.SortUtil.sort;
 
 
-public class MyTaskFragment extends Fragment implements MyTaskFragmentView, SwipeListener {
+public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTaskFragmentListener {
 
 
     private List<BaseEntity> tasks = new ArrayList<>();
@@ -49,6 +50,11 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, Swip
     private MyTaskPresenter taskPresenter;
     private OnMyTaskFragmentInteractionListener listener;
     private RecyclerView recycler;
+    private TaskService taskService = new TaskServiceImpl();
+    private ContactService contactService = new ContactServiceImpl();
+    private GroupService groupService = new GroupServiceImpl();
+
+
 
     public MyTaskFragment() {
     }
@@ -116,6 +122,25 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, Swip
     @Override
     public void onChangeStatus(Task task, Task.TaskStatus status) {
         taskPresenter.setStatus(task, status);
+    }
+
+    @Override
+    public void onContactButtonClicked(Task task) {
+
+    }
+
+    @Override
+    public void onContactSelected(Task task) {
+        taskService.update(task, new ServiceListener() {
+
+            @Override
+            public void onSuccess() {
+                task.setAcknowledged(false);
+                //  addLogs(event);
+                Timber.d("user updated");
+            }
+        });
+
     }
 
     public interface OnMyTaskFragmentInteractionListener {

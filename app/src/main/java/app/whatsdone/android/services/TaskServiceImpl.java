@@ -171,6 +171,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         data.put(Constants.FIELD_TASK_CREATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_UPDATED_BY, AuthServiceImpl.getCurrentUser().getDocumentID());
         data.put(Constants.ACKNOWLEDGED, task.isAcknowledged());
 
         List<Object> checkListItems = new ArrayList<>();
@@ -208,6 +209,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.FIELD_TASK_ASSIGNEE_COMMENT, task.getAssigneeComment());
         data.put(Constants.FIELD_TASK_STATUS, task.getStatus().getValue());
         data.put(Constants.FIELD_TASK_UPDATED_AT, new Date());
+        data.put(Constants.FIELD_TASK_UPDATED_BY, AuthServiceImpl.getCurrentUser().getDocumentID());
         data.put(Constants.ACKNOWLEDGED, task.isAcknowledged());
 
         // sync with local state

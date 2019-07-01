@@ -39,6 +39,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
@@ -47,6 +48,7 @@ import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
@@ -56,6 +58,7 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
@@ -107,6 +110,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         acknowledgeButton.setEnabled(false);
         acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
 
+        this.original = this.task.getClone();
 
         Spinner spinner = view.findViewById(R.id.user_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.planets, android.R.layout.simple_spinner_item);
@@ -115,6 +119,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         spinner.setSelection(Task.TaskStatus.getIndex(task.getStatus()), true);
 
         gettitle = view.findViewById(R.id.title_edit_text);
+
 
         if(!task.getAssignedBy().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && task.getAssignedUser().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()))
         {
@@ -224,10 +229,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
                 ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
 
-
-
                 fragment.show(getChildFragmentManager(), "Contacts");
-                assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+
+                task.setAcknowledged(false);
 
 
             });
@@ -256,8 +260,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
            // assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
-            task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
-            save();
+             save();
             LocalState.getInstance().setTaskRead(this.task);
             getActivity().getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -339,6 +342,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         assignFromContacts.setText(user.getDisplayName());
         task.setAssignedUserName(user.getDisplayName());
         task.setAssignedUser(user.getPhoneNumber());
+        assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
+        task.setAssignedBy(AuthServiceImpl.getCurrentUser().getPhoneNo());
     }
 
     @Override

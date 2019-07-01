@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -18,23 +19,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.ExistUser;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
+import app.whatsdone.android.ui.fragments.ContactPickerListDialogFragment;
+import app.whatsdone.android.ui.fragments.MyTaskFragmentListener;
 import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
+import app.whatsdone.android.utils.UrlUtils;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -45,7 +55,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
 
     public List<BaseEntity> tasks;
     private Context context;
-    private SwipeListener listener;
+    private MyTaskFragmentListener listener;
 
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
@@ -55,7 +65,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         this.context = context;
     }
 
-    public void setListener(SwipeListener listener) {
+    public void setListener(MyTaskFragmentListener listener) {
         this.listener = listener;
     }
 
@@ -100,6 +110,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             intent.putExtra(Constants.ARG_TASK, task);
             context.startActivity(intent);
         });
+
         if(task.getStatus() == Task.TaskStatus.DONE){
             holder.statusIndicator.setVisibility(View.GONE);
         }else {
@@ -107,8 +118,6 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             holder.statusIndicator.setText(getStatusIndicatorText(task));
             holder.statusIndicator.setBackgroundColor(context.getResources().getColor(getStatusIndicatorColor(task)));
         }
-
-
 
         setStatusIcons(holder, task);
 

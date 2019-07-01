@@ -26,12 +26,15 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
     TaskService service = new TaskServiceImpl();
     LogService logService = new LogServiceImpl();
     Task original = new Task();
-    Task task = new Task();
+
+    Group group;
 
     @Override
-    public void init(TaskInnerGroupFragmentView view) {
+    public void init(TaskInnerGroupFragmentView view, Group group) {
 
+        this.group = group;
         this.view = view;
+
     }
 
     @Override
@@ -66,10 +69,11 @@ public class TaskInnerGroupPresenterImpl implements TaskInnerGroupPresenter {
 
     @Override
     public void setStatus(Task task, Task.TaskStatus status) {
-        this.original = this.task.getClone();
+
+        this.original = task.getClone();
         task.setStatus(status);
 
-        LogEvent event = ObjectComparer.isEqual(original, task, task.getDocumentID());
+        LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
 
         if (!event.getLogs().isEmpty())
         service.update(task, new ServiceListener() {

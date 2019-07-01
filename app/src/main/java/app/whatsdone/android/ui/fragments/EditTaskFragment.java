@@ -7,16 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.List;
-
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.GroupService;
-import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.LocalState;
@@ -25,7 +21,7 @@ import timber.log.Timber;
 
 public class EditTaskFragment extends TaskFragmentBase {
 
-    public static EditTaskFragment newInstance(Group group, Task task, boolean isMyTask) {
+    public static EditTaskFragment newInstance(Group group, Task task) {
 
         EditTaskFragment instance = new EditTaskFragment();
         Bundle args = new Bundle();
@@ -86,10 +82,7 @@ public class EditTaskFragment extends TaskFragmentBase {
             service.update(task, new ServiceListener() {
                 @Override
                 public void onSuccess() {
-
-                    addLogs(event);
-                    Timber.d("task created");
-                    inviteAssignee();
+                    Timber.d("task updated");
                 }
 
                 @Override
@@ -99,13 +92,4 @@ public class EditTaskFragment extends TaskFragmentBase {
             });
     }
 
-    private void addLogs(LogEvent event) {
-
-        logService.update(event, new ServiceListener() {
-            @Override
-            public void onSuccess() {
-                Timber.d("log added");
-            }
-        });
-    }
 }

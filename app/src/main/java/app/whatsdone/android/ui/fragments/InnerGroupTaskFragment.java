@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,19 +27,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.ContactService;
-import app.whatsdone.android.services.ContactServiceImpl;
-import app.whatsdone.android.services.GroupService;
-import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -52,10 +47,7 @@ import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenter;
 import app.whatsdone.android.ui.presenter.TaskInnerGroupPresenterImpl;
 import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.ContactReadListner;
 import app.whatsdone.android.utils.ContactReaderUtil;
-import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
@@ -74,13 +66,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private Group group = new Group();
     public EditText groupName;
     private TextView toolbarTextView;
-    private ImageView imageView;
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private Task task;
+    private Task task = new Task();
     private TaskService taskService = new TaskServiceImpl();
-    private ContactService contactService = new ContactServiceImpl();
-    private GroupService groupService = new GroupServiceImpl();
+
 
     public static InnerGroupTaskFragment newInstance(Group group) {
 
@@ -95,6 +85,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @SuppressLint("ResourceType")
@@ -108,10 +99,11 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbarTextView = getActivity().findViewById(R.id.toolbar_task_title);
         groupName = view.findViewById(R.id.group_name_edit_text);
-        imageView = view.findViewById(R.id.image_view_task_inner_group);
 
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
+
+
         LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
@@ -128,7 +120,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
         this.presenter = new TaskInnerGroupPresenterImpl();
-        this.presenter.init(this);
+        this.presenter.init(this, group);
         this.presenter.loadTasksInner(group.getDocumentID());
 
         //fab
@@ -245,7 +237,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
                                 Timber.d("user updated");
                             }
                         });
-                        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
                     });
                     break;
                 }
@@ -269,14 +260,19 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onContactSelected(Task task) {
+        task.setAcknowledged(false);
+        this.original = this.task.getClone();
+
+        LogEvent event = ObjectComparer.isEqual(original, task, group.getDocumentID());
+       // if (!event.getLogs().isEmpty())
         taskService.update(task, new ServiceListener() {
+
             @Override
             public void onSuccess() {
+                addLogs(event);
                 Timber.d("user updated");
             }
         });
-        new InviteAssigneeUtil(task, contactService, taskService, group, groupService).invite();
     }
-
 }
 

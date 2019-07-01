@@ -93,6 +93,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             String clickAction = remoteMessage.getNotification().getClickAction();
 
             Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
+           // if(!body.indexOf(AuthServiceImpl.getCurrentUser().getPhoneNo()))
             sendNotification(title, body);
         }
     }

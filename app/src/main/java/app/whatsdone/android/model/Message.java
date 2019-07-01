@@ -9,6 +9,8 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
+import app.whatsdone.android.utils.ContactUtil;
+
 public class Message implements IMessage, MessageContentType.Image,MessageContentType,BaseEntity {
 
     private String id;
@@ -44,9 +46,22 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
 
     @Override
     public String getText() {
+
         return text;
     }
 
+    public String getPlainText() {
+        return text;
+    }
+
+    public String getPlainText() {
+
+        String mentionedNumber = (ContactUtil.getInstance().cleanNo(text));
+       // String name = ContactUtil.getInstance().resolveContact(mentionedNumber).getDisplayName();
+
+
+        return text;
+    }
     @Override
     public IUser getUser() {
         return this.user;
