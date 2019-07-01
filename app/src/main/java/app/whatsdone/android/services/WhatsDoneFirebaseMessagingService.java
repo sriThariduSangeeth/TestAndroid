@@ -70,18 +70,6 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     // [END on_new_token]
 
     /**
-     * Schedule async work using WorkManager.
-     */
-    private void scheduleJob() {
-        //sendNotification("Local notification");
-        // [START dispatch_job]
-//        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
-//                .build();
-//        WorkManager.getInstance().beginWith(work).enqueue();
-        // [END dispatch_job]
-    }
-
-    /**
      * Handle time allotted to BroadcastReceivers.
      * @param remoteMessage
      */
@@ -93,7 +81,15 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             String clickAction = remoteMessage.getNotification().getClickAction();
 
             Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
-           // if(!body.indexOf(AuthServiceImpl.getCurrentUser().getPhoneNo()))
+            sendNotification(title, body);
+        }
+
+        if(remoteMessage.getData().get("type").equals("group")){
+            String title = remoteMessage.getNotification().getTitle();
+            String body = remoteMessage.getNotification().getBody();
+            String clickAction = remoteMessage.getNotification().getClickAction();
+
+            Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
             sendNotification(title, body);
         }
     }
