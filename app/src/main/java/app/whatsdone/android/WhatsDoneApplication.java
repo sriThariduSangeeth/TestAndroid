@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 //import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import app.whatsdone.android.utils.ConfigLoader;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.LocalState;
