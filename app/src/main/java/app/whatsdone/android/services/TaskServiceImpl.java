@@ -131,7 +131,6 @@ public class TaskServiceImpl implements TaskService {
                     checkListItems.add(item);
                 }
                 task.setCheckList(checkListItems);
-                Timber.d("%s", checklist);
             }catch (Exception ex){
                 Timber.e(ex);
             }

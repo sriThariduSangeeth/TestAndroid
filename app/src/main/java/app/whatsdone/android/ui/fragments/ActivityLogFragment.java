@@ -19,6 +19,7 @@ import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.adapters.MyActivityLogRecyclerViewAdapter;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +32,7 @@ import java.util.List;
  */
 public class ActivityLogFragment extends Fragment implements ServiceListener {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_TASK_ID = "task_id";
-    // TODO: Customize parameters
     private String taskId = "";
     private OnListFragmentInteractionListener mListener;
     private List<Change> changes = new ArrayList<>();
@@ -48,7 +47,6 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
     public ActivityLogFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ActivityLogFragment newInstance(String taskId) {
         ActivityLogFragment fragment = new ActivityLogFragment();
@@ -116,24 +114,15 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Change item);
     }
 
     @Override
     public void onDataReceived(BaseEntity entity) {
+
         LogEvent event = (LogEvent)entity;
+        Timber.d("%s",event.getLogs().size());
         this.changes.addAll(event.getLogs());
         this.adapter.notifyDataSetChanged();
     }
