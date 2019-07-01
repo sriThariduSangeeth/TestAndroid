@@ -74,13 +74,12 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      * @param remoteMessage
      */
     private void handleNow(RemoteMessage remoteMessage) {
-        Timber.d("Short lived task is done.");
+
         if(remoteMessage.getData().get("type").equals("task")){
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            String clickAction = remoteMessage.getNotification().getClickAction();
 
-            Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
+            Timber.d("title: %s, body: %s", title, body);
             sendNotification(title, body);
         }
 
@@ -89,7 +88,7 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             String body = remoteMessage.getNotification().getBody();
             String clickAction = remoteMessage.getNotification().getClickAction();
 
-            Timber.d("title: %s, body: %s, action: %s", title, body,clickAction);
+            Timber.d("title: %s, body: %s", title, body);
             sendNotification(title, body);
         }
     }
