@@ -45,9 +45,6 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     private OnMyTaskFragmentInteractionListener listener;
     private RecyclerView recycler;
     private TaskService taskService = new TaskServiceImpl();
-    private ContactService contactService = new ContactServiceImpl();
-    private GroupService groupService = new GroupServiceImpl();
-
 
 
     public MyTaskFragment() {

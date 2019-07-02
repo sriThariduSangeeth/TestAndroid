@@ -35,7 +35,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private List<BaseEntity> groups = new ArrayList<>();
 
-    private RecyclerView.LayoutManager layoutManager;
     private GroupPresenter presenter;
     private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
@@ -126,7 +125,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private void setupRecyclerView() {
 
-        layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new GroupsRecyclerViewAdapter(groups, getContext());
         myrecycler.setAdapter(adapter);

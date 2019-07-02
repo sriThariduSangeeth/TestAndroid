@@ -125,8 +125,9 @@ public class GroupServiceImpl implements GroupService {
         }
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
             group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
-        List<ExistUser> users = new ArrayList<>();
+
         if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
+            List<ExistUser> users = new ArrayList<>();
             List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
 
             for (HashMap map :
@@ -147,16 +148,21 @@ public class GroupServiceImpl implements GroupService {
                 user.setPhoneNumber(phone);
                 users.add(user);
             }
+            group.setMemberDetails(users);
         }
         if(doc.get(Constants.FIELD_GROUP_TASK_HISTORY) != null){
-            HashMap data = (HashMap)doc.get(Constants.FIELD_GROUP_TASK_HISTORY);
-            for (Object key : data.keySet()) {
-                HashMap task = (HashMap) data.get(key);
-                group.getTaskDetails().put(key.toString(), ((Timestamp)task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+            try {
+                HashMap data = (HashMap) doc.get(Constants.FIELD_GROUP_TASK_HISTORY);
+                for (Object key : data.keySet()) {
+                    HashMap task = (HashMap) data.get(key);
+                    group.getTaskDetails().put(key.toString(), ((Timestamp) task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+                }
+                Timber.d("%s", data);
+            }catch (Exception ex){
+                Timber.e(ex);
             }
-            Timber.d("%s",data);
         }
-        group.setMemberDetails(users);
+
         return group;
     }
 
