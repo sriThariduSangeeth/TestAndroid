@@ -6,7 +6,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Group implements Parcelable, BaseEntity {
 
@@ -25,6 +27,7 @@ public class Group implements Parcelable, BaseEntity {
     private Bitmap teamImage;
     private boolean imageChanged = false;
     private List<ExistUser> memberDetails = new ArrayList<>();
+    private Map<String, Date> taskDetails = new HashMap<>();
 
     public void Group(String groupName , String groupId , String groupAvatar ){
         this.documentID = groupId;
@@ -139,9 +142,7 @@ public class Group implements Parcelable, BaseEntity {
     }
 
     public Group() {
-
     }
-
 
     public void setMemberDetails(List<ExistUser> memberDetails) {
         this.memberDetails = memberDetails;
@@ -183,7 +184,7 @@ public class Group implements Parcelable, BaseEntity {
         }
         createdBy = in.readString();
         if (in.readByte() == 0x01) {
-            admins = new ArrayList<String>();
+            admins = new ArrayList<>();
             in.readList(admins, String.class.getClassLoader());
         } else {
             admins = null;
@@ -191,7 +192,7 @@ public class Group implements Parcelable, BaseEntity {
         teamImage = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
         imageChanged = in.readByte() != 0x00;
         if (in.readByte() == 0x01) {
-            memberDetails = new ArrayList<ExistUser>();
+            memberDetails = new ArrayList<>();
             in.readList(memberDetails, ExistUser.class.getClassLoader());
         } else {
             memberDetails = null;
@@ -254,4 +255,12 @@ public class Group implements Parcelable, BaseEntity {
             return new Group[size];
         }
     };
+
+    public Map<String, Date> getTaskDetails() {
+        return taskDetails;
+    }
+
+    public void setTaskDetails(Map<String, Date> taskDetails) {
+        this.taskDetails = taskDetails;
+    }
 }

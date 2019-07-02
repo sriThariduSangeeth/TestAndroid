@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -146,6 +148,14 @@ public class GroupServiceImpl implements GroupService {
                 user.setPhoneNumber(phone);
                 users.add(user);
             }
+        }
+        if(doc.get(Constants.FIELD_GROUP_TASK_HISTORY) != null){
+            HashMap data = (HashMap)doc.get(Constants.FIELD_GROUP_TASK_HISTORY);
+            for (Object key : data.keySet()) {
+                HashMap task = (HashMap) data.get(key);
+                group.getTaskDetails().put(key.toString(), ((Timestamp)task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+            }
+            Timber.d("%s",data);
         }
         group.setMemberDetails(users);
         return group;

@@ -30,6 +30,8 @@ public class Constants {
     public static final String FIELD_GROUP_TITLE = "title";
     public static final String FIELD_GROUP_AVATAR = "avatar";
     public static final String FIELD_GROUP_UPDATED_AT = "updated_at";
+    public static final String FIELD_GROUP_TASK_HISTORY = "task_history";
+    public static final String FIELD_GROUP_TASK_HISTORY_UPDATED_AT = "updated_at";
 
     // Task Fields
     public static int TASKS_LIMIT = 50;
