@@ -2,9 +2,10 @@ package app.whatsdone.android.ui.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.databinding.DataBindingUtil;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.databinding.ActivityCodeVerificationBinding;
@@ -15,7 +16,6 @@ import app.whatsdone.android.ui.view.CodeVerifyView;
 import app.whatsdone.android.ui.viewmodel.CodeVerificationViewModel;
 import app.whatsdone.android.utils.Constants;
 
-// TODO: check if this class is a duplicate of PhoneNoVerificationActivity and remove
 public class CodeVerificationActivity extends AppCompatActivity implements CodeVerifyView {
 
     @Override

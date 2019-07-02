@@ -3,13 +3,14 @@ package app.whatsdone.android.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.databinding.DataBindingUtil;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;

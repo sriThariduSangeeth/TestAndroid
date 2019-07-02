@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,8 +20,6 @@ import java.util.Map;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.activity.GroupsActivity;
-import app.whatsdone.android.ui.activity.SplashActivity;
-import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import timber.log.Timber;

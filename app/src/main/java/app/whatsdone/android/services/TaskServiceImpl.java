@@ -1,7 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.support.annotation.NonNull;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -86,7 +84,6 @@ public class TaskServiceImpl implements TaskService {
                 });
     }
 
-    @NonNull
     private Task getTask(QueryDocumentSnapshot doc) {
         Task task = new Task();
         task.setDocumentID(doc.getId());

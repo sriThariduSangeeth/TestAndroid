@@ -1,20 +1,11 @@
 package app.whatsdone.android.services;
 
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GetTokenResult;
-
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
-import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.ContactRequestItem;
 import app.whatsdone.android.model.ContactSyncRequest;
 import app.whatsdone.android.model.ContactSyncResponse;
@@ -27,17 +18,10 @@ import app.whatsdone.android.model.InviteAssigneeResponse;
 import app.whatsdone.android.model.InviteMembersRequest;
 import app.whatsdone.android.model.InviteMembersResponse;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ServiceFactory;
-import app.whatsdone.android.utils.SharedPreferencesUtil;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ContactServiceImpl implements ContactService {
     private CloudService service;

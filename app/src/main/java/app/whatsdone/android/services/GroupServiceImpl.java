@@ -1,11 +1,12 @@
 package app.whatsdone.android.services;
 
-import android.provider.DocumentsContract;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -124,8 +125,9 @@ public class GroupServiceImpl implements GroupService {
         }
         if (doc.get(Constants.FIELD_GROUP_ADMINS) != null)
             group.setAdmins((List<String>) doc.get(Constants.FIELD_GROUP_ADMINS));
-        List<ExistUser> users = new ArrayList<>();
+
         if (doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS) != null) {
+            List<ExistUser> users = new ArrayList<>();
             List<HashMap> details = (List<HashMap>) doc.get(Constants.FIELD_GROUP_MEMBERS_DETAILS);
 
             for (HashMap map :
@@ -146,8 +148,21 @@ public class GroupServiceImpl implements GroupService {
                 user.setPhoneNumber(phone);
                 users.add(user);
             }
+            group.setMemberDetails(users);
         }
-        group.setMemberDetails(users);
+        if(doc.get(Constants.FIELD_GROUP_TASK_HISTORY) != null){
+            try {
+                HashMap data = (HashMap) doc.get(Constants.FIELD_GROUP_TASK_HISTORY);
+                for (Object key : data.keySet()) {
+                    HashMap task = (HashMap) data.get(key);
+                    group.getTaskDetails().put(key.toString(), ((Timestamp) task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+                }
+                Timber.d("%s", data);
+            }catch (Exception ex){
+                Timber.e(ex);
+            }
+        }
+
         return group;
     }
 

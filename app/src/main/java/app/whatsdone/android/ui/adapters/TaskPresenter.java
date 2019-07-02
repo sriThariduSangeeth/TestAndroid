@@ -1,17 +1,16 @@
 package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.otaliastudios.autocomplete.RecyclerViewPresenter;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.otaliastudios.autocomplete.RecyclerViewPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
