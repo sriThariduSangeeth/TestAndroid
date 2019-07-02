@@ -55,7 +55,7 @@ public class ContactReaderUtil {
                         number = ContactUtil.getInstance().cleanNo(number);
                         if (number != null && !number.isEmpty()) {
 
-                            task.setAssignedUserName(number);
+                            task.setAssignedUser(number);
                             if(listener != null){
                                 listener.onTaskSelected(task);
                             }
