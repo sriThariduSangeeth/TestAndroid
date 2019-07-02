@@ -5,26 +5,22 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.helper.ItemTouchHelper.Callback;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
-import app.whatsdone.android.model.ButtonsState;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 
-import static android.support.v7.widget.helper.ItemTouchHelper.*;
+import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
+import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
 
-public class GroupSwipeController extends Callback {
+public class GroupSwipeController extends ItemTouchHelper.Callback {
 
 
     private boolean swipeBack = false;

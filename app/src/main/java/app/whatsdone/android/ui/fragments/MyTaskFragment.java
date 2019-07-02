@@ -1,27 +1,22 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
 import app.whatsdone.android.services.GroupService;
@@ -35,7 +30,6 @@ import app.whatsdone.android.ui.presenter.MyTaskPresenter;
 import app.whatsdone.android.ui.presenter.MyTaskPresenterImpl;
 import app.whatsdone.android.ui.view.MyTaskFragmentView;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 

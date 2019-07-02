@@ -1,26 +1,18 @@
 package app.whatsdone.android.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 import app.whatsdone.android.model.Change;
-import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.User;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
-import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.ContactUtil;
 import timber.log.Timber;
 
 public class AddTaskFragment extends TaskFragmentBase {

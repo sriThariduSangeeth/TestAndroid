@@ -2,17 +2,18 @@ package app.whatsdone.android.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
@@ -31,8 +32,6 @@ import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
-import app.whatsdone.android.services.TaskService;
-import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.fragments.ContactPickerListDialogFragment;
 import app.whatsdone.android.ui.fragments.EditTaskFragment;
 import app.whatsdone.android.ui.fragments.InnerGroupTaskFragmentListener;

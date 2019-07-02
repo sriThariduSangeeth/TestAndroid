@@ -29,6 +29,7 @@ public class LocalState {
 
     private HashMap<String, HashMap<String, Serializable>> groupsData = new HashMap<>();
     private HashMap<String, String> taskData = new HashMap<>();
+    private HashMap<String, HashMap<String, Serializable>> taskHistory = new HashMap<>();
 
     public void syncTasks(List<BaseEntity> tasks){
         for (BaseEntity entity: tasks) {
@@ -74,6 +75,7 @@ public class LocalState {
                 group.setUnreadDiscussionCount(Math.max(totalDiscussionCount - discussionCount, 0));
 
                 groupsData.get(id).put(TASK_COUNT, String.valueOf(totalTaskCount));
+
                 group.setUnreadTaskCount(Math.max(totalTaskCount - taskCount, 0));
 
             }else {
@@ -109,6 +111,7 @@ public class LocalState {
         try {
             SharedPreferencesUtil.save(Constants.SHARED_STATE_GROUPS, groupsData);
             SharedPreferencesUtil.save(Constants.SHARED_STATE_TASKS, taskData);
+            SharedPreferencesUtil.save(Constants.SHARED_STATE_TASKS_HISTORY, taskHistory);
         }catch (Exception ex){
             Timber.e(ex);
         }
@@ -117,12 +120,17 @@ public class LocalState {
     public void reloadFromDisk(){
         HashMap<String, HashMap<String, Serializable>> data = SharedPreferencesUtil.get(Constants.SHARED_STATE_GROUPS);
         HashMap<String, String> tasks = SharedPreferencesUtil.get(Constants.SHARED_STATE_TASKS);
+        HashMap<String, HashMap<String, Serializable>> tasks_history = SharedPreferencesUtil.get(Constants.SHARED_STATE_TASKS_HISTORY);
         if(data != null){
             groupsData = data;
         }
 
         if(tasks != null){
             taskData = tasks;
+        }
+
+        if(tasks_history != null){
+            taskHistory = tasks_history;
         }
     }
 }

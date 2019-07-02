@@ -9,9 +9,10 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
-import android.support.v4.content.CursorLoader;
 import android.telephony.TelephonyManager;
+
+import androidx.annotation.Nullable;
+import androidx.loader.content.CursorLoader;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;

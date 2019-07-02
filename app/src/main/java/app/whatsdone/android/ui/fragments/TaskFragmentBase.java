@@ -6,27 +6,25 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -66,37 +64,33 @@ import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
 
 public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{
-    protected boolean isFromMyTasks;
-    protected boolean isPersonalTask;
+    boolean isFromMyTasks;
+    boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
-    protected TextView setDueDate, assignFromContacts, assignedBy;
-    private Toolbar toolbar;
+    private TextView setDueDate;
+    protected TextView assignFromContacts;
+    protected TextView assignedBy;
     private AddItemsAdapter itemsAdapter;
-    private RecyclerView listView;
     private EditText getTitle, getDescription;
-    private Button addChecklistBtn;
-    protected Button acknowledgeButton;
-    private ConstraintLayout lay;
-    protected Group group = new Group();
+    private Button acknowledgeButton;
+
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private DateFormat dateFormat;
     protected String title = "Add Task";
     //data
     protected TaskService service = new TaskServiceImpl();
-    protected GroupService groupService = new GroupServiceImpl();
-    protected ContactService contactService = new ContactServiceImpl();
-    protected LogService logService = new LogServiceImpl();
+    GroupService groupService = new GroupServiceImpl();
+    private ContactService contactService = new ContactServiceImpl();
+    LogService logService = new LogServiceImpl();
 
-
+    protected Group group = new Group();
     Task task = new Task();
     Task original = new Task();
-    protected TextView toolbarTitle;
 
     public TaskFragmentBase() {
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -171,8 +165,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         getDescription = view.findViewById(R.id.description_edit_text);
         getDescription.setText(task.getDescription());
         getDescription.setHintTextColor(getResources().getColor(R.color.gray));
-        lay = view.findViewById(R.id.select_group_view);
-        listView = view.findViewById(R.id.list_view_checklist);
+        ConstraintLayout lay = view.findViewById(R.id.select_group_view);
+        RecyclerView listView = view.findViewById(R.id.list_view_checklist);
 
         lay.setVisibility(LinearLayout.GONE);
         setupToolbar();
@@ -201,7 +195,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         });
 
 
-        addChecklistBtn = view.findViewById(R.id.add_check_list);
+        Button addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
@@ -260,8 +254,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
     private void setupToolbar() {
         this.setHasOptionsMenu(true);
-        toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView toolbarTitle = getActivity().findViewById(R.id.toolbar_task_title);
         if (title == null || title.isEmpty()) {
             toolbarTitle.setText(R.string.add_task);
         } else {

@@ -1,10 +1,9 @@
 package app.whatsdone.android.ui.viewmodel;
 
-import android.database.Observable;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableInt;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableInt;
 
 import java.util.Arrays;
 

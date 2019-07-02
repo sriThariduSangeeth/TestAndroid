@@ -1,6 +1,6 @@
 package app.whatsdone.android.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;

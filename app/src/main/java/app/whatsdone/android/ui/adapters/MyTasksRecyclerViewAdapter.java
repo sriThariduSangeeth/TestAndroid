@@ -1,50 +1,33 @@
 package app.whatsdone.android.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
-import app.whatsdone.android.model.ExistUser;
-import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
-import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
-import app.whatsdone.android.ui.fragments.ContactPickerListDialogFragment;
 import app.whatsdone.android.ui.fragments.MyTaskFragmentListener;
-import app.whatsdone.android.utils.ColorGenerator;
 import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
-import app.whatsdone.android.utils.UrlUtils;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;

@@ -3,16 +3,14 @@ package app.whatsdone.android;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 
-//import com.crashlytics.android.Crashlytics;
+import androidx.multidex.MultiDex;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import app.whatsdone.android.utils.ConfigLoader;
-import app.whatsdone.android.utils.Constants;
-import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
+
+//import com.crashlytics.android.Crashlytics;
 
 public class WhatsDoneApplication extends Application {
 
