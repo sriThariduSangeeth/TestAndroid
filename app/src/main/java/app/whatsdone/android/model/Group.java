@@ -170,13 +170,13 @@ public class Group implements Parcelable, BaseEntity {
         long tmpUpdatedDate = in.readLong();
         updatedDate = tmpUpdatedDate != -1 ? new Date(tmpUpdatedDate) : null;
         if (in.readByte() == 0x01) {
-            members = new ArrayList<String>();
+            members = new ArrayList<>();
             in.readList(members, String.class.getClassLoader());
         } else {
             members = null;
         }
         if (in.readByte() == 0x01) {
-            originalMembers = new ArrayList<String>();
+            originalMembers = new ArrayList<>();
             in.readList(originalMembers, String.class.getClassLoader());
         } else {
             originalMembers = null;

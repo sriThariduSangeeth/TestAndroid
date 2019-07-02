@@ -104,7 +104,7 @@ public class TaskPresenter extends RecyclerViewPresenter<String> {
             }
             final Task task = data.get(position);
             holder.fullname.setText(task.getTitle());
-            holder.root.setOnClickListener(v -> dispatchClick(task.getDocumentID()));
+            holder.root.setOnClickListener(v -> dispatchClick(task.getTitle()));
         }
     }
 }
