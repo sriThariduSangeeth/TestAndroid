@@ -57,6 +57,7 @@ import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.TextUtil;
+import app.whatsdone.android.utils.UIUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -240,12 +241,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));
-           // assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
              save();
             LocalState.getInstance().setTaskRead(this.task);
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-            );
+            UIUtil.hideSoftKeyboard(getActivity());
             getActivity().onBackPressed();
         });
 
@@ -263,7 +261,10 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> {
+            UIUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
         toolbarTitle.setClickable(false);
     }
 

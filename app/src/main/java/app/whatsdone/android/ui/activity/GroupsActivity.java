@@ -19,6 +19,7 @@ import app.whatsdone.android.ui.fragments.SettingFragment;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.UIUtil;
 import timber.log.Timber;
 
 public class GroupsActivity extends AppCompatActivity {
@@ -87,6 +88,7 @@ public class GroupsActivity extends AppCompatActivity {
                        break;
 
                }
+               UIUtil.hideSoftKeyboard(GroupsActivity.this);
            }
 
            @Override
