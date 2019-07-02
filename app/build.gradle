@@ -55,7 +55,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //tablayout support
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //Recycler View
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     //circular image view
@@ -136,5 +135,4 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
-// Apply the Performance Monitoring plugin to enable instrumentation
 apply plugin: 'com.google.firebase.firebase-perf'
