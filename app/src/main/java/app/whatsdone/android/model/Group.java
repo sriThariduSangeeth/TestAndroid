@@ -24,7 +24,7 @@ public class Group implements Parcelable, BaseEntity {
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
     private boolean imageChanged = false;
-    private List<ExistUser> memberDetails;
+    private List<ExistUser> memberDetails = new ArrayList<>();
 
     public void Group(String groupName , String groupId , String groupAvatar ){
         this.documentID = groupId;
