@@ -15,6 +15,7 @@ import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.ObjectComparer;
 import timber.log.Timber;
@@ -40,7 +41,7 @@ public class EditTaskFragment extends TaskFragmentBase {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment fragment = ActivityLogFragment.newInstance(task.getDocumentID());
+        Fragment fragment = ActivityLogFragment.newInstance(task.getDocumentID(), group);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.task_container, fragment).commit();
 
         return true;
@@ -67,6 +68,8 @@ public class EditTaskFragment extends TaskFragmentBase {
                     @Override
                     public void onDataReceived(BaseEntity entity) {
                         group = (Group) entity;
+                        assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy(), group.getMemberDetails()).getDisplayName());
+                        assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser(), group.getMemberDetails()).getDisplayName());
                     }
                 });
             }

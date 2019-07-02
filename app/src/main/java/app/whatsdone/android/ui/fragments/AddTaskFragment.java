@@ -40,33 +40,35 @@ public class AddTaskFragment extends TaskFragmentBase {
         Bundle arg = getArguments();
         String currentUserId = AuthServiceImpl.getCurrentUser().getDocumentID();
         if(arg != null) {
-            this.group = arg.getParcelable("group");
-            if(group != null) {
-                task.setGroupId(group.getDocumentID());
-                task.setGroupName(group.getGroupName());
-                task.setAssignedBy(currentUserId);
+            if(arg.getParcelable("group") != null) {
+                this.group = arg.getParcelable("group");
+                if (group != null) {
+                    task.setGroupId(group.getDocumentID());
+                    task.setGroupName(group.getGroupName());
+                    task.setAssignedBy(currentUserId);
 
-                if(group.getDocumentID().equals(currentUserId)){
-                    this.isPersonalTask = true;
-                    this.isFromMyTasks = true;
-                    if(!group.getCreatedBy().equals(currentUserId)){
-                        group.setUpdatedDate(new Date());
-                        group.getMembers().add(currentUserId);
-                        group.getAdmins().add(currentUserId);
-                        group.setCreatedBy(currentUserId);
-                        group.setAvatar(AuthServiceImpl.getCurrentUser().getAvatar());
-                        groupService.create(group, new ServiceListener() {
-                            @Override
-                            public void onSuccess() {
-                                Timber.d("%s created.", group.getGroupName());
-                                GroupServiceImpl.personalGroup = group;
-                            }
+                    if (group.getDocumentID().equals(currentUserId)) {
+                        this.isPersonalTask = true;
+                        this.isFromMyTasks = true;
+                        if (!group.getCreatedBy().equals(currentUserId)) {
+                            group.setUpdatedDate(new Date());
+                            group.getMembers().add(currentUserId);
+                            group.getAdmins().add(currentUserId);
+                            group.setCreatedBy(currentUserId);
+                            group.setAvatar(AuthServiceImpl.getCurrentUser().getAvatar());
+                            groupService.create(group, new ServiceListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Timber.d("%s created.", group.getGroupName());
+                                    GroupServiceImpl.personalGroup = group;
+                                }
 
-                            @Override
-                            public void onError(@javax.annotation.Nullable String error) {
-                                Timber.e(error);
-                            }
-                        });
+                                @Override
+                                public void onError(@javax.annotation.Nullable String error) {
+                                    Timber.e(error);
+                                }
+                            });
+                        }
                     }
                 }
             }

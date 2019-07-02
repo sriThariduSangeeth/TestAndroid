@@ -6,17 +6,20 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.ExistUser;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
+import app.whatsdone.android.model.Task;
 import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.DateUtil;
 import timber.log.Timber;
 
 public class LogServiceImpl implements LogService {
@@ -58,7 +61,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void getByTaskId(String id, ServiceListener serviceListener) {
+    public void getByTaskId(String id, Group group, ServiceListener serviceListener) {
         db.collection(Constants.REF_LOGS).document(id)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -76,7 +79,7 @@ public class LogServiceImpl implements LogService {
                            LogEvent event = new LogEvent();
                            event.setDocumentID(id);
                            event.setGroupId(doc.getString(Constants.FIELD_LOG_GROUP_ID));
-                           event.setLogs(getChanges((List<HashMap<String, Object>>) doc.get(Constants.FIELD_LOG_LOGS)));
+                           event.setLogs(getChanges((List<HashMap<String, Object>>) doc.get(Constants.FIELD_LOG_LOGS), group));
 
                            serviceListener.onDataReceived(event);
                        } catch (Exception e) {
@@ -91,27 +94,43 @@ public class LogServiceImpl implements LogService {
                 });
     }
 
-    private List<Change> getChanges(List<HashMap<String, Object>> data){
+    private List<Change> getChanges(List<HashMap<String, Object>> data, Group group){
         List<Change> changes = new ArrayList<>();
         for (HashMap<String, Object> datum : data) {
             try {
+                Change.ChangeType changeType = Change.ChangeType.valueOf((String) datum.get(Constants.FIELD_LOG_LOGS_TYPE));
+                String byUser = (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER);
                 Change change = new Change(
-                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USER),
-                        (String) datum.get(Constants.FIELD_LOG_LOGS_BY_USERNAME),
-                        Change.ChangeType.valueOf((String) datum.get(Constants.FIELD_LOG_LOGS_TYPE)),
+                        byUser,
+                        ContactUtil.getInstance().resolveContact(byUser, group.getMemberDetails()).getDisplayName(),
+                        changeType,
                         ((Timestamp) datum.get(Constants.FIELD_LOG_LOGS_DATE)).toDate(),
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM) != null ?
-                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM).toString() : "",
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_FROM), changeType, group.getMemberDetails()): "",
                         datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO) != null ?
-                                datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO).toString() : ""
+                                getValueForChangeType(datum.get(Constants.FIELD_LOG_LOGS_VALUE_TO), changeType, group.getMemberDetails()) : ""
 
                 );
                 changes.add(change);
             }catch (Exception e){
+                Timber.d("%s", datum);
                 Timber.e(e);
             }
         }
 
         return changes;
+    }
+
+    private String getValueForChangeType(Object data, Change.ChangeType changeType, List<ExistUser> memberDetails){
+        switch (changeType){
+            case ASSIGNEE_CHANGE:
+                return ContactUtil.getInstance().resolveContact(data.toString(),memberDetails).getDisplayName();
+            case STATUS_CHANGE:
+                return Task.TaskStatus.fromInt(Integer.parseInt(data.toString())).name();
+            case DUE_CHANGE:
+                return DateUtil.formatted(((Timestamp)data).toDate(),null);
+                default:
+                    return String.valueOf(data);
+        }
     }
 }

@@ -12,6 +12,8 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,6 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.CheckListItem;
 import app.whatsdone.android.model.ExistUser;
 import app.whatsdone.android.model.Group;
-import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
@@ -48,7 +49,6 @@ import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
-import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.adapters.AddItemsAdapter;
@@ -58,7 +58,6 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
-import app.whatsdone.android.utils.ObjectComparer;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
@@ -70,16 +69,15 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     protected boolean isFromMyTasks;
     protected boolean isPersonalTask;
     private DatePickerDialog datePickerDialog;
-    private TextView setDueDate, assignFromContacts, assignedBy;
+    protected TextView setDueDate, assignFromContacts, assignedBy;
     private Toolbar toolbar;
-    private int mYear, mMonth, mDay;
     private AddItemsAdapter itemsAdapter;
-    private ListView listView;
-    private EditText gettitle, getDescript;
+    private RecyclerView listView;
+    private EditText getTitle, getDescription;
     private Button addChecklistBtn;
     protected Button acknowledgeButton;
     private ConstraintLayout lay;
-    protected Group group;
+    protected Group group = new Group();
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private DateFormat dateFormat;
@@ -118,7 +116,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         spinner.setAdapter(adapter);
         spinner.setSelection(Task.TaskStatus.getIndex(task.getStatus()), true);
 
-        gettitle = view.findViewById(R.id.title_edit_text);
+        getTitle = view.findViewById(R.id.title_edit_text);
 
 
         if(!task.getAssignedBy().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && task.getAssignedUser().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()))
@@ -133,14 +131,11 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 acknowledgeButton.setClickable(true);
                 acknowledgeButton.setTextColor(BLUE);
 
-                acknowledgeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        task.setAcknowledged(true);
-                        acknowledgeButton.setEnabled(false);
-                        acknowledgeButton.setTextColor(GREEN);
-                        acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
-                    }
+                acknowledgeButton.setOnClickListener(v -> {
+                    task.setAcknowledged(true);
+                    acknowledgeButton.setEnabled(false);
+                    acknowledgeButton.setTextColor(GREEN);
+                    acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
                 });
             }
         }
@@ -166,15 +161,16 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
 
 
-        gettitle.setText(task.getTitle());
-        gettitle.setHintTextColor(getResources().getColor(R.color.gray));
+        getTitle.setText(task.getTitle());
+        getTitle.setHintTextColor(getResources().getColor(R.color.gray));
 
         assignedBy = view.findViewById(R.id.assigned_by_text);
-        assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy()).getDisplayName());
+        if(group != null)
+            assignedBy.setText(ContactUtil.getInstance().resolveContact(task.getAssignedBy(), group.getMemberDetails()).getDisplayName());
 
-        getDescript = view.findViewById(R.id.description_edit_text);
-        getDescript.setText(task.getDescription());
-        getDescript.setHintTextColor(getResources().getColor(R.color.gray));
+        getDescription = view.findViewById(R.id.description_edit_text);
+        getDescription.setText(task.getDescription());
+        getDescription.setHintTextColor(getResources().getColor(R.color.gray));
         lay = view.findViewById(R.id.select_group_view);
         listView = view.findViewById(R.id.list_view_checklist);
 
@@ -185,42 +181,37 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         setDueDate.setText(dateFormat.format(task.getDueDate()));
         final Calendar calendar = Calendar.getInstance();
 
-        setDueDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calendar.setTime(task.getDueDate());
-                    datePickerDialog = new DatePickerDialog(getContext(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view1, int year, int monthOfYear, int dayOfMonth) {
-                                    // set day of month , month and year value in the edit text
-                                    String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear + 1, dayOfMonth, year);
-                                    setDueDate.setText(dateValue);
-                                    try {
-                                        Date date = dateFormat.parse(dateValue);
-                                        task.setDueDate(date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        setDueDate.setOnClickListener(v -> {
+            calendar.setTime(task.getDueDate());
+                datePickerDialog = new DatePickerDialog(getContext(),
+                        (view1, year, monthOfYear, dayOfMonth) -> {
+                            // set day of month , month and year value in the edit text
+                            String dateValue = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear + 1, dayOfMonth, year);
+                            setDueDate.setText(dateValue);
+                            try {
+                                Date date = dateFormat.parse(dateValue);
+                                task.setDueDate(date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-                datePickerDialog.show();
-            }
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            datePickerDialog.show();
         });
 
 
         addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
 
         addChecklistBtn.setOnClickListener(this::addValue);
 
         assignFromContacts = view.findViewById(R.id.assign_from_contacts_text_view);
 
-        if (!task.getAssignedUserName().isEmpty()) {
-            assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser()).getDisplayName());
+        if (group != null && !TextUtil.isNullOrEmpty(task.getAssignedUser())) {
+            assignFromContacts.setText(ContactUtil.getInstance().resolveContact(task.getAssignedUser(), group.getMemberDetails()).getDisplayName());
 
         }
 
@@ -228,12 +219,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             assignFromContacts.setOnClickListener(v -> {
                 ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
                 ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
-
                 fragment.show(getChildFragmentManager(), "Contacts");
-
                 task.setAcknowledged(false);
-
-
             });
         } else {
             assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
@@ -241,7 +228,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
-            String title = gettitle.getText().toString();
+            String title = getTitle.getText().toString();
             if (title.isEmpty()) {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
                 return;
@@ -255,7 +242,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             task.setCheckList(nonEmpty);
             v.setEnabled(false);
             task.setTitle(title);
-            task.setDescription(getDescript.getText().toString());
+            task.setDescription(getDescription.getText().toString());
             task.setStatus(Task.TaskStatus.valueOf(returnStatus(spinner.getSelectedItem().toString())));
             task.setUpdatedDate(new Date());
             task.setAssignedUserImage(UrlUtils.getUserImage(task.getAssignedUser()));

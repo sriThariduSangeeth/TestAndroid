@@ -24,7 +24,7 @@ public class Group implements Parcelable, BaseEntity {
     private List<String> admins = new ArrayList<>();
     private Bitmap teamImage;
     private boolean imageChanged = false;
-    private List<ExistUser> memberDetails;
+    private List<ExistUser> memberDetails = new ArrayList<>();
 
     public void Group(String groupName , String groupId , String groupAvatar ){
         this.documentID = groupId;
@@ -170,13 +170,13 @@ public class Group implements Parcelable, BaseEntity {
         long tmpUpdatedDate = in.readLong();
         updatedDate = tmpUpdatedDate != -1 ? new Date(tmpUpdatedDate) : null;
         if (in.readByte() == 0x01) {
-            members = new ArrayList<String>();
+            members = new ArrayList<>();
             in.readList(members, String.class.getClassLoader());
         } else {
             members = null;
         }
         if (in.readByte() == 0x01) {
-            originalMembers = new ArrayList<String>();
+            originalMembers = new ArrayList<>();
             in.readList(originalMembers, String.class.getClassLoader());
         } else {
             originalMembers = null;

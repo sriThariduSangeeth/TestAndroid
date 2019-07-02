@@ -14,6 +14,7 @@ import android.widget.TextView;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.LogEvent;
 import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
@@ -23,6 +24,8 @@ import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static app.whatsdone.android.utils.Constants.ARG_GROUP;
 
 /**
  * A fragment representing a list of Items.
@@ -38,6 +41,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
     private List<Change> changes = new ArrayList<>();
     private LogService service = new LogServiceImpl();
     private MyActivityLogRecyclerViewAdapter adapter;
+    private Group group;
 
 
     /**
@@ -48,10 +52,11 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
     }
 
     @SuppressWarnings("unused")
-    public static ActivityLogFragment newInstance(String taskId) {
+    public static ActivityLogFragment newInstance(String taskId, Group group) {
         ActivityLogFragment fragment = new ActivityLogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TASK_ID, taskId);
+        args.putParcelable(ARG_GROUP, group);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +67,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
 
         if (getArguments() != null) {
             taskId = getArguments().getString(ARG_TASK_ID);
+            group = getArguments().getParcelable(ARG_GROUP);
         }
     }
 
@@ -81,7 +87,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
         }
         setupToolbar();
 
-        service.getByTaskId(taskId, this);
+        service.getByTaskId(taskId, group, this);
 
         return view;
     }

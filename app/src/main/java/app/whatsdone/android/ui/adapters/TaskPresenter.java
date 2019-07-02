@@ -17,13 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Task;
+import timber.log.Timber;
 
 public class TaskPresenter extends RecyclerViewPresenter<String> {
 
     protected Adapter adapter;
-    private List<String> tasksList = new ArrayList<>();
+    private List<Task> tasksList;
 
-    public TaskPresenter(Context context , List<String> taskList) {
+    public TaskPresenter(Context context , List<Task> taskList) {
         super(context);
         this.tasksList = taskList;
     }
@@ -44,27 +46,26 @@ public class TaskPresenter extends RecyclerViewPresenter<String> {
 
     @Override
     protected void onQuery(@Nullable CharSequence query) {
-        List<String> all = tasksList;
+        List<Task> all = tasksList;
         if (TextUtils.isEmpty(query)) {
             adapter.setData(all);
         } else {
             query = query.toString().toLowerCase();
-            List<String> list = new ArrayList<>();
-            for (String u : all) {
-                if (u.toLowerCase().contains(query) ||
-                        u.toLowerCase().contains(query)) {
+            List<Task> list = new ArrayList<>();
+            for (Task u : all) {
+                if (u.getTitle().toLowerCase().contains(query)) {
                     list.add(u);
                 }
             }
             adapter.setData(list);
-            Log.e("UserPresenter", "found "+list.size()+" users for query "+query);
+            Timber.d("found " + list.size() + " users for query " + query);
         }
         adapter.notifyDataSetChanged();
     }
 
     class Adapter extends RecyclerView.Adapter<TaskPresenter.Adapter.Holder> {
 
-        private List<String> data;
+        private List<Task> data;
 
         public class Holder extends RecyclerView.ViewHolder {
             private View root;
@@ -72,11 +73,11 @@ public class TaskPresenter extends RecyclerViewPresenter<String> {
             public Holder(View itemView) {
                 super(itemView);
                 root = itemView;
-                fullname = ((TextView) itemView.findViewById(R.id.taskname));
+                fullname = itemView.findViewById(R.id.taskname);
             }
         }
 
-        public void setData(List<String> data) {
+        public void setData(List<Task> data) {
             this.data = data;
         }
 
@@ -97,19 +98,13 @@ public class TaskPresenter extends RecyclerViewPresenter<String> {
         @Override
         public void onBindViewHolder(TaskPresenter.Adapter.Holder holder, int position) {
             if (isEmpty()) {
-                holder.fullname.setText("No Task here!");
+                holder.fullname.setText(getContext().getString(R.string.no_task));
                 holder.root.setOnClickListener(null);
                 return;
             }
-            final String task = data.get(position);
-            holder.fullname.setText(task);
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dispatchClick(task);
-                }
-            });
+            final Task task = data.get(position);
+            holder.fullname.setText(task.getTitle());
+            holder.root.setOnClickListener(v -> dispatchClick(task.getTitle()));
         }
     }
 }

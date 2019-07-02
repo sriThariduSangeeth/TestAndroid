@@ -1,8 +1,7 @@
 package app.whatsdone.android.services;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import app.whatsdone.android.model.Message;
+import app.whatsdone.android.model.MessageFormatter;
 
 public interface DiscussionService {
 
@@ -14,7 +13,7 @@ public interface DiscussionService {
 
     void loadRestMessages( String groupId , ServiceListener serviceListener);
 
-    void subscribe(String id , ServiceListener serviceListener);
+    void subscribe(String id, MessageFormatter formatter, ServiceListener serviceListener);
 
     void unSubscribe();
 

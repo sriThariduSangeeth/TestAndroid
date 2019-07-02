@@ -5,6 +5,7 @@
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:minDistRequestDisallowParent="5000dp"
     app:mode="same_level">
 
     <RelativeLayout
@@ -73,7 +74,8 @@
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light">
+        android:background="@android:color/holo_blue_light"
+        android:clickable="true">
 
         <include layout="@layout/task_inner_recycler_view_layout" />
     </LinearLayout>

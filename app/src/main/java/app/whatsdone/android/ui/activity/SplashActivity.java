@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.utils.ConfigLoader;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
 import timber.log.Timber;
@@ -26,7 +27,7 @@ import timber.log.Timber;
 public class SplashActivity extends AppCompatActivity {
 
     private ProgressBar progressBar = null;
-    private ImageView bgImage , bgImageCurve;
+    private ImageView bgImage;
     private Animation uptodown, downtoup, logopopup;
     private LinearLayout layoutcenter , layoutWelcome;
     private Handler mHandler;
@@ -41,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        new ConfigLoader().fetch();
         Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 for (String key : bundle.keySet()) {
