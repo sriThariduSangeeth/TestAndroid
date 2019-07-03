@@ -324,40 +324,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
-        ContactUtil.getInstance().cleanNo(group.getMembers());
-
-        for (ExistUser member : group.getMemberDetails()) {
-            ExistUser user = null;
-            for (ExistUser existUser : users) {
-                if(existUser.getPhoneNumber().equals(member.getPhoneNumber())){
-                    user = existUser;
-                    break;
-                }
-            }
-
-            if(user != null){
-                users.remove(user);
-            }
-        }
-
-        for (String member : group.getMembers()) {
-            ExistUser user = null;
-            for (ExistUser existUser : users) {
-                if(existUser.getPhoneNumber().equals(member)){
-                    user = existUser;
-                    break;
-                }
-            }
-
-            if(user == null){
-                user = new ExistUser();
-                user.setIsInvited(false);
-                user.setDisplayName(member);
-                user.setPhoneNumber(member);
-                users.add(user);
-            }
-        }
-
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
         data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);

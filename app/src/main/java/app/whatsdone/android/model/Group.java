@@ -78,7 +78,7 @@ public class Group implements Parcelable, BaseEntity {
     }
 
     public int getTaskCount() {
-        return taskCount;
+        return taskDetails.size();
     }
 
     public void setTaskCount(int taskCount) {

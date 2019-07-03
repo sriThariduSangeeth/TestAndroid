@@ -101,8 +101,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
 
-
-        LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
 
@@ -205,7 +203,6 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDetach() {
         super.onDetach();
-        LocalState.getInstance().markTasksRead(group.getDocumentID(), group.getTaskCount());
     }
 
 
