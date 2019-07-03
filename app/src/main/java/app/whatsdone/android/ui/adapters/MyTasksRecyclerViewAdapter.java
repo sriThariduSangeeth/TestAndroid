@@ -70,7 +70,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         if(task.isUnreadTask()){
             holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.BOLD);
         }else {
-            holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.NORMAL);
+            holder.textView.setTypeface(null, Typeface.NORMAL);
         }
 
 

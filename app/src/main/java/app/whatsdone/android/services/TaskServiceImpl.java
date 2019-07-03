@@ -179,7 +179,6 @@ public class TaskServiceImpl implements TaskService {
             checkListItems.add(checkListItem);
         }
         data.put(Constants.FIELD_TASK_CHECKLIST, checkListItems);
-
         document.set(data).addOnCompleteListener(taskResult -> {
             if(taskResult.isSuccessful())
                 serviceListener.onSuccess();
@@ -188,6 +187,8 @@ public class TaskServiceImpl implements TaskService {
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
             serviceListener.onCompleted(taskResult.isSuccessful());
+            LocalState.getInstance().setTaskRead(task);
+
         });
     }
 
@@ -209,7 +210,7 @@ public class TaskServiceImpl implements TaskService {
         data.put(Constants.ACKNOWLEDGED, task.isAcknowledged());
 
         // sync with local state
-        LocalState.getInstance().setTaskRead(task);
+
 
         data.put(Constants.FIELD_TASK_DUE_AT, DateUtil.getLastMinuteDate(task.getDueDate()));
         List<Object> checkListItems = new ArrayList<>();
@@ -230,6 +231,7 @@ public class TaskServiceImpl implements TaskService {
                 serviceListener.onError(taskResult.getException().getLocalizedMessage());
             }
             serviceListener.onCompleted(taskResult.isSuccessful());
+            LocalState.getInstance().setTaskRead(task);
         });
     }
 

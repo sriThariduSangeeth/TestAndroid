@@ -86,7 +86,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         if (task.isUnreadTask()) {
             holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.BOLD);
         } else {
-            holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.NORMAL);
+            holder.groupTaskText.setTypeface(null, Typeface.NORMAL);
         }
 
         TextDrawable icon = IconFactory.getInstance().get(holder.image, task);
