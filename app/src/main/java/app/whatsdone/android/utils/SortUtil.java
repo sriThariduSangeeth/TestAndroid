@@ -11,6 +11,8 @@ import java.util.List;
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Change;
+import app.whatsdone.android.model.ExistUser;
+import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 
 public class SortUtil {
@@ -38,6 +40,29 @@ public class SortUtil {
         unreadTasks.addAll(doneTasks);
 
         return unreadTasks;
+    }
+
+    public static List<ExistUser> clean(Group group, List<ExistUser> users) {
+        List<ExistUser> cleaned = new ArrayList<>();
+        for (String member : group.getMembers()) {
+            ExistUser user = null;
+            for (ExistUser existUser : users) {
+                if(member.equals(existUser.getPhoneNumber())) {
+                    user = existUser;
+                    break;
+                }
+            }
+            if(user != null){
+                cleaned.add(user);
+            }else {
+                user = new ExistUser();
+                user.setPhoneNumber(member);
+                user.setDisplayName(member);
+                cleaned.add(user);
+            }
+
+        }
+        return cleaned;
     }
 
     public static List<Change> sortChanges(List<Change> changes){

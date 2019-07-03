@@ -38,6 +38,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
+import static app.whatsdone.android.utils.SortUtil.clean;
+
 public class GroupServiceImpl implements GroupService {
     private static final String REGISTRATION = "registration";
     private static final String HANDLER = "handler";
@@ -393,29 +395,6 @@ public class GroupServiceImpl implements GroupService {
             }
             serviceListener.onCompleted(task.isSuccessful());
         });
-    }
-
-    private List<ExistUser> clean(Group group, List<ExistUser> users) {
-        List<ExistUser> cleaned = new ArrayList<>();
-        for (String member : group.getMembers()) {
-            ExistUser user = null;
-            for (ExistUser existUser : users) {
-                if(member.equals(existUser.getPhoneNumber())) {
-                    user = existUser;
-                    break;
-                }
-            }
-            if(user != null){
-                cleaned.add(user);
-            }else {
-                user = new ExistUser();
-                user.setPhoneNumber(member);
-                user.setDisplayName(member);
-                cleaned.add(user);
-            }
-
-        }
-        return users;
     }
 
     @Override
