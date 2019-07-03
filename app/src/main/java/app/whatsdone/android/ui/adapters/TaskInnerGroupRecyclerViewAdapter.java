@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +37,7 @@ import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.UrlUtils;
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
@@ -54,7 +53,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     private Group group;
     private InnerGroupTaskFragmentListener listener;
     private FragmentManager fragmentManager;
-    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
     public TaskInnerGroupRecyclerViewAdapter(List<BaseEntity> tasks, Context context, Group group, InnerGroupTaskFragmentListener listener, FragmentManager fragmentManager) {
         this.taskList = tasks;
@@ -75,11 +73,12 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         return new MyRecyclerViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull TaskInnerGroupRecyclerViewAdapter.MyRecyclerViewHolder holder, int position) {
 
         Task task = (Task) taskList.get(position);
-
+        holder.swipeLayout.setOffset(position);
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         holder.groupTaskText.setText(task.getTitle());
         Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
@@ -108,8 +107,9 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             //  Picasso.get().load(R.mipmap.ic_user_default).into(myRecyclerViewHolder.image);
         }
 
+        holder.frontLayout.setClickable(true);
         holder.frontLayout.setOnClickListener(v -> {
-            holder.swipeLayout.close(false);
+            holder.swipeLayout.animateReset();
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             Fragment myFragment = EditTaskFragment.newInstance(group, task);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.task_container, myFragment).addToBackStack(null).commit();
@@ -126,22 +126,15 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
 
-        holder.swipeLayout.setMinFlingVelocity(5000);
-
-        if (task != null) {
-            try {
-                binderHelper.bind(holder.swipeLayout, task.getDocumentID());
-            }catch (NullPointerException ignored){}
-
-        }
-
         if (task.getStatus() == TODO) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.status.setText(R.string.todo);
         }
 
         if (task.getStatus() == ON_HOLD) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.status.setText(R.string.on_hold);
             holder.inprogressBtn.setVisibility(View.VISIBLE);
             holder.onholdBtn.setVisibility(View.GONE);
@@ -150,14 +143,16 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         if (task.getStatus() == DONE) {
             holder.status.setText(R.string.done);
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(false);
             holder.inprogressBtn.setVisibility(View.GONE);
             holder.onholdBtn.setVisibility(View.GONE);
             holder.doneBtn.setVisibility(View.GONE);
         }
 
         if (task.getStatus() == Task.TaskStatus.IN_PROGRESS) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.status.setText(R.string.in_progress);
             holder.inprogressBtn.setVisibility(View.GONE);
             holder.onholdBtn.setVisibility(View.VISIBLE);
@@ -184,7 +179,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
             if(listener != null)
                 listener.onChangeStatus(task, DONE);
         });
-        System.out.println("members "+group.getMembers());
+
         holder.image.setOnClickListener(v -> {
 
             ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
@@ -205,9 +200,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
                 @Override
                 public void onContactButtonClicked() {
                     listener.onContactButtonClicked(task);
-
-
-
                 }
             });
             fragment.show(fragmentManager, "Contacts");
@@ -215,6 +207,30 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
 
 
+    }
+
+    private void setSwipeListener(MyRecyclerViewHolder viewHolder){
+        viewHolder.swipeLayout.setOnSwipeListener(new SwipeLayout.OnSwipeListener() {
+            @Override
+            public void onBeginSwipe(SwipeLayout swipeLayout, boolean moveToRight) {
+                Timber.d("move:%s",moveToRight);
+            }
+
+            @Override
+            public void onSwipeClampReached(SwipeLayout swipeLayout, boolean moveToRight) {
+                Timber.d("move:%s",moveToRight);
+            }
+
+            @Override
+            public void onLeftStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+                Timber.d("move:%s",moveToRight);
+            }
+
+            @Override
+            public void onRightStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+                Timber.d("move:%s",moveToRight);
+            }
+        });
     }
 
     @Override
@@ -234,7 +250,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
     }
 
     class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
-        private final SwipeRevealLayout swipeLayout;
+        private final SwipeLayout swipeLayout;
         private final View frontLayout;
         private final View deleteLayout;
         private final TextView inprogressBtn, onholdBtn, doneBtn;
