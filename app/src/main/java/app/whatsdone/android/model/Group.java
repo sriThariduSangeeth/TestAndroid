@@ -27,7 +27,7 @@ public class Group implements Parcelable, BaseEntity {
     private Bitmap teamImage;
     private boolean imageChanged = false;
     private List<ExistUser> memberDetails = new ArrayList<>();
-    private Map<String, Date> taskDetails = new HashMap<>();
+    private Map<String, HashMap<String, Object>> taskDetails = new HashMap<>();
 
     public void Group(String groupName , String groupId , String groupAvatar ){
         this.documentID = groupId;
@@ -256,11 +256,11 @@ public class Group implements Parcelable, BaseEntity {
         }
     };
 
-    public Map<String, Date> getTaskDetails() {
+    public Map<String, HashMap<String, Object>> getTaskDetails() {
         return taskDetails;
     }
 
-    public void setTaskDetails(Map<String, Date> taskDetails) {
+    public void setTaskDetails(Map<String, HashMap<String, Object>> taskDetails) {
         this.taskDetails = taskDetails;
     }
 }
