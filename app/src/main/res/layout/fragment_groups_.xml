@@ -5,6 +5,7 @@
     android:id="@+id/fragment_groups"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/tab_height"
     tools:context=".ui.fragments.GroupFragment"
     android:layout_gravity="center|center_vertical"
 

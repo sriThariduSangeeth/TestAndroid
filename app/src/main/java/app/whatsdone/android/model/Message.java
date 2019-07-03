@@ -20,7 +20,6 @@ public class Message implements IMessage, MessageContentType.Image,MessageConten
     private MessageFormatter messageFormatter;
 
     public  Message(){
-
     }
 
     public Message(String id, User user, String text, Date createdAt) {

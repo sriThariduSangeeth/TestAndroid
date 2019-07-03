@@ -28,6 +28,7 @@ import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
+import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -69,6 +70,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     {
         Task task = (Task)tasks.get(i);
         holder.textView.setText(task.getTitle());
+        Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
         if(task.isUnreadTask()){
             holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.BOLD);
         }else {
@@ -181,6 +183,17 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         else if ((today).after(task.getDueDate()))
             return R.string.task_overdue;
         return R.string.task_ontrack;
+    }
+
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
 

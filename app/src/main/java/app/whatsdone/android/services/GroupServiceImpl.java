@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import app.whatsdone.android.model.BaseEntity;
@@ -32,46 +33,34 @@ import app.whatsdone.android.model.LeaveGroupRequest;
 import app.whatsdone.android.model.LeaveGroupResponse;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
-import app.whatsdone.android.utils.SharedPreferencesUtil;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import app.whatsdone.android.utils.ServiceFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import timber.log.Timber;
 
 public class GroupServiceImpl implements GroupService {
+    private static final String REGISTRATION = "registration";
+    private static final String HANDLER = "handler";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     public static Group personalGroup = new Group();
-    private ListenerRegistration listener;
+    private Map<String, Map<String, Object>> listeners = new HashMap<>();
     private CloudService service;
+    private List<BaseEntity> latestData;
 
-    public GroupServiceImpl() {
-        AuthServiceImpl.refreshToken();
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(chain -> {
-            Request original = chain.request();
-
-            Request request = original.newBuilder()
-                    .header("Authorization", "Bearer " + SharedPreferencesUtil.getString(Constants.SHARED_TOKEN))
-                    .header("Accept", "application/json")
-                    .method(original.method(), original.body())
-                    .build();
-
-            return chain.proceed(request);
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .baseUrl(Constants.URL_FIREBASE)
-                .client(client)
-                .build();
-
+    private GroupServiceImpl() {
+        Retrofit retrofit = ServiceFactory.getRetrofitService();
         service = retrofit.create(CloudService.class);
+    }
+
+    private static class LazyHolder {
+        private static GroupService service = new GroupServiceImpl();
+    }
+
+    public static GroupService getInstance() {
+        return LazyHolder.service;
     }
 
     public static Group getPersonalGroup() {
@@ -95,7 +84,7 @@ public class GroupServiceImpl implements GroupService {
                             serviceListener.onDataReceived(groups);
                         }
                     } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
+                        Timber.tag(TAG).w(task.getException(), "Error getting documents.");
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
                     serviceListener.onCompleted(task.isSuccessful());
@@ -213,7 +202,7 @@ public class GroupServiceImpl implements GroupService {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error updating document.", task.getException());
+                Timber.tag(TAG).w(task.getException(), "Error updating document.");
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
@@ -231,7 +220,7 @@ public class GroupServiceImpl implements GroupService {
                    if(task.isSuccessful()) {
                     serviceListener.onSuccess();
                    }else {
-                       Log.w(TAG, "Error deleting document.", task.getException());
+                       Timber.tag(TAG).w(task.getException(), "Error deleting document.");
                        serviceListener.onError(task.getException().getLocalizedMessage());
                    }
                     serviceListener.onCompleted(task.isSuccessful());
@@ -263,39 +252,101 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void subscribe(ServiceListener serviceListener) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        listener = db.collection(Constants.REF_TEAMS)
-                .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
-                .orderBy(Constants.FIELD_GROUP_UPDATED_AT, Query.Direction.DESCENDING)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Timber.tag(TAG).w(e, "Team subscription failed");
-                        return;
-                    }
-                    Timber.tag(TAG).d(value.toString());
-
-                    List<BaseEntity> groups = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : value) {
-
-                        try {
-                            Group group = getGroup(doc);
-                            groups.add(group);
-                        }catch (Exception exception) {
-                            Timber.tag(TAG).d(exception, "failed to parse group");
+    public void subscribeForGroup(String id, ServiceListener serviceListener) {
+        if(listeners.get(id) == null) {
+            ListenerRegistration listener = db.collection(Constants.REF_TEAMS)
+                    .document(id)
+                    .addSnapshotListener((value, e) -> {
+                        ServiceListener handler = (ServiceListener) listeners.get(id).get(HANDLER);
+                        if (e != null || handler == null) {
+                            Timber.tag(TAG).w(e, "Team subscription failed");
+                            return;
                         }
+                        Timber.tag(TAG).d(value.toString());
 
-                    }
+                        Group group = getGroup(value);
 
-                    serviceListener.onDataReceived(groups);
-                });
+                        handler.onDataReceived(group);
+                    });
+            HashMap<String, Object> data = new HashMap<>();
+            data.put(REGISTRATION, listener);
+            data.put(HANDLER, serviceListener);
+            listeners.put(id, data);
+        }else {
+            listeners.get(id).put(HANDLER, serviceListener);
+        }
     }
 
     @Override
-    public void unSubscribe() {
-        if( listener != null) {
-            listener.remove();
-            listener = null;
+    public void subscribe(String tag, ServiceListener serviceListener) {
+
+
+        if(listeners.get(tag) == null || latestData == null ) {
+
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            ListenerRegistration listener = db.collection(Constants.REF_TEAMS)
+                    .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
+                    .orderBy(Constants.FIELD_GROUP_UPDATED_AT, Query.Direction.DESCENDING)
+                    .addSnapshotListener((value, e) -> {
+                        ServiceListener handler = (ServiceListener) listeners.get(tag).get(HANDLER);
+                        if (e != null || handler == null) {
+                            Timber.tag(TAG).w(e, "Team subscription failed");
+                            return;
+                        }
+                        Timber.tag(TAG).d(value.toString());
+
+                        List<BaseEntity> groups = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : value) {
+
+                            try {
+                                Group group = getGroup(doc);
+                                groups.add(group);
+                            } catch (Exception exception) {
+                                Timber.tag(TAG).d(exception, "failed to parse group");
+                            }
+
+                        }
+
+                        latestData = groups;
+
+                        handler.onDataReceived(groups);
+                    });
+            HashMap<String, Object> data = new HashMap<>();
+            data.put(REGISTRATION, listener);
+            data.put(HANDLER, serviceListener);
+            listeners.put(tag, data);
+        }else {
+            listeners.get(tag).put(HANDLER, serviceListener);
+            serviceListener.onDataReceived(latestData);
+        }
+    }
+
+    @Override
+    public void removeAllListeners() {
+        for (String tag : listeners.keySet()) {
+            Map<String, Object> data = listeners.get(tag);
+            if(data.get(REGISTRATION) != null){
+               ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
+               listenerRegistration.remove();
+            }
+        }
+        listeners.clear();
+    }
+
+    @Override
+    public void registerHandler(String tag, ServiceListener handler){
+        if(listeners.get(tag) != null){
+           listeners.get(tag).put(HANDLER, handler);
+        }
+    }
+
+    @Override
+    public void unSubscribe(String tag) {
+        if(listeners.get(tag) != null){
+            if(listeners.get(tag).containsKey(HANDLER)) {
+                listeners.get(tag).remove(HANDLER);
+            }
         }
     }
 
@@ -324,40 +375,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
-        ContactUtil.getInstance().cleanNo(group.getMembers());
-
-        for (ExistUser member : group.getMemberDetails()) {
-            ExistUser user = null;
-            for (ExistUser existUser : users) {
-                if(existUser.getPhoneNumber().equals(member.getPhoneNumber())){
-                    user = existUser;
-                    break;
-                }
-            }
-
-            if(user != null){
-                users.remove(user);
-            }
-        }
-
-        for (String member : group.getMembers()) {
-            ExistUser user = null;
-            for (ExistUser existUser : users) {
-                if(existUser.getPhoneNumber().equals(member)){
-                    user = existUser;
-                    break;
-                }
-            }
-
-            if(user == null){
-                user = new ExistUser();
-                user.setIsInvited(false);
-                user.setDisplayName(member);
-                user.setPhoneNumber(member);
-                users.add(user);
-            }
-        }
-
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
         data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);
@@ -398,20 +415,5 @@ public class GroupServiceImpl implements GroupService {
         });
     }
 
-    @Override
-    public void subscribe(String id, ServiceListener serviceListener) {
-        listener = db.collection(Constants.REF_TEAMS)
-                .document(id)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Timber.tag(TAG).w(e, "Team subscription failed");
-                        return;
-                    }
-                    Timber.tag(TAG).d(value.toString());
 
-                    Group group = getGroup(value);
-
-                    serviceListener.onDataReceived(group);
-                });
-    }
 }

@@ -86,7 +86,10 @@ public class ContactServiceImpl implements ContactService {
                     return;
                 }
                 serviceListener.onError(null);
+
             }
+
+
 
             @Override
             public void onFailure(Call<ExistInPlatformResponse> call, Throwable t) {

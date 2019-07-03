@@ -8,6 +8,7 @@ import androidx.multidex.MultiDex;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import app.whatsdone.android.services.GroupServiceImpl;
 import timber.log.Timber;
 
 //import com.crashlytics.android.Crashlytics;
@@ -61,5 +62,11 @@ public class WhatsDoneApplication extends Application {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, ex.getMessage());
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "string");
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        GroupServiceImpl.getInstance().removeAllListeners();
     }
 }

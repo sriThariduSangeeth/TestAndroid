@@ -33,6 +33,8 @@ public class Constants {
     public static final String FIELD_GROUP_TASK_HISTORY = "task_history";
     public static final String FIELD_GROUP_TASK_HISTORY_UPDATED_AT = "updated_at";
     public static final String SHARED_STATE_TASKS_HISTORY = "state_task_history";
+    public static final String LISTENER_GROUP_ALL = "group_all_listener";
+    public static final String LISTENER_MY_TASK = "my_task_listener";
 
     // Task Fields
     public static int TASKS_LIMIT = 50;

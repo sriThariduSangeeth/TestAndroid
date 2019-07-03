@@ -65,10 +65,11 @@ public class DateUtil {
     public static Date parse(String dateStr, @Nullable String format) {
         if(format == null)
             format = Constants.DATE_FORMAT;
-        SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
+
         try {
+            SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.getDefault());
             return fmt.parse(dateStr);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

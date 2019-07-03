@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +39,7 @@ import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.UrlUtils;
+import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -82,6 +82,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         holder.groupTaskText.setText(task.getTitle());
+        Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
+
         if (task.isUnreadTask()) {
             holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.BOLD);
         } else {
@@ -124,7 +126,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
 
-        holder.swipeLayout.setMinFlingVelocity(50);
+        holder.swipeLayout.setMinFlingVelocity(5000);
 
         if (task != null) {
             try {
@@ -257,22 +259,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
 
         }
-    }
-
-
-    private Callback getCallBack(final ImageView imageView) {
-        return new Callback() {
-            @Override
-            public void onSuccess() {
-                imageView.setAlpha(0f);
-                imageView.animate().setDuration(500).alpha(1f).start();
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        };
     }
 
 

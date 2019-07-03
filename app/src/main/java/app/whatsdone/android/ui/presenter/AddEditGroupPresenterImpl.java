@@ -22,15 +22,13 @@ import timber.log.Timber;
 public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
     private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private BaseGroupFragmentView view;
-    private Activity context;
-    private GroupService service = new GroupServiceImpl();
+    private GroupService service = GroupServiceImpl.getInstance();
     private StorageService storageService = new StorageServiceImpl();
     private ContactService contactService = new ContactServiceImpl();
 
     @Override
     public void init(BaseGroupFragmentView view, Activity context) {
         this.view = view;
-        this.context = context;
     }
 
     @Override
@@ -129,7 +127,6 @@ public class AddEditGroupPresenterImpl implements AddEditGroupPresenter {
 
 
     public void setContext(Activity context) {
-        this.context = context;
     }
 
 

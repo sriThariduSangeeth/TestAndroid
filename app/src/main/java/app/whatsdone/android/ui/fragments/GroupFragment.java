@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.fragments;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.ui.activity.InnerGroupTaskActivity;
 import app.whatsdone.android.ui.adapters.GroupSwipeController;
 import app.whatsdone.android.ui.adapters.GroupSwipeControllerActions;
 import app.whatsdone.android.ui.adapters.GroupsRecyclerViewAdapter;
@@ -30,13 +32,15 @@ import app.whatsdone.android.ui.view.GroupFragmentView;
 import app.whatsdone.android.utils.LocalState;
 import timber.log.Timber;
 
+import static app.whatsdone.android.utils.Constants.ACTION_VIEW_GROUP;
+import static app.whatsdone.android.utils.Constants.ARG_ACTION;
+
 
 public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private List<BaseEntity> groups = new ArrayList<>();
 
     private GroupPresenter presenter;
-    private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     private GroupsRecyclerViewAdapter adapter;
@@ -58,14 +62,10 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
         myrecycler = view.findViewById(R.id.group_recycler_view);
 
-
-
-
         view.findViewById(R.id.fab_add_group).setOnClickListener(v -> {
-
-            if (listener != null) {
-                listener.onAddClicked();
-            }
+            Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+            intent.putExtra(ARG_ACTION, ACTION_VIEW_GROUP);
+            getActivity().startActivity(intent);
         });
 
         setupRecyclerView();
@@ -106,19 +106,17 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     }
 
     public void setListener(OnGroupFragmentInteractionListener handler) {
-        listener = handler;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalState.getInstance().syncGroups(groups);
+        this.presenter.subscribe();
         if(adapter != null)
             adapter.notifyDataSetChanged();
     }

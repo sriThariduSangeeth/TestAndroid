@@ -59,6 +59,7 @@ import app.whatsdone.android.ui.presenter.AddEditGroupPresenterImpl;
 import app.whatsdone.android.ui.view.BaseGroupFragmentView;
 import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.ContactUtil;
+import app.whatsdone.android.utils.UIUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -105,7 +106,10 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
 
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-
+        toolbar.setNavigationOnClickListener(v -> {
+            UIUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
         contactName = new ArrayList<>();
 
         circleImageView = view.findViewById(R.id.group_photo_image_view);
@@ -236,6 +240,7 @@ public abstract class BaseFragment extends Fragment implements BaseGroupFragment
     @Override
     public void onGroupSaved() {
         adapter.notifyDataSetChanged();
+        UIUtil.hideSoftKeyboard(getActivity());
         getActivity().onBackPressed();
     }
 
