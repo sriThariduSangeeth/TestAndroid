@@ -19,6 +19,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.model.MessageFormatter;
@@ -76,10 +77,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
                     }
                 }
-
             }
-
-
             return textMessage;
         }
     };
@@ -156,6 +154,17 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public Message verifyMessageInsert(Message message){
 
         boolean postDelayed = new Handler().postDelayed(() -> {
+            String text = message.getText();
+
+           for(int i=0; i<group.getMemberDetails().size() ; i++) {
+                Contact member = ContactUtil.getInstance().resolveContact(group.getMemberDetails().get(i).getPhoneNumber(), group.getMemberDetails());
+               if(text.contains(member.getDisplayName())) {
+                       text = text.replace("@"+member.getDisplayName(), "@"+group.getMemberDetails().get(i).getPhoneNumber());
+                   }
+           }
+
+           
+           message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
                 @Override

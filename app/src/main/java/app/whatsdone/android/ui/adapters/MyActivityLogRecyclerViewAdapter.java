@@ -19,6 +19,7 @@ import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyActivityLogRecyclerViewAdapter.ViewHolder> {
 
     private final List<Change> mValues;
@@ -48,8 +49,6 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
       holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
                 mListener.onListFragmentInteraction(holder.mItem);
             }
         });
@@ -64,35 +63,33 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
     private String generateText(Change change) {
         String user = change.getByUserName();
-
+        String fromValue = getValueFromText(change.getValueFrom());
         switch (change.getType()){
             case ASSIGNEE_CHANGE:
-                return String.format("Changed assignee %s to %s by %s", getValueFromText(change.getValueFrom()),change.getValueTo(), user);
+                return String.format("Changed assignee %s to %s by %s",fromValue,change.getValueTo(), user);
             case CHECKLIST_CHANGE:
-               // return String.format("%s %s %s %s","Checklist items count changed from ",change.getValueFrom(),"to ",change.getValueTo());
-                return String.format("%s %s %s %s by %s","Checklist items count changed ",getValueFromText(change.getValueFrom()),"to "
-                        ,change.getValueTo(), user);
+                return String.format("Checklist items changed by %s", user);
             //return ;
             case CREATED:
                 return String.format("%s %s ","Task created by ",change.getByUserName());
             //return "Task created by";
             case DETAIL_CHANGE:
-                return String.format("%s %s %s %s by %s","Description changed",getValueFromText(change.getValueFrom()),"to ",change.getValueTo(),user );
+                return String.format("%s %s %s %s by %s","Description changed",fromValue,"to ",change.getValueTo(),user );
             //return "Description changed from";
             case DUE_CHANGE:
-                return String.format("%s %s %s %s by %s","Due date changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo(), user);
+                return String.format("%s %s %s %s by %s","Due date changed ",fromValue,"to ",change.getValueTo(), user);
 
             //return "Due date changed from";
             case STATUS_CHANGE:
-                return String.format("%s %s %s %s by %s","Task status changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo(), user);
+                return String.format("%s %s %s %s by %s","Task status changed ",fromValue,"to ",change.getValueTo(), user);
 
             //return "Task status changed from";
             case TITLE_CHANGE:
-                return String.format("%s %s %s %s by %s","Title changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo(), user);
+                return String.format("%s %s %s %s by %s","Title changed ",fromValue,"to ",change.getValueTo(), user);
 
             //return "Title changed from";
             case ACKNOWLEGDE_CHANGE:
-            return String.format("%s %s %s %s by %s","Acknowledge changed ",getValueFromText(change.getValueFrom()),"to ",change.getValueTo(), user);
+            return String.format("%s %s %s %s by %s","Acknowledge changed ",fromValue,"to ",change.getValueTo(), user);
 
             default:
 
@@ -106,33 +103,6 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
 
     }
-
-    private int generateImageResource(Change change) {
-
-        switch (change.getType()){
-            case ASSIGNEE_CHANGE:
-                return R.drawable.discussion;
-            case CHECKLIST_CHANGE:
-                return R.drawable.discussion;
-            case CREATED:
-                return R.drawable.chat_icon;
-            case DETAIL_CHANGE:
-                return R.drawable.discussion;
-            case DUE_CHANGE:
-                return R.drawable.chat_icon;
-            case STATUS_CHANGE:
-                return R.drawable.chat_icon;
-            case TITLE_CHANGE:
-                return R.drawable.chat_icon;
-            case ACKNOWLEGDE_CHANGE:
-                return R.drawable.chat_icon;
-            default:
-                return R.drawable.chat_icon;
-
-        }
-
-    }
-
 
     @Override
     public int getItemCount() {

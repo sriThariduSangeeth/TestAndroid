@@ -81,9 +81,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
             this.groups.addAll(groups);
             adapter.notifyDataSetChanged();
         }
-
     }
-
 
     @Override
     public void onGroupDeleted() {
@@ -98,7 +96,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     @Override
     public void onGroupLeave() {
         adapter.notifyDataSetChanged();
-
     }
 
     public interface OnGroupFragmentInteractionListener {
@@ -123,15 +120,12 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
 
     private void setupRecyclerView() {
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         myrecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new GroupsRecyclerViewAdapter(groups, getContext());
         myrecycler.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(myrecycler.getContext(),
                 DividerItemDecoration.VERTICAL);
         myrecycler.addItemDecoration(dividerItemDecoration);
-//        adapter.setHasStableIds(true);
-       // myrecycler.setItemViewCacheSize(10);
 
 
         groupSwipeController = new GroupSwipeController(new GroupSwipeControllerActions() {
@@ -145,8 +139,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                 try {
                     Group group = adapter.getGroup(position);
                     String id = group.getDocumentID();
-                    //groups.remove(position);
-                    //adapter.notifyDataSetChanged();
                     if (group.getCreatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID())) {
                         presenter.deleteTeam(id);
 

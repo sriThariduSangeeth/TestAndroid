@@ -71,12 +71,10 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
         public class Holder extends RecyclerView.ViewHolder {
             private View root;
             private TextView fullname;
-            private TextView username;
             public Holder(View itemView) {
                 super(itemView);
                 root = itemView;
                 fullname = ((TextView) itemView.findViewById(R.id.fullname));
-                username = ((TextView) itemView.findViewById(R.id.username));
             }
         }
 
@@ -102,13 +100,11 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
         public void onBindViewHolder(Holder holder, int position) {
             if (isEmpty()) {
                 holder.fullname.setText("No user here!");
-                holder.username.setText("Sorry!");
                 holder.root.setOnClickListener(null);
                 return;
             }
             final Contact user = data.get(position);
             holder.fullname.setText(user.getDisplayName());
-            holder.username.setText("|" + user.getPhoneNumber());
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -72,6 +72,14 @@ public class Task implements BaseEntity, Parcelable {
         return output;
     }
 
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     public enum TaskStatus {
         TODO(0),
         IN_PROGRESS(10),
@@ -132,6 +140,7 @@ public class Task implements BaseEntity, Parcelable {
     private String assigneeComment = "";
     private String assignedBy = "";
     private String createdBy = "";
+    private String updatedBy = "";
     private TaskStatus status = TaskStatus.TODO;
     private Date updatedDate = new Date();
     private List<CheckListItem> checkList = new ArrayList<>();
@@ -299,6 +308,7 @@ public class Task implements BaseEntity, Parcelable {
         assigneeComment = in.readString();
         assignedBy = in.readString();
         createdBy = in.readString();
+        updatedBy = in.readString();
         acknowledge = in.readByte() != 0x00;
         status = TaskStatus.valueOf(in.readString());
 
@@ -331,6 +341,7 @@ public class Task implements BaseEntity, Parcelable {
         dest.writeString(assigneeComment);
         dest.writeString(assignedBy);
         dest.writeString(createdBy);
+        dest.writeString(updatedBy);
         dest.writeByte((byte) (acknowledge ? 0x01 : 0x00));
         dest.writeString(status.name());
         dest.writeLong(updatedDate != null ? updatedDate.getTime() : -1L);

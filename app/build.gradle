@@ -33,8 +33,8 @@ android {
         applicationId "app.whatsdone.android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 20
-        versionName "1.992-beta"
+        versionCode 21
+        versionName "1.993-beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.release
@@ -101,11 +101,12 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.otaliastudios:autocomplete:1.1.0'
-    implementation 'com.github.hydrated:SwipeRevealLayout:960abd4'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
 
     implementation 'androidx.annotation:annotation:' + rootProject.androidxLibVersion;
     implementation 'com.google.guava:guava:26.0-android'
+
+    implementation 'ru.rambler.android:swipe-layout:1.1.0'
 
     // Testing-only dependencies
     // Core library

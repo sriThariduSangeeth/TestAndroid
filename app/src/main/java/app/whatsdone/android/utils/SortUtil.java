@@ -10,6 +10,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Change;
 import app.whatsdone.android.model.Task;
 
 public class SortUtil {
@@ -39,7 +40,17 @@ public class SortUtil {
         return unreadTasks;
     }
 
-    public static Comparator<BaseEntity> overdueTaskCompare =
+    public static List<Change> sortChanges(List<Change> changes){
+        Collections.sort(changes, byDate);
+        return changes;
+    }
+
+
+    private static Comparator<Change> byDate =
+            (change1, change2) -> change1.getDate().before(change2.getDate())? 1 :
+                    DateUtil.isDateTimeEqual(change1.getDate(), change2.getDate()) ? 0 : -1;
+
+    private static Comparator<BaseEntity> overdueTaskCompare =
             (entity1, entity2) -> {
                 Task task1 = (Task)entity1;
                 Task task2 = (Task)entity2;
