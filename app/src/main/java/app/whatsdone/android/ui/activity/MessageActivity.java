@@ -156,32 +156,20 @@ public abstract class MessageActivity extends AppCompatActivity implements
             String text = message.getText();
 
            for(int i=0; i<group.getMemberDetails().size() ; i++) {
-               if (text.startsWith("@")) {
-                   String name = text.substring(1);
-                   if(group.getMemberDetails().get(i).getDisplayName().contains(name)) {
-                      String num = group.getMemberDetails().get(i).getPhoneNumber();
 
-                       text = text.replace(name, num);
+               if(text.contains(group.getMemberDetails().get(i).getDisplayName())) {
+                       text = text.replace("@"+group.getMemberDetails().get(i).getDisplayName(), "@"+group.getMemberDetails().get(i).getPhoneNumber());
                    }
-
-               }
            }
 
-            for(int j=0 ; j<taskList.size() ; j++)
-            {
-                if(text.startsWith("#")) {
-                    String taskName = text.substring(1);
-                    // if(taskList.get(j).getTitle().contains(taskName)){
+           for(int j=0 ; j<taskList.size() ; j++)
+           {
                     for (Task task : taskList) {
-                        if(task.getTitle().equals(taskName)){
-                            text = text.replace(taskName, task.getDocumentID());
+                        if(text.contains(task.getTitle())){
+                            text = text.replace("#"+task.getTitle(), "#"+task.getDocumentID());
                         }
                     }
-
-                    //  }
-
-                }
-            }
+           }
            message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
