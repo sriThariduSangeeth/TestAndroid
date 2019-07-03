@@ -209,30 +209,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     }
 
-    private void setSwipeListener(MyRecyclerViewHolder viewHolder){
-        viewHolder.swipeLayout.setOnSwipeListener(new SwipeLayout.OnSwipeListener() {
-            @Override
-            public void onBeginSwipe(SwipeLayout swipeLayout, boolean moveToRight) {
-                Timber.d("move:%s",moveToRight);
-            }
-
-            @Override
-            public void onSwipeClampReached(SwipeLayout swipeLayout, boolean moveToRight) {
-                Timber.d("move:%s",moveToRight);
-            }
-
-            @Override
-            public void onLeftStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
-                Timber.d("move:%s",moveToRight);
-            }
-
-            @Override
-            public void onRightStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
-                Timber.d("move:%s",moveToRight);
-            }
-        });
-    }
-
     @Override
     public long getItemId(int position) {
         return position;
