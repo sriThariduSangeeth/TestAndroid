@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -45,7 +46,6 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
         CheckListItem myTask = itemList.get(position);
         viewHolder.textView.setText(myTask.getTitle());
-        changedColors(viewHolder, myTask);
 
         viewHolder.textView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -66,7 +66,6 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
         viewHolder.toggleComplete.setOnClickListener((buttonView) -> {
             myTask.setCompleted(!myTask.isCompleted());
-            changedColors(viewHolder, myTask);
         });
 
 
@@ -74,16 +73,6 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
             itemList.remove(position);
             notifyDataSetChanged();
         });
-    }
-
-    private void changedColors(@NonNull ViewHolder viewHolder, CheckListItem myTask) {
-        if(myTask.isCompleted()) {
-            viewHolder.first_status.setBackgroundColor(viewHolder.first_status.getContext().getResources().getColor(R.color.LimeGreen));
-            viewHolder.textView.setPaintFlags(viewHolder.textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }else {
-            viewHolder.first_status.setBackgroundColor(viewHolder.first_status.getContext().getResources().getColor(R.color.CornflowerBlue));
-            viewHolder.textView.setPaintFlags(viewHolder.textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
     }
 
     @Override
@@ -100,14 +89,12 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
         EditText textView;
         View delete;
-        View toggleComplete;
-        TextView first_status;
+        CheckBox toggleComplete;
         ViewHolder(@NonNull View convertView) {
             super(convertView);
-            delete = convertView.findViewById(R.id.delete_layout);
-            toggleComplete = convertView.findViewById(R.id.status_layout);
+            delete = convertView.findViewById(R.id.remove_image_view);
+            toggleComplete = convertView.findViewById(R.id.checkbox_task);
             textView = convertView.findViewById(R.id.checklist__item);
-            first_status = convertView.findViewById(R.id.first_status);
         }
     }
 }
