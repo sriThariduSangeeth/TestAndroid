@@ -184,13 +184,14 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
         holder.image.setOnClickListener(v -> {
 
             List<ExistUser> users = ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+            ArrayList<ExistUser> userCleaned = (ArrayList<ExistUser>) clean(group, users);
 
-            ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance((ArrayList<ExistUser>) clean(group, users));
+            ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(userCleaned);
             fragment.setListener(new ContactPickerListDialogFragment.Listener() {
                 @Override
                 public void onContactPickerClicked(int position) {
 
-                    ExistUser user = group.getMemberDetails().get(position);
+                    ExistUser user = userCleaned.get(position);
                     task.setAssignedUserName(user.getDisplayName());
                     task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
                     task.setAssignedUser(user.getPhoneNumber());

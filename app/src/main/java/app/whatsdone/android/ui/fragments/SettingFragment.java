@@ -9,6 +9,7 @@ import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -80,6 +81,11 @@ public class SettingFragment extends Fragment implements SettingsView {
         model.setEnableNotifications(user.isEnableNotifications());
         binding.enableNotifications.setChecked(user.isEnableNotifications());
         model.status.set(user.getStatus().getValue());
+    }
+
+    @Override
+    public void onSaved() {
+        Toast.makeText(getContext(), getString(R.string.message_saved_user),Toast.LENGTH_LONG).show();
     }
 
     private void loadProfileImage(String avatar){
