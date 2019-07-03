@@ -76,10 +76,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
                     }
                 }
-
             }
-
-
             return textMessage;
         }
     };
@@ -156,6 +153,24 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public Message verifyMessageInsert(Message message){
 
         boolean postDelayed = new Handler().postDelayed(() -> {
+            String text = message.getText();
+
+           for(int i=0; i<group.getMemberDetails().size() ; i++) {
+
+               if(text.contains(group.getMemberDetails().get(i).getDisplayName())) {
+                       text = text.replace("@"+group.getMemberDetails().get(i).getDisplayName(), "@"+group.getMemberDetails().get(i).getPhoneNumber());
+                   }
+           }
+
+           for(int j=0 ; j<taskList.size() ; j++)
+           {
+                    for (Task task : taskList) {
+                        if(text.contains(task.getTitle())){
+                            text = text.replace("#"+task.getTitle(), "#"+task.getDocumentID());
+                        }
+                    }
+           }
+           message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
                 @Override
