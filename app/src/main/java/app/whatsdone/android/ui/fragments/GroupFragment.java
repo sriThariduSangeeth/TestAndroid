@@ -41,7 +41,6 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     private List<BaseEntity> groups = new ArrayList<>();
 
     private GroupPresenter presenter;
-    private OnGroupFragmentInteractionListener listener;
     private GroupSwipeController groupSwipeController;
     private RecyclerView myrecycler;
     private GroupsRecyclerViewAdapter adapter;
@@ -52,7 +51,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
         super.onCreate(savedInstanceState);
         this.presenter = new GroupPresenterImpl();
         this.presenter.init(this);
-
+        this.presenter.subscribe();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_groups_, container, false);
-        this.presenter.subscribe();
+
         myrecycler = view.findViewById(R.id.group_recycler_view);
 
         view.findViewById(R.id.fab_add_group).setOnClickListener(v -> {
@@ -107,19 +106,17 @@ public class GroupFragment extends Fragment implements GroupFragmentView {
     }
 
     public void setListener(OnGroupFragmentInteractionListener handler) {
-        listener = handler;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalState.getInstance().syncGroups(groups);
+        this.presenter.subscribe();
         if(adapter != null)
             adapter.notifyDataSetChanged();
     }

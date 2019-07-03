@@ -40,6 +40,7 @@ import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
 import app.whatsdone.android.utils.UrlUtils;
+import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
@@ -82,6 +83,8 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         holder.groupTaskText.setText(task.getTitle());
+        Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
+
         if (task.isUnreadTask()) {
             holder.groupTaskText.setTypeface(holder.groupTaskText.getTypeface(), Typeface.BOLD);
         } else {

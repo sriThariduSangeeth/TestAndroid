@@ -43,8 +43,6 @@ public class GroupPresenterImpl implements GroupPresenter{
 
     @Override
     public void deleteTeam(String documentId) {
-        // ((GroupServiceImpl) service).setContext(context);
-
         try {
             service.delete(documentId, new ServiceListener() {
                 @Override

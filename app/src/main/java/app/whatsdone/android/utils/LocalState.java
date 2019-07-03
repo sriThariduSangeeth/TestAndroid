@@ -40,10 +40,13 @@ public class LocalState {
             if (taskHistory.containsKey(task.getGroupId())) {
                 HashMap<String, Serializable> taskData = taskHistory.get(task.getGroupId());
                 if (taskData.containsKey(task.getDocumentID())) {
-                    Date date = DateUtil.parse(taskData.get(task.getDocumentID()).toString(), DATETIME_FORMAT);
-                    if (task.getUpdatedDate().after(date)) {
+                    Date taskUpdatedDate = task.getUpdatedDate();
+                    Date localTaskUpdated = DateUtil.parse(taskData.get(task.getDocumentID()).toString(), DATETIME_FORMAT);
+                    if (!DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated) && localTaskUpdated.before(taskUpdatedDate)) {
                         task.setUnreadTask(true);
-                    } else {
+                    } else if (DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated)) {
+                        task.setUnreadTask(true);
+                    }else{
                         task.setUnreadTask(false);
                     }
                 }else {

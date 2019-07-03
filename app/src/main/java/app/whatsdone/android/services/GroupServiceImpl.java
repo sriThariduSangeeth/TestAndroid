@@ -48,6 +48,7 @@ public class GroupServiceImpl implements GroupService {
     public static Group personalGroup = new Group();
     private Map<String, Map<String, Object>> listeners = new HashMap<>();
     private CloudService service;
+    private List<BaseEntity> latestData;
 
     private GroupServiceImpl() {
         Retrofit retrofit = ServiceFactory.getRetrofitService();
@@ -201,7 +202,7 @@ public class GroupServiceImpl implements GroupService {
             if(task.isSuccessful())
                 serviceListener.onSuccess();
             else {
-                Log.w(TAG, "Error updating document.", task.getException());
+                Timber.tag(TAG).w(task.getException(), "Error updating document.");
 
                 serviceListener.onError(task.getException().getLocalizedMessage());
             }
@@ -219,7 +220,7 @@ public class GroupServiceImpl implements GroupService {
                    if(task.isSuccessful()) {
                     serviceListener.onSuccess();
                    }else {
-                       Log.w(TAG, "Error deleting document.", task.getException());
+                       Timber.tag(TAG).w(task.getException(), "Error deleting document.");
                        serviceListener.onError(task.getException().getLocalizedMessage());
                    }
                     serviceListener.onCompleted(task.isSuccessful());
@@ -280,7 +281,7 @@ public class GroupServiceImpl implements GroupService {
     public void subscribe(String tag, ServiceListener serviceListener) {
 
 
-        if(listeners.get(tag) == null) {
+        if(listeners.get(tag) == null || latestData == null ) {
 
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -307,6 +308,8 @@ public class GroupServiceImpl implements GroupService {
 
                         }
 
+                        latestData = groups;
+
                         handler.onDataReceived(groups);
                     });
             HashMap<String, Object> data = new HashMap<>();
@@ -315,7 +318,20 @@ public class GroupServiceImpl implements GroupService {
             listeners.put(tag, data);
         }else {
             listeners.get(tag).put(HANDLER, serviceListener);
+            serviceListener.onDataReceived(latestData);
         }
+    }
+
+    @Override
+    public void removeAllListeners() {
+        for (String tag : listeners.keySet()) {
+            Map<String, Object> data = listeners.get(tag);
+            if(data.get(REGISTRATION) != null){
+               ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
+               listenerRegistration.remove();
+            }
+        }
+        listeners.clear();
     }
 
     @Override

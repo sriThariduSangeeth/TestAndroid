@@ -29,4 +29,6 @@ public interface GroupService {
     void subscribeForGroup(String id, ServiceListener serviceListener);
 
     void subscribe(String id, ServiceListener serviceListener);
+
+    void removeAllListeners();
 }
