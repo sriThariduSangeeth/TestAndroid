@@ -29,6 +29,8 @@ import app.whatsdone.android.ui.presenter.SettingsPresenter;
 import app.whatsdone.android.ui.presenter.SettingsPresenterImpl;
 import app.whatsdone.android.ui.view.SettingsView;
 import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.SharedPreferencesUtil;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,7 +47,9 @@ public class SettingFragment extends Fragment implements SettingsView {
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         User current =  AuthServiceImpl.getCurrentUser();
 
-        this.model = new SettingsViewModel(current.getDisplayName(), true, UserStatus.Available, current.getAvatar());
+        boolean isEnable = !SharedPreferencesUtil.getString(Constants.SHARED_TOKEN).equals("");
+
+        this.model = new SettingsViewModel(current.getDisplayName(), isEnable, UserStatus.Available, current.getAvatar());
         this.loadProfileImage(current.getAvatar());
         this.presenter = new SettingsPresenterImpl(this, model);
         this.binding.setModel(model);
@@ -74,6 +78,7 @@ public class SettingFragment extends Fragment implements SettingsView {
         model.setAvatar(user.getAvatar());
         model.setDisplayName(user.getDisplayName());
         model.setEnableNotifications(user.isEnableNotifications());
+        binding.enableNotifications.setChecked(user.isEnableNotifications());
         model.status.set(user.getStatus().getValue());
     }
 
