@@ -3,6 +3,7 @@ package app.whatsdone.android.ui.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 
@@ -11,8 +12,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Group;
+import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.GroupService;
+import app.whatsdone.android.services.GroupServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
+import app.whatsdone.android.services.TaskService;
+import app.whatsdone.android.services.TaskServiceImpl;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
 import app.whatsdone.android.ui.fragments.GroupFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
@@ -24,6 +37,8 @@ import app.whatsdone.android.utils.LocalState;
 import app.whatsdone.android.utils.UIUtil;
 import timber.log.Timber;
 
+import static app.whatsdone.android.utils.Constants.ARG_TASK;
+
 public class GroupsActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
@@ -31,6 +46,12 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupFragment groupContainerFragment;
     private MyTaskFragment myTaskContainerFragment;
     private SettingFragment settingFragment;
+    private List<BaseEntity> taskInnerGroups = new ArrayList<>();
+    GroupService groupService = GroupServiceImpl.getInstance();
+    private Group notificationNavigationGroup;
+    private TaskService taskService = new TaskServiceImpl();
+    private List<BaseEntity> notificationNavigationTasks= new ArrayList<>();
+
 
 
     // private int[] tabIcons = {R.drawable.group, R.drawable.task, R.drawable.settings};
@@ -149,18 +170,43 @@ public class GroupsActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Bundle args = intent.getExtras();
+
         if(args != null && args.containsKey(Constants.ARG_ACTION)){
             if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
                 tabLayout.getTabAt(1).select();
             }
-//            else if(args.getString(Constants.ARG_ACTION).equals("view_discussion")){
-//               // getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
-//                String groupId=args.getString(Constants.ARG_GROUP_ID);
-//                intent = new Intent(this, InnerGroupDiscussionActivity.class);
-//                this.startActivity ( intent );
-//            }
+            else if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_DISCUSSION)){
+
+                String groupId=args.getString(Constants.ARG_GROUP_ID);
+
+                groupService.getGroupById(groupId, new ServiceListener() {
+                    @Override
+                    public void onDataReceived(BaseEntity entity) {
+                        notificationNavigationGroup = (Group) entity;
+                        Log.d("my group",notificationNavigationGroup.getGroupName());
+
+                        taskService.getByGroupId(groupId, new ServiceListener() {
+                            @Override
+                            public void onDataReceived(List<BaseEntity> entities) {
+                                notificationNavigationTasks= entities;
+                                Intent DiscussionIntent;
+                                DiscussionIntent = new Intent(GroupsActivity.this, InnerGroupDiscussionActivity.class);
+                                DiscussionIntent.putExtra(Constants.ARG_GROUP, notificationNavigationGroup);
+                                DiscussionIntent.putExtra(ARG_TASK, Lists.transform(notificationNavigationTasks, t -> (Task)t).toArray());
+                                startActivity(DiscussionIntent);
+                            }
+                        });
+
+                    }
+                });
+
+
+
+
+
+            }
         }
     }
 }

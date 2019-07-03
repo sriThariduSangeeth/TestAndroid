@@ -96,8 +96,8 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
         if(remoteMessage.getData().get("type").equals("discussion")){
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            //String groupId=remoteMessage.getData().get("id");
-            String groupId="";
+            String groupId=remoteMessage.getData().get("id");
+            //String groupId="";
             Timber.d("title: %s, body: %s", title, body);
             sendNotification(title, body,groupId);
         }
