@@ -36,6 +36,8 @@ import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
 import app.whatsdone.android.services.AuthServiceImpl;
+import app.whatsdone.android.services.GroupService;
+import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
@@ -47,6 +49,7 @@ import app.whatsdone.android.ui.view.TaskInnerGroupFragmentView;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
@@ -68,6 +71,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Task task = new Task();
     private TaskService taskService = new TaskServiceImpl();
+    private GroupService groupService = GroupServiceImpl.getInstance();
 
 
     public static InnerGroupTaskFragment newInstance(Group group) {
@@ -101,6 +105,16 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         Bundle args = getArguments();
         this.group = args.getParcelable("group");
 
+        this.presenter = new TaskInnerGroupPresenterImpl();
+
+        if(!TextUtil.isNullOrEmpty((this.group.getDocumentID()))) {
+            groupService.subscribeForGroup(this.group.getDocumentID(), new ServiceListener() {
+                @Override
+                public void onDataReceived(BaseEntity entity) {
+                    group = (Group) entity;
+                }
+            });
+        }
         toolbarTextView.setText(group.getGroupName());
         toolbar.setOnClickListener(v -> {
 
@@ -115,7 +129,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         myRecycler = view.findViewById(R.id.task_inner_group_recycler_view);
-        this.presenter = new TaskInnerGroupPresenterImpl();
+
         this.presenter.init(this, group);
         this.presenter.loadTasksInner(group.getDocumentID());
 
@@ -203,6 +217,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
     @Override
     public void onDetach() {
         super.onDetach();
+        groupService.unSubscribe(group.getDocumentID());
     }
 
 
