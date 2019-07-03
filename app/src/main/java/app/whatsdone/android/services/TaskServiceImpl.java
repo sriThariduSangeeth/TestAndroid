@@ -101,6 +101,8 @@ public class TaskServiceImpl implements TaskService {
             task.setAssignedUserName(doc.getString(Constants.FIELD_TASK_ASSIGNED_USER_NAME));
         if (doc.get(Constants.FIELD_TASK_ASSIGNED_BY) != null)
             task.setAssignedBy(doc.getString(Constants.FIELD_TASK_ASSIGNED_BY));
+        if (doc.get(Constants.FIELD_TASK_UPDATED_BY) != null)
+            task.setUpdatedBy(doc.getString(Constants.FIELD_TASK_UPDATED_BY));
         if (doc.get(Constants.FIELD_TASK_UPDATED_AT) != null)
             task.setUpdatedDate(doc.getDate(Constants.FIELD_TASK_UPDATED_AT));
         if (doc.get(Constants.FIELD_TASK_GROUP_ID) != null)

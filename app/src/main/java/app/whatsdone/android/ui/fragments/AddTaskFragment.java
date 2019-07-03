@@ -83,23 +83,6 @@ public class AddTaskFragment extends TaskFragmentBase {
         service.create(task, new ServiceListener() {
             @Override
             public void onSuccess() {
-                LogEvent event = new LogEvent();
-                event.setDocumentID(task.getDocumentID());
-                event.setGroupId(group.getDocumentID());
-                event.getLogs().add(
-                        new Change(
-                                current.getDocumentID(),
-                                current.getDisplayName(),
-                                Change.ChangeType.CREATED, new Date(),
-                                "", "" ));
-                logService.create(event, new ServiceListener() {
-                    @Override
-                    public void onSuccess() {
-                        Timber.d("log added");
-                    }
-                });
-
-                inviteAssignee();
 
             }
 
