@@ -19,6 +19,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.BaseEntity;
+import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Message;
 import app.whatsdone.android.model.MessageFormatter;
@@ -156,20 +157,13 @@ public abstract class MessageActivity extends AppCompatActivity implements
             String text = message.getText();
 
            for(int i=0; i<group.getMemberDetails().size() ; i++) {
-
-               if(text.contains(group.getMemberDetails().get(i).getDisplayName())) {
-                       text = text.replace("@"+group.getMemberDetails().get(i).getDisplayName(), "@"+group.getMemberDetails().get(i).getPhoneNumber());
+                Contact member = ContactUtil.getInstance().resolveContact(group.getMemberDetails().get(i).getPhoneNumber(), group.getMemberDetails());
+               if(text.contains(member.getDisplayName())) {
+                       text = text.replace("@"+member.getDisplayName(), "@"+group.getMemberDetails().get(i).getPhoneNumber());
                    }
            }
 
-           for(int j=0 ; j<taskList.size() ; j++)
-           {
-                    for (Task task : taskList) {
-                        if(text.contains(task.getTitle())){
-                            text = text.replace("#"+task.getTitle(), "#"+task.getDocumentID());
-                        }
-                    }
-           }
+           
            message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
