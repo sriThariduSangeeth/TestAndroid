@@ -1,6 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.text.Layout;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -84,7 +83,7 @@ public class GroupServiceImpl implements GroupService {
                             serviceListener.onDataReceived(groups);
                         }
                     } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
+                        Timber.tag(TAG).w(task.getException(), "Error getting documents.");
                         serviceListener.onError(task.getException().getLocalizedMessage());
                     }
                     serviceListener.onCompleted(task.isSuccessful());
