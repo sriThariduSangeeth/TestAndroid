@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -127,7 +126,7 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
     private void setStatusIcons(@NonNull MyRecyclerViewHolder holder, Task task) {
 
-        holder.swipeLayout.setMinFlingVelocity(50);
+        holder.swipeLayout.setMinFlingVelocity(5000);
 
         if (task != null) {
             try {
@@ -260,22 +259,6 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
 
         }
-    }
-
-
-    private Callback getCallBack(final ImageView imageView) {
-        return new Callback() {
-            @Override
-            public void onSuccess() {
-                imageView.setAlpha(0f);
-                imageView.animate().setDuration(500).alpha(1f).start();
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        };
     }
 
 

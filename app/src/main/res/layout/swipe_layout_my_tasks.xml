@@ -5,7 +5,7 @@
     android:id="@+id/swipe_layout_my"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:mode="same_level">
+    app:mode="normal">
 
     <RelativeLayout
         android:id="@+id/delete_layout"

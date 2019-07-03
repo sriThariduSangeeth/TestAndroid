@@ -28,10 +28,6 @@ import app.whatsdone.android.utils.TextDrawable;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
-//import com.amulyakhare.textdrawable.TextDrawable;
-//import com.amulyakhare.textdrawable.util.ColorGenerator;
-
-
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.RecyclerViewHolder> {
     private List<BaseEntity> groups;
     private Context context;
