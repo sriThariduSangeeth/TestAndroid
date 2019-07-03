@@ -1,7 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -377,11 +375,12 @@ public class GroupServiceImpl implements GroupService {
                 });
     }
 
+
     @Override
     public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
-        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);
+        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, clean(group, users));
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
         document.update(data).addOnCompleteListener(task -> {
@@ -394,6 +393,29 @@ public class GroupServiceImpl implements GroupService {
             }
             serviceListener.onCompleted(task.isSuccessful());
         });
+    }
+
+    private List<ExistUser> clean(Group group, List<ExistUser> users) {
+        List<ExistUser> cleaned = new ArrayList<>();
+        for (String member : group.getMembers()) {
+            ExistUser user = null;
+            for (ExistUser existUser : users) {
+                if(member.equals(existUser.getPhoneNumber())) {
+                    user = existUser;
+                    break;
+                }
+            }
+            if(user != null){
+                cleaned.add(user);
+            }else {
+                user = new ExistUser();
+                user.setPhoneNumber(member);
+                user.setDisplayName(member);
+                cleaned.add(user);
+            }
+
+        }
+        return users;
     }
 
     @Override
