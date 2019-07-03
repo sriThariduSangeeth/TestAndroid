@@ -42,11 +42,12 @@ public class LocalState {
                 if (taskData.containsKey(task.getDocumentID())) {
                     Date taskUpdatedDate = task.getUpdatedDate();
                     Date localTaskUpdated = DateUtil.parse(taskData.get(task.getDocumentID()).toString(), DATETIME_FORMAT);
+                    Timber.d("task updated: %s, local: %s", taskUpdatedDate, localTaskUpdated);
                     if (!DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated) && localTaskUpdated.before(taskUpdatedDate)) {
                         task.setUnreadTask(true);
                     } else if (DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated)) {
                         task.setUnreadTask(true);
-                    }else{
+                    } else{
                         task.setUnreadTask(false);
                     }
                 }else {
@@ -56,17 +57,20 @@ public class LocalState {
             } else {
                 task.setUnreadTask(true);
             }
+            Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
         }
+
     }
 
     public void setTaskRead(Task task) {
-        String now = DateUtil.formatted(DateUtil.addTime(new Date(), 1), DATETIME_FORMAT);
+        String now = DateUtil.formatted(DateUtil.addTime(task.getUpdatedDate(), 1), DATETIME_FORMAT);
         if(groupsData.containsKey(task.getGroupId())){
             groupsData.get(task.getGroupId()).put(UPDATED_AT, now);
         }
         if (taskHistory.containsKey(task.getGroupId())) {
             taskHistory.get(task.getGroupId()).put(task.getDocumentID(),now );
         }
+        Timber.d("%s is marked as read", task.getTitle());
     }
 
     public void syncGroups(List<BaseEntity> groups) {
