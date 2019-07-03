@@ -78,8 +78,10 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             String body = remoteMessage.getNotification().getBody();
 
             Timber.d("title: %s, body: %s", title, body);
-            sendNotification(title, body);
+            sendNotification(title, body,"");
         }
+
+
 
         if(remoteMessage.getData().get("type").equals("group")){
             String title = remoteMessage.getNotification().getTitle();
@@ -87,8 +89,19 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             String clickAction = remoteMessage.getNotification().getClickAction();
 
             Timber.d("title: %s, body: %s", title, body);
-            sendNotification(title, body);
+            sendNotification(title, body,"");
         }
+
+        /////
+        if(remoteMessage.getData().get("type").equals("discussion")){
+            String title = remoteMessage.getNotification().getTitle();
+            String body = remoteMessage.getNotification().getBody();
+            String groupId=remoteMessage.getData().get("id");
+            //String groupId="";
+            Timber.d("title: %s, body: %s", title, body);
+            sendNotification(title, body,groupId);
+        }
+        ///////
     }
 
    /*
@@ -123,10 +136,17 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String title, String messageBody) {
+    private void sendNotification(String title, String messageBody, String groupId) {
         Intent intent = new Intent(this, GroupsActivity.class);
         if(title.indexOf(Constants.NOTIFICATION_TO_ME) > 0)
             intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+        else if(title.indexOf(Constants.DISCUSSION_NOTIFICATION_TO_ME) > 0) {
+            intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_DISCUSSION);
+            intent.putExtra(Constants.ARG_GROUP_ID, groupId);
+
+
+
+        }
         intent.putExtra(Constants.ARG_CLICK_ACTION, Constants.ACTION_GROUP_ACTIVITY);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);

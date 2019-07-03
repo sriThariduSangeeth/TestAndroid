@@ -92,6 +92,8 @@ public class Constants {
     public static final String ACTION_ADD_TASK = "add_task";
     public static final String GROUP_PERSONAL = "Personal";
     public static final String ACTION_VIEW_TASK = "view_task";
+    public static final String ACTION_VIEW_DISCUSSION="view_discussion";
+
     public static final String ARG_TASK = "task";
     public static final String DATE_FORMAT = "MM/dd/yyyy";
     public static final String DATETIME_FORMAT = "MMM dd yyyy HH:mm:ss.SSS zzz";
@@ -107,6 +109,7 @@ public class Constants {
     public static final String SHARED_STATE_TASKS = "task_state";
     public static final String ARG_TYPE = "type";
     public static final String NOTIFICATION_TO_ME = "assigned you";
+    public static final String DISCUSSION_NOTIFICATION_TO_ME= "discussion";
     public static final String ARG_CLICK_ACTION = "click_action";
     public static final String ACTION_GROUP_ACTIVITY = "GROUP_ACTIVITY";
     public static final String REF_LOGS = "activity_log";
