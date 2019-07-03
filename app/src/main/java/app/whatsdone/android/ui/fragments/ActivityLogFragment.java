@@ -24,9 +24,11 @@ import app.whatsdone.android.services.LogService;
 import app.whatsdone.android.services.LogServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.adapters.MyActivityLogRecyclerViewAdapter;
+import app.whatsdone.android.utils.SortUtil;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.Constants.ARG_GROUP;
+import static app.whatsdone.android.utils.SortUtil.sortChanges;
 
 /**
  * A fragment representing a list of Items.
@@ -130,7 +132,7 @@ public class ActivityLogFragment extends Fragment implements ServiceListener {
 
         LogEvent event = (LogEvent)entity;
         Timber.d("%s",event.getLogs().size());
-        this.changes.addAll(event.getLogs());
+        this.changes.addAll(sortChanges(event.getLogs()));
         this.adapter.notifyDataSetChanged();
     }
 }

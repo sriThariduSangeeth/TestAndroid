@@ -1,5 +1,7 @@
 package app.whatsdone.android.utils;
 
+import android.os.Parcel;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
 import app.whatsdone.android.model.Task;
+import app.whatsdone.android.services.AuthServiceImpl;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.Constants.DATETIME_FORMAT;
@@ -40,6 +43,11 @@ public class LocalState {
             if (taskHistory.containsKey(task.getGroupId())) {
                 HashMap<String, Serializable> taskData = taskHistory.get(task.getGroupId());
                 if (taskData.containsKey(task.getDocumentID())) {
+                    if(task.getUpdatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID()))
+                    {
+                        task.setUnreadTask(false);
+                        return;
+                    }
                     Date taskUpdatedDate = task.getUpdatedDate();
                     Date localTaskUpdated = DateUtil.parse(taskData.get(task.getDocumentID()).toString(), DATETIME_FORMAT);
                     Timber.d("task updated: %s, local: %s", taskUpdatedDate, localTaskUpdated);
