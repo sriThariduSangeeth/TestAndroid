@@ -155,6 +155,12 @@ public class GroupsActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
                 tabLayout.getTabAt(1).select();
             }
+//            else if(args.getString(Constants.ARG_ACTION).equals("view_discussion")){
+//               // getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
+//                String groupId=args.getString(Constants.ARG_GROUP_ID);
+//                intent = new Intent(this, InnerGroupDiscussionActivity.class);
+//                this.startActivity ( intent );
+//            }
         }
     }
 }
