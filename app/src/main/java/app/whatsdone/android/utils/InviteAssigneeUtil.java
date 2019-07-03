@@ -15,8 +15,6 @@ import app.whatsdone.android.services.TaskService;
 import timber.log.Timber;
 
 public class InviteAssigneeUtil {
-
-
     private Task task;
     private ContactService contactService;
     private TaskService taskService;
@@ -24,7 +22,6 @@ public class InviteAssigneeUtil {
     private GroupService groupService;
 
     public InviteAssigneeUtil(Task task, ContactService contactService, TaskService taskService, Group group, GroupService groupService) {
-
         this.task = task;
         this.contactService = contactService;
         this.taskService = taskService;
@@ -50,26 +47,22 @@ public class InviteAssigneeUtil {
 
                     addUserToGroup(user);
                 }
-                    contactService.notifyAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
-                        @Override
-                        public void onInvited() {
-                            Timber.d("user invited");
-                            ExistUser user = new ExistUser();
-                            user.setIsInvited(true);
-                            user.setDisplayName(String.format("%s(%s)", task.getAssignedUser(), Constants.INVITED));
-                            addUserToGroup(user);
-                        }
-                    });
-
-
-
-
+                contactService.notifyAssignee(task.getAssignedUser(), group, task, new ContactService.Listener() {
+                    @Override
+                    public void onInvited() {
+                        Timber.d("user invited");
+                        ExistUser user = new ExistUser();
+                        user.setIsInvited(true);
+                        user.setDisplayName(String.format("%s(%s)", task.getAssignedUser(), Constants.INVITED));
+                        addUserToGroup(user);
+                    }
+                });
             }
         });
     }
 
     private void addUserToGroup(ExistUser user) {
-        if(!group.getMembers().contains(task.getAssignedUser())){
+        if (!group.getMembers().contains(task.getAssignedUser())) {
             group.getMembers().add(user.getPhoneNumber());
             group.getMemberDetails().add(user);
             groupService.update(group, user, new ServiceListener() {

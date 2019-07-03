@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chauthai.swipereveallayout.SwipeRevealLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.rambler.libs.swipe_layout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_layout_my"
+    android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:mode="normal">
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:clickable="true">
 
-    <RelativeLayout
-        android:id="@+id/delete_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="#ffcc0000">
-        <TextView
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@color/lightRed"
-            android:textColor="@android:color/white"
-            android:text="@string/delete"/>
-    </RelativeLayout>
-    <RelativeLayout
+        <include layout="@layout/my_task_recycler_view_layout" />
+    </LinearLayout>
+
+    <FrameLayout
+        app:gravity="right"
+        app:bring_to_clamp="100dp"
+        app:clamp="self"
+        app:sticky="none"
         android:id="@+id/status_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -67,14 +65,26 @@
                 android:text="@string/done"
                 android:layout_alignParentEnd="true" />
         </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/front_layout_my"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light">
-
-        <include layout="@layout/my_task_recycler_view_layout" />
+        android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:gravity="left"
+        app:bring_to_clamp="150dp"
+        app:clamp="self"
+        app:sticky="100dp"
+        android:background="#ffcc0000">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/lightRed"
+            android:textColor="@android:color/white"
+            android:text="@string/delete"/>
     </LinearLayout>
-</com.chauthai.swipereveallayout.SwipeRevealLayout>
+
+
+
+</ru.rambler.libs.swipe_layout.SwipeLayout>

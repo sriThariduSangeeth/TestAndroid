@@ -53,7 +53,9 @@ public class IconFactory {
                 .height(imageView.getLayoutParams().height)
                 .endConfig()
                 .rect();
-        TextDrawable icon =  builder.build(task.getAssignedUserName().substring(0,1), colorGen);
+        String token = task.getAssignedUserName();
+        if(TextUtil.isNullOrEmpty(token)) token = task.getAssignedUser();
+        TextDrawable icon =  builder.build(token.substring(0,1), colorGen);
         memory.put(task.getAssignedUser(), icon);
         return icon;
     }

@@ -63,7 +63,7 @@ public class LocalState {
     }
 
     public void setTaskRead(Task task) {
-        String now = DateUtil.formatted(DateUtil.addTime(task.getUpdatedDate(), 1), DATETIME_FORMAT);
+        String now = DateUtil.formatted(DateUtil.addTime(task.getUpdatedDate(), 2), DATETIME_FORMAT);
         if(groupsData.containsKey(task.getGroupId())){
             groupsData.get(task.getGroupId()).put(UPDATED_AT, now);
         }
