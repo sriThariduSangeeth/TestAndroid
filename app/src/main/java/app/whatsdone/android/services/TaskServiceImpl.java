@@ -1,6 +1,10 @@
 package app.whatsdone.android.services;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -56,6 +60,32 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public void getByGroupId(String groupId, ServiceListener serviceListener) {
+        db.collection(Constants.REF_TASKS)
+                .whereEqualTo(Constants.FIELD_TASK_GROUP_ID, groupId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
+                            List<BaseEntity> tasks = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Task taskData = getTask(doc);
+
+                                tasks.add(taskData);
+                                serviceListener.onDataReceived(tasks);
+                            }
+                        } else {
+                            Timber.tag(TAG).w(task.getException(), "Error getting documents.");
+                            serviceListener.onError(task.getException().getLocalizedMessage());
+                        }
+                        serviceListener.onCompleted(task.isSuccessful());
+                    }else {
+                        serviceListener.onError(task.getException().getLocalizedMessage());
+                    }
+                });
+    }
+
+    @Override
     public void subscribeForGroup(String groupId, ServiceListener serviceListener) {
         listener = db.collection(Constants.REF_TASKS)
                 .whereEqualTo(Constants.FIELD_TASK_GROUP_ID, groupId)
@@ -84,7 +114,7 @@ public class TaskServiceImpl implements TaskService {
                 });
     }
 
-    private Task getTask(QueryDocumentSnapshot doc) {
+    private Task getTask(DocumentSnapshot doc) {
         Task task = new Task();
         task.setDocumentID(doc.getId());
         if (doc.get(Constants.FIELD_TASK_TITLE) != null)
