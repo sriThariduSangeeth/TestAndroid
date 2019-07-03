@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -28,6 +25,7 @@ import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.DateUtil;
 import app.whatsdone.android.utils.IconFactory;
 import app.whatsdone.android.utils.TextDrawable;
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 import timber.log.Timber;
 
 import static app.whatsdone.android.model.Task.TaskStatus.DONE;
@@ -40,8 +38,6 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     public List<BaseEntity> tasks;
     private Context context;
     private MyTaskFragmentListener listener;
-
-    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
     public MyTasksRecyclerViewAdapter(List<BaseEntity> tasks , Context context)
     {
@@ -74,7 +70,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         if(task.isUnreadTask()){
             holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.BOLD);
         }else {
-            holder.textView.setTypeface(holder.textView.getTypeface(), Typeface.NORMAL);
+            holder.textView.setTypeface(null, Typeface.NORMAL);
         }
 
 
@@ -89,7 +85,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         holder.dueDateText.setText(DateUtil.formatted(task.getDueDate(), null));
 
         holder.frontLayout.setOnClickListener(v -> {
-            holder.swipeLayout.close(false);
+            holder.swipeLayout.animateReset();
             Intent intent = new Intent(context, InnerGroupTaskActivity.class);
             intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
             intent.putExtra(Constants.ARG_TASK, task);
@@ -109,57 +105,56 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
     }
 
     private void setStatusIcons(@NonNull RecyclerViewHolderTask holder, Task task) {
-        if (task != null) {
-            try {
-                binderHelper.bind(holder.swipeLayout, task.getDocumentID());
-            }catch (NullPointerException ignored){}
-
-        }else {
-            return;
-        }
-
         if (task.getStatus() == TODO) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
         }
 
         if (task.getStatus() == ON_HOLD) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.inprogressBtn.setVisibility(View.VISIBLE);
             holder.onholdBtn.setVisibility(View.GONE);
             holder.doneBtn.setVisibility(View.VISIBLE);
         }
 
         if (task.getStatus() == DONE) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.inprogressBtn.setVisibility(View.GONE);
             holder.onholdBtn.setVisibility(View.GONE);
             holder.doneBtn.setVisibility(View.GONE);
         }
 
         if (task.getStatus() == Task.TaskStatus.IN_PROGRESS) {
-            holder.swipeLayout.setEnableEdge(SwipeRevealLayout.DRAG_EDGE_LEFT | SwipeRevealLayout.DRAG_EDGE_RIGHT);
+            holder.swipeLayout.setLeftSwipeEnabled(true);
+            holder.swipeLayout.setRightSwipeEnabled(true);
             holder.inprogressBtn.setVisibility(View.GONE);
             holder.onholdBtn.setVisibility(View.VISIBLE);
             holder.doneBtn.setVisibility(View.VISIBLE);
         }
 
         holder.deleteLayout.setOnClickListener(v -> {
+            holder.swipeLayout.animateReset();
             if (listener != null) {
                 listener.onDelete(task);
             }
         });
 
         holder.onholdBtn.setOnClickListener(click -> {
+            holder.swipeLayout.animateReset();
             if(listener != null)
                 listener.onChangeStatus(task, ON_HOLD);
         });
 
         holder.inprogressBtn.setOnClickListener(click -> {
+            holder.swipeLayout.animateReset();
             if(listener != null)
                 listener.onChangeStatus(task, IN_PROGRESS);
         });
 
         holder.doneBtn.setOnClickListener(click -> {
+            holder.swipeLayout.animateReset();
             if(listener != null)
                 listener.onChangeStatus(task, DONE);
         });
@@ -212,7 +207,7 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
         TextView dueDateText;
         ImageView imageView;
 
-        private final SwipeRevealLayout swipeLayout;
+        private final SwipeLayout swipeLayout;
         private final View frontLayout;
         private final View deleteLayout;
         private final TextView inprogressBtn, onholdBtn, doneBtn;
@@ -226,8 +221,8 @@ public class MyTasksRecyclerViewAdapter extends RecyclerView.Adapter<MyTasksRecy
             statusIndicator = itemView.findViewById(R.id.status_indicator);
             dueDateText = itemView.findViewById(R.id.task_inner_date);
 
-            swipeLayout = itemView.findViewById(R.id.swipe_layout_my);
-            frontLayout = itemView.findViewById(R.id.front_layout_my);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            frontLayout = itemView.findViewById(R.id.front_layout);
             deleteLayout = itemView.findViewById(R.id.delete_layout);
             inprogressBtn = itemView.findViewById(R.id.first_status);
             onholdBtn = itemView.findViewById(R.id.second_status);

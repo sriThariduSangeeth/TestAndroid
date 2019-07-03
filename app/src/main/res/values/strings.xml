@@ -24,7 +24,7 @@
     <string name="Discussion">Discussion</string>
     <string name="NewTask">New Task</string>
     <string name="Title">Title</string>
-    <string name="Description">Description</string>
+    <string name="Description">Enter Description Here</string>
     <string name="done_image">done image</string>
     <string name="Task_Name">Task Name</string>
     <string name="teamPhoto">Group Photo</string>
@@ -93,12 +93,13 @@
     <string name="group_settings">Group Settings</string>
     <string name="team_name">Enter group name here</string>
     <string name="assigned_by">Assigned by</string>
-    <string name="add_checklist_items_here">Add item to the checklist</string>
+    <string name="add_checklist_items_here">Add New item</string>
     <string name="delete">Delete</string>
     <string name="acknowledged">Acknowledged</string>
-    <string name="acknowledge_pending">Acknowledge pending</string>
+    <string name="acknowledge_pending">Pending Acknowledgement</string>
     <string name="activity_log">AcivityLog</string>
     <string name="no_task">No Task here!</string>
     <string name="toggle">Toggle</string>
+    <string name="acknowledge_task">Acknowledge Task</string>
 
 </resources>
