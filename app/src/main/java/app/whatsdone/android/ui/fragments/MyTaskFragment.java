@@ -101,8 +101,11 @@ public class MyTaskFragment extends Fragment implements MyTaskFragmentView, MyTa
     @Override
     public void onTaskClicked(Task task) {
         System.out.println("MyTaskFrament onTaskClicked");
-        if( this.listener != null)
-            this.listener.onTaskClicked(task);
+        Intent intent = new Intent(getActivity(), InnerGroupTaskActivity.class);
+        intent.putExtra(Constants.ARG_ACTION, Constants.ACTION_VIEW_TASK);
+        intent.putExtra(Constants.ARG_TASK, task);
+        getActivity().startActivity(intent);
+
     }
 
     @Override

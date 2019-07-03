@@ -12,8 +12,12 @@ public interface GroupService {
     void update(Group group, ServiceListener serviceListener);
     void delete(String id, ServiceListener serviceListener);
     void leave(String groupId, ServiceListener serviceListener);
-    void subscribe(ServiceListener serviceListener);
-    void unSubscribe();
+
+
+
+    void registerHandler(String tag, ServiceListener handler);
+
+    void unSubscribe(String tag);
 
     String add();
 
@@ -21,6 +25,8 @@ public interface GroupService {
 
     void update(Group group, List<ExistUser> users, ServiceListener serviceListener);
     void update(Group group, ExistUser users, ServiceListener serviceListener);
+
+    void subscribeForGroup(String id, ServiceListener serviceListener);
 
     void subscribe(String id, ServiceListener serviceListener);
 }

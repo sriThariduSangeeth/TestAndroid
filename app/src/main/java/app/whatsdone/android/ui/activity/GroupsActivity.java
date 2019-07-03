@@ -14,7 +14,9 @@ import com.google.android.material.tabs.TabLayout;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
+import app.whatsdone.android.ui.fragments.GroupFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
+import app.whatsdone.android.ui.fragments.MyTaskFragment;
 import app.whatsdone.android.ui.fragments.SettingFragment;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
@@ -26,8 +28,8 @@ public class GroupsActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
-    private GroupContainerFragment groupContainerFragment;
-    private MyTaskContainerFragment myTaskContainerFragment;
+    private GroupFragment groupContainerFragment;
+    private MyTaskFragment myTaskContainerFragment;
     private SettingFragment settingFragment;
 
 
@@ -106,8 +108,8 @@ public class GroupsActivity extends AppCompatActivity {
 
     private void setupTabLayout()
     {
-        groupContainerFragment = new GroupContainerFragment();
-        myTaskContainerFragment = new MyTaskContainerFragment();
+        groupContainerFragment = new GroupFragment();
+        myTaskContainerFragment = new MyTaskFragment();
         settingFragment = new SettingFragment();
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.group)),true);
@@ -149,8 +151,9 @@ public class GroupsActivity extends AppCompatActivity {
         Bundle args = intent.getExtras();
         if(args != null && args.containsKey(Constants.ARG_ACTION)){
             if(args.getString(Constants.ARG_ACTION).equals(Constants.ACTION_VIEW_TASK)){
-                tabLayout.getTabAt(1).select();
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, myTaskContainerFragment).commit();
+                tabLayout.getTabAt(1).select();
             }
         }
     }

@@ -81,7 +81,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     protected String title = "Add Task";
     //data
     protected TaskService service = new TaskServiceImpl();
-    GroupService groupService = new GroupServiceImpl();
+    GroupService groupService = GroupServiceImpl.getInstance();
     private ContactService contactService = new ContactServiceImpl();
     LogService logService = new LogServiceImpl();
 

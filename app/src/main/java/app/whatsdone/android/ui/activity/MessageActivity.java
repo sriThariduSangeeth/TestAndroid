@@ -46,7 +46,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
     private DiscussionService discussionService = new DiscussionImpl();
-    private GroupService groupService = new GroupServiceImpl();
+    private GroupService groupService = GroupServiceImpl.getInstance();
     private GetCurrentDetails getCurrentDetails = new GetCurrentDetails();
     public List<Task> taskList = new ArrayList<>();
     public Group group;
@@ -116,7 +116,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
             }
         });
 
-        groupService.subscribe(group.getDocumentID(), new ServiceListener(){
+        groupService.subscribeForGroup(group.getDocumentID(), new ServiceListener(){
             @Override
             public void onDataReceived(BaseEntity entity) {
                 group.setDiscussionCount(((Group)entity).getDiscussionCount());
@@ -129,14 +129,14 @@ public abstract class MessageActivity extends AppCompatActivity implements
         super.onPause();
         LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         discussionService.unSubscribe();
-        groupService.unSubscribe();
+        groupService.unSubscribe(group.getDocumentID());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         discussionService.unSubscribe();
-        groupService.unSubscribe();
+        groupService.unSubscribe(group.getDocumentID());
     }
 
     @Override

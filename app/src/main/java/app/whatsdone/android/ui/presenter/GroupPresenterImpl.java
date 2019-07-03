@@ -11,11 +11,11 @@ import app.whatsdone.android.services.GroupService;
 import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.ui.view.GroupFragmentView;
+import app.whatsdone.android.utils.Constants;
 
 public class GroupPresenterImpl implements GroupPresenter{
-    private static final String TAG = GroupServiceImpl.class.getSimpleName();
     private GroupFragmentView view;
-    private GroupService service = new GroupServiceImpl();
+    private GroupService service = GroupServiceImpl.getInstance();
 
 
     @Override
@@ -28,7 +28,7 @@ public class GroupPresenterImpl implements GroupPresenter{
     public void subscribe() {
 
 
-        service.subscribe(new ServiceListener() {
+        service.subscribe(Constants.LISTENER_GROUP_ALL, new ServiceListener() {
             @Override
             public void onDataReceived(List<BaseEntity> entities) {
                 view.updateGroups(entities);
@@ -38,7 +38,7 @@ public class GroupPresenterImpl implements GroupPresenter{
 
     @Override
     public void unSubscribe() {
-        service.unSubscribe();
+        service.unSubscribe(Constants.LISTENER_GROUP_ALL);
     }
 
     @Override
