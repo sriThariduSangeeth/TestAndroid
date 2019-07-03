@@ -144,7 +144,11 @@ public class GroupServiceImpl implements GroupService {
                 HashMap data = (HashMap) doc.get(Constants.FIELD_GROUP_TASK_HISTORY);
                 for (Object key : data.keySet()) {
                     HashMap task = (HashMap) data.get(key);
-                    group.getTaskDetails().put(key.toString(), ((Timestamp) task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+                    HashMap<String, Object> taskData = new HashMap<>();
+                    taskData.put(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT,
+                            ((Timestamp) task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT)).toDate());
+                    taskData.put(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY, (task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY)));
+                    group.getTaskDetails().put(key.toString(), taskData);
                 }
                 Timber.d("%s", data);
             }catch (Exception ex){

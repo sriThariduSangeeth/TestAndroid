@@ -1,12 +1,9 @@
 package app.whatsdone.android.utils;
 
-import android.os.Parcel;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import app.whatsdone.android.model.BaseEntity;
 import app.whatsdone.android.model.Group;
@@ -15,6 +12,8 @@ import app.whatsdone.android.services.AuthServiceImpl;
 import timber.log.Timber;
 
 import static app.whatsdone.android.utils.Constants.DATETIME_FORMAT;
+import static app.whatsdone.android.utils.Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_AT;
+import static app.whatsdone.android.utils.Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY;
 
 public class LocalState {
     private static final String TASK_COUNT = "task_count";
@@ -39,31 +38,27 @@ public class LocalState {
     public void syncTasks(List<BaseEntity> tasks) {
         for (BaseEntity entity : tasks) {
             Task task = (Task) entity;
+            String current = AuthServiceImpl.getCurrentUser().getDocumentID();
 
             if (taskHistory.containsKey(task.getGroupId())) {
                 HashMap<String, Serializable> taskData = taskHistory.get(task.getGroupId());
                 if (taskData.containsKey(task.getDocumentID())) {
-                    if(task.getUpdatedBy().equals(AuthServiceImpl.getCurrentUser().getDocumentID()))
-                    {
-                        task.setUnreadTask(false);
-                        return;
-                    }
                     Date taskUpdatedDate = task.getUpdatedDate();
                     Date localTaskUpdated = DateUtil.parse(taskData.get(task.getDocumentID()).toString(), DATETIME_FORMAT);
                     Timber.d("task updated: %s, local: %s", taskUpdatedDate, localTaskUpdated);
                     if (!DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated) && localTaskUpdated.before(taskUpdatedDate)) {
-                        task.setUnreadTask(true);
+                        if(!task.getUpdatedBy().equals(current)) { task.setUnreadTask(true);}
                     } else if (DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated)) {
-                        task.setUnreadTask(true);
+                        if(!task.getUpdatedBy().equals(current)) { task.setUnreadTask(true);}
                     } else{
                         task.setUnreadTask(false);
                     }
                 }else {
-                    task.setUnreadTask(true);
+                    if(!task.getUpdatedBy().equals(current)) { task.setUnreadTask(true);}
                     taskHistory.get(task.getGroupId()).put(task.getDocumentID(), DateUtil.formatted(task.getUpdatedDate(), DATETIME_FORMAT));
                 }
             } else {
-                task.setUnreadTask(true);
+                if(!task.getUpdatedBy().equals(current)) { task.setUnreadTask(true);}
             }
             Timber.d("%s is unread: %b", task.getTitle(), task.isUnreadTask());
         }
@@ -83,6 +78,7 @@ public class LocalState {
 
     public void syncGroups(List<BaseEntity> groups) {
         boolean isFirstTime = false;
+        String currentUser = AuthServiceImpl.getCurrentUser().getDocumentID();
         if (groupsData.isEmpty())
             isFirstTime = true;
         for (BaseEntity entity : groups) {
@@ -106,29 +102,29 @@ public class LocalState {
                 } else {
                     groupsData.get(id).put(UPDATED_AT, DateUtil.formatted(updated, DATETIME_FORMAT));
                     int unread = 0;
-                    //TODO : write a trigger for task delete
-                    int totalDeleted = 0;
                     if (taskHistory.containsKey(id)) {
                         HashMap taskData = taskHistory.get(id);
                         for (String taskId : group.getTaskDetails().keySet()) {
-                            Date taskUpdatedDate = group.getTaskDetails().get(taskId);
-                            if (taskData.containsKey(taskId)) {
-                                Date localTaskUpdated = DateUtil.parse(taskData.get(taskId).toString(), DATETIME_FORMAT);
-                                if (!DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated) && localTaskUpdated.before(taskUpdatedDate)) {
-                                    unread++;
+                            Date taskUpdatedDate = (Date) group.getTaskDetails().get(taskId).get(FIELD_GROUP_TASK_HISTORY_UPDATED_AT);
+                            String updatedBy = (String) group.getTaskDetails().get(taskId).get(FIELD_GROUP_TASK_HISTORY_UPDATED_BY);
+
+                                if (taskData.containsKey(taskId)) {
+                                    Date localTaskUpdated = DateUtil.parse(taskData.get(taskId).toString(), DATETIME_FORMAT);
+                                    if (!DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated) && localTaskUpdated.before(taskUpdatedDate)) {
+                                        if(!currentUser.equals(updatedBy)) unread++;
+                                        taskHistory.get(id).put(taskId, DateUtil.formatted(taskUpdatedDate, DATETIME_FORMAT));
+                                    } else if (DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated)) {
+                                        if(!currentUser.equals(updatedBy)) unread++;
+                                    }
+                                } else {
+                                    if(!currentUser.equals(updatedBy)) unread++;
                                     taskHistory.get(id).put(taskId, DateUtil.formatted(taskUpdatedDate, DATETIME_FORMAT));
-                                } else if (DateUtil.isDateTimeEqual(taskUpdatedDate, localTaskUpdated)) {
-                                    unread++;
                                 }
-                            } else {
-                                unread++;
-                                taskHistory.get(id).put(taskId, DateUtil.formatted(taskUpdatedDate, DATETIME_FORMAT));
-                            }
                         }
                     } else {
                         HashMap<String, Serializable> taskData = new HashMap<>();
                         for (String taskId : group.getTaskDetails().keySet()) {
-                            Date taskUpdated = group.getTaskDetails().get(taskId);
+                            Date taskUpdated = (Date) group.getTaskDetails().get(taskId).get(FIELD_GROUP_TASK_HISTORY_UPDATED_AT);
                             taskData.put(taskId, DateUtil.formatted(taskUpdated, DATETIME_FORMAT));
                         }
                         taskHistory.put(id, taskData);
@@ -157,7 +153,7 @@ public class LocalState {
     private void updateTaskHistory(Group group, String id) {
         HashMap<String, Serializable> taskData = new HashMap<>();
         for (String taskId : group.getTaskDetails().keySet()) {
-            Date taskUpdated = group.getTaskDetails().get(taskId);
+            Date taskUpdated = (Date) group.getTaskDetails().get(taskId).get(UPDATED_AT);
             taskData.put(taskId, DateUtil.formatted(taskUpdated, DATETIME_FORMAT));
         }
         taskHistory.put(id, taskData);
