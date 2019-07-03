@@ -89,6 +89,16 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
             Timber.d("title: %s, body: %s", title, body);
             sendNotification(title, body);
         }
+
+        /////
+        if(remoteMessage.getData().get("type").equals("discussion")){
+            String title = remoteMessage.getNotification().getTitle();
+            String body = remoteMessage.getNotification().getBody();
+
+            Timber.d("title: %s, body: %s", title, body);
+            sendNotification(title, body);
+        }
+        ///////
     }
 
    /*
