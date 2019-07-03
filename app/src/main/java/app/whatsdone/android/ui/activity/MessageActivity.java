@@ -156,6 +156,20 @@ public abstract class MessageActivity extends AppCompatActivity implements
     public Message verifyMessageInsert(Message message){
 
         boolean postDelayed = new Handler().postDelayed(() -> {
+            String text = message.getText();
+
+           for(int i=0; i<group.getMemberDetails().size() ; i++) {
+               if (text.startsWith("@")) {
+                   String name = text.substring(1);
+                   if(group.getMemberDetails().get(i).getDisplayName().contains(name)) {
+                      String num = group.getMemberDetails().get(i).getPhoneNumber();
+
+                       text = text.replace(name, num);
+                   }
+
+               }
+           }
+           message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
                 @Override
