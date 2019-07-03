@@ -76,10 +76,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
                     }
                 }
-
             }
-
-
             return textMessage;
         }
     };
@@ -169,6 +166,22 @@ public abstract class MessageActivity extends AppCompatActivity implements
 
                }
            }
+
+            for(int j=0 ; j<taskList.size() ; j++)
+            {
+                if(text.startsWith("#")) {
+                    String taskName = text.substring(1);
+                    // if(taskList.get(j).getTitle().contains(taskName)){
+                    for (Task task : taskList) {
+                        if(task.getTitle().equals(taskName)){
+                            text = text.replace(taskName, task.getDocumentID());
+                        }
+                    }
+
+                    //  }
+
+                }
+            }
            message.setText(text);
 
             discussionService.insertMessage(message, new ServiceListener() {
