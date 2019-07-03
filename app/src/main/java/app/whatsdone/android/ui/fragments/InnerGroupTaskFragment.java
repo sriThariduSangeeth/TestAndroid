@@ -161,6 +161,7 @@ public class InnerGroupTaskFragment extends Fragment implements TaskInnerGroupFr
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.task_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
