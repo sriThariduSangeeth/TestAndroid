@@ -2,15 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    defaultConfig {
-        applicationId "app.whatsdone.android"
-        minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 19
-        versionName "1.991-beta"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
-    }
+
     dataBinding {
         enabled = true
     }
@@ -37,6 +29,16 @@ android {
         }
     }
 
+    defaultConfig {
+        applicationId "app.whatsdone.android"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 20
+        versionName "1.992-beta"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        signingConfig signingConfigs.release
+    }
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
