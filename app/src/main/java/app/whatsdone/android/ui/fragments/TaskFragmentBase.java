@@ -11,7 +11,6 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,6 +73,7 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     private AddItemsAdapter itemsAdapter;
     private EditText getTitle, getDescription;
     private Button acknowledgeButton;
+    private View assignedByLayout, assignedToLayout;
 
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
@@ -98,7 +98,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         View view = inflater.inflate(R.layout.fragment_create_new_task, container, false);
 
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
-
+        assignedToLayout = view.findViewById(R.id.constraintLayout8);
+        assignedByLayout = view.findViewById(R.id.constraintLayout9);
         acknowledgeButton = view.findViewById(R.id.acknowledge_button);
         acknowledgeButton.setEnabled(false);
         acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
@@ -211,6 +212,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         if (!isPersonalTask) {
+            assignedByLayout.setVisibility(View.VISIBLE);
+            assignedToLayout.setVisibility(View.VISIBLE);
             assignFromContacts.setOnClickListener(v -> {
                 ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
                 ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
@@ -218,6 +221,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
                 task.setAcknowledged(false);
             });
         } else {
+            assignedByLayout.setVisibility(View.GONE);
+            assignedToLayout.setVisibility(View.GONE);
             assignFromContacts.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
 
         }

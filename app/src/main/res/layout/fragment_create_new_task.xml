@@ -378,7 +378,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:background="@color/white"
-                android:text="Acknowledge"
+                android:text="@string/acknowledge_task"
                 android:textColor="@color/button_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
