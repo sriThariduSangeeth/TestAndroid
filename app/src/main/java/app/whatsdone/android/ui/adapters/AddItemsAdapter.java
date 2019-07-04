@@ -111,6 +111,8 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
     }
 
 
+
+
     class ViewHolder extends RecyclerView.ViewHolder {
         EditText textView;
         View delete;

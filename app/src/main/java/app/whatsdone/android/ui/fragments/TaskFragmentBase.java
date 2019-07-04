@@ -200,8 +200,14 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         Button addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        listView.setLayoutManager(linearLayoutManager);
+        //listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
+
 
         addChecklistBtn.setOnClickListener(this::addValue);
 
