@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
         CheckListItem myTask = itemList.get(position);
         viewHolder.textView.setText(myTask.getTitle());
+        viewHolder.toggleComplete.setChecked(myTask.isCompleted());
 
         viewHolder.textView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -55,7 +57,8 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                myTask.setTitle(s.toString());
+                //
+
             }
 
             @Override
@@ -64,9 +67,28 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
             }
         });
 
+        viewHolder.textView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                TextView tmp=(TextView) view;
+                myTask.setTitle((tmp.getText().toString()));
+                itemList.set(position,myTask);
+            }
+        });
+
         viewHolder.toggleComplete.setOnClickListener((buttonView) -> {
             myTask.setCompleted(!myTask.isCompleted());
+            itemList.set(position,myTask);
+
         });
+
+//        viewHolder.toggleComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                myTask.setCompleted(b);
+//                itemList.set(position,myTask);
+//            }
+//        });
 
 
         viewHolder.delete.setOnClickListener(v -> {
