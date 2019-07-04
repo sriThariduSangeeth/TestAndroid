@@ -8,7 +8,7 @@
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/background"
         android:clickable="true">
 
         <include layout="@layout/my_task_recycler_view_layout" />
