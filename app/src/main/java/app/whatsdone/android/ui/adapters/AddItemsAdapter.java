@@ -67,6 +67,7 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
             }
         });
 
+
         viewHolder.textView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -81,6 +82,8 @@ public class AddItemsAdapter extends RecyclerView.Adapter<AddItemsAdapter.ViewHo
             itemList.set(position,myTask);
 
         });
+
+
 
 //        viewHolder.toggleComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
