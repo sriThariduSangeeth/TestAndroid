@@ -141,8 +141,10 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void toggleNotifications() {
         if(model.isEnableNotifications()){
             service.enableNotifications();
+            isChanged = true;
         }else {
             service.disableNotifications();
+            isChanged = true;
         }
     }
 
