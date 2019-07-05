@@ -101,5 +101,6 @@
     <string name="no_task">No Task here!</string>
     <string name="toggle">Toggle</string>
     <string name="acknowledge_task">Acknowledge Task</string>
+    <string name="message_saved_user">Successfully saved the user details.</string>
 
 </resources>

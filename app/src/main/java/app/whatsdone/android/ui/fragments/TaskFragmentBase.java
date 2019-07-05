@@ -55,6 +55,7 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.SortUtil;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UIUtil;
 import app.whatsdone.android.utils.UrlUtils;
@@ -62,6 +63,7 @@ import timber.log.Timber;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
+import static app.whatsdone.android.utils.SortUtil.clean;
 
 public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{
     boolean isFromMyTasks;
@@ -215,8 +217,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             assignedByLayout.setVisibility(View.VISIBLE);
             assignedToLayout.setVisibility(View.VISIBLE);
             assignFromContacts.setOnClickListener(v -> {
-                ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
-                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
+                List<ExistUser> users = ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+                ArrayList<ExistUser> userCleaned = (ArrayList<ExistUser>) clean(group, users);
+                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(userCleaned);
                 fragment.show(getChildFragmentManager(), "Contacts");
                 task.setAcknowledged(false);
             });

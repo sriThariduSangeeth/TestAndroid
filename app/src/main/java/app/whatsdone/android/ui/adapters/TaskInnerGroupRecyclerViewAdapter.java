@@ -44,6 +44,7 @@ import static app.whatsdone.android.model.Task.TaskStatus.DONE;
 import static app.whatsdone.android.model.Task.TaskStatus.IN_PROGRESS;
 import static app.whatsdone.android.model.Task.TaskStatus.ON_HOLD;
 import static app.whatsdone.android.model.Task.TaskStatus.TODO;
+import static app.whatsdone.android.utils.SortUtil.clean;
 import static app.whatsdone.android.utils.SortUtil.getStatusIndicatorColor;
 import static app.whatsdone.android.utils.SortUtil.getStatusIndicatorText;
 
@@ -182,13 +183,15 @@ public class TaskInnerGroupRecyclerViewAdapter extends RecyclerView.Adapter<Task
 
         holder.image.setOnClickListener(v -> {
 
-            ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
-            ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
+            List<ExistUser> users = ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+            ArrayList<ExistUser> userCleaned = (ArrayList<ExistUser>) clean(group, users);
+
+            ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(userCleaned);
             fragment.setListener(new ContactPickerListDialogFragment.Listener() {
                 @Override
                 public void onContactPickerClicked(int position) {
 
-                    ExistUser user = group.getMemberDetails().get(position);
+                    ExistUser user = userCleaned.get(position);
                     task.setAssignedUserName(user.getDisplayName());
                     task.setAssignedBy(AuthServiceImpl.getCurrentUser().getDocumentID());
                     task.setAssignedUser(user.getPhoneNumber());

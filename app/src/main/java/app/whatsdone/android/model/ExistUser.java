@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.firebase.firestore.PropertyName;
 
-import java.util.List;
-
 public class ExistUser implements Parcelable {
     private String phoneNumber;
     private String displayName;
@@ -51,6 +49,18 @@ public class ExistUser implements Parcelable {
         this.isInvited = isInvited;
     }
 
+    @JsonProperty("profile_image")
+    @PropertyName("profile_image")
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    @JsonProperty("profile_image")
+    @PropertyName("profile_image")
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public ExistUser(){
 
     }
@@ -88,15 +98,5 @@ public class ExistUser implements Parcelable {
         }
     };
 
-    @JsonProperty("profile_image")
-    @PropertyName("profile_image")
-    public String getProfileImage() {
-        return profileImage;
-    }
 
-    @JsonProperty("profile_image")
-    @PropertyName("profile_image")
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
 }

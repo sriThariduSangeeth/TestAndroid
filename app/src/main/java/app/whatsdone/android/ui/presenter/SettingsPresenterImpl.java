@@ -1,6 +1,7 @@
 package app.whatsdone.android.ui.presenter;
 
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -65,6 +66,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                             Timber.d("profile saved");
                         }
                     });
+                    view.onSaved();
                 }
 
                 @Override
