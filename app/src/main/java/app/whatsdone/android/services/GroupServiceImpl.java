@@ -292,6 +292,8 @@ public class GroupServiceImpl implements GroupService {
                     .whereArrayContains(Constants.FIELD_GROUP_MEMBERS, user.getPhoneNumber())
                     .orderBy(Constants.FIELD_GROUP_UPDATED_AT, Query.Direction.DESCENDING)
                     .addSnapshotListener((value, e) -> {
+                        if(listeners == null) return;
+                        if(listeners.get(tag) == null) return;
                         ServiceListener handler = (ServiceListener) listeners.get(tag).get(HANDLER);
                         if (e != null || handler == null) {
                             Timber.tag(TAG).w(e, "Team subscription failed");
@@ -331,7 +333,10 @@ public class GroupServiceImpl implements GroupService {
             Map<String, Object> data = listeners.get(tag);
             if(data.get(REGISTRATION) != null){
                ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
-               listenerRegistration.remove();
+               if(listenerRegistration != null)
+                listenerRegistration.remove();
+                data.put(REGISTRATION,null);
+                listenerRegistration = null;
             }
         }
         listeners.clear();
@@ -344,6 +349,7 @@ public class GroupServiceImpl implements GroupService {
             if (data.get(REGISTRATION) != null) {
                 ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
                 listenerRegistration.remove();
+                listenerRegistration = null;
             }
             listeners.remove(tag);
         }
