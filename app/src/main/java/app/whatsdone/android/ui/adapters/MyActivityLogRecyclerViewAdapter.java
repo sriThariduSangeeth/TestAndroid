@@ -89,7 +89,9 @@ public class MyActivityLogRecyclerViewAdapter extends RecyclerView.Adapter<MyAct
 
             //return "Title changed from";
             case ACKNOWLEGDE_CHANGE:
-            return String.format("%s %s %s %s by %s","Acknowledge changed ",fromValue,"to ",change.getValueTo(), user);
+                if(fromValue.toLowerCase().equals("false") && change.getValueTo().toLowerCase().equals("true"))
+                    return String.format("The task is acknowledged by %s", user);
+            return String.format("Acknowledge changed by %s", user);
 
             default:
 

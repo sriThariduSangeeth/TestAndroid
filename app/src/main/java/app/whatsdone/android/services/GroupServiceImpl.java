@@ -150,7 +150,6 @@ public class GroupServiceImpl implements GroupService {
                     taskData.put(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY, (task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY)));
                     group.getTaskDetails().put(key.toString(), taskData);
                 }
-                Timber.d("%s", data);
             }catch (Exception ex){
                 Timber.e(ex);
             }
