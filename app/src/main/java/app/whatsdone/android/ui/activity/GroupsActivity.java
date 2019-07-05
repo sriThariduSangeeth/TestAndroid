@@ -26,6 +26,8 @@ import app.whatsdone.android.services.GroupServiceImpl;
 import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.TaskService;
 import app.whatsdone.android.services.TaskServiceImpl;
+import app.whatsdone.android.services.UserService;
+import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.fragments.GroupContainerFragment;
 import app.whatsdone.android.ui.fragments.GroupFragment;
 import app.whatsdone.android.ui.fragments.MyTaskContainerFragment;
@@ -46,8 +48,8 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupFragment groupContainerFragment;
     private MyTaskFragment myTaskContainerFragment;
     private SettingFragment settingFragment;
-    private List<BaseEntity> taskInnerGroups = new ArrayList<>();
     GroupService groupService = GroupServiceImpl.getInstance();
+    UserService userService = new UserServiceImpl();
     private Group notificationNavigationGroup;
     private TaskService taskService = new TaskServiceImpl();
     private List<BaseEntity> notificationNavigationTasks= new ArrayList<>();
@@ -86,6 +88,13 @@ public class GroupsActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_groups_constraint_layout, fragment).commit();
         ContactUtil.getInstance().getPermission(GroupsActivity.this);
+        checkNotifications();
+    }
+
+    private void checkNotifications() {
+        if(Constants.ALWAYS_NOTIFY){
+            userService.enableNotifications();
+        }
     }
 
     private void bindWidgetsWithAnEvent()
