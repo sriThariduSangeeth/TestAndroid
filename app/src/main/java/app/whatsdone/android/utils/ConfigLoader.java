@@ -52,6 +52,7 @@ public class ConfigLoader {
         Constants.DISCUSSION_LIMIT = messageLimit.intValue();
 
         Constants.ALWAYS_NOTIFY = mFirebaseRemoteConfig.getBoolean(Constants.CONFIG_ALWAYS_NOTIFY);
+        Constants.SHOW_PHONE_NO_IN_PICKER = mFirebaseRemoteConfig.getBoolean(Constants.CONFIG_SHOW_PHONE_NO_IN_PICKER);
 
     }
 }

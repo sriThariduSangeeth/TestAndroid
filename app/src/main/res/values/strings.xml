@@ -102,5 +102,6 @@
     <string name="toggle">Toggle</string>
     <string name="acknowledge_task">Acknowledge Task</string>
     <string name="message_saved_user">Successfully saved the user details.</string>
+    <string name="no_user_found">No user here!</string>
 
 </resources>

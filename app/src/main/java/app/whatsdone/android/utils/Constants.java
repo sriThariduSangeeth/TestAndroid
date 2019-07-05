@@ -130,6 +130,8 @@ public class Constants {
     public static final String CONFIG_ALWAYS_NOTIFY = "always_notify";
     public static final String CONFIG_TASK_LIMIT = "task_limit";
     public static final String CONFIG_MESSAGE_LIMIT = "discussion_limit";
+    public static final String CONFIG_SHOW_PHONE_NO_IN_PICKER = "show_phone_number_in_picker";
+    public static boolean SHOW_PHONE_NO_IN_PICKER = false;
     public static long DISCUSSION_LIMIT = 50;
     public static boolean ALWAYS_NOTIFY = true;
     public static int TASKS_LIMIT = 50;
