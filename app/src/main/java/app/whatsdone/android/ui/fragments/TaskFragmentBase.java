@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -75,8 +76,10 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     protected TextView assignedBy;
     private AddItemsAdapter itemsAdapter;
     private EditText getTitle, getDescription;
-    private Button acknowledgeButton;
+ // private TextView acknowledgeTextView;
     private View assignedByLayout, assignedToLayout;
+    private ImageView ackImage;
+    private ConstraintLayout constraintLayout;
 
     private final int REQUEST_CODE = 99;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
@@ -103,9 +106,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault());
         assignedToLayout = view.findViewById(R.id.constraintLayout8);
         assignedByLayout = view.findViewById(R.id.constraintLayout9);
-        acknowledgeButton = view.findViewById(R.id.acknowledge_button);
-        acknowledgeButton.setEnabled(false);
-        acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
+        ackImage = view.findViewById(R.id.ack_imageview);
+        constraintLayout = view.findViewById(R.id.ack_constraint);
 
         this.original = this.task.getClone();
 
@@ -121,20 +123,17 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         if(!task.getAssignedBy().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()) && task.getAssignedUser().equals(AuthServiceImpl.getCurrentUser().getPhoneNo()))
         {
             if(task.isAcknowledged()) {
-                acknowledgeButton.setEnabled(false);
-                acknowledgeButton.setTextColor(GREEN);
-                acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
+                ackImage.setImageResource(R.mipmap.ic_ack_inactive);
+
 
             } else  {
-                acknowledgeButton.setEnabled(true);
-                acknowledgeButton.setClickable(true);
-                acknowledgeButton.setTextColor(BLUE);
+                ackImage.setImageResource(R.mipmap.ic_ack_do);
 
-                acknowledgeButton.setOnClickListener(v -> {
+
+                constraintLayout.setOnClickListener(v -> {
                     task.setAcknowledged(true);
-                    acknowledgeButton.setEnabled(false);
-                    acknowledgeButton.setTextColor(GREEN);
-                    acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
+                    ackImage.setImageResource(R.mipmap.ic_ack_active);
+
                 });
             }
         }
@@ -144,19 +143,18 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         {
             if(task.isAcknowledged())
             {
-                acknowledgeButton.setTextColor(GREEN);
-                acknowledgeButton.setText(getResources().getString(R.string.acknowledged));
-                acknowledgeButton.setEnabled(false);
+                ackImage.setImageResource(R.mipmap.ic_ack_inactive);
+
             } else {
-                acknowledgeButton.setText(getResources().getString(R.string.acknowledge_pending));
-                acknowledgeButton.setEnabled(false);
-                acknowledgeButton.setTextColor(getResources().getColor(R.color.textViewColor));
+                ackImage.setImageResource(R.mipmap.ic_ack_pending);
+
             }
         }
 
-        else
-            acknowledgeButton.setVisibility(View.GONE);
-
+        else {
+            ackImage.setVisibility(View.GONE);
+            constraintLayout.setVisibility(View.GONE);
+        }
 
 
 
@@ -338,7 +336,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     public void onContactPickerClicked(int position) {
         Timber.d(group.getMembers().get(position));
         ExistUser user = group.getMemberDetails().get(position);
-        assignFromContacts.setText(user.getDisplayName());
+     //   assignFromContacts.setText(user.getDisplayName());
+        assignFromContacts.setText(ContactUtil.getInstance().resolveContact(user.getPhoneNumber(), group.getMemberDetails()).getDisplayName());
+
         task.setAssignedUserName(user.getDisplayName());
         task.setAssignedUser(user.getPhoneNumber());
         assignedBy.setText(AuthServiceImpl.getCurrentUser().getDisplayName());
