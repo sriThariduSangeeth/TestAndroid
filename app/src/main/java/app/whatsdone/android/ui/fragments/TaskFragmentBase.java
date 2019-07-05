@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -201,8 +202,14 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         Button addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        listView.setLayoutManager(linearLayoutManager);
+        //listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
+
 
         addChecklistBtn.setOnClickListener(this::addValue);
 
@@ -231,6 +238,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
+            listView.setFocusableInTouchMode(false);
+            listView.requestFocus();
             String title = getTitle.getText().toString();
             if (title.isEmpty()) {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));

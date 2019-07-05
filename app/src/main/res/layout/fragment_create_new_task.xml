@@ -425,9 +425,15 @@
                 android:background="@drawable/border"
                 android:dividerHeight="2dp"
                 android:scrollbars="vertical"
+                app:stackFromEnd="true"
+                app:reverseLayout="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_check_list">
+                app:layout_constraintTop_toBottomOf="@+id/add_check_list"
+
+
+
+                >
 
             </androidx.recyclerview.widget.RecyclerView>
 
