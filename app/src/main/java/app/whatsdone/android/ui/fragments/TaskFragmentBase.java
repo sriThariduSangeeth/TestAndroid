@@ -236,8 +236,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
-            listView.setFocusableInTouchMode(false);
-            listView.requestFocus();
+            //listView.setFocusableInTouchMode(false);
+            getTitle.setFocusableInTouchMode(true);
+            getTitle.requestFocus();
             String title = getTitle.getText().toString();
             if (title.isEmpty()) {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
