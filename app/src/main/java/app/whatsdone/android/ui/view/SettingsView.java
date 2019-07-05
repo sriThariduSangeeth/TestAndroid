@@ -7,4 +7,6 @@ public interface SettingsView {
     void onLogout();
 
     void onProfileLoaded(User user);
+
+    void onSaved();
 }

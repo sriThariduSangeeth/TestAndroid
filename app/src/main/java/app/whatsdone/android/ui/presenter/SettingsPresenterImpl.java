@@ -71,6 +71,7 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                             Timber.d("profile saved");
                         }
                     });
+                    view.onSaved();
                 }
 
                 @Override

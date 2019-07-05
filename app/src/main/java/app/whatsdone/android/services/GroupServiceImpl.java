@@ -1,7 +1,5 @@
 package app.whatsdone.android.services;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +37,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
+
+import static app.whatsdone.android.utils.SortUtil.clean;
 
 public class GroupServiceImpl implements GroupService {
     private static final String REGISTRATION = "registration";
@@ -377,11 +377,12 @@ public class GroupServiceImpl implements GroupService {
                 });
     }
 
+
     @Override
     public void update(Group group, List<ExistUser> users, ServiceListener serviceListener) {
         DocumentReference document = db.collection(Constants.REF_TEAMS).document(group.getDocumentID());
         HashMap<String, Object>  data = new HashMap<>();
-        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, users);
+        data.put(Constants.FIELD_GROUP_MEMBERS_DETAILS, clean(group, users));
         data.put(Constants.FIELD_GROUP_UPDATED_AT, new Date());
 
         document.update(data).addOnCompleteListener(task -> {

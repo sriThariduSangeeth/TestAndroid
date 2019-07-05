@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
+import app.whatsdone.android.utils.SortUtil;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UIUtil;
 import app.whatsdone.android.utils.UrlUtils;
@@ -63,6 +65,7 @@ import timber.log.Timber;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
+import static app.whatsdone.android.utils.SortUtil.clean;
 
 public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{
     boolean isFromMyTasks;
@@ -197,8 +200,14 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
 
         Button addChecklistBtn = view.findViewById(R.id.add_check_list);
         itemsAdapter = new AddItemsAdapter(getContext().getApplicationContext(), task.getCheckList());
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        listView.setLayoutManager(linearLayoutManager);
+        //listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(itemsAdapter);
+
 
         addChecklistBtn.setOnClickListener(this::addValue);
 
@@ -213,8 +222,9 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
             assignedByLayout.setVisibility(View.VISIBLE);
             assignedToLayout.setVisibility(View.VISIBLE);
             assignFromContacts.setOnClickListener(v -> {
-                ArrayList<ExistUser> users = (ArrayList<ExistUser>) ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
-                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(users);
+                List<ExistUser> users = ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+                ArrayList<ExistUser> userCleaned = (ArrayList<ExistUser>) clean(group, users);
+                ContactPickerListDialogFragment fragment = ContactPickerListDialogFragment.newInstance(userCleaned);
                 fragment.show(getChildFragmentManager(), "Contacts");
                 task.setAcknowledged(false);
             });
@@ -226,6 +236,8 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
         }
 
         view.findViewById(R.id.save_task_button_mmm).setOnClickListener(v -> {
+            listView.setFocusableInTouchMode(false);
+            listView.requestFocus();
             String title = getTitle.getText().toString();
             if (title.isEmpty()) {
                 AlertUtil.showAlert(getActivity(), getString(R.string.error_task_title));
