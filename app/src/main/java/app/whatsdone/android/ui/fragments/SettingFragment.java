@@ -48,11 +48,11 @@ public class SettingFragment extends Fragment implements SettingsView {
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         User current =  AuthServiceImpl.getCurrentUser();
 
-        boolean isEnable = !SharedPreferencesUtil.getString(Constants.SHARED_TOKEN).equals("");
+        boolean isEnable = !SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS).equals("");
 
         this.model = new SettingsViewModel(current.getDisplayName(), isEnable, UserStatus.Available, current.getAvatar());
         this.loadProfileImage(current.getAvatar());
-        this.presenter = new SettingsPresenterImpl(this, model, getContext());
+        this.presenter = new SettingsPresenterImpl(this, model, getActivity());
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
         presenter.initUser();
