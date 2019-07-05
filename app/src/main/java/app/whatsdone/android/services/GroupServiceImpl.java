@@ -339,6 +339,18 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public void removeListener(String tag) {
+        if(listeners.containsKey(tag)) {
+            Map<String, Object> data = listeners.get(tag);
+            if (data.get(REGISTRATION) != null) {
+                ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
+                listenerRegistration.remove();
+            }
+            listeners.remove(tag);
+        }
+    }
+
+    @Override
     public void registerHandler(String tag, ServiceListener handler){
         if(listeners.get(tag) != null){
            listeners.get(tag).put(HANDLER, handler);

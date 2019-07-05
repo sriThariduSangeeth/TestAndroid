@@ -14,6 +14,7 @@ public interface GroupService {
     void leave(String groupId, ServiceListener serviceListener);
 
 
+    void removeListener(String tag);
 
     void registerHandler(String tag, ServiceListener handler);
 

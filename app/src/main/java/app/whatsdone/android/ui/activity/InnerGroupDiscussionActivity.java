@@ -33,6 +33,7 @@ import app.whatsdone.android.ui.adapters.TaskPresenter;
 import app.whatsdone.android.ui.adapters.UserPresenter;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.GetCurrentDetails;
+import app.whatsdone.android.utils.LocalState;
 
 import static android.R.layout;
 
@@ -170,6 +171,7 @@ public class InnerGroupDiscussionActivity extends MessageActivity implements Mes
         message.setUser(getCurrentDetails.getCurrentUser());
 
         super.messagesAdapter.addToStart(verifyMessageInsert(message), true);
+
         return true;
     }
 
