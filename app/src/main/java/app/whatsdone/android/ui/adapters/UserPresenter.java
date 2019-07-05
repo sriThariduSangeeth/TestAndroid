@@ -6,18 +6,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.otaliastudios.autocomplete.RecyclerViewPresenter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
+import app.whatsdone.android.utils.UrlUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserPresenter extends RecyclerViewPresenter<Contact> {
@@ -71,10 +75,14 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
         public class Holder extends RecyclerView.ViewHolder {
             private View root;
             private TextView fullname;
+            private TextView username;
+            private CircleImageView userImage;
             public Holder(View itemView) {
                 super(itemView);
                 root = itemView;
-                fullname = ((TextView) itemView.findViewById(R.id.fullname));
+                fullname =  itemView.findViewById(R.id.fullname);
+                username = itemView.findViewById(R.id.username);
+                userImage = itemView.findViewById(R.id.userImage);
             }
         }
 
@@ -105,6 +113,8 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
             }
             final Contact user = data.get(position);
             holder.fullname.setText(user.getDisplayName());
+            holder.username.setText("|" + user.getPhoneNumber());
+            Picasso.get().load(UrlUtils.getUserImage(user.getPhoneNumber())).into(holder.userImage);
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
