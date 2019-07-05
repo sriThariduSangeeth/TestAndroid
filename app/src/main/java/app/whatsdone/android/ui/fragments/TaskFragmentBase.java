@@ -335,7 +335,10 @@ public abstract class TaskFragmentBase extends Fragment implements ContactPicker
     @Override
     public void onContactPickerClicked(int position) {
         Timber.d(group.getMembers().get(position));
-        ExistUser user = group.getMemberDetails().get(position);
+        List<ExistUser> users = ContactUtil.getInstance().resolveContacts(group.getMemberDetails());
+        ArrayList<ExistUser> userCleaned = (ArrayList<ExistUser>) clean(group, users);
+
+        ExistUser user = userCleaned.get(position);
      //   assignFromContacts.setText(user.getDisplayName());
         assignFromContacts.setText(ContactUtil.getInstance().resolveContact(user.getPhoneNumber(), group.getMemberDetails()).getDisplayName());
 
