@@ -33,8 +33,8 @@ android {
         applicationId "app.whatsdone.android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 21
-        versionName "1.993-beta"
+        versionCode 23
+        versionName "1.995-beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.release

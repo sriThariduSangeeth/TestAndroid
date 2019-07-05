@@ -111,7 +111,8 @@ public class WhatsDoneFirebaseMessagingService extends FirebaseMessagingService 
     private void sendRegistrationToServer(String token) {
         try {
             if(token != null && !token.isEmpty() && !AuthServiceImpl.getCurrentUser().getDocumentID().isEmpty()) {
-                if (SharedPreferencesUtil.getString(Constants.DISABLE_NOTIFICATION).isEmpty()) {
+                String localToken = SharedPreferencesUtil.getString(Constants.DISABLE_NOTIFICATION);
+                if (!localToken.equals(token)) {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     Map<String, Object> data = new HashMap<>();
                     data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayUnion(token));

@@ -15,11 +15,14 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -175,9 +178,8 @@ public class AuthServiceImpl implements AuthService {
                         Timber.tag(TAG).d("onCodeSent:%s", verificationId);
                         SharedPreferencesUtil.save(Constants.SHARED_PHONE, phoneNo);
                         // Save verification ID and resending token so we can use them later
-                        String mVerificationId = verificationId;
                         PhoneAuthProvider.ForceResendingToken mResendToken = token;
-                        listener.onCodeSent(mVerificationId);
+                        listener.onCodeSent(verificationId);
                         // ...
                     }
                 });        // OnVerificationStateChangedCallbacks
@@ -185,7 +187,30 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout() {
-        firebaseAuth.signOut();
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+            String token = SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS);
+            if(!token.isEmpty()) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> data = new HashMap<>();
+                data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayRemove(token));
+                db.collection(Constants.REF_USERS)
+                        .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                        .update(data)
+                        .addOnCompleteListener(command -> {
+                            user = new User();
+                            firebaseAuth.signOut();
+                            if (command.isSuccessful()) {
+                                SharedPreferencesUtil.save(Constants.FIELD_USER_DEVICE_TOKENS, "");
+                                Timber.d("command is success: %s", command.isSuccessful());
+                            }
+                        });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential, AuthService.Listener listener) {
@@ -205,16 +230,13 @@ public class AuthServiceImpl implements AuthService {
                         data.put(Constants.FIELD_USER_ACTIVE, 1);
                         db.collection(Constants.REF_USERS).document(phoneNo).set(data, SetOptions.merge());
 
-                        user.getIdToken(false).addOnCompleteListener(context, new OnCompleteListener<GetTokenResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                if(task.isSuccessful()) {
-                                    System.out.println(task.getResult().getToken());
-                                    SharedPreferencesUtil.save(Constants.SHARED_TOKEN, task.getResult().getToken());
-                                    listener.onSuccess();
-                                }else {
-                                    listener.onError(task.getException().getLocalizedMessage());
-                                }
+                        user.getIdToken(false).addOnCompleteListener(context, task1 -> {
+                            if(task1.isSuccessful()) {
+                                System.out.println(task1.getResult().getToken());
+                                SharedPreferencesUtil.save(Constants.SHARED_TOKEN, task1.getResult().getToken());
+                                listener.onSuccess();
+                            }else {
+                                listener.onError(task1.getException().getLocalizedMessage());
                             }
                         });
 

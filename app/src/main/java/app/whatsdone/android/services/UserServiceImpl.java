@@ -44,30 +44,27 @@ public class UserServiceImpl implements UserService {
     public void disableNotifications() {
         try {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        FirebaseInstanceId.getInstance().deleteInstanceId();
-                        String token = SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS);
-                        if(!token.isEmpty()) {
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            Map<String, Object> data = new HashMap<>();
-                            data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayRemove(token));
-                            data.put(Constants.FIELD_USER_ENABLE_NOTIFICATIONS, false);
-                            db.collection(Constants.REF_USERS)
-                                    .document(AuthServiceImpl.getCurrentUser().getDocumentID())
-                                    .update(data)
-                                    .addOnCompleteListener(command -> {
-                                        if (command.isSuccessful())
+            new Thread(() -> {
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                    String token = SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS);
+                    if(!token.isEmpty()) {
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        Map<String, Object> data = new HashMap<>();
+                        data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayRemove(token));
+                        data.put(Constants.FIELD_USER_ENABLE_NOTIFICATIONS, false);
+                        db.collection(Constants.REF_USERS)
+                                .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                                .update(data)
+                                .addOnCompleteListener(command -> {
+                                    if (command.isSuccessful())
 
-                                            Timber.d("command is success: %s", command.isSuccessful());
-                                    });
-                        }
-                        SharedPreferencesUtil.save(Constants.DISABLE_NOTIFICATION, "true");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                                        Timber.d("command is success: %s", command.isSuccessful());
+                                });
                     }
+                    SharedPreferencesUtil.save(Constants.DISABLE_NOTIFICATION, "true");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }).start();
 
@@ -85,7 +82,7 @@ public class UserServiceImpl implements UserService {
             FirebaseInstanceId.getInstance().getInstanceId()
                     .addOnCompleteListener(task -> {
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            Timber.tag(TAG).w(task.getException(), "getInstanceId failed");
                             return;
                         }
 

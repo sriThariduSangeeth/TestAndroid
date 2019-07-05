@@ -38,7 +38,7 @@ public class Constants {
     public static final String FIELD_GROUP_TASK_HISTORY_UPDATED_BY = "updated_by";
 
     // Task Fields
-    public static int TASKS_LIMIT = 50;
+
     public static final String FIELD_TASK_ASSIGNED_USER = "assigned_user";
     public static final String FIELD_TASK_ASSIGNED_BY = "assigned_by";
     public static final String FIELD_TASK_ASSIGNED_BY_NAME = "assigned_by_name";
@@ -97,7 +97,7 @@ public class Constants {
     public static final String ARG_TASK = "task";
     public static final String DATE_FORMAT = "MM/dd/yyyy";
     public static final String DATETIME_FORMAT = "MMM dd yyyy HH:mm:ss.SSS zzz";
-    public static long DISCUSSION_LIMIT = 50;
+
     public static final String FIELD_GROUP_MEMBERS_DETAILS = "member_details";
 
 
@@ -123,6 +123,16 @@ public class Constants {
     public static final String FIELD_LOG_LOGS_TYPE = "type";
     public static final String INVITED = "Invited";
     public static final String FIELD_TASK_UPDATED_BY = "updated_by";
+
+
+    // Remote config
+
+    public static final String CONFIG_ALWAYS_NOTIFY = "always_notify";
     public static final String CONFIG_TASK_LIMIT = "task_limit";
     public static final String CONFIG_MESSAGE_LIMIT = "discussion_limit";
+    public static long DISCUSSION_LIMIT = 50;
+    public static boolean ALWAYS_NOTIFY = true;
+    public static int TASKS_LIMIT = 50;
+
+
 }

@@ -51,5 +51,7 @@ public class ConfigLoader {
         Long messageLimit = mFirebaseRemoteConfig.getLong(Constants.CONFIG_MESSAGE_LIMIT);
         Constants.DISCUSSION_LIMIT = messageLimit.intValue();
 
+        Constants.ALWAYS_NOTIFY = mFirebaseRemoteConfig.getBoolean(Constants.CONFIG_ALWAYS_NOTIFY);
+
     }
 }
