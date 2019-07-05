@@ -52,7 +52,7 @@ public class SettingFragment extends Fragment implements SettingsView {
 
         this.model = new SettingsViewModel(current.getDisplayName(), isEnable, UserStatus.Available, current.getAvatar());
         this.loadProfileImage(current.getAvatar());
-        this.presenter = new SettingsPresenterImpl(this, model);
+        this.presenter = new SettingsPresenterImpl(this, model, getContext());
         this.binding.setModel(model);
         this.binding.setPresenter(presenter);
         presenter.initUser();

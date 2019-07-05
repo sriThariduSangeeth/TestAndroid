@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
@@ -36,10 +37,12 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     private boolean isSaving = false;
     private boolean userLoaded = false;
     private boolean isChanged = false;
+    private Context context;
 
-    public SettingsPresenterImpl(SettingsView view, SettingsViewModel model){
+    public SettingsPresenterImpl(SettingsView view, SettingsViewModel model, Context context){
         this.view = view;
         this.model = model;
+        this.context = context;
     }
 
     @Override
@@ -60,6 +63,8 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                 @Override
                 public void onSuccess() {
                     Timber.d("user saved");
+                    Toast toast = Toast.makeText(context, "Your changes have been saved successfully", Toast.LENGTH_LONG);
+                    toast.show();
                     authService.updateProfile(user, new AuthService.Listener() {
                         @Override
                         public void onSuccess() {
@@ -137,8 +142,10 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     public void toggleNotifications() {
         if(model.isEnableNotifications()){
             service.enableNotifications();
+            isChanged = true;
         }else {
             service.disableNotifications();
+            isChanged = true;
         }
     }
 
