@@ -1,5 +1,6 @@
 package app.whatsdone.android.ui.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
@@ -16,12 +17,14 @@ import app.whatsdone.android.services.AuthService;
 import app.whatsdone.android.services.AuthServiceImpl;
 import app.whatsdone.android.services.ContactService;
 import app.whatsdone.android.services.ContactServiceImpl;
+import app.whatsdone.android.services.ServiceListener;
 import app.whatsdone.android.services.StorageService;
 import app.whatsdone.android.services.StorageServiceImpl;
 import app.whatsdone.android.services.UserService;
 import app.whatsdone.android.services.UserServiceImpl;
 import app.whatsdone.android.ui.view.SettingsView;
 import app.whatsdone.android.ui.viewmodel.SettingsViewModel;
+import app.whatsdone.android.utils.AlertUtil;
 import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.SharedPreferencesUtil;
@@ -112,9 +115,19 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 
     @Override
     public void logout() {
-        authService.logout();
-        SharedPreferencesUtil.save(Constants.SHARED_TOKEN, "");
-        view.onLogout();
+        authService.logout(new ServiceListener() {
+            @Override
+            public void onSuccess() {
+                SharedPreferencesUtil.save(Constants.SHARED_TOKEN, "");
+                view.onLogout();
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                AlertUtil.showAlert((Activity)context, error);
+            }
+        });
+
     }
 
     @Override

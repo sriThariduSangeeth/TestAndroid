@@ -186,29 +186,36 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout() {
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId();
-            String token = SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS);
-            if(!token.isEmpty()) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                Map<String, Object> data = new HashMap<>();
-                data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayRemove(token));
-                db.collection(Constants.REF_USERS)
-                        .document(AuthServiceImpl.getCurrentUser().getDocumentID())
-                        .update(data)
-                        .addOnCompleteListener(command -> {
-                            user = new User();
-                            firebaseAuth.signOut();
-                            if (command.isSuccessful()) {
-                                SharedPreferencesUtil.save(Constants.FIELD_USER_DEVICE_TOKENS, "");
-                                Timber.d("command is success: %s", command.isSuccessful());
-                            }
-                        });
+    public void logout(ServiceListener listener) {
+        GroupServiceImpl.getInstance().removeAllListeners();
+        new Thread(() -> {
+            try {
+
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+                String token = SharedPreferencesUtil.getString(Constants.FIELD_USER_DEVICE_TOKENS);
+                if (!token.isEmpty()) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put(Constants.FIELD_USER_DEVICE_TOKENS, FieldValue.arrayRemove(token));
+                    db.collection(Constants.REF_USERS)
+                            .document(AuthServiceImpl.getCurrentUser().getDocumentID())
+                            .update(data)
+                            .addOnCompleteListener(command -> {
+                                user = new User();
+                                firebaseAuth.signOut();
+                                if (command.isSuccessful()) {
+                                    SharedPreferencesUtil.save(Constants.FIELD_USER_DEVICE_TOKENS, "");
+                                    Timber.d("command is success: %s", command.isSuccessful());
+                                }
+                                listener.onSuccess();
+                            });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                listener.onError(e.getLocalizedMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
+
 
 
     }
