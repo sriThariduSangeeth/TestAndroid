@@ -118,6 +118,7 @@ public abstract class MessageActivity extends AppCompatActivity implements
             @Override
             public void onDataReceived(BaseEntity entity) {
                 group.setDiscussionCount(((Group)entity).getDiscussionCount());
+                LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
             }
         });
     }
@@ -127,14 +128,14 @@ public abstract class MessageActivity extends AppCompatActivity implements
         super.onPause();
         LocalState.getInstance().markDiscussionsRead(group.getDocumentID(), group.getDiscussionCount());
         discussionService.unSubscribe();
-        groupService.unSubscribe(group.getDocumentID());
+        groupService.removeListener(group.getDocumentID());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         discussionService.unSubscribe();
-        groupService.unSubscribe(group.getDocumentID());
+        groupService.removeListener(group.getDocumentID());
     }
 
     @Override

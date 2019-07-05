@@ -150,7 +150,6 @@ public class GroupServiceImpl implements GroupService {
                     taskData.put(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY, (task.get(Constants.FIELD_GROUP_TASK_HISTORY_UPDATED_BY)));
                     group.getTaskDetails().put(key.toString(), taskData);
                 }
-                Timber.d("%s", data);
             }catch (Exception ex){
                 Timber.e(ex);
             }
@@ -336,6 +335,18 @@ public class GroupServiceImpl implements GroupService {
             }
         }
         listeners.clear();
+    }
+
+    @Override
+    public void removeListener(String tag) {
+        if(listeners.containsKey(tag)) {
+            Map<String, Object> data = listeners.get(tag);
+            if (data.get(REGISTRATION) != null) {
+                ListenerRegistration listenerRegistration = (ListenerRegistration) data.get(REGISTRATION);
+                listenerRegistration.remove();
+            }
+            listeners.remove(tag);
+        }
     }
 
     @Override

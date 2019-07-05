@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import app.whatsdone.android.R;
 import app.whatsdone.android.model.Contact;
+import app.whatsdone.android.utils.Constants;
 import app.whatsdone.android.utils.UrlUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,13 +75,13 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
         public class Holder extends RecyclerView.ViewHolder {
             private View root;
             private TextView fullname;
-            private TextView username;
+            private TextView phoneNumber;
             private CircleImageView userImage;
             public Holder(View itemView) {
                 super(itemView);
                 root = itemView;
                 fullname =  itemView.findViewById(R.id.fullname);
-                username = itemView.findViewById(R.id.username);
+                phoneNumber = itemView.findViewById(R.id.username);
                 userImage = itemView.findViewById(R.id.userImage);
             }
         }
@@ -107,21 +107,21 @@ public class UserPresenter extends RecyclerViewPresenter<Contact> {
         @Override
         public void onBindViewHolder(Holder holder, int position) {
             if (isEmpty()) {
-                holder.fullname.setText("No user here!");
+                holder.fullname.setText(holder.fullname.getResources().getString(R.string.no_user_found));
                 holder.root.setOnClickListener(null);
                 return;
             }
             final Contact user = data.get(position);
             holder.fullname.setText(user.getDisplayName());
-            holder.username.setText("|" + user.getPhoneNumber());
-            Picasso.get().load(UrlUtils.getUserImage(user.getPhoneNumber())).into(holder.userImage);
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dispatchClick(user);
-                }
-            });
+            holder.phoneNumber.setText(user.getPhoneNumber());
+            if(Constants.SHOW_PHONE_NO_IN_PICKER){
+                holder.phoneNumber.setVisibility(View.VISIBLE);
+            }
+            Picasso.get()
+                    .load(UrlUtils.getUserImage(user.getPhoneNumber()))
+                    .placeholder(R.drawable.user_group_man_woman3x)
+                    .into(holder.userImage);
+            holder.root.setOnClickListener(v -> dispatchClick(user));
         }
     }
 }

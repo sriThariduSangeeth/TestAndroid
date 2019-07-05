@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,14 +56,11 @@ import app.whatsdone.android.utils.ContactReaderUtil;
 import app.whatsdone.android.utils.ContactUtil;
 import app.whatsdone.android.utils.InviteAssigneeUtil;
 import app.whatsdone.android.utils.LocalState;
-import app.whatsdone.android.utils.SortUtil;
 import app.whatsdone.android.utils.TextUtil;
 import app.whatsdone.android.utils.UIUtil;
 import app.whatsdone.android.utils.UrlUtils;
 import timber.log.Timber;
 
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.GREEN;
 import static app.whatsdone.android.utils.SortUtil.clean;
 
 public abstract class TaskFragmentBase extends Fragment implements ContactPickerListDialogFragment.Listener{

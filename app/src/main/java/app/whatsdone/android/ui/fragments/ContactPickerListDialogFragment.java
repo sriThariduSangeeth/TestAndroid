@@ -15,12 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.whatsdone.android.R;
+import app.whatsdone.android.model.Contact;
 import app.whatsdone.android.model.ExistUser;
+import app.whatsdone.android.utils.Constants;
+import app.whatsdone.android.utils.UrlUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactPickerListDialogFragment extends BottomSheetDialogFragment {
 
@@ -88,14 +93,16 @@ public class ContactPickerListDialogFragment extends BottomSheetDialogFragment {
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
-
-        final TextView text;
-
-        ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.fragment_contactpicker_list_dialog_item, parent, false));
-            text = itemView.findViewById(R.id.text);
-
-
+        private View root;
+        private TextView fullName;
+        private TextView phoneNumber;
+        private CircleImageView userImage;
+        ViewHolder(View itemView) {
+            super(itemView);
+            root = itemView;
+            fullName =  itemView.findViewById(R.id.fullname);
+            phoneNumber = itemView.findViewById(R.id.username);
+            userImage = itemView.findViewById(R.id.userImage);
         }
 
     }
@@ -113,13 +120,25 @@ public class ContactPickerListDialogFragment extends BottomSheetDialogFragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()), parent);
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(R.layout.user, parent, false);
+
+            return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.text.setText(contacts.get(position).getDisplayName());
-            holder.text.setOnClickListener(v -> {
+            ExistUser user = contacts.get(position);
+            holder.fullName.setText(user.getDisplayName());
+            holder.phoneNumber.setText(user.getPhoneNumber());
+            if(Constants.SHOW_PHONE_NO_IN_PICKER){
+                holder.phoneNumber.setVisibility(View.VISIBLE);
+            }
+            Picasso.get()
+                    .load(UrlUtils.getUserImage(user.getPhoneNumber()))
+                    .placeholder(R.drawable.user_group_man_woman3x)
+                    .into(holder.userImage);
+            holder.root.setOnClickListener(v -> {
                 if (mListener != null) {
                     mListener.onContactPickerClicked(position);
                     dismiss();
